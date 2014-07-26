@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>Controlled multi-tab browsing</title>
+  <style>
+    div#status {
+      backgroud-color: yellow;
+      color: green
+    } 
+    body {
+      font-family:Helvetica,Arial,sans-serif;
+      font-size:small;
+      color:#000;
+      background-color:#fff;
+      width: 180px
+    }
+  </style>         
+</head>
+
+
+<body onload="restore_options()">
+        
+<div id="status"><br /></div>
+
+
+Set userId: 
+<input type="text" id="userId"></input>
+Set tab limit: 
+<select id="maxtab">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
+  <option value="11">11</option>
+  <option value="12">12</option>
+  <option value="13">13</option>
+  <option value="14">14</option>
+  <option value="15">15</option>
+  <option value="20">20</option>
+  <option value="25">25</option>
+  <option value="30">30</option>
+  <option value="35">35</option>
+  <option value="40">40</option>
+  <option value="45">45</option>
+  <option value="50">50</option>
+</select>
+
+<button id="save">Save</button>
+<script src="options.js"></script>
+
+</body>
+</html>

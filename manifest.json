@@ -1,0 +1,37 @@
+{
+  "background": {"scripts": ["background.js"]},
+
+  "options_page": "options.html",
+
+  "browser_action": {
+
+    "default_icon": "images/16.png",
+
+    "default_title": "Pavlok Tab Productivity",
+
+    "default_popup": "options.html"
+
+  },
+
+  "icons": {
+
+    "16": "images/16.png",
+
+    "48": "images/48.png",
+
+    "128": "images/128.png"
+
+  },
+
+  "description": "Pavlok",
+
+  "name": "Pavlok Tab Productivity",
+
+  "permissions": [ "tabs" ,"http://pavlok.herokuapp.com/", "http://localhost:3000/"],
+
+  "version": "0.2",
+    "manifest_version": 2
+
+
+}
+
