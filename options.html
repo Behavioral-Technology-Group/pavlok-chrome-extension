@@ -5,7 +5,7 @@
     div#status {
       backgroud-color: yellow;
       color: green
-    } 
+    }
     body {
       font-family:Helvetica,Arial,sans-serif;
       font-size:small;
@@ -13,18 +13,21 @@
       background-color:#fff;
       width: 180px
     }
-  </style>         
+  </style>
 </head>
 
 
 <body onload="restore_options()">
-        
+
+<img src="/images/pavlok-logo.png"
+
 <div id="status"><br /></div>
 
 
-Set userId: 
-<input type="text" id="userId"></input>
-Set tab limit: 
+Set security token:
+<input type="text" id="securityToken"></input>
+<br>
+Set tab limit:
 <select id="maxtab">
   <option value="1">1</option>
   <option value="2">2</option>
@@ -49,7 +52,7 @@ Set tab limit:
   <option value="45">45</option>
   <option value="50">50</option>
 </select>
-
+<br>
 <button id="save">Save</button>
 <script src="options.js"></script>
 

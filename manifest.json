@@ -27,11 +27,14 @@
 
   "name": "Pavlok Tab Productivity",
 
-  "permissions": [ "tabs" ,"http://pavlok.herokuapp.com/", "http://localhost:3000/"],
+  "permissions": [
+    "tabs",
+    "http://pavlok.herokuapp.com/",
+    "http://localhost:3000/"
+    ],
 
   "version": "0.2",
     "manifest_version": 2
 
 
 }
-
