@@ -29,6 +29,8 @@
 
   "permissions": [
     "tabs",
+    "idle",
+    "activeTab",
     "http://pavlok.herokuapp.com/",
     "http://localhost:3000/"
     ],
