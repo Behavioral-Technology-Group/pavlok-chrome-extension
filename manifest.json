@@ -23,9 +23,9 @@
 
   },
 
-  "description": "Pavlok",
+  "description": "Stay Focused. Eliminate Distraction.",
 
-  "name": "Pavlok Tab Productivity",
+  "name": "Pavlok Chrome Extension",
 
   "permissions": [
     "tabs",
@@ -35,8 +35,9 @@
     "http://localhost:3000/"
     ],
 
-  "version": "0.2",
-    "manifest_version": 2
+  "version": "0.0.1",
+
+  "manifest_version": 2
 
 
 }

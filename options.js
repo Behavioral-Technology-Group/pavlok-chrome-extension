@@ -9,99 +9,11 @@ function save_options() {
   var no_of_tabs = select.children[select.selectedIndex].value;
   localStorage.maxTabs = no_of_tabs;
 
-/*
-if (localStorage.blackSites == null)
-  {
-    var blackSites = new Object();
-  }
-
-  blackSites["facebook.com"]
-  blackSites["reddit.com"] = false;
-  blackSites["youtube.com"] = false;
-  blackSites["hackthesystem.com"] = false;
-  blackSites["useroption"] = false;
-*/
-
-
-//localStorage.blackSiteArray = new Array();
-
-/*for (var i = 0; i < localStorage.blackSiteArray.length; i++)
-  {
-
-     console.log(localStorage.blackSiteArray[i])
-
-  }
-  */
-    var blackList = document.getElementById("blackList").value;
-localStorage.blackList = blackList;
-    /*
-    if (document.getElementById('facebook.com').checked)
-      {
-        localStorage.blackList += "facebook.com,";
-      }
-
-    if (document.getElementById('reddit.com').checked)
-        {
-          localStorage.blackList += "reddit.com,";
-        }
-
-    if (document.getElementById('huffingtonpost.com').checked)
-    {
-      localStorage.blackList += "huffingtonpost.com,";
-    }
-
-
-if (document.getElementById('youtube.com').checked)
-    {
-      localStorage.blackList += "youtube.com,";
-    }
-
-    if (document.getElementById('twitter.com').checked)
-        {
-          localStorage.blackList += "twitter.com,";
-        }
-
-
-
-
-
-if (document.getElementById('hackthesystem.com').checked)
-    {
-      localStorage.blackList += "hackthesystem.com,";
-    }
-
-
-if (document.getElementById('gmail.com').checked)
-    {
-      localStorage.blackList += "gmail.com,";
-    }
-
-  //    if (document.getElementById('userchoice').value != '')
-  //      {
-          localStorage.blackList += document.getElementById('userchoice').value;
-  //      }
-*/
-
-    alert(localStorage.blackList);
-
-
-/*    var reddit = document.getElementById('reddit.com').checked;
-
-    if (facebook.checked == true)
-      {localStorage.blackList
-      }
-  chrome.storage.sync.set({
-    reddit = reddit.comcolor,
-    likesColor: likesColor
-  }, function() {
-
-  */
-
-
+  var blackList = document.getElementById("blackList").value;
+  localStorage.blackList = blackList;
 
   var securityToken = document.getElementById("securityToken").value;
   localStorage.securityToken = securityToken;
-
   var status = document.getElementById("status");
   status.innerHTML = "Option saved successfully!";
   setTimeout(function() {
@@ -112,7 +24,7 @@ if (document.getElementById('gmail.com').checked)
 document.addEventListener('DOMContentLoaded', restore_options());
 
 function restore_options() {
-  var favorite = localStorage.maxTabs;
+  var maxTabsSelect = localStorage.maxTabs;
   var securityToken = localStorage.securityToken;
   var blackList = localStorage.blackList;
 
@@ -127,18 +39,19 @@ function restore_options() {
   }
 
 
-  if (!favorite) {
+  if (!maxTabsSelect) {
     return;
   }
 
   var select = document.getElementById("maxtab");
   for (var i = 0; i < select.children.length; i++) {
     var child = select.children[i];
-    if (child.value == favorite) {
+    if (child.value == maxTabsSelect) {
       child.selected = "true";
       break;
     }
   }
+
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
@@ -217,113 +130,7 @@ function addTrackedSites(new_site) {
 
 var blackSites = new Array();
 
-function addLocalDisplay() {
-  var table = document.getElementById("stats");
-  var tbody = document.createElement("tbody");
-  table.appendChild(tbody);
 
-  /* Sort sites by time spent */
-  var sites = JSON.parse(localStorage.sites);
-  var sortedBlackSites = new Array();
-
-
-  var totalBlackSiteTime = 0;
-
-  //  blackSites = ['https://www.facebook.com','http://reddit.com'];
-//blackSites.push('*.facebook.com/');
-//  blackSites.push('facebook.com');
-//  blackSites.push('reddit.com');
-//  localStorage.blackList = new Array();
-//  localStorage.blackList = blackSites.join();
-
-  for (var i = 0; i < blackSites.length; i++) {
-    var blackSiteTime = sites[blackSites[i]];
-
-    if (isNaN(blackSiteTime)) {
-      blackSiteTime = 0;
-    }
-
-    totalBlackSiteTime += blackSiteTime;
-
-    console.log("You've been on " + blackSites[i] + " for " + blackSiteTime + " minutes");
-    console.log("Total Black Site Time:"+ totalBlackSiteTime);
-    if (sites[blackSites[i]]) //if the site exists in black site
-      {
-        console.log(blackSites[i]);
-      };
-  }
-
-  var totalTime = 0;
-  for (blackSite in blackSites) {
-//    console.log(site.getName());
-   sortedBlackSites.push([blackSite, sites[blackSite]]);
-
-   totalTime += sites[site];
-  }
-  sortedBlackSites.sort(function(a, b) {
-   return b[1] - a[1];
-  });
-
-  /* Show only the top 15 sites by default */
-  var max = 15;
-  if (document.location.href.indexOf("show=all") != -1) {
-   max = sortedBlackSites.length;
-  }
-
-  /* Add total row. */
-  var totalTime = (totalTime / 60).toFixed(2)
-  var row = document.createElement("tr");
-  var cell = document.createElement("td");
-  cell.innerHTML = "<b>Total</b>";
-  row.appendChild(cell);
-  cell = document.createElement("td");
-  cell.appendChild(document.createTextNode(totalTime));
-
-
-
-  row.appendChild(cell);
-  cell = document.createElement("td");
-  cell.appendChild(document.createTextNode(("100")));
-  row.appendChild(cell);
-  tbody.appendChild(row);
-
-  // for (var index = 0; ((index < sortedBlackSites.length) && (index < max));
-  //     index++ ){
-  //  var site = sortedBlackSites[index][0];
-  //  row = document.createElement("tr");
-  //  cell = document.createElement("td");
-  //  var removeImage = document.createElement("img");
-  //  removeImage.src = chrome.extension.getURL("images/remove.png");
-  //  removeImage.title = "Remove and stop tracking.";
-  //  removeImage.width = 10;
-  //  removeImage.height = 10;
-  //  removeImage.onclick = addTrackedSites(site);
-  //  cell.appendChild(removeImage);
-  //  cell.appendChild(document.createTextNode(site));
-  //  row.appendChild(cell);
-  //  cell = document.createElement("td");
-  //  cell.appendChild(document.createTextNode((sites[site] / 60).toFixed(2)));
-  //  row.appendChild(cell);
-  //  cell = document.createElement("td");
-  //  cell.appendChild(document.createTextNode(
-  //    (sites[site] / totalTime * 100).toFixed(2)));
-  //  row.appendChild(cell);
-  //  tbody.appendChild(row);
-  }
-
-  /* Add an option to show all stats */
-  var showAllLink = document.createElement("a");
-  showAllLink.onclick = function() {
-   chrome.tabs.create({url: "popup.html?show=all"});
-  }
-
-  /* Show the "Show All" link if there are some sites we didn't show. */
-  if (max < sortedBlackSites.length) {
-   showAllLink.setAttribute("href", "javascript:void(0)");
-   showAllLink.appendChild(document.createTextNode("Show All"));
-   document.getElementById("options").appendChild(showAllLink);
-  }
-}
 
 function sendStats() {
   chrome.extension.sendRequest({action: "sendStats"}, function(response) {
