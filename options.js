@@ -13,7 +13,20 @@ function save_options() {
   localStorage.blackList = blackList;
 
   var securityToken = document.getElementById("securityToken").value;
+  var xhr = new XMLHttpRequest();
+    xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/0/'+localStorage.securityToken, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if(xhr.status == '401'){
+          alert("Security Token Ivalid, please check and try again.");
+        }
+      }    
+       //alert('inside');
+    }
+  xhr.send();
+
   localStorage.securityToken = securityToken;
+
   var status = document.getElementById("status");
   status.innerHTML = "Option saved successfully!";
   setTimeout(function() {

@@ -35,13 +35,20 @@ function CheckBlackList(tab) {
     var curTabURL = tabs[0].url;
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", ""); //strips http://s and wwws
     if (localStorage.blackList.indexOf(curTabDomain) != -1){
-      console.log('hi');
       var xhr = new XMLHttpRequest();
         xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
         xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4) {
+            if(xhr.status == '401'){
+              alert("Security Token Ivalid, please check and try again.");
+            }
+          }    
            //alert('inside');
         }
       xhr.send();
+
+
+
       console.log(curTabURL + " is blacklisted!");
 
 
