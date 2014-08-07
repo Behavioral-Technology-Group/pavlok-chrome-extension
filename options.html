@@ -14,25 +14,21 @@
       width: 29rem;
       padding: 2rem;
     }
-    logo{
-      align: center;
-    }
-    #save{
-      padding: 10px;
-      margin-top:20px;
-      font-size: 14px;
-      background-color: #FFFF11;
-      border: 1px solid #FFF;
-      color:#222222;
 
-      border-radius: 14%;
+    #save{
+      background-image: url('images/save.png');
+      margin-top: 1em;
     }
     p {
       color: white;
     }
 
     h2 {
-      color: white
+      color: white;
+    }
+
+    #label-text {
+      color: white;
     }
     
   </style>
@@ -46,10 +42,12 @@
 <div id="status"><br /></div>
 
 <h2>Welcome Pavlokian! Please enter your security token below:</h2>
-Set security token:
-<input type="text" id="securityToken"></input>
-<br>
-Set tab limit:
+<span id="label-text">  Set security token:  
+  <input type="text" id="securityToken"></input>
+  <br>
+</span>
+
+<span id="label-text">Set tab limit:</span>
 <select id="maxtab">
   <option value="1">1</option>
   <option value="2">2</option>
@@ -78,7 +76,7 @@ Set tab limit:
 
 <h2>Black Sites</h2>
 
-<p>Please choose your black sites, separated by commas
+<p>Please choose your black sites, separated by commas:
   <p><input name="blackList" id="blackList" type="text" style="width:90%"></input>
 <!--
 <p><input name="blackSiteCheckbox" id="facebook.com" value="facebook.com" type="checkbox">Block Facebook?</input>
@@ -96,7 +94,7 @@ Set tab limit:
 
 
 <br>
-<button id="save">Save</button>
+<input type="image" src="images/save.png" name="saveForm" class="submit" id="save" />
 <script src="options.js"></script>
 </form>
 
