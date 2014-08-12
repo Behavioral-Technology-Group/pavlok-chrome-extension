@@ -32,7 +32,8 @@
     "idle",
     "activeTab",
     "http://pavlok.herokuapp.com/",
-    "http://localhost:3000/"
+    "http://localhost:3000/",
+    "http://*.facebook.com/*"
     ],
 
   "version": "0.0.1",

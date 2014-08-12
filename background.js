@@ -1,3 +1,69 @@
+function onFacebookLogin(){
+  if (localStorage.getItem('accessToken')) {
+    chrome.tabs.query({}, function(tabs) { // get all tabs from every window
+      for (var i = 0; i < tabs.length; i++) {
+        if (tabs[i].url.indexOf(successURL) !== -1) {
+          // below you get string like this: access_token=...&expires_in=...
+          var params = tabs[i].url.split('#')[1];
+
+          // in my extension I have used mootools method: parseQueryString. The following code is just an example ;)
+          var accessToken = params.split('&')[0];
+          accessToken = accessToken.split('=')[1];
+          localStorage.setItem('accessToken', accessToken);
+          chrome.tabs.remove(tabs[i].id);
+          console.log(accessToken)
+          userSignedIn = true
+          findFacebookName();
+        }
+      }
+    });
+  }
+}
+chrome.tabs.onUpdated.addListener(onFacebookLogin);
+
+var client_token = '54694623dbc704e4f5b7a84835e1efee'
+
+var inspectTokenUrl = 'https://graph.facebook.com/debug_token?input_token=' + 
+  localStorage.accessToken + 
+  '&access_token=' + 
+  client_token
+
+function findFacebookName(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", inspectTokenUrl, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+    }    
+  }
+  xhr.send();
+}
+
+var getAppTokenUrl = 'https://graph.facebook.com/oauth/access_token?client_id=682570301792724'+
+'&client_secret=0301ee81f28518488f60a2cdc6e7c7f7&grant_type=client_credentials'
+
+function getAppToken(){
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", getAppTokenUrl, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+    }    
+  }
+  xhr.send();
+}
+
+
+
+var lis = this; 
+  chrome.tabs.getAllInWindow(null, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      if (tabs[i].url.indexOf("https://www.facebook.com/connect/login_success.html") == 0) {
+        var token = tabs[i].url.match(/[\\?&#]auth_token=([^&#])*/i)
+        chrome.tabs.onUpdated.removeListener(lis);
+        return;
+      }
+    }
+});
+
 function UpdateBadge(count) {
   chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
   chrome.browserAction.setBadgeText({ text: count.toString() + "/" + localStorage.maxTabs });
@@ -27,37 +93,25 @@ function UpdateTabCount(windowId) {
 }
 
 function CheckBlackList(tab) {
-//  console.log("TAB=" + tab);
-
-
-//Find the active tab's URL--->hostname--> check blacklist for that hostname.
+  //Find the active tab's URL--->hostname--> check blacklist for that hostname.
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
     var curTabURL = tabs[0].url;
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", ""); //strips http://s and wwws
     if (localStorage.blackList.indexOf(curTabDomain) != -1){
       var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4) {
-            if(xhr.status == '401'){
-              alert("Security Token Ivalid, please check and try again.");
-            }
-          }    
-           //alert('inside');
-        }
+      xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if(xhr.status == '401'){
+            alert("Security Token Ivalid, please check and try again.");
+          }
+        }    
+         //alert('inside');
+      }
       xhr.send();
-
-
-
       console.log(curTabURL + " is blacklisted!");
-
-
     }
-});
-
-
-
-
+  });
 }
 
 function CheckTabCount(tab) {
@@ -419,13 +473,7 @@ function updateTime(site, seconds) {
 //      console.log("Tab updated");
   //  }
   //});
-
-
-
-
 }
-
-
 /**
  * Initailized our storage and sets up tab listeners.
  */
@@ -451,9 +499,6 @@ function initialize() {
   if (!localStorage.idleDetection) {
     localStorage.idleDetection = "true";
   }
-
-
-
 
   chrome.windows.onFocusChanged.addListener(
   function(windowId) {

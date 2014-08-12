@@ -1,3 +1,20 @@
+  
+if (localStorage.accessToken) {
+  var graphUrl = "https://graph.facebook.com/me?" + localStorage.accessToken + "&callback=displayUser";
+  console.log(graphUrl);
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", graphUrl, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      if(xhr.status == '401'){
+        alert("Security Token Ivalid, please check and try again.");
+      }
+    }    
+  }
+  xhr.send();
+}
+
+
 Object.prototype.getName = function() {
    var funcNameRegex = /function (.{1,})\(/;
    var results = (funcNameRegex).exec((this).constructor.toString());
