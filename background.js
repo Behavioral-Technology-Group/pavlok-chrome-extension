@@ -1,68 +1,89 @@
+var successURL = 'https://www.facebook.com/connect/login_success.html';
+var userFirstName = ''
+var userEmail = ''
+
 function onFacebookLogin(){
   if (localStorage.getItem('accessToken')) {
-    chrome.tabs.query({}, function(tabs) { // get all tabs from every window
+    chrome.tabs.query({}, function(tabs) {
       for (var i = 0; i < tabs.length; i++) {
         if (tabs[i].url.indexOf(successURL) !== -1) {
-          // below you get string like this: access_token=...&expires_in=...
           var params = tabs[i].url.split('#')[1];
-
-          // in my extension I have used mootools method: parseQueryString. The following code is just an example ;)
           var accessToken = params.split('&')[0];
           accessToken = accessToken.split('=')[1];
           localStorage.setItem('accessToken', accessToken);
           chrome.tabs.remove(tabs[i].id);
-          console.log(accessToken)
-          userSignedIn = true
+          console.log(accessToken);
+          pullSecurityToken();
           findFacebookName();
         }
       }
     });
   }
 }
+
 chrome.tabs.onUpdated.addListener(onFacebookLogin);
 
-var client_token = '54694623dbc704e4f5b7a84835e1efee'
+function pullSecurityToken(){
+  var pointUrl = "localhost:3000/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + localStorage.securityToken;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", pointUrl, true);
+  alert(JSON.parse(xhr.responseText));
+}
 
-var inspectTokenUrl = 'https://graph.facebook.com/debug_token?input_token=' + 
-  localStorage.accessToken + 
-  '&access_token=' + 
-  client_token
-
+// chrome.identity.launchWebAuthFlow(
+//   {'url': 'https://graph.facebook.com/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html', 'interactive': true},
+//   function(redirect_url) { 
+//     if (localStorage.getItem('accessToken')) {
+//       chrome.tabs.query({}, function(tabs) { 
+//         for (var i = 0; i < tabs.length; i++) {
+//           if (tabs[i].url.indexOf(redirect_url) !== -1) {
+//             var params = tabs[i].url.split('#')[1];
+//             var accessToken = params.split('&')[0];
+//             accessToken = accessToken.split('=')[1];
+//             localStorage.setItem('accessToken', accessToken);
+//             chrome.tabs.remove(tabs[i].id);
+//             console.log(accessToken);
+//             userSignedIn = true;
+//             alert(findFacebookName());
+//           }
+//         }
+//       });
+//     }
+//   }
+// );
+var response = ''
 function findFacebookName(){
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", inspectTokenUrl, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-    }    
+  if (localStorage.accessToken) {
+    var graphUrl = "https://graph.facebook.com/me?access_token=" + localStorage.accessToken;
+    console.log(graphUrl);
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", graphUrl, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if(xhr.status == '401'){
+          alert("Security Token Invalid, please check and try again.");
+        }
+        response = JSON.parse(xhr.responseText);
+        userFirstName = response.first_name
+        userEmail = response.email
+        console.log(response);
+      }    
+    }
   }
   xhr.send();
 }
-
-var getAppTokenUrl = 'https://graph.facebook.com/oauth/access_token?client_id=682570301792724'+
-'&client_secret=0301ee81f28518488f60a2cdc6e7c7f7&grant_type=client_credentials'
-
-function getAppToken(){
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", getAppTokenUrl, true);
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4) {
-    }    
-  }
-  xhr.send();
-}
-
-
 
 var lis = this; 
+
   chrome.tabs.getAllInWindow(null, function(tabs) {
     for (var i = 0; i < tabs.length; i++) {
-      if (tabs[i].url.indexOf("https://www.facebook.com/connect/login_success.html") == 0) {
+      if (tabs[i].url.indexOf(successURL) == 0) {
         var token = tabs[i].url.match(/[\\?&#]auth_token=([^&#])*/i)
         chrome.tabs.onUpdated.removeListener(lis);
         return;
       }
     }
-});
+  });
 
 function UpdateBadge(count) {
   chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
