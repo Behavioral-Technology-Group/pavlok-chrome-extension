@@ -2,88 +2,53 @@ var successURL = 'https://www.facebook.com/connect/login_success.html';
 var userFirstName = ''
 var userEmail = ''
 
-function onFacebookLogin(){
-  if (localStorage.getItem('accessToken')) {
-    chrome.tabs.query({}, function(tabs) {
-      for (var i = 0; i < tabs.length; i++) {
-        if (tabs[i].url.indexOf(successURL) !== -1) {
-          var params = tabs[i].url.split('#')[1];
-          var accessToken = params.split('&')[0];
-          accessToken = accessToken.split('=')[1];
-          localStorage.setItem('accessToken', accessToken);
-          chrome.tabs.remove(tabs[i].id);
-          console.log(accessToken);
-          pullSecurityToken();
-          findFacebookName();
-        }
+function onFacebookLogin(tab){
+  chrome.tabs.query({}, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      if (tabs[i].url.indexOf(successURL) !== -1) {
+        var params = tabs[i].url.split('#')[1];
+        var accessToken = params.split('&')[0];
+        accessToken = accessToken.split('=')[1];
+        localStorage.setItem('accessToken', accessToken);
+        chrome.tabs.remove(tabs[i].id);
+        console.log(accessToken);
+        pullSecurityToken();
+        findFacebookName();
       }
-    });
-  }
+    }
+  });
 }
 
-chrome.tabs.onUpdated.addListener(onFacebookLogin);
+chrome.tabs.onUpdated.addListener(function(tab){ 
+  onFacebookLogin(tab);
+});
+
+var tempToken = "7fd3676716cfca982759728f62a10b15";
 
 function pullSecurityToken(){
-  var pointUrl = "localhost:3000/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + localStorage.securityToken;
+  var pointUrl = "http://localhost:3000/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
   var xhr = new XMLHttpRequest();
   xhr.open("GET", pointUrl, true);
-  alert(JSON.parse(xhr.responseText));
-}
-
-// chrome.identity.launchWebAuthFlow(
-//   {'url': 'https://graph.facebook.com/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html', 'interactive': true},
-//   function(redirect_url) { 
-//     if (localStorage.getItem('accessToken')) {
-//       chrome.tabs.query({}, function(tabs) { 
-//         for (var i = 0; i < tabs.length; i++) {
-//           if (tabs[i].url.indexOf(redirect_url) !== -1) {
-//             var params = tabs[i].url.split('#')[1];
-//             var accessToken = params.split('&')[0];
-//             accessToken = accessToken.split('=')[1];
-//             localStorage.setItem('accessToken', accessToken);
-//             chrome.tabs.remove(tabs[i].id);
-//             console.log(accessToken);
-//             userSignedIn = true;
-//             alert(findFacebookName());
-//           }
-//         }
-//       });
-//     }
-//   }
-// );
-var response = ''
-function findFacebookName(){
-  if (localStorage.accessToken) {
-    var graphUrl = "https://graph.facebook.com/me?access_token=" + localStorage.accessToken;
-    console.log(graphUrl);
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", graphUrl, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        if(xhr.status == '401'){
-          alert("Security Token Invalid, please check and try again.");
-        }
-        response = JSON.parse(xhr.responseText);
-        userFirstName = response.first_name
-        userEmail = response.email
-        console.log(response);
-      }    
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      localStorage.securityToken = xhr.responseText;
     }
   }
   xhr.send();
 }
 
-var lis = this; 
+var response = '';
 
-  chrome.tabs.getAllInWindow(null, function(tabs) {
-    for (var i = 0; i < tabs.length; i++) {
-      if (tabs[i].url.indexOf(successURL) == 0) {
-        var token = tabs[i].url.match(/[\\?&#]auth_token=([^&#])*/i)
-        chrome.tabs.onUpdated.removeListener(lis);
-        return;
-      }
+var lis = this; 
+chrome.tabs.getAllInWindow(null, function(tabs) {
+  for (var i = 0; i < tabs.length; i++) {
+    if (tabs[i].url.indexOf(successURL) == 0) {
+      var token = tabs[i].url.match(/[\\?&#]auth_token=([^&#])*/i)
+      chrome.tabs.onUpdated.removeListener(lis);
+      return;
     }
-  });
+  }
+});
 
 function UpdateBadge(count) {
   chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
@@ -114,7 +79,6 @@ function UpdateTabCount(windowId) {
 }
 
 function CheckBlackList(tab) {
-  //Find the active tab's URL--->hostname--> check blacklist for that hostname.
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
     var curTabURL = tabs[0].url;
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", ""); //strips http://s and wwws
@@ -124,10 +88,9 @@ function CheckBlackList(tab) {
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if(xhr.status == '401'){
-            alert("Security Token Ivalid, please check and try again.");
+            alert("Security Token Invalid, please check and try again.");
           }
         }    
-         //alert('inside');
       }
       xhr.send();
       console.log(curTabURL + " is blacklisted!");
