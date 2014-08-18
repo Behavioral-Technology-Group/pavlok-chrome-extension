@@ -1,23 +1,49 @@
 var fb_url = "https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html"
 
-function initSISO(){
+function isValid(token){
+  if (token == "null"){
+    return false;
+  } else {
+    var pointUrl = "http://pavlok.herokuapp.com/api/v1/shock/0/" + token;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", pointUrl, true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4) {
+        if (xhr.status != 200){
+          return false;
+        } else {
+          return true
+        }
+      }
+    }
+    xhr.send();
+  }
+}
+
+function userSignedIn(){
+  if (isValid(localStorage.securityToken)){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function displaySignOut(){
   $('#signin_signout')
-    .attr('href',fb_url)
-    .attr('target', 'blank')
-    .text('Sign in using Facebook')
-    .click(signIn());
+    .attr('href',"#")
+    .text('Sign out')
+    .click(signOut);
+}
+
+function initSISO(){
+  if (userSignedIn == true){
+    displaySignOut();
+  }
 }
 
 function signOut(){
   destroyToken();
   initSISO();
-}
-
-function signIn(){
-  $('#signin_signout')
-    .attr('href',"#")
-    .text('Sign out')
-    .click(signOut);
 }
 
 function destroyToken(){
@@ -140,6 +166,7 @@ function togglePause() {
 function initialize() {
   initSISO();
 }
+
 document.addEventListener("DOMContentLoaded", function() {
   initialize();
 });

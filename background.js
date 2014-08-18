@@ -1,3 +1,10 @@
+function signIn(){
+  $('#signin_signout')
+    .attr('href',"#")
+    .text('Sign out')
+    .click(signOut);
+}
+
 var successURL = 'https://www.facebook.com/connect/login_success.html';
 var userFirstName = ''
 var userEmail = ''
@@ -13,7 +20,6 @@ function onFacebookLogin(tab){
         chrome.tabs.remove(tabs[i].id);
         console.log(accessToken);
         pullSecurityToken();
-        findFacebookName();
       }
     }
   });
@@ -26,11 +32,12 @@ chrome.tabs.onUpdated.addListener(function(tab){
 var tempToken = "7fd3676716cfca982759728f62a10b15";
 
 function pullSecurityToken(){
-  var pointUrl = "http://localhost:3000/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
+  var pointUrl = "http://pavlok.herokuapp.com/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
   var xhr = new XMLHttpRequest();
   xhr.open("GET", pointUrl, true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState == 4) {
+      console.log(xhr.responseText)
       localStorage.securityToken = xhr.responseText;
     }
   }
