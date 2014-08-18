@@ -1,22 +1,10 @@
 var fb_url = "https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html"
 
 function isValid(token){
-  if (token == "null"){
+  if (token == "null" || token == undefined){
     return false;
   } else {
-    var pointUrl = "http://pavlok.herokuapp.com/api/v1/shock/0/" + token;
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", pointUrl, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        if (xhr.status != 200){
-          return false;
-        } else {
-          return true
-        }
-      }
-    }
-    xhr.send();
+    return true;
   }
 }
 
@@ -28,22 +16,16 @@ function userSignedIn(){
   }
 }
 
-function displaySignOut(){
-  $('#signin_signout')
-    .attr('href',"#")
-    .text('Sign out')
-    .click(signOut);
+function hideSignIn(){
+  $('#signin_signout').hide();
 }
 
-function initSISO(){
-  if (userSignedIn == true){
-    displaySignOut();
-  }
+if (userSignedIn() == true){
+  hideSignIn();
 }
 
 function signOut(){
   destroyToken();
-  initSISO();
 }
 
 function destroyToken(){
@@ -164,7 +146,6 @@ function togglePause() {
 }
 
 function initialize() {
-  initSISO();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
