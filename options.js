@@ -20,8 +20,14 @@ function hideSignIn(){
   $('#signin_signout').hide();
 }
 
+function showSignOut(){
+  var string = "Sign Out"
+  $('li#sign_out').text(string);
+}
+
 if (userSignedIn() == true){
   hideSignIn();
+  showSignOut();
 }
 
 function signOut(){

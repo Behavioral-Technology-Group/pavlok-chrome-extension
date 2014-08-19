@@ -51,8 +51,15 @@
     <!-- <input type="text" id="securityToken"></input> -->
     <br>
 
-    <a href="https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html" id="signin_signout">Sign In with Facebook!</a>
-
+    <div class="auth">
+      <ul class="nav">
+        <li>
+          <a href="https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html" id="signin_signout" target="_blank">Sign In with Facebook!</a>
+        </li>
+        <li id="sign_out">
+        </li>
+      </ul>
+    </div>
     <br>
 
     <span id="label-text">Set tab limit:</span>
