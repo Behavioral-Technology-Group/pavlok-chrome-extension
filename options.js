@@ -1,3 +1,44 @@
+var fb_url = "https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html"
+
+function isValid(token){
+  if (token == "null" || token == undefined){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function userSignedIn(){
+  if (isValid(localStorage.securityToken)){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function hideSignIn(){
+  $('#signin_signout').hide();
+}
+
+function showSignOut(){
+  $('li#sign_out').html("<a href='#'>Sign Out!</a>")
+  .click(signOut);
+}
+
+if (userSignedIn() == true){
+  hideSignIn();
+  showSignOut();
+}
+
+function signOut(){
+  destroyToken();
+  location.reload();
+}
+
+function destroyToken(){
+  localStorage.securityToken = "null";
+}
+
 Object.prototype.getName = function() {
    var funcNameRegex = /function (.{1,})\(/;
    var results = (funcNameRegex).exec((this).constructor.toString());
@@ -8,25 +49,8 @@ function save_options() {
   var select = document.getElementById("maxtab");
   var no_of_tabs = select.children[select.selectedIndex].value;
   localStorage.maxTabs = no_of_tabs;
-
   var blackList = document.getElementById("blackList").value;
   localStorage.blackList = blackList;
-
-  var securityToken = document.getElementById("securityToken").value;
-  var xhr = new XMLHttpRequest();
-    xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/0/'+localStorage.securityToken, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        if(xhr.status == '401'){
-          alert("Security Token Ivalid, please check and try again.");
-        }
-      }    
-       //alert('inside');
-    }
-  xhr.send();
-
-  localStorage.securityToken = securityToken;
-
   var status = document.getElementById("status");
   status.innerHTML = "Option saved successfully!";
   setTimeout(function() {
@@ -38,13 +62,7 @@ document.addEventListener('DOMContentLoaded', restore_options());
 
 function restore_options() {
   var maxTabsSelect = localStorage.maxTabs;
-  var securityToken = localStorage.securityToken;
   var blackList = localStorage.blackList;
-
-  if ("securityToken")
-  {
-  document.getElementById("securityToken").value=securityToken;
-  }
 
   if ("blackList")
   {
@@ -106,29 +124,6 @@ function restoreOptions() {
     option.value = ignoredSites[i];
     select.appendChild(option);
   }
-
-  var clearStatsInterval = localStorage['clearStatsInterval'];
-  if (!clearStatsInterval) {
-    clearStatsInterval = "0";
-  }
-  select = document.getElementById("clear_stats_interval");
-  for (var i = 0; i < select.options.length; i++) {
-    var option = select.options[i];
-    if (option.value == clearStatsInterval) {
-      option.selected = true;
-      break;
-    }
-  }
-}
-
-function addFrame() {
-  var iframe = document.createElement("iframe");
-  iframe.setAttribute("src", "http://browser-timetracker.appspot.com/stats/view?now=" +
-                            escape(new Date().getTime()/1000));
-  iframe.setAttribute("width", "400px");
-  iframe.setAttribute("height", "400px");
-  iframe.setAttribute("id", "stats_frame");
-  document.getElementById("stats").appendChild(iframe);
 }
 
 function addTrackedSites(new_site) {
@@ -142,23 +137,6 @@ function addTrackedSites(new_site) {
 }
 
 var blackSites = new Array();
-
-
-
-function sendStats() {
-  chrome.extension.sendRequest({action: "sendStats"}, function(response) {
-   /* Reload the iframe. */
-   var iframe = document.getElementById("stats_frame");
-   iframe.src = iframe.src;
-  });
-}
-
-function clearStats() {
-  console.log("Request to clear stats.");
-  chrome.extension.sendRequest({action: "clearStats"}, function(response) {
-   initialize();
-  });
-}
 
 function togglePause() {
   console.log("In toggle pause");
@@ -175,42 +153,8 @@ function togglePause() {
 }
 
 function initialize() {
-  var stats = document.getElementById("stats");
-  if (stats.childNodes.length == 1) {
-   stats.removeChild(stats.childNodes[0]);
-  }
-
-  if (localStorage["storageType"] == "appengine") {
-   addFrame();
-  } else if (localStorage["storageType"] == "local") {
-   addLocalDisplay();
-  }
-
-  var link = document.getElementById("toggle_pause");
-  if (localStorage["paused"] == undefined || localStorage["paused"] == "false") {
-   localStorage["paused"] = "false";
-   link.innerHTML = "Pause Timer";
-  } else {
-   link.innerHTML = "Resume Timer";
-  }
-
-  var nextClearStats = localStorage["nextTimeToClear"];
-  if (nextClearStats) {
-   nextClearStats = parseInt(nextClearStats, 10);
-   console.log(nextClearStats)
-   nextClearStats = new Date(nextClearStats);
-   var nextClearDiv = document.getElementById("nextClear");
-   if (nextClearDiv.childNodes.length == 1) {
-     nextClearDiv.removeChild(nextClear.childNodes[0]);
-   }
-   nextClearDiv.appendChild(
-     document.createTextNode("Next Reset: " + nextClearStats.toString()));
-  }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("clear").addEventListener("click", clearStats);
-  document.getElementById("toggle_pause").addEventListener(
-    "click", togglePause);
   initialize();
 });

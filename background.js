@@ -1,3 +1,63 @@
+function signIn(){
+  $('#signin_signout')
+    .attr('href',"#")
+    .text('Sign out')
+    .click(signOut);
+}
+
+var successURL = 'https://www.facebook.com/connect/login_success.html';
+var userFirstName = ''
+var userEmail = ''
+
+function onFacebookLogin(tab){
+  chrome.tabs.query({}, function(tabs) {
+    for (var i = 0; i < tabs.length; i++) {
+      if (tabs[i].url.indexOf(successURL) !== -1) {
+        var params = tabs[i].url.split('#')[1];
+        var accessToken = params.split('&')[0];
+        accessToken = accessToken.split('=')[1];
+        localStorage.setItem('accessToken', accessToken);
+        chrome.tabs.remove(tabs[i].id);
+        console.log(accessToken);
+        pullSecurityToken();
+        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!")
+      }
+    }
+  });
+}
+
+chrome.tabs.onUpdated.addListener(function(tab){ 
+  onFacebookLogin(tab);
+});
+
+var tempToken = "7fd3676716cfca982759728f62a10b15";
+
+function pullSecurityToken(){
+  var pointUrl = "http://pavlok.herokuapp.com/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", pointUrl, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4) {
+      console.log(xhr.responseText)
+      localStorage.securityToken = xhr.responseText;
+    }
+  }
+  xhr.send();
+}
+
+var response = '';
+
+var lis = this; 
+chrome.tabs.getAllInWindow(null, function(tabs) {
+  for (var i = 0; i < tabs.length; i++) {
+    if (tabs[i].url.indexOf(successURL) == 0) {
+      var token = tabs[i].url.match(/[\\?&#]auth_token=([^&#])*/i)
+      chrome.tabs.onUpdated.removeListener(lis);
+      return;
+    }
+  }
+});
+
 function UpdateBadge(count) {
   chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
   chrome.browserAction.setBadgeText({ text: count.toString() + "/" + localStorage.maxTabs });
@@ -27,37 +87,23 @@ function UpdateTabCount(windowId) {
 }
 
 function CheckBlackList(tab) {
-//  console.log("TAB=" + tab);
-
-
-//Find the active tab's URL--->hostname--> check blacklist for that hostname.
   chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
     var curTabURL = tabs[0].url;
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", ""); //strips http://s and wwws
     if (localStorage.blackList.indexOf(curTabDomain) != -1){
       var xhr = new XMLHttpRequest();
-        xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4) {
-            if(xhr.status == '401'){
-              alert("Security Token Ivalid, please check and try again.");
-            }
-          }    
-           //alert('inside');
-        }
+      xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if(xhr.status == '401'){
+            alert("Security Token Invalid, please check and try again.");
+          }
+        }    
+      }
       xhr.send();
-
-
-
       console.log(curTabURL + " is blacklisted!");
-
-
     }
-});
-
-
-
-
+  });
 }
 
 function CheckTabCount(tab) {
@@ -419,13 +465,7 @@ function updateTime(site, seconds) {
 //      console.log("Tab updated");
   //  }
   //});
-
-
-
-
 }
-
-
 /**
  * Initailized our storage and sets up tab listeners.
  */
@@ -451,9 +491,6 @@ function initialize() {
   if (!localStorage.idleDetection) {
     localStorage.idleDetection = "true";
   }
-
-
-
 
   chrome.windows.onFocusChanged.addListener(
   function(windowId) {

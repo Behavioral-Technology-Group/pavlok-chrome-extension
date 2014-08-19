@@ -1,123 +1,139 @@
 <html>
-<head>
-  <title>Controlled multi-tab browsing</title>
-  <style>
-    div#status {
-      background-color: yellow;
-      color: green
-    }
-    body {
-      font-family:Helvetica,Arial,sans-serif;
-      font-size:small;
-      color:#000;
-      background-image: url('images/background.png');
-      width: 29rem;
-      padding: 2rem;
-    }
+  <head>
+    <title>Controlled multi-tab browsing</title>
+    <style>
+    #status {
+        background-color: yellow;
+        color: green
+      }
+      body {
+        font-family:Helvetica,Arial,sans-serif;
+        font-size:small;
+        color:#000;
+        background-image: url('images/background.png');
+        width: 29rem;
+        padding: 2rem;
+      }
 
-    #save{
-      background-image: url('images/save.png');
-      margin-top: 1em;
-    }
-    p {
-      color: white;
-    }
+      #save{
+        background-image: url('images/save.png');
+        margin-top: 1em;
+      }
+      p {
+        color: white;
+      }
 
-    h2 {
-      color: white;
-    }
+      h2 {
+        color: white;
+      }
 
-    #label-text {
-      color: white;
-    }
-    
-  </style>
+      #label-text {
+        color: white;
+      }
 
-</head>
+      #signin_signout{
+        color: white;
+        background-color: #369cff;
+        padding: 7px 5px 5px 7px;
+        margin-bottom: 10px;
+      }
+    </style>
 
-<body>
+  </head>
 
-<img src="/images/pavlok-logo.png" class="logo">
+  <body>
 
-<div id="status"><br /></div>
+    <img src="/images/pavlok-logo.png" class="logo">
 
-<h2>Welcome Pavlokian! Please enter your security token below:</h2>
-<span id="label-text">  Set security token:  
-  <input type="text" id="securityToken"></input>
-  <br>
-</span>
+    <div id="status"><br /></div>
 
-<span id="label-text">Set tab limit:</span>
-<select id="maxtab">
-  <option value="1">1</option>
-  <option value="2">2</option>
-  <option value="3">3</option>
-  <option value="4">4</option>
-  <option value="5">5</option>
-  <option value="6">6</option>
-  <option value="7">7</option>
-  <option value="8">8</option>
-  <option value="9">9</option>
-  <option value="10">10</option>
-  <option value="11">11</option>
-  <option value="12">12</option>
-  <option value="13">13</option>
-  <option value="14">14</option>
-  <option value="15">15</option>
-  <option value="20">20</option>
-  <option value="25">25</option>
-  <option value="30">30</option>
-  <option value="35">35</option>
-  <option value="40">40</option>
-  <option value="45">45</option>
-  <option value="50">50</option>
-</select>
-<br>
+    <h2>Welcome <span>Alpha!</span></h2> 
+    <!-- <input type="text" id="securityToken"></input> -->
+    <br>
 
-<h2>Black Sites</h2>
+    <div class="auth">
+      <ul class="nav">
+        <li>
+          <a href="https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html" id="signin_signout" target="_blank">Sign In with Facebook!</a>
+        </li>
+        <li id="sign_out">
+        </li>
+      </ul>
+    </div>
+    <br>
 
-<p>Please choose your black sites, separated by commas:
-  <p><input name="blackList" id="blackList" type="text" style="width:90%"></input>
-<!--
-<p><input name="blackSiteCheckbox" id="facebook.com" value="facebook.com" type="checkbox">Block Facebook?</input>
-<p><input name="blackSiteCheckbox" id="reddit.com" value="reddit.com" type="checkbox">Block Reddit?</input>
-<p><input name="blackSiteCheckbox" id="huffingtonpost.com" value="huffingtonpost.com" type="checkbox">Block Huffington Post?</input>
-<p><input name="blackSiteCheckbox" id="youtube.com" value="youtube.com" type="checkbox">Block YouTube?</input>
-<p><input name="blackSiteCheckbox" id="twitter.com" value="twitter.com" type="checkbox">Block Twitter?</input>
-<p><input name="blackSiteCheckbox" id="hackthesystem.com" value="hackthesystem.com" type="checkbox">Block Hack the System?</input>
-<p><input name="blackSiteCheckbox" id="gmail.com" value="gmail.com" type="checkbox">Block Gmail??</input>
-<p><input name="blackSiteCheckbox" id="userchoice" value="" type="text">Block Hack the System?</input>
+    <span id="label-text">Set tab limit:</span>
+    <select id="maxtab">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="20">20</option>
+      <option value="25">25</option>
+      <option value="30">30</option>
+      <option value="35">35</option>
+      <option value="40">40</option>
+      <option value="45">45</option>
+      <option value="50">50</option>
+    </select>
+    <br>
 
--->
+    <h2>Black Sites</h2>
 
+    <p>Please choose your black sites, separated by commas:
+      <p><input name="blackList" id="blackList" type="text" style="width:90%"></input>
+    <!--
+    <p><input name="blackSiteCheckbox" id="facebook.com" value="facebook.com" type="checkbox">Block Facebook?</input>
+    <p><input name="blackSiteCheckbox" id="reddit.com" value="reddit.com" type="checkbox">Block Reddit?</input>
+    <p><input name="blackSiteCheckbox" id="huffingtonpost.com" value="huffingtonpost.com" type="checkbox">Block Huffington Post?</input>
+    <p><input name="blackSiteCheckbox" id="youtube.com" value="youtube.com" type="checkbox">Block YouTube?</input>
+    <p><input name="blackSiteCheckbox" id="twitter.com" value="twitter.com" type="checkbox">Block Twitter?</input>
+    <p><input name="blackSiteCheckbox" id="hackthesystem.com" value="hackthesystem.com" type="checkbox">Block Hack the System?</input>
+    <p><input name="blackSiteCheckbox" id="gmail.com" value="gmail.com" type="checkbox">Block Gmail??</input>
+    <p><input name="blackSiteCheckbox" id="userchoice" value="" type="text">Block Hack the System?</input>
 
-
-
-<br>
-<input type="image" src="images/save.png" name="saveForm" class="submit" id="save" />
-<script src="options.js"></script>
-</form>
-
-<!-- 
-<div id="options">
-  <button id="toggle_pause"></button>
-  <button id="clear">Clear *All* Stats</button>&nbsp;
-</div>
-
-<div id="nextClear">
-</div>
-<div>
-  <table id="stats">
-    <thead>
-      <tr>
-        <th scope="col">Site</th>
-        <th scope="col">Minutes</th>
-        <th scope="col">Percent</th>
-      </tr>
-    </thead>
-  </table>
-</div> -->
+    -->
 
 
-</body>
+
+
+    <br>
+    <input type="image" src="images/save.png" name="saveForm" class="submit" id="save" />
+    <script src="jquery.min.js"></script>
+    <script src="options.js"></script>
+    </form>
+
+    <!-- 
+    <div id="options">
+      <button id="toggle_pause"></button>
+      <button id="clear">Clear *All* Stats</button>&nbsp;
+    </div>
+
+    <div id="nextClear">
+    </div>
+    <div>
+      <table id="stats">
+        <thead>
+          <tr>
+            <th scope="col">Site</th>
+            <th scope="col">Minutes</th>
+            <th scope="col">Percent</th>
+          </tr>
+        </thead>
+      </table>
+    </div> -->
+
+
+  </body>
 </html>
