@@ -21,8 +21,8 @@ function hideSignIn(){
 }
 
 function showSignOut(){
-  var string = "Sign Out"
-  $('li#sign_out').text(string);
+  $('li#sign_out').html("<a href='#'>Sign Out!</a>")
+  .click(signOut);
 }
 
 if (userSignedIn() == true){
@@ -32,6 +32,7 @@ if (userSignedIn() == true){
 
 function signOut(){
   destroyToken();
+  location.reload();
 }
 
 function destroyToken(){

@@ -20,6 +20,7 @@ function onFacebookLogin(tab){
         chrome.tabs.remove(tabs[i].id);
         console.log(accessToken);
         pullSecurityToken();
+        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!")
       }
     }
   });
