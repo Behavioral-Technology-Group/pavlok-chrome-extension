@@ -1,5 +1,4 @@
-var fb_url = "https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html"
-
+var fb_url = "https://www.facebook.com/dialog/oauth?client_id=682570301792724&response_type=token&scope=email&redirect_uri=http://www.facebook.com/connect/login_success.html";
 function isValid(token){
   if (token == "null" || token == undefined){
     return false;
@@ -49,8 +48,6 @@ function save_options() {
   var select = document.getElementById("maxtab");
   var no_of_tabs = select.children[select.selectedIndex].value;
   localStorage.maxTabs = no_of_tabs;
-  var blackList = document.getElementById("blackList").value;
-  localStorage.blackList = blackList;
   var status = document.getElementById("status");
   status.innerHTML = "Option saved successfully!";
   setTimeout(function() {
@@ -58,13 +55,16 @@ function save_options() {
   }, 1300);
 }
 
-document.addEventListener('DOMContentLoaded', restore_options());
+function save_tags() {
+  var blackList = document.getElementById("blackList").value;
+  localStorage.blackList = blackList;
+}
+
 
 function restore_options() {
   var maxTabsSelect = localStorage.maxTabs;
   var blackList = localStorage.blackList;
-
-  if ("blackList")
+  if (blackList)
   {
   document.getElementById("blackList").value=blackList;
   }
@@ -74,20 +74,18 @@ function restore_options() {
     return;
   }
 
-  var select = document.getElementById("maxtab");
+  /*var select = document.getElementById("maxtab");
   for (var i = 0; i < select.children.length; i++) {
     var child = select.children[i];
     if (child.value == maxTabsSelect) {
       child.selected = "true";
       break;
     }
-  }
+  }*/
 
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-    save_options);
 
 
 function saveIdle() {
@@ -102,7 +100,7 @@ function saveIdle() {
 
 
 // Restores options from localStorage, if available.
-function restoreOptions() {
+/*function restoreOptions() {
   var idleCheck = document.getElementById("idle_check");
   var idleDetection = localStorage["idleDetection"];
   if (!idleDetection || idleDetection == "false") {
@@ -125,7 +123,7 @@ function restoreOptions() {
     select.appendChild(option);
   }
 }
-
+*/
 function addTrackedSites(new_site) {
   return function() {
     chrome.extension.sendRequest(
@@ -151,8 +149,18 @@ function togglePause() {
    document.getElementById("toggle_pause").innerHTML = "Pause Timer";
   }
 }
-
+$('#blackList').tagsInput();
 function initialize() {
+  document.getElementById('save').addEventListener('click',
+    save_options);
+
+$('#blackList').tagsInput({
+  'width':'350px',
+  'height':'300px',
+  'onChange' : save_tags,
+  'removeWithBackspace' : true
+});
+$('#blackList')[0].value = localStorage["blackList"];
 }
 
 document.addEventListener("DOMContentLoaded", function() {
