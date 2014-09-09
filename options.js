@@ -158,6 +158,7 @@ $('#blackList').tagsInput({
   'width':'350px',
   'height':'300px',
   'onChange' : save_tags,
+  'defaultText':'Add a blacklisted website',
   'removeWithBackspace' : true
 });
 $('#blackList')[0].value = localStorage["blackList"];
