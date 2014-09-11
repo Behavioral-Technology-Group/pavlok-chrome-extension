@@ -20,13 +20,13 @@ function onFacebookLogin(tab){
         chrome.tabs.remove(tabs[i].id);
         console.log(accessToken);
         pullSecurityToken();
-        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!")
+        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!");
       }
     }
   });
 }
 
-chrome.tabs.onUpdated.addListener(function(tab){ 
+chrome.tabs.onUpdated.addListener(function(tab){
   onFacebookLogin(tab);
 });
 
@@ -47,7 +47,7 @@ function pullSecurityToken(){
 
 var response = '';
 
-var lis = this; 
+var lis = this;
 chrome.tabs.getAllInWindow(null, function(tabs) {
   for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].url.indexOf(successURL) == 0) {
@@ -92,13 +92,13 @@ function CheckBlackList(tab) {
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", ""); //strips http://s and wwws
     if (localStorage.blackList.indexOf(curTabDomain) != -1){
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
+      xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if(xhr.status == '401'){
             alert("Security Token Invalid, please check and try again.");
           }
-        }    
+        }
       }
       xhr.send();
       console.log(curTabURL + " is blacklisted!");
@@ -118,7 +118,7 @@ function CheckTabCount(tab) {
 
     if(tabs.length > maxtabs) {
       var xhr = new XMLHttpRequest();
-      	xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/shock/255/'+localStorage.securityToken, true);
+      	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
   		xhr.onreadystatechange = function () {
   		//alert('inside');
 		}
