@@ -149,16 +149,17 @@ function togglePause() {
    document.getElementById("toggle_pause").innerHTML = "Pause Timer";
   }
 }
+
 $('#blackList').tagsInput();
+
 function initialize() {
   document.getElementById('save').addEventListener('click',
     save_options);
 
 $('#blackList').tagsInput({
-  'width':'350px',
-  'height':'300px',
+  'width' : '350px',
   'onChange' : save_tags,
-  'defaultText':'Add a blacklisted website',
+  'defaultText':'Add site',
   'removeWithBackspace' : true
 });
 $('#blackList')[0].value = localStorage["blackList"];
