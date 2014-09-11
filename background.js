@@ -20,13 +20,13 @@ function onFacebookLogin(tab){
         chrome.tabs.remove(tabs[i].id);
         console.log(accessToken);
         pullSecurityToken();
-        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!")
+        alert("You're signed in! Feel free to edit your black sites and max tabs threshold!");
       }
     }
   });
 }
 
-chrome.tabs.onUpdated.addListener(function(tab){ 
+chrome.tabs.onUpdated.addListener(function(tab){
   onFacebookLogin(tab);
 });
 
@@ -47,7 +47,7 @@ function pullSecurityToken(){
 
 var response = '';
 
-var lis = this; 
+var lis = this;
 chrome.tabs.getAllInWindow(null, function(tabs) {
   for (var i = 0; i < tabs.length; i++) {
     if (tabs[i].url.indexOf(successURL) == 0) {
@@ -98,7 +98,7 @@ function CheckBlackList(tab) {
           if(xhr.status == '401'){
             alert("Security Token Invalid, please check and try again.");
           }
-        }    
+        }
       }
       xhr.send();
       console.log(curTabURL + " is blacklisted!");

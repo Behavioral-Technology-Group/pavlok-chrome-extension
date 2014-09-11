@@ -17,7 +17,7 @@ body {
   font-size:small;
   color:#000;
   background-image: url('../images/background.png');
-  width: 29rem;
+  width: 22rem;
   padding: 2rem;
 }
 
@@ -41,8 +41,14 @@ h2 {
 }
 
 #signin_signout{
+  text-align: left;
   color: white;
   background-color: #369cff;
   padding: 7px 5px 5px 7px;
   margin-bottom: 10px;
+}
+
+.tagcontainer {
+
+  height:150px;
 }

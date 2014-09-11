@@ -1,7 +1,14 @@
+
+
 <html>
   <head>
     <title>Controlled multi-tab browsing</title>
     <link rel="stylesheet" href="css/options.css">
+<script src="jquery.min.js"></script>
+<script src="jquery.tagsinput.js"></script>
+<script src="options.js"></script>
+
+<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
 
   </head>
 
@@ -11,7 +18,7 @@
 
     <div id="status"><br /></div>
 
-    <h2>Welcome <span>Alpha!</span></h2> 
+    <h2>Welcome <span>Alpha!</span></h2>
     <!-- <input type="text" id="securityToken"></input> -->
     <br>
 
@@ -55,8 +62,8 @@
 
     <h2>Black Sites</h2>
 
-    <p>Please choose your black sites, separated by commas:
-      <p><input name="blackList" id="blackList" type="text" style="width:90%"></input>
+    <p>Please choose your black sites, separated by commas:</p>
+   <div class="tagcontainer"> <input name="blackList" id="blackList" value=""></input></div>
     <!--
     <p><input name="blackSiteCheckbox" id="facebook.com" value="facebook.com" type="checkbox">Block Facebook?</input>
     <p><input name="blackSiteCheckbox" id="reddit.com" value="reddit.com" type="checkbox">Block Reddit?</input>
@@ -73,12 +80,10 @@
 
 
     <br>
-    <input type="image" src="images/save.png" name="saveForm" class="submit" id="save" />
-    <script src="jquery.min.js"></script>
-    <script src="options.js"></script>
+    <input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
     </form>
 
-    <!-- 
+    <!--
     <div id="options">
       <button id="toggle_pause"></button>
       <button id="clear">Clear *All* Stats</button>&nbsp;
@@ -97,6 +102,7 @@
         </thead>
       </table>
     </div> -->
+  <!--  <script>$('#blackList').tagsInput();</script> -->
 
 
   </body>
