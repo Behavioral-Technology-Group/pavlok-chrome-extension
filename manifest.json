@@ -25,14 +25,6 @@
 
   "name": "Pavlok Chrome Extension",
 
-  /*"content_scripts": [
-    {
-      "matches": ["http://*"],
-      "css": ["mystyles.css"],
-      "js": ["jquery.min.js", "jquery.tagsinput.js"]
-    }
-  ],*/
-
   "permissions": [
     "tabs",
     "idle",
