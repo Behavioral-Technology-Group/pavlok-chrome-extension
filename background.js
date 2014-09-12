@@ -127,7 +127,7 @@ function CheckTabCount(tab) {
     else if (tabs.length > maxtabs - 1)
     {
     	var xhr = new XMLHttpRequest();
-    	xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/beep/3/'+localStorage.securityToken, true);
+    	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/beep/3/'+localStorage.securityToken, true);
 		xhr.onreadystatechange = function () {
 		//alert('inside');
 		}
@@ -139,7 +139,7 @@ function CheckTabCount(tab) {
     else if (tabs.length > maxtabs - 2)
     {
     	var xhr = new XMLHttpRequest();
-    	xhr.open("GET", 'http://pavlok.herokuapp.com/api/v1/vibrate/230/'+localStorage.securityToken, true);
+    	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/vibrate/230/'+localStorage.securityToken, true);
 		xhr.onreadystatechange = function () {
 		//alert('inside');
 		}
