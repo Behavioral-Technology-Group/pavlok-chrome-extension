@@ -33,7 +33,6 @@
     }
   ],*/
 
-
   "permissions": [
     "tabs",
     "idle",
@@ -45,7 +44,7 @@
     "identity"
     ],
 
-  "version": "0.3.2",
+  "version": "0.3.3",
 
   "manifest_version": 2
 }
