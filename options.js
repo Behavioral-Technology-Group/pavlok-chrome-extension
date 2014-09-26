@@ -20,13 +20,8 @@ function hideSignIn(){
 }
 
 function showSignOut(){
-  $('li#sign_out').html("<a href='#'>Sign Out!</a>")
+  $('#signin_signout').html("<a href='#'>Sign Out!</a>")
   .click(signOut);
-}
-
-if (userSignedIn() == true){
-  hideSignIn();
-  showSignOut();
 }
 
 function signOut(){
@@ -155,13 +150,17 @@ $('#blackList').tagsInput();
 function initialize() {
   document.getElementById('save').addEventListener('click',
     save_options);
+  if (userSignedIn() == true){
+    hideSignIn();
+  }
 
-$('#blackList').tagsInput({
+  $('#blackList').tagsInput({
   'width' : '350px',
   'onChange' : save_tags,
   'defaultText':'Add site',
   'removeWithBackspace' : true
 });
+
 $('#blackList')[0].value = localStorage["blackList"];
 }
 

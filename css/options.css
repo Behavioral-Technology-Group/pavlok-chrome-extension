@@ -8,15 +8,24 @@
 }
 
 #status {
-  background-color: yellow;
-  color: green
+  background-color: #E2A92B;
+  color: green;
+  height: 11px;
 }
 
 body {
-  font-family: 'Halis Black',Helvetica,Arial,sans-serif;
+  font-family: Helvetica,Arial,sans-serif;
   font-size:small;
   color:#000;
-  background-image: url('../images/background.png');
+  background:
+    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
+    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
+    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
+    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
+    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
+    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
+  background-color: #131313;
+  background-size: 20px 20px;
   width: 22rem;
   padding: 2rem;
 }
@@ -28,12 +37,13 @@ body {
 
 p {
   color: white;
-  font-family: 'Halis Black',Helvetica;
+  font-family: Helvetica;
 }
 
 h2 {
   color: white;
-  font-family: 'Halis Black',Helvetica;
+  font-family: Helvetica;
+  margin-bottom: 0
 }
 
 #label-text {
@@ -43,12 +53,22 @@ h2 {
 #signin_signout{
   text-align: left;
   color: white;
-  background-color: #369cff;
-  padding: 7px 5px 5px 7px;
+  background-color: #47639E;
+  padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
+  border-radius: 7px;
 }
 
 .tagcontainer {
+  height:100px;
+}
 
-  height:150px;
+ul.nav{
+  list-style-type: none;
+  left:0;
+  padding:0;
+}
+
+div.auth{
+  text-decoration: none;
 }
