@@ -17,21 +17,15 @@
 
     "16": "images/browser_action_16x16.png",
 
-    "48": "images/browser_action_48x48.png"
+    "48": "images/browser_action_48x48.png",
+
+    "128": "images/logo_128x128.png"
 
   },
 
   "description": "Stay Focused. Eliminate Distraction.",
 
   "name": "Pavlok Chrome Extension",
-
-  /*"content_scripts": [
-    {
-      "matches": ["http://*"],
-      "css": ["mystyles.css"],
-      "js": ["jquery.min.js", "jquery.tagsinput.js"]
-    }
-  ],*/
 
   "permissions": [
     "tabs",
@@ -44,7 +38,7 @@
     "identity"
     ],
 
-  "version": "0.3.3",
+  "version": "0.3.4",
 
   "manifest_version": 2
 }
