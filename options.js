@@ -55,7 +55,6 @@ function save_tags() {
   localStorage.blackList = blackList;
 }
 
-
 function restore_options() {
   var maxTabsSelect = localStorage.maxTabs;
   var blackList = localStorage.blackList;
@@ -64,24 +63,13 @@ function restore_options() {
   document.getElementById("blackList").value=blackList;
   }
 
-
   if (!maxTabsSelect) {
     return;
   }
 
-  /*var select = document.getElementById("maxtab");
-  for (var i = 0; i < select.children.length; i++) {
-    var child = select.children[i];
-    if (child.value == maxTabsSelect) {
-      child.selected = "true";
-      break;
-    }
-  }*/
-
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
-
 
 function saveIdle() {
   var idleCheck = document.getElementById("idle_check");
@@ -92,33 +80,6 @@ function saveIdle() {
   }
 }
 
-
-
-// Restores options from localStorage, if available.
-/*function restoreOptions() {
-  var idleCheck = document.getElementById("idle_check");
-  var idleDetection = localStorage["idleDetection"];
-  if (!idleDetection || idleDetection == "false") {
-    idle_check.checked = false;
-  } else {
-    idle_check.checked = true;
-  }
-
-  var ignoredSites = localStorage['ignoredSites'];
-  if (!ignoredSites) {
-    return;
-  }
-  ignoredSites = JSON.parse(ignoredSites);
-  var select = document.getElementById("ignored_sites");
-  select.options.length = 0;
-  for (var i in ignoredSites) {
-    var option = document.createElement("option");
-    option.text = ignoredSites[i];
-    option.value = ignoredSites[i];
-    select.appendChild(option);
-  }
-}
-*/
 function addTrackedSites(new_site) {
   return function() {
     chrome.extension.sendRequest(
