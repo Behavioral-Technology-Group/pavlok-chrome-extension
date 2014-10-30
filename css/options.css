@@ -50,7 +50,7 @@ h2 {
   color: white;
 }
 
-#signin_signout{
+#sign_in{
   text-align: left;
   color: white;
   background-color: #47639E;
@@ -58,6 +58,16 @@ h2 {
   margin-bottom: 10px;
   border-radius: 7px;
 }
+
+.sign_out{
+  text-align: left;
+  color: white;
+  background-color: #47639E;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+}
+
 
 .tagcontainer {
   height:100px;
