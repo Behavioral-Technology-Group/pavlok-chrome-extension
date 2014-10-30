@@ -16,16 +16,17 @@ function userSignedIn(){
 }
 
 function hideSignIn(){
-  $('#signin_signout').hide();
+  $('#sign_in').hide();
 }
 
 function showSignOut(){
-  $('#signin_signout').html("<a href='#'>Sign Out!</a>")
+  $('#sign_out').html("<a href='#' class='sign_out'>Sign Out!</a>")
   .click(signOut);
 }
 
 function signOut(){
   destroyToken();
+  console.log("User signed out.")
   location.reload();
 }
 
@@ -113,6 +114,9 @@ function initialize() {
     save_options);
   if (userSignedIn() == true){
     hideSignIn();
+  }
+  if (userSignedIn() == true){
+    showSignOut();
   }
 
   $('#blackList').tagsInput({
