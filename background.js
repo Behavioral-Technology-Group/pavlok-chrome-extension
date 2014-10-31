@@ -130,149 +130,52 @@ function CheckTabCount(tab) {
 var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
-//var siteRegexp = /(http:\/\/|https:\/\/){0}.*$/;
-/**
- * Returns just the site/domain from the url. Includes the protocol.
- * chrome://extensions/some/other?blah=ffdf -> chrome://extensions
- * @param {string} url The URL of the page, including the protocol.
- * @return {string} The site, including protocol, but not paths.
- */
-function getSiteFromUrl(url) {
 
-  var match = url.match(siteRegexp);
+function CreateTabListeners() {
+  if(!localStorage.maxTabs) {
+    localStorage.maxTabs = 6;
+  }
 
-  if (match) {
-
-    //MANEESH ADDED: remove the https:// headers
-    //match = match.replace('https://', '');
-    //match = match.replace('https://', '');
-    //match = match.replace('www.', '');
-
-    /* Check the ignored list. */
-    var ignoredSites = localStorage["ignoredSites"];
-    if (!ignoredSites) {
-      ignoredSites = [];
-    } else {
-      ignoredSites = JSON.parse(ignoredSites);
+  chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    console.log("Tab updated: " + tab.status);
+    if (tab.status=='complete'){
+      CheckBlackList(tabId);
     }
-    for (i in ignoredSites) {
-      if (ignoredSites[i] == match[1]) {
-        console.log("Site is on ignore list: " + match[1]);
-        return null;
-      }
-    }
-    return match[1];
-  }
-  return null;
-}
+  });
 
-function checkIdleTime(newState) {
-  console.log("Checking idle behavior " + newState);
-  if ((newState == "idle" || newState == "locked") &&
-      localStorage["paused"] == "false") {
-    pause();
-  } else if (newState == "active") {
-    resume();
-  }
-}
+  chrome.tabs.onCreated.addListener(function(tab) {
+    CheckTabCount(tab);
+  });
 
-function pause() {
-  console.log("Pausing timers.");
-  localStorage["paused"] = "true";
-  chrome.browserAction.setIcon({path: 'images/icon_paused.png'});
-}
+  chrome.tabs.onRemoved.addListener(function(tab) {
+    CheckTabCount(tab);
+  });
 
-function resume() {
-  console.log("Resuming timers.");
-  localStorage["paused"] = "false";
-  chrome.browserAction.setIcon({path: 'images/icon.png'});
-}
+  chrome.tabs.onDetached.addListener(function(tab) {
+    CheckTabCount(tab);
+  });
 
-function periodicClearStats() {
-  console.log("Checking to see if we should clear stats.");
-  var clearStatsInterval = localStorage["clearStatsInterval"];
-  if (!clearStatsInterval) {
-    clearStatsInterval = "0";
-    localStorage["clearStatsInterval"] = "0";
-  }
-  clearStatsInterval = parseInt(clearStatsInterval, 10);
-  console.log("Clear interval of " + clearStatsInterval);
-  if (clearStatsInterval < 3600) {
-    console.log("Invalid interval period, minimum is 3600.");
-    delete localStorage["nextTimeToClear"];
-    return;
-  }
+  chrome.tabs.onAttached.addListener(function(tab) {
+    CheckTabCount(tab);
+  });
 
-  var nextTimeToClear = localStorage["nextTimeToClear"];
-  if (!nextTimeToClear) {
-    var d = new Date();
-    d.setTime(d.getTime() + clearStatsInterval * 1000);
-    d.setMinutes(0);
-    d.setSeconds(0);
-    if (clearStatsInterval == 86400) {
-      d.setHours(0);
-    }
-    console.log("Next time to clear is " + d.toString());
-    nextTimeToClear = d.getTime();
-    localStorage["nextTimeToClear"] = "" + nextTimeToClear;
-  }
-  nextTimeToClear = parseInt(nextTimeToClear, 10);
-  var now = new Date();
-  if (now.getTime() > nextTimeToClear) {
-    console.log("Yes, time to clear stats.");
-    clearStatistics();
-    nextTimeToClear = new Date(nextTimeToClear + clearStatsInterval * 1000);
-    console.log("Next time to clear is " + nextTimeToClear.toString());
-    localStorage["nextTimeToClear"] = "" + nextTimeToClear.getTime();
-    return;
-  }
-}
+  chrome.windows.getLastFocused(function(win) {
+    UpdateTabCount(win.windowId);
+  });
 
- function CreateTabListeners() {
-     if(!localStorage.maxTabs) {
-       localStorage.maxTabs = 6;
-     }
+  chrome.windows.onCreated.addListener(function(win) {
+    UpdateTabCount(win.windowId);
+  });
 
-    chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-      console.log("Tab updated: " + tab.status);
-      if (tab.status=='complete'){
-        CheckBlackList(tabId);
-      }
-     });
+  chrome.windows.onFocusChanged.addListener(function(win) {
+    UpdateTabCount(win.windowId);
+  });
 
-     chrome.tabs.onCreated.addListener(function(tab) {
-       CheckTabCount(tab);
-     });
-
-     chrome.tabs.onRemoved.addListener(function(tab) {
-       CheckTabCount(tab);
-     });
-
-     chrome.tabs.onDetached.addListener(function(tab) {
-       CheckTabCount(tab);
-     });
-
-     chrome.tabs.onAttached.addListener(function(tab) {
-       CheckTabCount(tab);
-     });
-
-     chrome.windows.getLastFocused(function(win) {
-       UpdateTabCount(win.windowId);
-     });
-
-     chrome.windows.onCreated.addListener(function(win) {
-       UpdateTabCount(win.windowId);
-     });
-
-     chrome.windows.onFocusChanged.addListener(function(win) {
-       UpdateTabCount(win.windowId);
-   });
-
-   chrome.tabs.onSelectionChanged.addListener(
-   function(tabId, selectionInfo) {
-     console.log("Tab changed");
-     currentTabId = tabId;
-   });
+  chrome.tabs.onSelectionChanged.addListener(
+  function(tabId, selectionInfo) {
+   console.log("Tab changed");
+   currentTabId = tabId;
+  });
 }
 
 function initialize() {
