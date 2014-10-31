@@ -31,14 +31,14 @@
     "tabs",
     "idle",
     "activeTab",
-    "http://pavlok.herokuapp.com/",
+    "https://pavlok.herokuapp.com/",
     "http://localhost:3000/",
     "http://*.facebook.com/*",
     "cookies",
     "identity"
     ],
 
-  "version": "0.3.6",
+  "version": "0.3.7",
 
   "manifest_version": 2
 }
