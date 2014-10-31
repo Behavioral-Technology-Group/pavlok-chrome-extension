@@ -35,7 +35,7 @@ chrome.tabs.onUpdated.addListener(function(tab){
 var tempToken = "7fd3676716cfca982759728f62a10b15";
 
 function pullSecurityToken(){
-  var pointUrl = "http://pavlok.herokuapp.com/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
+  var pointUrl = "https://pavlok.herokuapp.com/api/v1/retrieve_token_for/" + localStorage.accessToken + "/" + tempToken//localStorage.securityToken;
   var xhr = new XMLHttpRequest();
   xhr.open("GET", pointUrl, true);
   xhr.onreadystatechange = function () {
@@ -78,7 +78,7 @@ function CheckBlackList(tab) {
     var curTabDomain = new URL(curTabURL).hostname.replace("www.", "");
     if (localStorage.blackList.indexOf(curTabDomain) != -1){
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
+      xhr.open("POST", 'https://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if(xhr.status == '401'){
@@ -104,21 +104,21 @@ function CheckTabCount(tab) {
 
     if(tabs.length > maxtabs) {
       var xhr = new XMLHttpRequest();
-      	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
+      	xhr.open("POST", 'https://pavlok.herokuapp.com/api/v1/shock/180/'+localStorage.securityToken, true);
   		xhr.onreadystatechange = function () {
 		}
 		xhr.send();
     }
     else if (tabs.length > maxtabs - 1){
     	var xhr = new XMLHttpRequest();
-    	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/beep/3/'+localStorage.securityToken, true);
+    	xhr.open("POST", 'https://pavlok.herokuapp.com/api/v1/beep/3/'+localStorage.securityToken, true);
 		  xhr.onreadystatechange = function () {
 		  }
 		  xhr.send();
     }
     else if (tabs.length > maxtabs - 2){
     	var xhr = new XMLHttpRequest();
-    	xhr.open("POST", 'http://pavlok.herokuapp.com/api/v1/vibrate/230/'+localStorage.securityToken, true);
+    	xhr.open("POST", 'https://pavlok.herokuapp.com/api/v1/vibrate/230/'+localStorage.securityToken, true);
 		  xhr.onreadystatechange = function () {
 		  }
 		  xhr.send();
@@ -143,8 +143,8 @@ function getSiteFromUrl(url) {
 
   if (match) {
 
-    //MANEESH ADDED: remove the http:// headers
-    //match = match.replace('http://', '');
+    //MANEESH ADDED: remove the https:// headers
+    //match = match.replace('https://', '');
     //match = match.replace('https://', '');
     //match = match.replace('www.', '');
 
