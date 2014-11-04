@@ -66,46 +66,15 @@ function restore_options() {
 
   if (!maxTabsSelect) {
     return;
+  } else {
+    document.getElementById("maxtab").value=maxTabsSelect
   }
 
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
 
-function saveIdle() {
-  var idleCheck = document.getElementById("idle_check");
-  if (idleCheck.checked) {
-    localStorage["idleDetection"] = "true";
-  } else {
-    localStorage["idleDetection"] = "false";
-  }
-}
-
-function addTrackedSites(new_site) {
-  return function() {
-    chrome.extension.sendRequest(
-       {action: "addTrackedSites", site: new_site},
-       function(response) {
-         initialize();
-       });
-  };
-}
-
 var blackSites = new Array();
-
-function togglePause() {
-  console.log("In toggle pause");
-  console.log("Value = " + localStorage["paused"]);
-  if (localStorage["paused"] == "false") {
-   console.log("Setting to Resume");
-   chrome.extension.sendRequest({action: "pause"}, function(response) {});
-   document.getElementById("toggle_pause").innerHTML = "Resume Timer";
-  } else if (localStorage["paused"] == "true"){
-   console.log("Setting to Pause");
-   chrome.extension.sendRequest({action: "resume"}, function(response) {});
-   document.getElementById("toggle_pause").innerHTML = "Pause Timer";
-  }
-}
 
 $('#blackList').tagsInput();
 
