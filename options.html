@@ -1,0 +1,93 @@
+<html>
+	<head>
+		<title>Controlled multi-tab browsing</title>
+		<link rel="stylesheet" href="css/options.css">
+		<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
+		
+		<script src="js/jquery.min.js"></script>
+		<script src="jquery.tagsinput.js"></script>
+		<script src="js/helpers.js"></script>
+		<script src="js/options.js"></script>
+	</head>
+
+	<body>
+		<div id="logged"></div>
+		<img src="/images/pavlok-logo.png" class="logo">
+		<br/>
+		<div id="status"><br /></div>
+
+		<h2>Welcome to <span>Alpha</span><span id="userName"></span>!</h2>
+		<br>
+
+		<div class="auth">
+			<ul class="nav">
+				<li>
+					<a href="#" id="sign_in">Sign In Pavlok!</a>
+				</li>
+				<li id="sign_out"></li>
+			</ul>
+		</div>
+		<br>
+
+		<div id="optionsDiv">
+		<form>
+			<span id="label-text">Set tab limit:</span>
+			<select id="maxtab">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="20">20</option>
+				<option value="25">25</option>
+				<option value="30">30</option>
+				<option value="35">35</option>
+				<option value="40">40</option>
+				<option value="45">45</option>
+				<option value="50">50</option>
+			</select>
+			<br>
+
+		<div id="blackListContainer">
+			<h2>Black List <img src="/images/help.ico" id="blackListHelp" class="helpIcon"></h2>
+			<div id="blackListHelpBox" class="helpBox">
+				<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
+				<p>For instance: <span class="yellow"><i>"www.facebook.com"</i></span> might be on your blacklist. If you visit the site, you'll get zapped.</p><p>For listing sites, type in the address and hit Enter or click Save.</p>
+			</div>
+			
+			<p>Please choose your black sites, separated by commas:</p>
+			<div class="tagcontainer">
+				<input name="blackList" id="blackList" value=""></input>
+			</div>
+		</div>
+		
+		<div id="whiteListContainer">
+			<h2>Exception List <img src="/images/help.ico" id="whiteListHelp" class="helpIcon"></h2>
+			<div id="whiteListHelpBox" class="helpBox">
+				<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p>
+				<p>For instance: <span class="yellow"><i>"www.amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"<i>"www.amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>
+			</div>
+			
+			<p>Please tell your exceptions for black sites, separated by commas. </p>
+			<div class="tagcontainer">
+				<input name="whiteList" id="whiteList" value=""></input>
+			</div>
+		</div>
+		<br/>
+		<br/>
+		<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
+		</form>
+		</div>
+
+	</body>
+</html>
