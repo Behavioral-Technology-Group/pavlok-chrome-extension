@@ -10,6 +10,38 @@ localStorage.setItem('timeouts', JSON.stringify(timeouts));
 
 var accessToken = localStorage['accessToken']
 
+/* HELPER FUNCTIONS */
+
+function notifyProhibited(title, message, notID){
+	var opt = {
+		type: "basic",
+		title: title,
+		message: message,
+		iconUrl: "icon.png"
+	};
+	
+	chrome.notifications.create(notID, opt, function(notID) {
+		if (chrome.runtime.lastError){
+			console.error(chrome.runtime.lastError);
+		}
+	});
+}
+
+function updateNotification(title, message, notID){
+	var opt = {
+		type: "basic",
+		title: title,
+		message: message,
+		iconUrl: "icon.png"
+	};
+	
+	chrome.notifications.update(notID, opt, function(notID) {
+		if (chrome.runtime.lastError){
+			console.error(chrome.runtime.lastError);
+		}
+	});
+}
+
 function logOnPage(message){
 	
 }
@@ -24,7 +56,7 @@ function clearTimeouts(lastTimeout){
 	// for (var i = 0 ; i < timeouts.length ; i++){
 		// clearTimeout(timeouts[i]);
 	// }
-	a
+	
 	while (lastTimeout--) {
 		window.clearTimeout(lastTimeout); // will do nothing if no timeout with id is present
 		if ( lastTimeout == 0 ) { break }
@@ -133,6 +165,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 
 }
 
+
 var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
@@ -142,21 +175,21 @@ function CreateTabListeners(token) {
 		localStorage.maxTabs = 6;
 	}
 	
-	// When page is updated
-	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-		if (tab.status=='complete'){
-			// curPAVtab = tab;
-		}
-	});
+	// // When page is updated
+	// chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+		// if (tab.status=='complete'){
+			// // curPAVtab = tab;
+		// }
+	// });
 
-	// When selected tab changes
-	chrome.tabs.onActivated.addListener(
-		function(tab) {
-			curPAVtab = tab;
-			tabId = tab.tabId;
-			checkPageOn(tabId);
-		}
-	);
+	// // When selected tab changes
+	// chrome.tabs.onActivated.addListener(
+		// function(tab) {
+			// curPAVtab = tab;
+			// tabId = tab.tabId;
+			// checkPageOn(tabId);
+		// }
+	// );
 	
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
@@ -208,36 +241,20 @@ function initialize() {
 	CreateTabListeners(accessToken);
 }
 
-function notifyProhibited(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
-	
-	chrome.notifications.create(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
+var testInterval = setInterval(function(){
+	chrome.tabs.query({active: true, currentWindow: true},
+		function(arrayOfTabs) {
+			curPAVtab = arrayOfTabs[0];
+			var curPAVUrl = curPAVtab.url;
+			var curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+			
+			// document.title = curPAVtab.id + " " + curPAVtab.url;
+			var _result = CheckBlackList(curPAVUrl, curPAVDomain);
+			document.title = _result + " " + curPAVtab.id + " " + curPAVtab.url;
 		}
-	});
-}
-
-function updateNotification(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
 	
-	chrome.notifications.update(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
-		}
-	});
-}
-
+	}
+,100);
 
 /* Logic of timer */
 
