@@ -1,5 +1,7 @@
 // To-do: get values for stimuli from our server, instead of hardcoding it
 // To-do: implement object code question
+// To-do: make icon reflect properly signed in or signed out
+// To-do: stop notifications when user is signed off
 
 // Globals
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
@@ -84,9 +86,6 @@ function updateNotification(title, message, notID){
 	});
 }
 
-function logOnPage(message){
-	
-}
 
 function clearNotifications(){
 	chrome.notifications.clear("firstWarning");
@@ -120,46 +119,45 @@ function CheckBlackList(curTabURL, curTabDomain) {
 }
 
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
-	
-	chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
-		var maxtabs = parseInt(localStorage.maxTabs);
-		if(!maxtabs) {
-			return;
-		}
+	if (isValid(token)){
+		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
+			var maxtabs = parseInt(localStorage.maxTabs);
+			if(!maxtabs) {
+				return;
+			}
 
-		var previousTabs = localStorage[tab.windowId];
-		console.log("There were " + previousTabs + " open on this window.");
-		UpdateTabCount(tab.windowId);
-		console.log("There are " + localStorage[tab.windowID] + " open on this window.");
-		
-		// Trends for tabs. Is it going up, going down or is it stable?
-		if (previousTabs < tab.WindowID) { situation.trend = "lowering"; }
-		else if ( previousTabs > tab.WindowID ) { situation.trend = "growing"; }
-		else { situation.trend = "stable"; }
-		
-		
-		if(tabs.length > maxtabs) {
-			situation.status = "over";
-			stimuli("vibro", 180, localStorage.accessToken);
-			console.log("total tabs over max tabs");
-		}
-		
-		else if (tabs.length == maxtabs ){ // Is this supposed to be "when user reaches his limit"
-			situation.status = "limit";
-			stimuli("beep", 3, localStorage.accessToken);
-		 
-		}
-		else if (tabs.length == maxtabs - 1){ // Is this supposed to be "one less than limit"?
-			situation.status = "borderline";
-			stimuli("vibration", 230, localStorage.accessToken);
-		}
-		else { situation.status = "wayBellow"};
-		
-		previousTabs = tabs.length;
-		
-		notifyTabCount(tabs.length, situation);
-	});
-
+			var previousTabs = localStorage[tab.windowId];
+			console.log("There were " + previousTabs + " open on this window.");
+			UpdateTabCount(tab.windowId);
+			console.log("There are " + localStorage[tab.windowID] + " open on this window.");
+			
+			// Trends for tabs. Is it going up, going down or is it stable?
+			if (previousTabs < tab.WindowID) { situation.trend = "lowering"; }
+			else if ( previousTabs > tab.WindowID ) { situation.trend = "growing"; }
+			else { situation.trend = "stable"; }
+			
+			
+			if(tabs.length > maxtabs) {
+				situation.status = "over";
+				stimuli("vibro", 180, localStorage.accessToken);
+				console.log("total tabs over max tabs");
+			}
+			else if (tabs.length == maxtabs ){ 
+				situation.status = "limit";
+				stimuli("beep", 3, localStorage.accessToken);
+			 
+			}
+			else if (tabs.length == maxtabs - 1){ 
+				situation.status = "borderline";
+				stimuli("vibration", 230, localStorage.accessToken);
+			}
+			else { situation.status = "wayBellow"};
+			
+			previousTabs = tabs.length;
+			
+			notifyTabCount(tabs.length, situation);
+		});
+	}
 }
 
 function notifyTabCount(tabs, situation){
@@ -238,7 +236,6 @@ function CreateTabListeners(token) {
 
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-	var token = localStorage.getItem("accessToken");
 		CheckTabCount(tab, accessToken, "shock");
 	});
 
