@@ -22,7 +22,7 @@ function isValid(token){
 		localStorage.setItem('logged', 'false');
 	return false;
 	} else {
-		console.log("Access Token went good. It is " + token);
+		// console.log("Access Token went good. It is " + token);
 		localStorage.setItem('logged', 'true');
 
 		return true;
@@ -202,6 +202,7 @@ function save_options() { // Working fine. Merged with save_tags
 // https://pavlok.herokuapp.com/api/v1/stimuli/beep/4/?access_token=1132bd06f21132eeaed6e9dc24c7cf280f307f026663f1fc92b128315ea41810
 
 function stimuli(stimuli, value, accessToken) { // checked. Working fine
+
 	postURL = 	'https://pavlok-stage.herokuapp.com/api/v1/stimuli/' + 
 				stimuli + '/' + 
 				value + 
@@ -212,6 +213,11 @@ function stimuli(stimuli, value, accessToken) { // checked. Working fine
 			return console.log(stimuli + ' succeeded!\n' + data + " " + result);
 		})
 		.fail( function() {
-			return console.log(stimuli + ' failed!\nUrl was: ' + postURL);
+			objectCode = localStorage.objectCode;
+			if (stimuli == "vibration") { stimuli = "vibro"; }
+			console.log(stimuli + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			$.get('https://pavlok.herokuapp.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
+			
+			return 
 		});	
 }
