@@ -24,7 +24,7 @@ function clearTimeouts(lastTimeout){
 	// for (var i = 0 ; i < timeouts.length ; i++){
 		// clearTimeout(timeouts[i]);
 	// }
-	
+	a
 	while (lastTimeout--) {
 		window.clearTimeout(lastTimeout); // will do nothing if no timeout with id is present
 		if ( lastTimeout == 0 ) { break }
