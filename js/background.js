@@ -97,7 +97,7 @@ function clearNotifications(){
 function CheckBlackList(curTabURL, curTabDomain) {
 	
 	var _result = "";
-	var _whiteList = "www.estudoemdia.com.br/usuario"
+	var _whiteList = localStorage.whiteList;
 	var _blackList = localStorage.blackList;
 		
 		// Checks for blackList.
