@@ -10,6 +10,11 @@ function oauth() { // checked. Working fine
 	// Local
 	var clientID = "f9a1d14731fa7333357a8f89c066c661cb90ec657a70cb94bed62828d5f1e81a";
 	var clientSecret = "0621dc253f364b012642092bd71918b0685cec42939fb1f2c2dd490533aef21d";
+	
+	// // Deployed
+	// var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
+	// var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
+	
 	var authURL = "https://pavlok-stage.herokuapp.com/oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
