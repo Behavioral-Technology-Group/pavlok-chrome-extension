@@ -7,7 +7,7 @@
 
 function oauth() { // checked. Working fine
 	var redirectURL = chrome.identity.getRedirectURL();
-	// Deployed
+	// Local
 	var clientID = "f9a1d14731fa7333357a8f89c066c661cb90ec657a70cb94bed62828d5f1e81a";
 	var clientSecret = "0621dc253f364b012642092bd71918b0685cec42939fb1f2c2dd490533aef21d";
 	var authURL = "https://pavlok-stage.herokuapp.com/oauth/authorize?" + 
