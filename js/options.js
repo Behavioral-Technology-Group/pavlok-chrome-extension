@@ -157,8 +157,8 @@ onload = function() {
 	if (isValid(token) == true) {
 		// Stimuli for confirmation
 		stimuli('beep', '4', token);
-		stimuli('vibration', '255', token);
-		stimuli('beep', '4', token);
+		// stimuli('vibration', '255', token);
+		// stimuli('beep', '4', token);
 		
 		var status = document.getElementById("status");
 		status.innerHTML = "If you don't feel any stimuli, check if your Pavlok is paired";

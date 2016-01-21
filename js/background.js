@@ -34,7 +34,7 @@ var msgBlacklisted = ["BLACKLISTED SITE!!!", "Watch out! You have " + timeWindow
 var msgZaped = ["Ouch!", "Too much time on blacklisted sites! Hurry outta here! Another zap is coming in " + timeWindow + " secs!", ""];
 
 
-var accessToken = localStorage["accessToken"]
+var accessToken = localStorage.accessToken;
 
 /* Logic of timer
 	Timer is supposed to give a breathing chance to users. Instead of zapping right away, once a bad trigger is set, it will begin a countdown of 10 seconds.
@@ -138,7 +138,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			// How is number of tabs compared to tab limit (maxtabs)?
 			if(tabs.length > maxtabs) {
 				situation.status = "over";
-				stimuli("vibro", 180, localStorage.accessToken);
+				stimuli("shock", 180, localStorage.accessToken);
 				console.log("total tabs over max tabs");
 			}
 			else if (tabs.length == maxtabs ){ 
@@ -148,6 +148,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			}
 			else if (tabs.length == maxtabs - 1){ 
 				situation.status = "borderline";
+				// stimuli("vibration", 230, localStorage.accessToken);
 				stimuli("vibration", 230, localStorage.accessToken);
 			}
 			else { situation.status = "wayBellow"};
@@ -259,12 +260,7 @@ function CreateTabListeners(token) {
 	
 }
 
-function initialize() {
-	// chrome.runtime.onMessage.addListener(
-		// function(request, sender, sendResponse){
-			 // localStorage["accessToken"] = request.accessToken;
-		// });
-	
+function initialize() {	
 	UpdateBadge(1);
 	var accessToken = localStorage.getItem("accessToken");
 	
@@ -302,7 +298,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 			
 			if (elapsed >= timeWindow){
 				notifyUser(msgZaped[0], msgZaped[1], "zapped");
-				stimuli("vibrate", 160, localStorage.accessToken);
+				stimuli("shock", 160, localStorage.accessToken);
 				
 				// $.get("https://pavlok.herokuapp.com/api/nXFVA8v1e8/vibro/160");
 				timeBegin = new Date();
@@ -325,8 +321,12 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 var testInterval = setInterval(
 	function(){
 		if (isValid(localStorage.accessToken)){
+			
 			getTabInfo(evaluateTabURL);
 		}
+		chrome.windows.getLastFocused(function(win) {
+			UpdateTabCount(win.windowId);
+		});
 	}
 ,100);
 
