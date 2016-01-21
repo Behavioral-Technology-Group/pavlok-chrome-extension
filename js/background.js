@@ -86,7 +86,6 @@ function updateNotification(title, message, notID){
 	});
 }
 
-
 function clearNotifications(){
 	chrome.notifications.clear("firstWarning");
 	chrome.notifications.clear("secondWarning");
@@ -136,7 +135,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			else if ( previousTabs > tab.WindowID ) { situation.trend = "growing"; }
 			else { situation.trend = "stable"; }
 			
-			
+			// How is number of tabs compared to tab limit (maxtabs)?
 			if(tabs.length > maxtabs) {
 				situation.status = "over";
 				stimuli("vibro", 180, localStorage.accessToken);
@@ -154,7 +153,6 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			else { situation.status = "wayBellow"};
 			
 			previousTabs = tabs.length;
-			
 			notifyTabCount(tabs.length, situation);
 		});
 	}
@@ -231,7 +229,7 @@ function CreateTabListeners(token) {
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		CheckTabCount(tab, "wrongToken", "noStimuli"); // Stimuli will fail to avoid punishing for getting back on track
+		CheckTabCount(tab, "null", "noStimuli"); // Stimuli will fail to avoid punishing for getting back on track
 	});
 
 	// When tab is detached
@@ -262,10 +260,10 @@ function CreateTabListeners(token) {
 }
 
 function initialize() {
-	chrome.runtime.onMessage.addListener(
-		function(request, sender, sendResponse){
-			 localStorage["accessToken"] = request.accessToken;
-		});
+	// chrome.runtime.onMessage.addListener(
+		// function(request, sender, sendResponse){
+			 // localStorage["accessToken"] = request.accessToken;
+		// });
 	
 	UpdateBadge(1);
 	var accessToken = localStorage.getItem("accessToken");

@@ -36,14 +36,14 @@ function oauth() { // checked. Working fine
 				.done(function (data) {
 					console.log(data);
 					var accessToken = data.access_token;
-					// // // chrome.storage.local.set({'accessToken': accessToken}, function() {
-						// // // localStorage.setItem('accessToken', accessToken);
-						// // // console.log('Settings saved\n accessToken is: ' + accessToken);
-					// // // });
+
 					localStorage.setItem('logged', 'true');
 					localStorage.setItem('accessToken', accessToken);
 					var logged = document.getElementById("logged");
 					$( "#logged" ).append("<span>in</span>");
+					chrome.windows.getLastFocused(function(win) {
+						UpdateTabCount(win.windowId);
+					});
 				});
 			
 			console.log("OAuth2 test concluded");
@@ -53,7 +53,6 @@ function oauth() { // checked. Working fine
 }
 
 function destroyToken(){ // checked. Working, but should probably be merged with signOut
-  chrome.storage.local.set({'accessToken': ""});
   localStorage.setItem('accessToken', 'null');
 }
 
@@ -136,55 +135,6 @@ function initialize() { // checked. Working fine
   
 }
 
-/* End of Helper Functions */
-
-
-// function notifyMe() {
-  // if (!Notification) {
-	// alert('Desktop notifications not available in your browser. Try Chromium.'); 
-	// return;
-  // }
-
-  // if (Notification.permission !== "granted")
-	// Notification.requestPermission();
-  // else {
-	// var notification = new Notification('PAVLOK Notification', {
-	  
-	  // icon: 'images/browser_action_48x48.png',
-	  // body: "Hey there! You've been notified!",
-	  // eventTime: Date.now() + 3000,
-	// });
-
-	// notification.onclick = function () {
-	  // alert("notification clicked");
-	// };
-	
-  // }
-
-// }
-
-// function test(){
-	// // At first, let's check if we have permission for notification
-	// // If not, let's ask for it
-	// // if (window.Notification && Notification.permission !== "granted") {
-	// if (Notification.permission !== "granted") {
-		// Notification.requestPermission(function (status) {
-			// if (Notification.permission !== status) {
-				// Notification.permission = status;
-			// }
-		// });
-	// }
-	// else {
-		// console.log("Notification permission is " + Notification.permission);
-	// }
-
-	// notifyMe();
-// }
-
-
-// Get the token from storage
-var token = localStorage.getItem("accessToken");
-
 onload = function() {
 	// test();
 	var validSequence = $.Deferred();
@@ -223,7 +173,10 @@ onload = function() {
 		console.log("Token is: " + token);
 		userInfo(token);
 		userName = localStorage.userName;
-		passAcessToken(token);
+		
+		chrome.windows.getLastFocused(function(win) {
+			UpdateTabCount(win.windowId);
+		});
 		
 		// Update interface functions
 		adjustOverInteractions(token, userName);
@@ -251,12 +204,4 @@ onload = function() {
 			});
 		});
 	}
-}	
-
-
-
-function passAcessToken(accessToken) {
-	chrome.runtime.sendMessage({
-		accessToken: token
-	});
 }

@@ -40,9 +40,9 @@ function isValid(token){
 
 // Background
 function UpdateBadge(count) {
-	var logged = localStorage.logged;
+	var logged = isValid(localStorage.accessToken);
 	
-	if (logged == 'true'){
+	if (logged == true){
 		chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
 		chrome.browserAction.setBadgeText({ text: count.toString() + "/" + localStorage.maxTabs });
@@ -56,43 +56,47 @@ function UpdateBadge(count) {
 }
 
 function UpdateTabCount(windowId) {
-  chrome.tabs.getAllInWindow(windowId, function(tabs) {
-    UpdateBadge(tabs.length);
-    localStorage[windowId] = tabs.length;
-  });
+	chrome.tabs.getAllInWindow(windowId, function(tabs) {
+		UpdateBadge(tabs.length);
+		localStorage[windowId] = tabs.length;
+	});
 }
 
-// When asked
 function hideSignIn(){ // checked. Working fine
-  $('#sign_in').hide();
+	$('#sign_in').hide();
 }
 
 function showSignOut(){ // checked. Complains, but works. Says #signOut is not defined
-  $('#sign_out').html("<a href='#' class='sign_out'>Sign Out!</a>")
-  .click(signOut);
+	$('#sign_out').html("<a href='#' class='sign_out'>Sign Out!</a>")
+	.click(signOut);
 }
 
 function signOut(){ // checked. Working, but should probably be merged with destroy token
+	localStorage.setItem('logged', 'false');
+	destroyToken();
+	
+	// Logging out of providers
 	signOutURL = " https://pavlok-stage.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
 	console.log("url for Sign Out is " + signOutURL)
 	
-	// Trying to brute force chrome extension
-	chrome.identity.launchWebAuthFlow(
-		{ 'url': signOutURL },
-		function(tokenUrl) {
-			console.log("User signed out.")
-		}
-	);
+	/*/ Trying to brute force chrome extension
+	// chrome.identity.launchWebAuthFlow(
+		// { 'url': signOutURL },
+		// function(tokenUrl) {
+			// console.log("User signed out.")
+		// }
+	// );*/
 	
 	// Proper way of handling it in our server
 	$.post(signOutURL)
-		.done(function(){
+		.done(function(data){
 			console.log("Signed out. Data is: " + data + " !");
+			location.reload();
 		})
-	
-	localStorage.setItem('logged', 'false');
-	destroyToken();
-	// location.reload();
+		.fail(function(){
+			console.log("Failed to sign out")
+			location.reload();
+		});
 }
 
 function showOptions() { // Working fine. Merged with save_tags
@@ -153,9 +157,9 @@ function adjustOverInteractions(token, userName) {
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/*--------                                                           --------*/
-/*--------                     3.Evaluation                          --------*/
-/*--------                                                           --------*/
+/*--------																													 --------*/
+/*--------										 3.Evaluation													--------*/
+/*--------																													 --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
@@ -171,32 +175,32 @@ function CountTabs(windowId){
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-/*--------                                                           --------*/
-/*--------                  4.API conversation                       --------*/
-/*--------                                                           --------*/
+/*--------																													 --------*/
+/*--------									4.API conversation											 --------*/
+/*--------																													 --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
 function save_options() { // Working fine. Merged with save_tags
-  var select = document.getElementById("maxtab");
-  var no_of_tabs = select.children[select.selectedIndex].value;
-  localStorage.maxTabs = no_of_tabs;
-  
-  var blackList = document.getElementById("blackList").value;
-  localStorage.blackList = blackList;
-  
-  var whiteList = document.getElementById("whiteList").value;
-  localStorage.whiteList = whiteList;
-  
-  var status = document.getElementById("status");
-  status.style.visibility = "visible";
-  status.innerHTML = "Option saved successfully!";
-  
-  console.log('Options saved');
-  setTimeout(function() {
-    status.innerHTML = "";
+	var select = document.getElementById("maxtab");
+	var no_of_tabs = select.children[select.selectedIndex].value;
+	localStorage.maxTabs = no_of_tabs;
+	
+	var blackList = document.getElementById("blackList").value;
+	localStorage.blackList = blackList;
+	
+	var whiteList = document.getElementById("whiteList").value;
+	localStorage.whiteList = whiteList;
+	
+	var status = document.getElementById("status");
+	status.style.visibility = "visible";
+	status.innerHTML = "Option saved successfully!";
+	
+	console.log('Options saved');
+	setTimeout(function() {
+		status.innerHTML = "";
 	status.style.visibility = "hidden";
-  }, 2300);
+	}, 2300);
 }
 
 // https://pavlok.herokuapp.com/api/v1/stimuli/beep/4/?access_token=1132bd06f21132eeaed6e9dc24c7cf280f307f026663f1fc92b128315ea41810
