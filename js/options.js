@@ -154,26 +154,22 @@ onload = function() {
 	initialize();
 	
 	// If checking for validity becomes default, it will ALWAYS be logged in OR logging in. Never will it be out.
-	if (isValid(token) == true) {
-		// Stimuli for confirmation
-		stimuli('beep', '4', token);
-		// stimuli('vibration', '255', token);
-		// stimuli('beep', '4', token);
-		
+	if (isValid(token) == true) {		
 		var status = document.getElementById("status");
 		status.innerHTML = "If you don't feel any stimuli, check if your Pavlok is paired";
 		
-		// $( "#status" ).slideDown(500).delay(3500).slideUp(500);
-		$( "#status" )
-			.delay(400)
-			.slideDown(250)
-			.delay(100)
-			.css("color", "green")
-			.css("fontSize", "2em")
-			.delay(5000)
-			.slideUp(100)
-			// .css("color", "#E2A92B")
-			// .css("fontSize", "1em");
+		$("#test_pairing").click(function(){
+			var token = localStorage.accessToken;
+			stimuli('vibration', '255', token);
+			$( "#status" )
+				.delay(400)
+				.slideDown(250)
+				.delay(100)
+				.css("color", "green")
+				.css("fontSize", "2em")
+				.delay(5000)
+				.slideUp(100);
+		});
 
 		console.log("Token is: " + token);
 		userInfo(token);

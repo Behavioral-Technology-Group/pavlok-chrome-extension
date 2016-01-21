@@ -55,10 +55,20 @@ h2 {
 }
 
 #sign_in{
-  text-align: left;
+text-align: left;
   color: white;
   /* background-color: #47639E; */
   background-color: #845221;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+}
+
+#test_pairing{
+  text-align: left;
+  color: white;
+  /* background-color: #47639E; */
+  background-color: #ffc106;
   padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
   border-radius: 7px;

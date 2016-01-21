@@ -321,12 +321,12 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 var testInterval = setInterval(
 	function(){
 		if (isValid(localStorage.accessToken)){
-			
 			getTabInfo(evaluateTabURL);
+			
+			chrome.windows.getLastFocused(function(win) {
+				UpdateTabCount(win.windowId);
+			});
 		}
-		chrome.windows.getLastFocused(function(win) {
-			UpdateTabCount(win.windowId);
-		});
 	}
 ,100);
 
