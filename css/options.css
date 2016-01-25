@@ -30,8 +30,6 @@ body {
     linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
   background-color: #131313;
   background-size: 20px 20px;
-  width: 22rem;
-  padding: 2rem;
 }
 
 #save{
@@ -57,7 +55,6 @@ h2 {
 #sign_in{
 text-align: left;
   color: white;
-  /* background-color: #47639E; */
   background-color: #845221;
   padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
@@ -67,17 +64,15 @@ text-align: left;
 #test_pairing{
   text-align: left;
   color: white;
-  /* background-color: #47639E; */
   background-color: #ffc106;
   padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
   border-radius: 7px;
 }
 
-.sign_out{
+#sign_out{
   text-align: left;
   color: white;
-  /* background-color: #47639E; */
   background-color: #845221;
   padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
@@ -104,9 +99,6 @@ div.auth{
   visibility: hidden;
 }
 
-#logged{
-  visibility: hidden;
-}
 
 .helpIcon {
   height:20px;
@@ -123,4 +115,41 @@ div.auth{
 
 .yellow{
 	color: yellow;
+}
+
+.ui-tabs-vertical {
+	width: 55em;
+}
+
+.ui-tabs-vertical .ui-tabs-nav {n
+	padding: .2em .1em .2em .2em;
+	float: left;
+	width: 12em;
+}
+
+.ui-tabs-vertical .ui-tabs-nav li { clear: left;
+	width: 100%;
+	border-bottom-width: 1px !important;
+	border-right-width: 0 !important;
+	margin: 0 -1px .2em 0;
+}
+
+.ui-tabs-vertical .ui-tabs-nav li a { display:block;
+}
+
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0;
+	padding-right: .1em;
+	border-right-width: 1px;
+}
+
+.ui-tabs-vertical .ui-tabs-panel { padding: 1em;
+	float: right;
+	width: 40em;}
+	
+.onlyLogged{
+	visibility: hidden;
+}
+
+.onlyUnlogged{
+	visibility: visible;
 }

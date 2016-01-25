@@ -25,7 +25,7 @@ var curTimeOut;
 // Third is message if tabs are being closed.
 
 // For tab numbers
-var msgTooManyTabs = ["Too Many Tabs", "You openned more than " + maxTabs + " tabs! Hurry, you still have " + timeWindow + " seconds before the zap! Close them down!" , "Yeap! Keep on closing them!"];
+var msgTooManyTabs = ["OUCH! Too Many Tabs", "You openned more than " + maxTabs + " tabs! Close them down and keep your sanity!" , "Yeap! Keep on closing them!"];
 var msgBorderlineTabs = ["Tabs limit approaching", "Keep them at bay and watch out for new tabs!", "Safe zone!"]
 var msgLimitTabs = ["Tabs limit reached!", "You're on the verge! Open no more tabs! Stay true to yourself!", "Back to safety, but still on the limit!"]
 
@@ -120,7 +120,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 	if (isValid(token)){
 		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
-			var maxtabs = parseInt(localStorage.maxTabs);
+			var maxtabs = parseInt(localStorage.maxtabs);
 			if(!maxtabs) {
 				return;
 			}
@@ -217,11 +217,6 @@ function CreateTabListeners(token) {
 		localStorage.maxTabs = 6;
 	}
 
-	// When selected tab changes
-	chrome.tabs.onActivated.addListener(function(tab) {
-		CheckTabCount(tab, accessToken, "shock");
-		}
-	);
 	
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
@@ -230,7 +225,13 @@ function CreateTabListeners(token) {
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		CheckTabCount(tab, "null", "noStimuli"); // Stimuli will fail to avoid punishing for getting back on track
+		if ( localStorage.zapOnClose == 'true' ){
+			CheckTabCount(tab, accessToken, "shock");
+		}
+		else{
+			console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
+			// CheckTabCount(tab, "falseToken", 'no stimuli');
+		}
 	});
 
 	// When tab is detached
@@ -261,7 +262,7 @@ function CreateTabListeners(token) {
 }
 
 function initialize() {	
-	UpdateBadge(1);
+	UpdateBadgeOnOff("1/3");
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
@@ -273,6 +274,10 @@ function getTabInfo(callback){
 		curPAVUrl = tabs[0].url;
 		curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
 		
+		if(curPAVDomain.length == 0){
+			console.log("unable to resolve domain for " + curPAVUrl);
+			curPAVDomain = curPAVUrl;
+		}
 		// console.log("Tab " + curPAVTab + " has url " + curPAVUrl + " on domain " + curPAVDomain);
 		
 		document.title = curPAVTab.id + " " + curPAVTab.url; // Debug. Shows on background.html
@@ -300,7 +305,6 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 				notifyUser(msgZaped[0], msgZaped[1], "zapped");
 				stimuli("shock", 160, localStorage.accessToken);
 				
-				// $.get("https://pavlok.herokuapp.com/api/nXFVA8v1e8/vibro/160");
 				timeBegin = new Date();
 			}
 		}

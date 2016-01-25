@@ -1,208 +1,244 @@
-﻿/* ---------------------------------------------------- */
-/*                   Helper Functions                   */
-/* ---------------------------------------------------- */
+﻿/* To-do 
+BOOM!	- Save input from Black and Whitelist
+BOOM!	- Populate fields with Black and Whitelist items
+BOOM!	- Create advanced zapping (zap when closing tabs?)
 
-// chrome.runtime.sendMessage(
-	// {}, function(response) { console.log(response.farewell); });
+*/
 
-function oauth() { // checked. Working fine
-	var redirectURL = chrome.identity.getRedirectURL();
-	// Local
-	var clientID = "f9a1d14731fa7333357a8f89c066c661cb90ec657a70cb94bed62828d5f1e81a";
-	var clientSecret = "0621dc253f364b012642092bd71918b0685cec42939fb1f2c2dd490533aef21d";
-	
-	// // Deployed
-	// var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
-	// var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
-	
-	var authURL = "https://pavlok-stage.herokuapp.com/oauth/authorize?" + 
-		'client_id=' + clientID +
-		'&redirect_uri=' + redirectURL +
-		'&response_type=code' +
-		'&prompt=select_account';
-	
-	console.log("Step 1: Redirect URL is: " + redirectURL);
-	
-	chrome.identity.launchWebAuthFlow(
-		{url: authURL, interactive: true},
-		
-		function(responseUrl) {
-			// Get Auth code
-			console.log("Step 2: Response url with code is:" + responseUrl);
-			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
-			console.log("Step 3: Authorizaion code is: " + authorizationCode);
-			
-			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://pavlok-stage.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
-			
-			console.log("Step 4: Access token Url is: " + accessTokenUrl);
-			
-			$.post(accessTokenUrl)
-				.done(function (data) {
-					console.log(data);
-					var accessToken = data.access_token;
-
-					localStorage.setItem('logged', 'true');
-					localStorage.setItem('accessToken', accessToken);
-					var logged = document.getElementById("logged");
-					$( "#logged" ).append("<span>in</span>");
-					chrome.windows.getLastFocused(function(win) {
-						UpdateTabCount(win.windowId);
-					});
-				});
-			
-			console.log("OAuth2 test concluded");
-			
-		}
-	);	
+function saveBlackList(){
+	localStorage.blackList = $("#blackList")[0].value;
 }
 
-function destroyToken(){ // checked. Working, but should probably be merged with signOut
-  localStorage.setItem('accessToken', 'null');
+function saveWhiteList(){
+	localStorage.whiteList = $("#whiteList")[0].value;
 }
 
-// API messing around
-function userInfo(accessToken) { // checked. Working fine
-	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
-		.done(function (data) {
-			var dude = JSON.stringify(data, null, 4);
-				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
-				localStorage.setItem('userName', data.name);
-				return data.name;
-		})
-		.fail(function(){
-			console.log('User information request failed');
+// Sign in and out
+$("#signIn").click(function(){
+	oauth();
+});
+
+$("#signOut").click(function(){
+	signOut();
+});
+
+function save_options() {
+	
+	var blackList = $("#blackList")[0].value;
+	localStorage.blackList = blackList;
+	
+	var whiteList = $("#whiteList")[0].value;
+	localStorage.whiteList = whiteList;
+	
+	var maxTabs = $("#maxtab").val();
+	localStorage.maxtabs = maxTabs;
+	
+	var zapOnClose = $("#zapOnClose").prop('checked');
+	localStorage.zapOnClose = zapOnClose;
+	
+	var zapPosition = $("#zapIntensity").val();
+	var zapIntensity = $("#zapIntensity").val();
+	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
+	localStorage.zapIntensity = zapIntensity;
+	
+	var vibrationPosition = $("#vibrationIntensity").val();
+	var vibrationIntensity = $("#vibrationIntensity").val();
+	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
+	localStorage.vibrationIntensity = vibrationIntensity;
+}
+
+function restore_options() {
+	// Black and white lists
+	var blackList = localStorage.blackList;
+	if (blackList == undefined) { blackList = ' '; }
+	
+	$("#blackList").val(blackList);
+	// if (blackList)
+	// {
+		// document.getElementById("blackList").value=blackList;
+	// }
+	
+	var whiteList = localStorage.whiteList;
+	if (whiteList == undefined) { whiteList = ' '; }
+	if (whiteList)
+	{
+		document.getElementById("whiteList").value=whiteList;
+	}
+
+	// Zap on Close
+	if (localStorage.zapOnClose == 'true' )
+		{ $("#zapOnClose").attr('checked', true); }
+	else { $("#zapOnClose").attr('checked', false); }
+	$("#maxtab").val(localStorage.maxtabs);
+
+	// Stimuli Intensity
+	if (parseInt(localStorage.vibrationIntensity) > 0){
+		var vibSlider = Math.round(parseInt(localStorage.vibrationIntensity) * 100 / 2550) * 10;
+	} else { var vibSlider = 60; }
+	$( "#sliderVibration" ).slider( { "value": vibSlider })
+	$( "#vibrationIntensity" ).val(vibSlider);
+	
+	if (parseInt(localStorage.zapIntensity) > 0){
+		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
+	} else { var vibSlider = 60; }
+	var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
+	$( "#sliderZap" ).slider( { "value": zapSlider })
+	$( "#zapIntensity" ).val(zapSlider);
+	
+}
+
+// Check which parameters are changed and what is clicked
+// Create the vertical tabs
+function initialize() {
+	
+	// Black and WhiteLists
+	var blackListContent = localStorage.blackList;
+	
+	var bl = document.getElementById("blackList");
+	if (bl) {
+		$('#blackList')[0].value = localStorage["blackList"];
+		$('#blackList').tagsInput({
+			'onChange' : saveBlackList,
+			'defaultText':'Add site',
+			'removeWithBackspace' : true
 		});
-}
-
-// Interface and DOMS
-var blackSites = new Array();
-$('#blackList').tagsInput();
-var whiteSites = new Array();
-$('#whiteList').tagsInput();
-
-function restore_options() { // checked. Working fine
-  var maxTabsSelect = localStorage.maxTabs;
-  var blackList = localStorage.blackList;
-  if (blackList)
-  {
-    document.getElementById("blackList").value=blackList;
-  }
-  
-  var whiteList = localStorage.whiteList;
-  if (whiteList)
-  {
-    document.getElementById("whiteList").value=whiteList;
-  }
-
-  if (!maxTabsSelect) {
-    return;
-  } else {
-    document.getElementById("maxtab").value=maxTabsSelect
-  }
-
-}
-
-function initialize() { // checked. Working fine
-  $('#blackList').tagsInput({
-    'onChange' : save_options,
-    'defaultText':'Add site',
-    'removeWithBackspace' : true
-  });
-  
-  $('#blackList')[0].value = localStorage["blackList"];
-  
-  $('#whiteList').tagsInput({
-    'onChange' : save_options,
-    'defaultText':'Add site',
-    'removeWithBackspace' : true
-  });
-  
-  $('#whiteList')[0].value = localStorage["whiteList"];
-  
-  $('#whiteListHelp').hover(
-	function(){
-	  $( '#whiteListHelpBox' ).fadeIn();
-	},
-	function(){
-	  $( '#whiteListHelpBox').fadeOut();
-	  }
-  );
-  
-   $('#blackListHelp').hover(
-	function(){
-	  $( '#blackListHelpBox' ).fadeIn();
-	},
-	function(){
-	  $( '#blackListHelpBox').fadeOut();
-	  }
-  );
-  
-}
-
-onload = function() {
-	// test();
-	var validSequence = $.Deferred();
-	var token = localStorage.getItem("accessToken"); // Try to remove this redundancy later and get it passed by the function
-	console.log("da onload, accessToken is " + localStorage.accessToken);
-
-	chrome.windows.getLastFocused(function(win) {
-		UpdateTabCount(win.windowId);
-	});
 	
-	restore_options();
-	initialize();
+	}
 	
-	// If checking for validity becomes default, it will ALWAYS be logged in OR logging in. Never will it be out.
-	if (isValid(token) == true) {		
-		var status = document.getElementById("status");
-		status.innerHTML = "If you don't feel any stimuli, check if your Pavlok is paired";
-		
-		$("#test_pairing").click(function(){
-			var token = localStorage.accessToken;
-			stimuli('vibration', '255', token);
-			$( "#status" )
-				.delay(400)
-				.slideDown(250)
-				.delay(100)
-				.css("color", "green")
-				.css("fontSize", "2em")
-				.delay(5000)
-				.slideUp(100);
-		});
-
-		console.log("Token is: " + token);
-		userInfo(token);
-		userName = localStorage.userName;
-		
-		chrome.windows.getLastFocused(function(win) {
-			UpdateTabCount(win.windowId);
-		});
-		
-		// Update interface functions
-		adjustOverInteractions(token, userName);
-		
-		var save = document.getElementById("save");
-		save.addEventListener("click", function() {
-			save_options();
-			adjustOverInteractions(token, userName);
-		});
-		
-		
-	} 
-	else {
-		var invalidSequence = $.Deferred();
-		var updateSequence = $.Deferred();
-		
-		console.log('OAuth try: Access token is invalid or inexistent');
-		var login = document.getElementById("sign_in");
-		$( login ).click(function() {
-			oauth();
-			
-			// Trigger because other functions are called before the end of oauth();
-			$("#logged").bind("DOMSubtreeModified", function() {
-				location.reload();
-			});
+	var wl = document.getElementById("blackList");
+	if (wl) {
+		$('#whiteList')[0].value = localStorage["whiteList"];
+		$('#whiteList').tagsInput({
+			'onChange' : saveWhiteList,
+			'defaultText':'Add site',
+			'removeWithBackspace' : true
 		});
 	}
+	
+	// Help boxes
+	$('#whiteListHelp').hover(
+	function(){
+		$( '#whiteListHelpBox' ).fadeIn();
+	},
+	function(){
+		$( '#whiteListHelpBox').fadeOut();
+		}
+	);
+	
+	 $('#blackListHelp').hover(
+	function(){
+		$( '#blackListHelpBox' ).fadeIn();
+	},
+	function(){
+		$( '#blackListHelpBox').fadeOut();
+		}
+	);
+	
+	// Create tabs
+	$(function() {
+		$( "#tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+		$( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+		// $( ".tabsLi")
+	});
+	
+	// Create sliders for intensities
+	$(function() {
+		$( "#sliderZap" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				$( "#zapIntensity" ).val( ui.value );
+				localStorage.zapPosition = ui.value ;
+				save_options();
+			}
+		});
+		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
+		
+		$( "#sliderVibration" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				$( "#vibrationIntensity" ).val( ui.value );
+				localStorage.vibrationPosition = ui.value ;
+				save_options();
+			}
+		});
+		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
+		
+	});
+	
+	// Test stimuli buttons
+	$(function(){
+		$("#testZapInt").click(function(){
+			stimuli('shock', localStorage.zapIntensity, localStorage.accessToken);
+		});
+		
+		$("#testVibrationInt").click(function(){
+			stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken);
+		});
+	});
+	
+	// Auto save results on changed
+	$("#zapOnClose").change(function(){
+		localStorage.zapOnClose = $(this).prop( "checked" );
+	});
+	$("#maxtab").change(function(){
+		localStorage.maxtabs = $(this).val();
+	});
+	$("#zapIntensity").change(function(){
+		localStorage.zapIntensity = $(this).val();
+	});
+	$("#vibrationIntensity").change(function(){
+		localStorage.vibrationIntensity = $(this).val();
+	});
+	$("#whiteList").change(function(){
+		localStorage.whiteList = $(this).val();
+		alert("changed white list");
+	});
+	$("#blackList").change(function(){
+		localStorage.blackList = $(this).val();
+		alert("changed black list");
+	});
+	
+	// Sign in and Sign out
+	$("#sign_in").click(function(){
+		oauth();
+	});
+	
+	$("#sign_out").click(function(){
+		signOut();
+	});
+	
+	$(function() {
+		$( document ).tooltip();
+	});	
 }
+
+
+if ( localStorage.blackList == undefined ) { localStorage.blackList = " "; };
+if ( localStorage.whiteList == undefined ) { localStorage.whiteList = " "; };
+if ( localStorage.maxtabs == undefined ) { localStorage.maxtabs = 6; }
+initialize();
+
+$( document ).ready(function() {
+	restore_options();
+	if (localStorage.logged == 'true') { 
+		$(".onlyLogged").css('visibility', 'visible');
+		$(".onlyUnlogged").css('display', 'none');
+	}
+	
+	// Fill user Data
+	if (!localStorage.name){
+		userInfo(localStorage.accessToken)
+	}
+	// else {
+		$('#userEmailSettings').html(localStorage.userEmail);
+		$('#userName').html(" " + localStorage.userName);
+		
+	// }
+	
+});

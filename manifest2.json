@@ -2,10 +2,10 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "name": "Local Extension for P.A.V.L.O.K.",
-  "version": "0.0.1",
+  "name": "Local P.A.V.L.O.K.",
+  "version": "0.3.21",
  
-  "description": "Awesome new Extension.",
+  "description": "Stay Focused. Eliminate Distraction.",
   "icons": {
     "16": "images/browser_action_16x16.png",
     "48": "images/browser_action_48x48.png",
@@ -15,7 +15,7 @@
   "browser_action": {
     "default_icon": "images/browser_action_16x16.png",
     "default_title": "Pavlok Tab Productivity",
-    "default_popup": "popup.html"
+    "default_popup": "options.html"
   },
 
   "background": {"page": "background.html"},
@@ -23,10 +23,14 @@
   
   "permissions": [
 	"background",
+    "tabs",
+    "idle",
+    "activeTab",
     "https://pavlok.herokuapp.com/*",
-    "https://pavlok-stage.herokuapp.com/*",
+    "cookies",
     "identity",
-	"notifications",
-	"tabs"
+	"storage",
+	"*://*/*",
+	"notifications"
     ]
 }
