@@ -241,4 +241,9 @@ $( document ).ready(function() {
 		
 	// }
 	
+	$("#test_pairing").click(function(){
+		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+		
+	});
+	
 });
