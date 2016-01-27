@@ -1,9 +1,109 @@
 ﻿/* To-do 
-BOOM!	- Save input from Black and Whitelist
-BOOM!	- Populate fields with Black and Whitelist items
-BOOM!	- Create advanced zapping (zap when closing tabs?)
+- Fix test Zap (NaN) bug
+- Fix Tooltip (enable the better one)
 
 */
+function percentToRaw(percent){
+	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
+	/*
+	100 - 0 			255 - 0
+	percent - 0 		x - 0
+	
+	100x = 255 * percent
+	x = percent * 255 / 100
+	*/
+	var rawN
+	rawN = Math.round(percent * 255 / 100);
+	
+	return rawN
+}
+
+function rawToPercent(raw){
+	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
+	/*
+	100 - 0 			255 - 0
+	x - 0 				raw - 0
+	
+	255x = 100 * raw
+	x = raw * 100 / 255
+	*/
+	
+	var percN = raw * 100 / 255;
+	percN = Math.round(percN / 10) * 10;
+	return percN
+}
+
+function enableButtons(){
+	$("#resetIntensity").click(function(){
+		var defValue = 60;
+		
+		$( "#sliderZap" ).slider( { "value": defValue });
+		$( "#zapIntensity" ).val(defValue);
+		localStorage.zapPosition = defValue;
+		localStorage.zapIntensity = percentToRaw(defValue);
+		
+		$( "#sliderVibration" ).slider( { "value": defValue });
+		$( "#vibrationIntensity" ).val(defValue);
+		localStorage.vibrationPosition = defValue;
+		localStorage.vibrationIntensity = percentToRaw(defValue);
+	});
+	
+	$("#test_pairing").click(function(){
+		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+	});
+
+	$("#testZapInt").click(function(){
+		stimuli('shock', localStorage.zapIntensity, localStorage.accessToken);
+	});
+		
+	$("#testVibrationInt").click(function(){
+		stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken);
+	});
+
+	$("#signIn").click(function(){
+		oauth();
+	});
+
+	$("#signOut").click(function(){
+		signOut();
+	});
+	
+}
+
+function enableSliders(){
+	$(function() {
+		$( "#sliderZap" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				$( "#zapIntensity" ).val( ui.value );
+				localStorage.zapPosition = ui.value ;
+				save_options();
+			}
+		});
+		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
+		
+		$( "#sliderVibration" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				$( "#vibrationIntensity" ).val( ui.value );
+				localStorage.vibrationPosition = ui.value ;
+				save_options();
+			}
+		});
+		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
+		
+	});
+}
+
+function enableCheckboxes(){
+	
+}
 
 function saveBlackList(){
 	localStorage.blackList = $("#blackList")[0].value;
@@ -13,15 +113,6 @@ function saveWhiteList(){
 	localStorage.whiteList = $("#whiteList")[0].value;
 }
 
-// Sign in and out
-$("#signIn").click(function(){
-	oauth();
-});
-
-$("#signOut").click(function(){
-	signOut();
-});
-
 function save_options() {
 	
 	var blackList = $("#blackList")[0].value;
@@ -30,8 +121,8 @@ function save_options() {
 	var whiteList = $("#whiteList")[0].value;
 	localStorage.whiteList = whiteList;
 	
-	var maxTabs = $("#maxtab").val();
-	localStorage.maxtabs = maxTabs;
+	var maxTabs = $("#maxTabsSelect").val();
+	localStorage.maxTabs = maxTabs;
 	
 	var zapOnClose = $("#zapOnClose").prop('checked');
 	localStorage.zapOnClose = zapOnClose;
@@ -53,10 +144,7 @@ function restore_options() {
 	if (blackList == undefined) { blackList = ' '; }
 	
 	$("#blackList").val(blackList);
-	// if (blackList)
-	// {
-		// document.getElementById("blackList").value=blackList;
-	// }
+
 	
 	var whiteList = localStorage.whiteList;
 	if (whiteList == undefined) { whiteList = ' '; }
@@ -69,25 +157,23 @@ function restore_options() {
 	if (localStorage.zapOnClose == 'true' )
 		{ $("#zapOnClose").attr('checked', true); }
 	else { $("#zapOnClose").attr('checked', false); }
-	$("#maxtab").val(localStorage.maxtabs);
+	$("#maxTabsSelect").val(localStorage.maxTabs);
 
 	// Stimuli Intensity
-	if (parseInt(localStorage.vibrationIntensity) > 0){
-		var vibSlider = Math.round(parseInt(localStorage.vibrationIntensity) * 100 / 2550) * 10;
+	if (parseInt(localStorage.vibrationPosition) > 0){
+		var vibSlider = localStorage.vibrationPosition;
 	} else { var vibSlider = 60; }
 	$( "#sliderVibration" ).slider( { "value": vibSlider })
 	$( "#vibrationIntensity" ).val(vibSlider);
 	
 	if (parseInt(localStorage.zapIntensity) > 0){
 		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
-	} else { var vibSlider = 60; }
-	var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
+	} else { var zapSlider = 60; }
 	$( "#sliderZap" ).slider( { "value": zapSlider })
 	$( "#zapIntensity" ).val(zapSlider);
 	
 }
 
-// Check which parameters are changed and what is clicked
 // Create the vertical tabs
 function initialize() {
 	
@@ -141,87 +227,46 @@ function initialize() {
 		// $( ".tabsLi")
 	});
 	
-	// Create sliders for intensities
-	$(function() {
-		$( "#sliderZap" ).slider({
-			value:60,
-			min: 10,
-			max: 100,
-			step: 10,
-			slide: function( event, ui ) {
-				$( "#zapIntensity" ).val( ui.value );
-				localStorage.zapPosition = ui.value ;
-				save_options();
-			}
-		});
-		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
-		
-		$( "#sliderVibration" ).slider({
-			value:60,
-			min: 10,
-			max: 100,
-			step: 10,
-			slide: function( event, ui ) {
-				$( "#vibrationIntensity" ).val( ui.value );
-				localStorage.vibrationPosition = ui.value ;
-				save_options();
-			}
-		});
-		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
-		
-	});
 	
-	// Test stimuli buttons
-	$(function(){
-		$("#testZapInt").click(function(){
-			stimuli('shock', localStorage.zapIntensity, localStorage.accessToken);
-		});
-		
-		$("#testVibrationInt").click(function(){
-			stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken);
-		});
-	});
-	
-	// Auto save results on changed
+	// Add listeners for Auto save when options change
 	$("#zapOnClose").change(function(){
 		localStorage.zapOnClose = $(this).prop( "checked" );
 	});
-	$("#maxtab").change(function(){
-		localStorage.maxtabs = $(this).val();
+	$("#maxTabsSelect").change(function(){
+		localStorage.maxTabs = $(this).val();
 	});
 	$("#zapIntensity").change(function(){
-		localStorage.zapIntensity = $(this).val();
+		localStorage.zapPosition = $(this).val();
+		localStorage.zapIntensity = percentToRaw(parseInt($(this).val()));
 	});
 	$("#vibrationIntensity").change(function(){
-		localStorage.vibrationIntensity = $(this).val();
+		localStorage.vibrationPosition = $(this).val();
+		localStorage.vibrationIntensity = percentToRaw(parseInt($(this).val()));
 	});
+	
+	// Both white and Blacklist listeners aren't working.
 	$("#whiteList").change(function(){
 		localStorage.whiteList = $(this).val();
 		alert("changed white list");
 	});
-	$("#blackList").change(function(){
+	$("#blackList").children().change(function(){
 		localStorage.blackList = $(this).val();
 		alert("changed black list");
 	});
 	
-	// Sign in and Sign out
-	$("#sign_in").click(function(){
-		oauth();
-	});
-	
-	$("#sign_out").click(function(){
-		signOut();
-	});
-	
+	// Tooltip
 	$(function() {
 		$( document ).tooltip();
 	});	
+	
+	enableButtons();
+	enableSliders();
 }
 
 
 if ( localStorage.blackList == undefined ) { localStorage.blackList = " "; };
 if ( localStorage.whiteList == undefined ) { localStorage.whiteList = " "; };
-if ( localStorage.maxtabs == undefined ) { localStorage.maxtabs = 6; }
+if ( localStorage.maxTabs == undefined ) { localStorage.maxTabs = 6; }
 initialize();
 
 $( document ).ready(function() {
@@ -232,18 +277,14 @@ $( document ).ready(function() {
 	}
 	
 	// Fill user Data
-	if (!localStorage.name){
+	if (!localStorage.userName){
 		userInfo(localStorage.accessToken)
 	}
+	if (localStorage.userName == undefined) {localStorage.userName = ''; }
 	// else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);
 		
 	// }
-	
-	$("#test_pairing").click(function(){
-		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
-		
-	});
 	
 });

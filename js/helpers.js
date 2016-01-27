@@ -11,7 +11,8 @@
 if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
-if (!localStorage.maxtabs ) { localStorage.maxtabs = 6; }
+if (!localStorage.maxTabs ) { localStorage.maxTabs = 6; }
+
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -74,7 +75,7 @@ function UpdateBadgeOnOff(badgeText) {
 
 function UpdateTabCount(windowId) {
 	chrome.tabs.getAllInWindow(windowId, function(tabs) {
-		UpdateBadgeOnOff(tabs.length.toString() + '/' + localStorage.maxtabs);
+		UpdateBadgeOnOff(tabs.length.toString() + '/' + localStorage.maxTabs);
 		localStorage[windowId] = tabs.length;
 	});
 }
@@ -318,6 +319,7 @@ function stimuli(stimuli, value, accessToken, textAlert) {
 			return console.log(stimuli + ' succeeded!\n' + data + " " + result);
 		})
 		.fail( function() {
+			console.log('Failed the new API. Trying the old one');
 			objectCode = localStorage.objectCode;
 			if (stimuli == "vibration") { stimuli = "vibro"; }
 			console.log(stimuli + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");

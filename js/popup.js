@@ -1,3 +1,8 @@
+/* To-do
+- Enable login through here
+- Fix the maxTabs discrepancy
+- Fix test pairing button
+*/
 function showName(){
 	// Tries the code against API
 	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
@@ -13,7 +18,6 @@ function showName(){
 
 function showOptions(accessToken){
 	if (isValid(localStorage.accessToken)){
-	// if (accessToken){
 		$(".onlyLogged").css('visibility', 'visible'); 
 		$(".onlyUnlogged").css('display', 'none'); 
 	}
@@ -39,19 +43,19 @@ function adjustOverInteractions(token, userName) {
 
 
 $( document ).ready(function() {
-	$("#sign_in").click(function(){
+	$("#signIn").click(function(){
 		oauth();
 	});
 	
-	$("#sign_out").click(function(){
+	$("#signOut").click(function(){
 		signOut();
 	});
 	
 	// Restore Max Tabs
-	if (localStorage.maxtabs == undefined) { localStorage.maxtabs = 6; }
-	$("#maxtab").val(localStorage.maxtabs);
-	$("#maxtab").change(function(){
-		localStorage.maxtabs = $(this).val();
+	if (localStorage.maxTabs == undefined) { localStorage.maxTabs = 6; }
+	$("#maxTabsSelect").val(localStorage.maxTabs);
+	$("#maxTabsSelect").change(function(){
+		localStorage.maxTabs = $(this).val();
 	});
 	
 	// Restore values for Black and White Lists along with enabling tags
@@ -90,8 +94,8 @@ $( document ).ready(function() {
 
 	$("#test_pairing").click(function(){
 		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
-		
 	});
+	
 	if (localStorage.logged == 'true') {
 		// Toggle visibility for options
 		$(".onlyLogged").css('visibility', 'visible');

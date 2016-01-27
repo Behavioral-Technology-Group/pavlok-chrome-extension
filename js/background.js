@@ -1,15 +1,15 @@
-// To-do: get values for stimuli from our server, instead of hardcoding it
-// To-do: implement object code question
-// To-do: make icon reflect properly signed in or signed out
-// To-do: stop notifications when user is signed off
+ /* To-do:
+- get values for stimuli from our server, instead of hardcoding it
 
+
+*/
 // Globals
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
 var elapsedTime = 0;
 var counter = false;
 var timeWindow = 5;
 var situation = {};
-var maxTabs = parseInt(localStorage.maxTabs);
+// var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
 var curTimeOut;
 
@@ -25,7 +25,7 @@ var curTimeOut;
 // Third is message if tabs are being closed.
 
 // For tab numbers
-var msgTooManyTabs = ["OUCH! Too Many Tabs", "You openned more than " + maxTabs + " tabs! Close them down and keep your sanity!" , "Yeap! Keep on closing them!"];
+var msgTooManyTabs = ["OUCH! Too Many Tabs", "You openned more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!" , "Yeap! Keep on closing them!"];
 var msgBorderlineTabs = ["Tabs limit approaching", "Keep them at bay and watch out for new tabs!", "Safe zone!"]
 var msgLimitTabs = ["Tabs limit reached!", "You're on the verge! Open no more tabs! Stay true to yourself!", "Back to safety, but still on the limit!"]
 
@@ -120,8 +120,8 @@ function CheckBlackList(curTabURL, curTabDomain) {
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 	if (isValid(token)){
 		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
-			var maxtabs = parseInt(localStorage.maxtabs);
-			if(!maxtabs) {
+			var maxTabs = parseInt(localStorage.maxTabs);
+			if(!maxTabs) {
 				return;
 			}
 
@@ -135,18 +135,18 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			else if ( previousTabs > tab.WindowID ) { situation.trend = "growing"; }
 			else { situation.trend = "stable"; }
 			
-			// How is number of tabs compared to tab limit (maxtabs)?
-			if(tabs.length > maxtabs) {
+			// How is number of tabs compared to tab limit (maxTabs)?
+			if(tabs.length > maxTabs) {
 				situation.status = "over";
 				stimuli("shock", 180, localStorage.accessToken);
 				console.log("total tabs over max tabs");
 			}
-			else if (tabs.length == maxtabs ){ 
+			else if (tabs.length == maxTabs ){ 
 				situation.status = "limit";
 				stimuli("beep", 3, localStorage.accessToken);
 			 
 			}
-			else if (tabs.length == maxtabs - 1){ 
+			else if (tabs.length == maxTabs - 1){ 
 				situation.status = "borderline";
 				// stimuli("vibration", 230, localStorage.accessToken);
 				stimuli("vibration", 230, localStorage.accessToken);
@@ -168,7 +168,8 @@ function notifyTabCount(tabs, situation){
 		notTitle = msgTooManyTabs[0];
 		notID = "tooManyTabs";
 		if(situation.trend != "lowering" ){ 
-			notMessage = msgTooManyTabs[1];
+			// notMessage = msgTooManyTabs[1]; // Variable is being set at startup, but ain't updated after that. So it's being called manually here, to match latest maxTabs
+			notMessage = "You openned more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!";
 			// curTimeOut = setTimeout(function(){ stimuli("shock", 160, localStorage.accessToken}, timeWindow * 1000);
 			}
 		else { notMessage = msgTooManyTabs[1]; }

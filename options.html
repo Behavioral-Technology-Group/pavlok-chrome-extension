@@ -24,14 +24,14 @@
 			<td>
 				<div class="onlyLogged">
 					<a href="#" id="test_pairing" name="test_pairing">Test  pairing</a> 
-					<a href="#" class="onlyLogged" id="sign_out">Sign Out</a>
+					<a href="#" class="onlyLogged" id="signOut">Sign Out</a>
 				</div>
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<div class="auth onlyUnlogged">
-					<a href="#" id="sign_in" name="sign_in">Sign In</a>
+					<a href="#" id="signIn" name="sign_in">Sign In</a>
 				</div>
 			</td>
 		</tr>
@@ -43,7 +43,6 @@
 	</table>
 	<div class="onlyLogged" id="loggedDIV">
 		<p>Your account email is: <span id="userEmailSettings"></span></p>
-
 
 		<div id="tabs">
 			<ul>
@@ -70,7 +69,7 @@
 					<h2>Exception List <img src="/images/help.ico" id="whiteListHelp" class="helpIcon"></h2>
 					<div id="whiteListHelpBox" class="helpBox">
 						<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p>
-						<p>For instance: <span class="yellow"><i>"www.amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"<i>"www.amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>
+						<p>For instance: <span class="yellow"><i>"www.amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"><i>"www.amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>
 					</div>
 					
 					<p>Please tell your exceptions for black sites, separated by commas. </p>
@@ -85,7 +84,7 @@
 					<h2>Tab numbers</h2>
 					<br />
 					<span id="label-text">Set tab limit:</span>
-					<select id="maxtab">
+					<select id="maxTabsSelect">
 						<option value="1">1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
@@ -111,7 +110,7 @@
 					</select>
 					<br/>
 
-					<input type="checkbox" name="zapOnClose" id="zapOnClose">Zap when closing<img src="/images/help.ico" id="blackListHelp" class="helpIcon" title="For those really inclined to stop opening to many habits! This will send a zap whenever you are above your tab limit, EVEN IF YOU ARE CLOSING EXCESS TABS. You'll sure think about opening more tabs after that!<p>If not checked, you'll only get zaps when opening tabs above the your limit."></input>
+					<input type="checkbox" name="zapOnClose" id="zapOnClose">Zap when closing<img src="/images/help.ico" id="blackListHelp" class="helpIcon" title="For those really inclined to stop opening to many habits! This will send a zap whenever you are above your tab limit, EVEN IF YOU ARE CLOSING EXCESS TABS. You'll sure think about opening more tabs after that! If not checked, you'll only get zaps when opening tabs above the your limit."></input>
 					<br/>
 					<br/>
 					
@@ -127,7 +126,6 @@
 				 
 				<div id="sliderZap"></div><br/>
 
-				
 				<hr>
 				
 				<h2><label for="vibInt">Vibration Intensity (10% increments):</label></h2>
@@ -136,11 +134,22 @@
 				</p>
 				 
 				<div id="sliderVibration"></div><br/>
-				
+				<br/>
+				<a href="#" id="resetIntensity">Reset values</a>
 			</div>
 			<div id="tabs-4">
 				<h2>About extension</h2>
-				<p>Something about the extension.</p>
+				<p>This extension is all about getting you on track to <b>your</b> habit goals.</p>
+				<p>If you struggle to keep distraction at bay when near the computer, this comes to rescue. There will be clear stakes here, as you'll be simultaneously made aware of the bad habit (and to a fix!) and get uncomfortable stimuli to assotiate with the bad habit.</p>
+				
+				<h4>BlackList reasoning</h4>
+				<p>When you get on a Blacklisted site, you'll be notified about it and prompted to change your behavior (aka <i>"Get the hell outta here!"</i>). This will remind you to think <b>why</b> are you going there and decide if it's worth doing it. To help you ponder, the extension adds a zap every 5 seconds you stay in the bad bad bad sites.</p>
+				<p>It gets way easier to stick and change your behavior when consequences are real AND you get called in real time about the bad behavior, with a chance to fix it. You'll soon get rid of bad browsing habits with it!</p>
+				<p>There are also some advanced options, like Whitelist. It came in because sometimes there are gems amidst the dirty. For instance, there should be no problem is listening to music using Amazon, but you don't want to loosen your wallet nor your evening browsing it's seductive shop. So you can Blacklist <span class="yellow">amazon.com</span>, but create an exception (whitelist) for <span class="yellow">amazon.com<b>/music</b></span></p>
+				
+				<h4>Tab limit reasoning</h4>
+				<p>It will also help you look at the messy infinite number of open tabs in a more concious way. You set a limit and it will tell you whenever you start to get close or over the limit. If the simple mention of the limit isn't enough to make you ponder why so many tabs, there will be a zap to make it more enlightening. Soon there will be no more 1264376 tabs open and a slow pc because of it!</p>
+				<p>If you want to make a crash change to your behavior, it can be sped up using the <span class="yellow">zap on close</span> option. Pavlok won't zap you when you adjust course (closing excess tabs, for instance). However, it's possible to make yourself way more sensible to the tab numbers by adding more stimulus. This option will make you remember TWICE not to open excess tabs. Not necessary, but sure speed breaking the tabs hoarding habit.</p>
 			</div>
 		</div>
 	</div>

@@ -54,7 +54,7 @@ h2 {
 	color: white;
 }
 
-#sign_in{
+#signIn{
 text-align: left;
 	color: white;
 	/* background-color: #47639E; */
@@ -74,7 +74,7 @@ text-align: left;
 	border-radius: 7px;
 }
 
-#sign_out{
+#signOut{
 	color: white;
 	/* background-color: #47639E; */
 	background-color: #845221;
