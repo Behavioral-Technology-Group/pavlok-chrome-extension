@@ -8,6 +8,8 @@
 */
 
 // Defaults
+if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
+if (!localStorage.zapIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
