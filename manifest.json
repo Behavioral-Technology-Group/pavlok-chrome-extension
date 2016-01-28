@@ -27,6 +27,7 @@
     "https://pavlok-stage.herokuapp.com/*",
     "identity",
 	"notifications",
-	"tabs"
+	"tabs",
+	"https://github.com/login/oauth/*"
     ]
 }

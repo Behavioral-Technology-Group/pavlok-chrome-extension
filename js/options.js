@@ -68,6 +68,9 @@ function enableButtons(){
 		signOut();
 	});
 	
+	$("#rescueTimeOAuth").click(function(){
+		rescueTimeOAuth();
+	});
 }
 
 function enableSliders(){

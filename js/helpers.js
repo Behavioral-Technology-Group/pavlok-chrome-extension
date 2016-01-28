@@ -8,6 +8,7 @@
 */
 
 // Defaults
+localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
 if (!localStorage.zapIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 if (!localStorage.blackList) { localStorage.blackList = " "; }
@@ -83,17 +84,22 @@ function UpdateTabCount(windowId) {
 }
 
 function hideSignIn(){ 
-	$('#sign_in').hide();
+	$('#signIn').hide();
 }
 
 function showSignOut(){ 
-	$('#sign_out').html("<a href='#' class='sign_out'>Sign Out!</a>")
+	$('#signOut').html("<a href='#' id='signOut' class='sign_out'>Sign Out!</a>")
 	.click(signOut);
 }
 
 function signOut(){ 
+	// Destroy login data
 	localStorage.setItem('logged', 'false');
 	destroyToken();
+	
+	// Updates interface
+	showOptions(localStorage.accessToken);
+	UpdateBadgeOnOff();
 	
 	// Logging out of providers
 	signOutURL = " https://pavlok-stage.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
@@ -118,21 +124,6 @@ function signOut(){
 			location.reload();
 		});
 }
-
-// // function showOptions() {
-	// // var logged = localStorage.logged;
-	// // console.log(logged);
-	// // if ( logged == "true"){
-		// // var options = document.getElementById("optionsDiv");
-		// // options.style.visibility = "visible";
-		// // return
-	// // }
-	// // else{
-		// // var options = document.getElementById("optionsDiv");
-		// // options.style.visibility = "hidden";
-		// // return
-	// // }
-// // }
 
 function showOptions(accessToken){
 	if (isValid(localStorage.accessToken)){
@@ -267,19 +258,73 @@ function oauth() {
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
+			// $.when(
+				$.post(accessTokenUrl)
+					.done(function (data) {
+						console.log(data);
+						var accessToken = data.access_token;
+
+						localStorage.setItem('logged', 'true');
+						localStorage.setItem('accessToken', accessToken);
+						var logged = document.getElementById("logged");
+						$( "#logged" ).append("<span>in</span>");
+						chrome.windows.getLastFocused(function(win) {
+							UpdateTabCount(win.windowId);
+							showOptions(accessToken);
+						});
+					});
+			// ).done(function() { alert("Oauth done");})
+			console.log("OAuth2 test concluded");
+			
+		}
+	);	
+}
+
+function rescueTimeOAuth() { 
+	var redirectURL = chrome.identity.getRedirectURL();
+	// Local
+	var clientID = "c78f8ede283287e0ffc3";
+	var clientSecret = "ce1f6b4bfad9663af02053155d42185c6de2c72b";
+	var scope = 'user';
+	var state = randomString(12);
+	
+	var authURL = "https://github.com/login/oauth/authorize?" + 
+		'client_id=' + clientID +
+		'&redirect_uri=' + redirectURL +
+		'&scope=' + scope +
+		'&state=' + state;
+	
+	console.log("Step 1: Redirect URL is: " + redirectURL);
+	
+	chrome.identity.launchWebAuthFlow(
+		{url: authURL, interactive: true},
+		
+		function(responseUrl) {
+			// Get Auth code
+			console.log("Step 2: Response url with code is:" + responseUrl);
+			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
+			console.log("Step 3: Authorizaion code is: " + authorizationCode);
+			
+			// Exchange AuthCode for Access Token:
+			accessTokenUrl = 'https://github.com/login/oauth/access_token?' + 
+			'client_id=' + clientID +  
+			'&client_secret=' + clientSecret + 
+			'&code=' + authorizationCode + 
+			'&redirect_uri=' + redirectURL;
+			'&state=' + state;
+			
+			console.log("Step 4: Access token Url is: " + accessTokenUrl);
+			
 			$.post(accessTokenUrl)
 				.done(function (data) {
 					console.log(data);
-					var accessToken = data.access_token;
-
-					localStorage.setItem('logged', 'true');
-					localStorage.setItem('accessToken', accessToken);
-					var logged = document.getElementById("logged");
-					$( "#logged" ).append("<span>in</span>");
-					chrome.windows.getLastFocused(function(win) {
-						UpdateTabCount(win.windowId);
-						location.reload(true);
-					});
+					var accessToken = data.split("=")[1];
+					localStorage.setItem('loggedRT', 'true');
+					localStorage.setItem('accessTokenRT', accessToken);
+					
+					$("#rescueTimeData").html($.get("https://api.github.com/user?access_token=" + localStorage.accessTokenRT));
+					
+					
 				});
 			
 			console.log("OAuth2 test concluded");
@@ -287,6 +332,7 @@ function oauth() {
 		}
 	);	
 }
+
 
 function destroyToken(){
   localStorage.setItem('accessToken', 'null');
@@ -329,4 +375,61 @@ function stimuli(stimuli, value, accessToken, textAlert) {
 			
 			return 
 		});	
+}
+
+function randomString(characters){
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < characters; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+
+
+function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
+	var redirectURL = chrome.identity.getRedirectURL();
+	var state = randomString(12);
+	
+	// var authURL = "https://github.com/login/oauth/authorize?" + 
+		// 'client_id=' + clientID +
+		// '&redirect_uri=' + redirectURL +
+		// '&scope=' + scope +
+		// '&state=' + state;
+	
+	console.log("Step 1: Redirect URL is: " + redirectURL);
+	
+	chrome.identity.launchWebAuthFlow(
+		{url: authURL, interactive: true},
+		
+		function(responseUrl) {
+			// Get Auth code
+			console.log("Step 2: Response url with code is:" + responseUrl);
+			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
+			console.log("Step 3: Authorizaion code is: " + authorizationCode);
+			
+			// Exchange AuthCode for Access Token:
+			accessTokenUrl = tokenURL;
+			console.log("Step 4: Access token Url is: " + accessTokenUrl);
+			
+			$.post(accessTokenUrl)
+				.done(function (data) {
+					console.log(data);
+					localStorage.lastOAuthData = data;//JSON.strigigy(data);
+					var accessToken = data.split("=")[1];
+					localStorage.setItem('oauthSuccess', 'true');
+					localStorage.setItem('lastAccessToken', accessToken);
+					
+					console.log("OAuth2 test concluded");
+				})
+				.fail(function() {
+					console.log("OAuth failed.")
+				});
+		}
+	);
+	if (localStorage.oauthSuccess == 'true' ){
+		return localStorage.lastAccessToken
+	}
 }
