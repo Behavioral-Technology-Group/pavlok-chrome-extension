@@ -93,6 +93,20 @@ function showSignOut(){
 }
 
 function signOut(){ 
+	// Logging out of providers
+	signOutURL = " https://pavlok-stage.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
+	console.log("url for Sign Out is " + signOutURL)
+	
+	// Proper way of handling it in our server
+	$.post(signOutURL)
+		.done(function(data){
+			console.log("Signed out. Data is: " + JSON.stringify(data) + " !");
+			// location.reload();
+		})
+		.fail(function(){
+			console.log("Failed to sign out")
+			// location.reload();
+		});
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
 	destroyToken();
@@ -101,28 +115,7 @@ function signOut(){
 	showOptions(localStorage.accessToken);
 	UpdateBadgeOnOff();
 	
-	// Logging out of providers
-	signOutURL = " https://pavlok-stage.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
-	console.log("url for Sign Out is " + signOutURL)
 	
-	/*/ Trying to brute force chrome extension
-	// chrome.identity.launchWebAuthFlow(
-		// { 'url': signOutURL },
-		// function(tokenUrl) {
-			// console.log("User signed out.")
-		// }
-	// );*/
-	
-	// Proper way of handling it in our server
-	$.post(signOutURL)
-		.done(function(data){
-			console.log("Signed out. Data is: " + data + " !");
-			location.reload();
-		})
-		.fail(function(){
-			console.log("Failed to sign out")
-			location.reload();
-		});
 }
 
 function showOptions(accessToken){
@@ -258,24 +251,21 @@ function oauth() {
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
-			// $.when(
-				$.post(accessTokenUrl)
-					.done(function (data) {
-						console.log(data);
-						var accessToken = data.access_token;
+			$.post(accessTokenUrl)
+				.done(function (data) {
+					console.log(data);
+					var accessToken = data.access_token;
 
-						localStorage.setItem('logged', 'true');
-						localStorage.setItem('accessToken', accessToken);
-						var logged = document.getElementById("logged");
-						$( "#logged" ).append("<span>in</span>");
-						chrome.windows.getLastFocused(function(win) {
-							UpdateTabCount(win.windowId);
-							showOptions(accessToken);
-						});
+					localStorage.setItem('logged', 'true');
+					localStorage.setItem('accessToken', accessToken);
+					var logged = document.getElementById("logged");
+					$( "#logged" ).append("<span>in</span>");
+					chrome.windows.getLastFocused(function(win) {
+						UpdateTabCount(win.windowId);
+						showOptions(accessToken);
 					});
-			// ).done(function() { alert("Oauth done");})
-			console.log("OAuth2 test concluded");
-			
+					console.log("OAuth2 test concluded");
+				});
 		}
 	);	
 }

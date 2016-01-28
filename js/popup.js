@@ -27,21 +27,6 @@ function showOptions(accessToken){
 	}
 }
 
-function adjustOverInteractions(token, userName) {
-	if (isValid(token)) {
-		hideSignIn();
-		showSignOut();
-		showOptions();
-		showName(userName);
-	}
-	else {
-		hideOptions();
-		hideName();
-	}
-	return
-}
-
-
 $( document ).ready(function() {
 	$("#signIn").click(function(){
 		oauth();
