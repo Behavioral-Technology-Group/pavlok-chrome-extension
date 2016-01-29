@@ -3,6 +3,13 @@
 - Fix Tooltip (enable the better one)
 
 */
+
+function restoreCheckBox(checkboxID, condition){
+	if (condition == 'true' )
+		{ $("#" + checkboxID).attr('checked', true); }
+	else { $("#" + checkboxID).attr('checked', false); }
+}
+
 function percentToRaw(percent){
 	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
 	/*
@@ -156,10 +163,14 @@ function restore_options() {
 		document.getElementById("whiteList").value=whiteList;
 	}
 
-	// Zap on Close
-	if (localStorage.zapOnClose == 'true' )
-		{ $("#zapOnClose").attr('checked', true); }
-	else { $("#zapOnClose").attr('checked', false); }
+	// Checkboxes
+	restoreCheckBox('zapOnClose', localStorage.zapOnClose);
+	restoreCheckBox('notifyZap', localStorage.notifyZap);
+	restoreCheckBox('notifyVibration', localStorage.notifyVibration);
+	restoreCheckBox('notifyBeep', localStorage.notifyBeep);
+	
+	
+	
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 
 	// Stimuli Intensity
@@ -235,6 +246,21 @@ function initialize() {
 	$("#zapOnClose").change(function(){
 		localStorage.zapOnClose = $(this).prop( "checked" );
 	});
+	
+	// Notifications before stimuli
+	$("#notifyZap").change(function(){
+		localStorage.notifyZap = $(this).prop( "checked" );
+	});
+
+	$("#notifyVibration").change(function(){
+		localStorage.notifyVibration = $(this).prop( "checked" );
+	});
+
+	$("#notifyBeep").change(function(){
+		localStorage.notifyBeep = $(this).prop( "checked" );
+	});
+	
+	// Max Tabs
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
 	});

@@ -25,7 +25,7 @@ var curTimeOut;
 // Third is message if tabs are being closed.
 
 // For tab numbers
-var msgTooManyTabs = ["OUCH! Too Many Tabs", "You openned more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!" , "Yeap! Keep on closing them!"];
+var msgTooManyTabs = ["OUCH! Too Many Tabs", "You opened more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!" , "Yeap! Keep on closing them!"];
 var msgBorderlineTabs = ["Tabs limit approaching", "Keep them at bay and watch out for new tabs!", "Safe zone!"]
 var msgLimitTabs = ["Tabs limit reached!", "You're on the verge! Open no more tabs! Stay true to yourself!", "Back to safety, but still on the limit!"]
 
@@ -97,8 +97,8 @@ function clearNotifications(){
 function CheckBlackList(curTabURL, curTabDomain) {
 	
 	var _result = "";
-	var _whiteList = localStorage.whiteList;
-	var _blackList = localStorage.blackList;
+	var _whiteList = localStorage.whiteList.split(",");
+	var _blackList = localStorage.blackList.split(",");
 		
 		// Checks for blackList.
 		if (_blackList.indexOf(curTabDomain) != -1 && 
@@ -169,7 +169,7 @@ function notifyTabCount(tabs, situation){
 		notID = "tooManyTabs";
 		if(situation.trend != "lowering" ){ 
 			// notMessage = msgTooManyTabs[1]; // Variable is being set at startup, but ain't updated after that. So it's being called manually here, to match latest maxTabs
-			notMessage = "You openned more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!";
+			notMessage = "You opened more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!";
 			// curTimeOut = setTimeout(function(){ stimuli("shock", 160, localStorage.accessToken}, timeWindow * 1000);
 			}
 		else { notMessage = msgTooManyTabs[1]; }

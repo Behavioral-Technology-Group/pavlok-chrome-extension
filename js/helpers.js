@@ -9,12 +9,21 @@
 
 // Defaults
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
+
+// Stimuli intensity
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
-if (!localStorage.zapIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
+if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
+
+// Blacklist and tabs
 if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
-if (!localStorage.maxTabs ) { localStorage.maxTabs = 6; }
+if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
+
+// Notifications
+if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'true'; }
+if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'true'; }
+if (!localStorage.notifyZap ) { localStorage.notifyZap = 'true'; }
 
 
 /*---------------------------------------------------------------------------*/
@@ -343,9 +352,14 @@ function userInfo(accessToken) {
 }
 
 function stimuli(stimuli, value, accessToken, textAlert) {
+	var notify = true;
 	if (!textAlert){ textAlert = "Incoming " + stimuli; }
 	
-	alert(textAlert);
+	if ( stimuli == 'beep' && localStorage.notifyBeep == 'false' ) { notify = false; }
+	else if ( stimuli == 'vibration' && localStorage.notifyVibration == 'false' ) { notify = false; }
+	else if ( stimuli == 'shock' && localStorage.notifyZap == 'false' ) { notify = false; }
+	
+	if (notify) { alert(textAlert); }
 	
 	postURL = 	'https://pavlok-stage.herokuapp.com/api/v1/stimuli/' + 
 				stimuli + '/' + 
@@ -376,8 +390,6 @@ function randomString(characters){
 
     return text;
 }
-
-
 
 function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 	var redirectURL = chrome.identity.getRedirectURL();

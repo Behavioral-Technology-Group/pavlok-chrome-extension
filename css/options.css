@@ -153,3 +153,7 @@ div.auth{
 .onlyUnlogged{
 	visibility: visible;
 }
+
+.noDisplay{
+	display: none;
+}

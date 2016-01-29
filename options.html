@@ -49,9 +49,11 @@
 				<li><a href="#tabs-1">Black List</a></li>
 				<li><a href="#tabs-2">Tab Numbers</a></li>
 				<li><a href="#tabs-3">Stimuli</a></li>
-				<li><a href="#tabs-4">Advanced Integrations</a></li>
+				<li><a href="#tabs-4">Advanced Options</a></li>
 				<li><a href="#tabs-5">About</a></li>
 			</ul>
+			
+			
 			<div id="tabs-1">
 				<div id="blackListContainer">
 					<h2>Black List <img src="/images/help.ico" id="blackListHelp" class="helpIcon" /></h2>
@@ -139,8 +141,26 @@
 				<a href="#" id="resetIntensity">Reset values</a>
 			</div>
 			<div id="tabs-4">
-				<a href="#" id="rescueTimeOAuth">Connect to GitHub</a>
-			<div id="rescueTimeData"></div>
+				<a href="#" id="rescueTimeOAuth" class="noDisplay">Connect to GitHub</a>
+				<div id="rescueTimeData" class="noDisplay"></div>
+				
+				<h2>Stimuli Notifications</h2>
+				<p>You might find too many popups before stimuli annoying and want to turn it off. We advise you keep at least the Zap one active, as it will help you understand better why you get that. And, being more conscious about it, you will be better off tackling the habit changes. Check off the ones you wish to disable.</p>
+				<table>
+					<tr>
+						<td>
+							<p>
+								<input type="checkbox" id="notifyZap">Zap
+							</p>
+						</td>
+						<td>
+							<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
+						</td>
+						<td>
+							<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
+						</td>
+					</tr>
+				</table>				
 			</div>
 			<div id="tabs-5">
 				<h2>About extension</h2>
