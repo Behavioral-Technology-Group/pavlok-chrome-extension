@@ -215,25 +215,6 @@ function initialize() {
 		});
 	}
 	
-	// Help boxes
-	$('#whiteListHelp').hover(
-	function(){
-		$( '#whiteListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#whiteListHelpBox').fadeOut();
-		}
-	);
-	
-	 $('#blackListHelp').hover(
-	function(){
-		$( '#blackListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#blackListHelpBox').fadeOut();
-		}
-	);
-	
 	// Create tabs
 	$(function() {
 		$( "#tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
@@ -283,11 +264,8 @@ function initialize() {
 		alert("changed black list");
 	});
 	
-	// Tooltip
-	$(function() {
-		$( document ).tooltip();
-	});	
-	
+	// Enablers
+	enableTooltips();
 	enableButtons();
 	enableSliders();
 }

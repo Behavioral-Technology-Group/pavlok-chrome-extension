@@ -28,6 +28,8 @@ function showOptions(accessToken){
 }
 
 $( document ).ready(function() {
+	enableTooltips();
+	
 	$("#signIn").click(function(){
 		oauth();
 	});
@@ -57,25 +59,6 @@ $( document ).ready(function() {
 		'defaultText':'Add site',
 		'removeWithBackspace' : true
 	});
-	
-	// Help boxes
-	$('#whiteListHelp').hover(
-	function(){
-		$( '#whiteListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#whiteListHelpBox').fadeOut();
-		}
-	);
-	
-	 $('#blackListHelp').hover(
-	function(){
-		$( '#blackListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#blackListHelpBox').fadeOut();
-		}
-	);	
 
 	$("#test_pairing").click(function(){
 		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
