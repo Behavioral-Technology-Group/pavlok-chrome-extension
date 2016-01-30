@@ -30,6 +30,9 @@ function showOptions(accessToken){
 $( document ).ready(function() {
 	enableTooltips();
 	
+	if ( !localStorage.userName ) { userInfo(localStorage.accessToken); }
+	if ( localStorage.userName ) { updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
+	
 	$("#signIn").click(function(){
 		oauth();
 	});
@@ -39,7 +42,6 @@ $( document ).ready(function() {
 	});
 	
 	// Restore Max Tabs
-	if (localStorage.maxTabs == undefined) { localStorage.maxTabs = 6; }
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();

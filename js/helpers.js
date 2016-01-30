@@ -145,14 +145,15 @@ function hideOptions(){
 }
 
 function showName(name){
-	if (name === undefined) {
+	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
 		console.log("SHOW NAME has username as undefined. Name is " + name)
 		return
 	}
 	else {
 		var userName = document.getElementById("userName");
 		userName.style.visibility = "visible";
-		userName.innerHTML = ", " + localStorage.getItem('userName');
+		userName.innerHTML = ", " + localStorage.userName;
+		
 		console.log('Username is ' + userName);
 	}
 	return
@@ -165,6 +166,10 @@ function hideName(){
 	return
 }
 
+function updateNameAndEmail(name, email){
+	if ( $("#userName")) { $("#userName").html(name); }
+	if ( $("#userEmail")) { $("#userEmail").html(email); }
+}
 //
 function enableTooltips(){
 	$(function() {
@@ -289,6 +294,7 @@ function oauth() {
 					chrome.windows.getLastFocused(function(win) {
 						UpdateTabCount(win.windowId);
 						showOptions(accessToken);
+						userInfo(accessToken);
 					});
 					console.log("OAuth2 test concluded");
 				});
@@ -361,6 +367,7 @@ function userInfo(accessToken) {
 				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
 				localStorage.setItem('userEmail', data.email)
 				localStorage.setItem('userName', data.name);
+				updateNameAndEmail(localStorage.userName, localStorage.userEmail);
 				return data.name;
 		})
 		.fail(function(){
@@ -440,6 +447,8 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 					var accessToken = data.split("=")[1];
 					localStorage.setItem('oauthSuccess', 'true');
 					localStorage.setItem('lastAccessToken', accessToken);
+					localStorage.setItem('lastAccessToken', accessToken);
+					
 					
 					console.log("OAuth2 test concluded");
 				})

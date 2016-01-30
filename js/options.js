@@ -80,6 +80,14 @@ function enableButtons(){
 	});
 }
 
+function enableTables(){
+	// $('#sundayActiveTimeStart').timepicker({
+	$('.timeSelectors').timepicker({
+		showPeriodLabels: false,
+	});
+	
+}
+
 function enableSliders(){
 	$(function() {
 		$( "#sliderZap" ).slider({
@@ -149,27 +157,24 @@ function save_options() {
 }
 
 function restore_options() {
+	// User name and email
+	updateNameAndEmail(localStorage.userName, localStorage.userEmail);
+	
 	// Black and white lists
 	var blackList = localStorage.blackList;
 	if (blackList == undefined) { blackList = ' '; }
-	
 	$("#blackList").val(blackList);
 
 	
 	var whiteList = localStorage.whiteList;
 	if (whiteList == undefined) { whiteList = ' '; }
-	if (whiteList)
-	{
-		document.getElementById("whiteList").value=whiteList;
-	}
+	$("#whiteList").val(whiteList);
 
 	// Checkboxes
 	restoreCheckBox('zapOnClose', localStorage.zapOnClose);
 	restoreCheckBox('notifyZap', localStorage.notifyZap);
 	restoreCheckBox('notifyVibration', localStorage.notifyVibration);
 	restoreCheckBox('notifyBeep', localStorage.notifyBeep);
-	
-	
 	
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 
@@ -268,6 +273,7 @@ function initialize() {
 	enableTooltips();
 	enableButtons();
 	enableSliders();
+	enableTables();
 }
 
 
@@ -287,7 +293,7 @@ $( document ).ready(function() {
 	if (!localStorage.userName){
 		userInfo(localStorage.accessToken)
 	}
-	if (localStorage.userName == undefined) {localStorage.userName = ''; }
+	if (localStorage.userName == undefined) {localStorage.userName = ' '; }
 	// else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);

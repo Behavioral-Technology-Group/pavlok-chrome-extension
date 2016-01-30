@@ -3,14 +3,15 @@
 	<title>Controlled multi-tab browsing</title>
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
 	
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
+	<script src="js/jquery.ui.timepicker.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/options.js"></script>
-	
 	
 	<link rel="stylesheet" href="css/options.css">
 </head>
@@ -37,12 +38,12 @@
 		</tr>
 		<tr>
 			<td class="onlyLogged">
-				<h2>Welcome to <span>Alpha</span><span id="userName"></span>!</h2>
+				<h2>Welcome <span id="userName"></span>!</h2>
 			</td>
 		</tr>
 	</table>
 	<div class="onlyLogged" id="loggedDIV">
-		<p>Your account email is: <span id="userEmailSettings"></span></p>
+		<p>Your account email is: <span id="userEmail"></span></p>
 
 		<div id="tabs">
 			<ul>
@@ -148,24 +149,95 @@
 			<div id="tabs-4">
 				<a href="#" id="rescueTimeOAuth" class="noDisplay">Connect to GitHub</a>
 				<div id="rescueTimeData" class="noDisplay"></div>
+				<div id="stimuliNotificationsDiv"</div>
+					<h2>Stimuli Notifications</h2>
+					<p>You might find too many popups before stimuli annoying and want to turn it off. We advise you keep at least the Zap one active, as it will help you understand better why you get that. And, being more conscious about it, you will be better off tackling the habit changes. Check off the ones you wish to disable.</p>
+					<table>
+						<tr>
+							<td>
+								<p>
+									<input type="checkbox" id="notifyZap">Zap
+								</p>
+							</td>
+							<td>
+								<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
+							</td>
+							<td>
+								<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
+							</td>
+						</tr>
+					</table>
+					<br/>
+				</div>
+				<div id="timeDaysDiv" class="noDisplay">
+					<h2>Conform it to you schedule</h2>
+					
+					<p>Select days for Pavlok to help you focus</p>
+					<table id="activeDaysTable">
+						<tr>
+							<th>
+								<input type="checkbox" id="sundayActive" class="activeDay"><br />
+								<label for="sundayActive">Sunday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="mondayActive" class="activeDay"><br />
+								<label for="mondayActive">Monday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="tuesdayActive" class="activeDay"><br />
+								<label for="tuesdayActive">Tuesday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="wednesdayActive" class="activeDay"><br />
+								<label for="wednesdayActive">Wednesday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="thursdayActive" class="activeDay"><br />
+								<label for="thursdayActive">Thursday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="fridayActive" class="activeDay"><br />
+								<label for="fridayActive">Friday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="saturdayActive" class="activeDay"><br />
+								<label for="saturdayActive">Saturday</label>
+							</th>
+						</tr>
+						<tr class="noDisplay">
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="sundayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="sundayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="mondayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="mondayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="tuesdayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="tuesdayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="wednesdayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="wednesdayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="thursdayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="thursdayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="fridayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="fridayActiveTimeEnd"></p>
+							</td>
+							<td>
+								<p>Start<br/><input class="50px timeSelectors" id="saturdayActiveTimeStart"></p>
+								<p>End<br/><input class="50px timeSelectors" id="saturdayActiveTimeEnd"></p>
+							</td>
+						</tr>
+					</table>
+
+				</div>
 				
-				<h2>Stimuli Notifications</h2>
-				<p>You might find too many popups before stimuli annoying and want to turn it off. We advise you keep at least the Zap one active, as it will help you understand better why you get that. And, being more conscious about it, you will be better off tackling the habit changes. Check off the ones you wish to disable.</p>
-				<table>
-					<tr>
-						<td>
-							<p>
-								<input type="checkbox" id="notifyZap">Zap
-							</p>
-						</td>
-						<td>
-							<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
-						</td>
-						<td>
-							<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
-						</td>
-					</tr>
-				</table>				
 			</div>
 			<div id="tabs-5">
 				<h2>About extension</h2>

@@ -149,3 +149,31 @@ div.auth{
 .noDisplay{
 	display: none;
 }
+
+#dayTimeTable thead th {
+	width: 130px;
+    border: 1px solid white;
+	border-collapse: collapse;
+	color: white;
+}
+
+#dayTimeTable td {
+	width: 130px;
+    border: 1px solid white;
+	border-collapse: collapse;
+	color: white;
+}
+
+#dayTimeTable {
+	border: 1px solid white;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.hasTimePicker {
+	width: 50px;
+}
+
+.50px {
+	width: 50px;
+}
