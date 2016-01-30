@@ -274,6 +274,12 @@ function initialize() {
 	enableButtons();
 	enableSliders();
 	enableTables();
+	
+	$(".linked")
+		.click( 
+			function() {
+				$("a", this).click();
+			});
 }
 
 
