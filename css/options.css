@@ -181,3 +181,22 @@ th {
 .100px {
 	width: 100px;
 }
+
+#autoZapperTable th {
+	/* width: 400px; */
+	width: 25%;
+}
+#autoZapperTable input {
+	width: 50px;
+}
+#autoZapperStart {
+  text-align: center;
+  color: white;
+  background-color: #845221;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  width: 85%;
+  display: block;
+}
+}

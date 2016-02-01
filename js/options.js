@@ -62,6 +62,69 @@ function checkActiveHour(start, end){	// start and End are for debugging
 }
 /* end of sandbox */
 
+function enableAutoZapper(){
+		var intensity = $( "#autoZapperIntensity" ).spinner({
+			min: 0,
+			max: 100,
+			page: 10,
+			step: 10
+		});
+		intensity.val(60);
+	
+		var duration = $( "#autoZapperDuration" ).spinner({
+			min: 0,
+			max: 60,
+			page: 1,
+			step: 1
+		});
+		duration.val(5);
+	
+		var frequency = $( "#autoZapperFrequency" ).spinner({
+			min: 2,
+			max: 30,
+			page: 1,
+			step: 1
+		});
+		frequency.val(5);
+	
+	$("#autoZapperStart").click(function(){
+		$.prompt("Starting <b>zaps on " + intensity.val() + "%</b>...<br />" +
+			"for <b>" + duration.val() + " minutes</b><br />"+
+			"zapping <b>every " + frequency.val() + " seconds</b>.", {
+			title: "Are you Ready?",
+			buttons: { "Yes, I'm Ready": true, "No, let me change this": false },
+			submit: function(e,v,m,f){
+				console.log("result was " + v);
+				var result = v;
+				if (result == true){
+					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ));
+					var zapFreq = parseInt( $("#autoZapperFrequency").val() ) * 1000;
+					var zapDur = parseInt( $("#autoZapperDuration").val() ) * 60 * 1000;
+
+					localStorage.trainingSessionZI = zapInt;
+					localStorage.trainingSessionZF = zapFreq;
+					localStorage.trainingSessionZD = zapDur;
+					
+					var trainingSession = setInterval(function() {
+						console.log("Occured at ");
+						stimuli('vibration', localStorage.trainingSessionZI, localStorage.accessToken, '', 'false');
+					}, parseInt(localStorage.trainingSessionZF));
+					
+					var endTraining = setTimeout(function(){ 
+						clearInterval(trainingSession);
+						$.prompt("Session is over");
+						localStorage.trainingSession = 'false';
+						localStorage.trainingSessionZI = '';
+						localStorage.trainingSessionZD = '';
+						localStorage.trainingSessionZF = '';
+						
+					}, parseInt(localStorage.trainingSessionZD));
+				}	
+			}
+		});
+	});
+}
+
 function restoreCheckBox(checkboxID, condition){
 	if (condition == 'true' )
 		{ $("#" + checkboxID).attr('checked', true); }
@@ -439,7 +502,8 @@ function initialize() {
 		alert("changed black list");
 	});
 	
-	// Enablers
+	// Enablers]
+	enableAutoZapper();
 	enableTooltips();
 	enableButtons();
 	enableSliders();

@@ -4,11 +4,13 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
 	
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/jquery.ui.timepicker.js"></script>
+	<script src="js/jquery-impromptu.min.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/options.js"></script>
@@ -51,7 +53,8 @@
 				<li class="linked"><a href="#tabs-2">Tab Numbers</a></li>
 				<li class="linked"><a href="#tabs-3">Stimuli</a></li>
 				<li class="linked"><a href="#tabs-4">Advanced Options</a></li>
-				<li class="linked"><a href="#tabs-5">About</a></li>
+				<li class="linked"><a href="#tabs-5">AutoZapper</a></li>
+				<li class="linked"><a href="#tabs-6">About</a></li>
 			</ul>
 			
 			
@@ -277,6 +280,36 @@
 				
 			</div>
 			<div id="tabs-5">
+				<h2>Free up your hands!</h2>
+				<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
+				<p>Here is how it works:<p>
+				<ol>
+					<li>Set the <span class="yellow">intensity of the zap</span><img src="/images/help.ico" id="blackListHelp" class="helpIcon" title='
+						<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
+						<p>We still advise you test the intesity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>'/>
+					</li>
+					<li>Set the <span class="yellow">duration</span> of your session</li>
+					<li>Set the <span class="yellow">frequency</span> for the zap to come</li>
+					<li>Get whatever you need (cigarettes, junk food, random sites, etc)</li>
+					<li>Brace yourself and rock on the go button</li>
+				</ol>
+				
+				<table id="autoZapperTable">
+					<thead>
+						<th>Intensity</th>
+						<th>Duration</th>
+						<th>Frequency</th>
+						<th>Now we...</th>
+					</thead>
+					<tbody>
+						<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
+						<td><p><input id="autoZapperDuration" class="50px"> (min)</p></td>
+						<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
+						<td><a id="autoZapperStart" type="button" value="GO!">GO!</a></td>
+					</tbody>
+				</table>
+			</div>
+			<div id="tabs-6">
 				<h2>About extension</h2>
 				<p>This extension is all about getting you on track to <b>your</b> habit goals.</p>
 				<p>If you struggle to keep distraction at bay when near the computer, this comes to rescue. There will be clear stakes here, as you'll be simultaneously made aware of the bad habit (and to a fix!) and get uncomfortable stimuli to assotiate with the bad habit.</p>
