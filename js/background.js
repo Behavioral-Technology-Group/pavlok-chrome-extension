@@ -118,7 +118,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 }
 
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
-	if (isValid(token)){
+	if (isValid(token) && checkActiveDayHour()){
 		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
 			var maxTabs = parseInt(localStorage.maxTabs);
 			if(!maxTabs) {
@@ -201,6 +201,61 @@ function notifyTabCount(tabs, situation){
 	notifyUser(notTitle, notMessage, notID);
 }
 
+function checkActiveDayHour(){
+	var now = new Date();
+	var start = localStorage.generalActiveTimeStart;
+	var end = localStorage.generalActiveTimeEnd;
+	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	
+	var dayActive = checkActiveDay(now);
+	var hourActive = checkActiveHour(start, end);
+	console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
+	
+	if (dayActive == true && hourActive == true) { return true }
+	else { return false }
+}
+
+function checkActiveDay(date){	
+	// Creates a list of active days from local Storage
+	var activeDaysList = [];
+	if (localStorage.sundayActive == 'true') { activeDaysList.push(0); }
+	if (localStorage.mondayActive == 'true') { activeDaysList.push(1); }
+	if (localStorage.tuesdayActive == 'true') { activeDaysList.push(2); }
+	if (localStorage.wednesdayActive == 'true') { activeDaysList.push(3); }
+	if (localStorage.thursdayActive == 'true') { activeDaysList.push(4); }
+	if (localStorage.fridayActive == 'true') { activeDaysList.push(5); }
+	if (localStorage.saturdayActive == 'true') { activeDaysList.push(6); }
+	
+	// Checks if current day is set as active
+	if ( activeDaysList.indexOf(date.getDay()) != -1 ) { return true } 
+	else { return false}
+}
+	
+function checkActiveHour(start, end){	// start and End are for debugging
+	// Checks if it's on an active day
+	var now = new Date();
+	
+	// Checks if it's on an active hour
+	var testHourStart = start;			// localStorage.xActiveStart
+	var testHourEnd = end;				// localStorage.xActiveEnd
+	
+	// New dates using today, but with begin and end times set
+	var begin = new Date();
+	begin.setHours(parseInt(testHourStart.split(":")[0]));
+	begin.setMinutes(parseInt(testHourStart.split(":")[1]));
+	begin.setSeconds(0);
+	begin.setMilliseconds(0);
+	
+	var end = new Date();
+	end.setHours(parseInt(testHourEnd.split(":")[0]));
+	end.setMinutes(parseInt(testHourEnd.split(":")[1]));
+	end.setSeconds(0);
+	end.setMilliseconds(0);
+	
+	// Evaluation
+	if (begin < now && now < end) { return true }
+	else { return false }
+}
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -325,12 +380,16 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 
 var testInterval = setInterval(
 	function(){
-		if (isValid(localStorage.accessToken)){
-			getTabInfo(evaluateTabURL);
-			
-			chrome.windows.getLastFocused(function(win) {
-				UpdateTabCount(win.windowId);
-			});
+		if (checkActiveDayHour() == true) {
+			if (isValid(localStorage.accessToken)){
+				getTabInfo(evaluateTabURL);
+				
+				chrome.windows.getLastFocused(function(win) {
+					UpdateTabCount(win.windowId);
+				});
+			}
+		} else {
+			UpdateBadgeOnOff("Zzz");
 		}
 	}
 ,100);

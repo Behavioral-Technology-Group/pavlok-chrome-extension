@@ -4,6 +4,64 @@
 
 */
 
+/* sandbox */
+function checkActiveDayHour(){
+	var now = new Date();
+	var start = localStorage.generalActiveTimeStart;
+	var end = localStorage.generalActiveTimeEnd;
+	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	
+	var dayActive = checkActiveDay(now);
+	var hourActive = checkActiveHour(start, end);
+	console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
+	
+	if (dayActive == true && hourActive == true) { return true }
+	else { return false }
+}
+
+function checkActiveDay(date){	
+	// Creates a list of active days from local Storage
+	var activeDaysList = [];
+	if (localStorage.sundayActive == 'true') { activeDaysList.push(0); }
+	if (localStorage.mondayActive == 'true') { activeDaysList.push(1); }
+	if (localStorage.tuesdayActive == 'true') { activeDaysList.push(2); }
+	if (localStorage.wednesdayActive == 'true') { activeDaysList.push(3); }
+	if (localStorage.thursdayActive == 'true') { activeDaysList.push(4); }
+	if (localStorage.fridayActive == 'true') { activeDaysList.push(5); }
+	if (localStorage.saturdayActive == 'true') { activeDaysList.push(6); }
+	
+	// Checks if current day is set as active
+	if ( activeDaysList.indexOf(date.getDay()) != -1 ) { return true } 
+	else { return false}
+}
+	
+function checkActiveHour(start, end){	// start and End are for debugging
+	// Checks if it's on an active day
+	var now = new Date();
+	
+	// Checks if it's on an active hour
+	var testHourStart = start;			// localStorage.xActiveStart
+	var testHourEnd = end;				// localStorage.xActiveEnd
+	
+	// New dates using today, but with begin and end times set
+	var begin = new Date();
+	begin.setHours(parseInt(testHourStart.split(":")[0]));
+	begin.setMinutes(parseInt(testHourStart.split(":")[1]));
+	begin.setSeconds(0);
+	begin.setMilliseconds(0);
+	
+	var end = new Date();
+	end.setHours(parseInt(testHourEnd.split(":")[0]));
+	end.setMinutes(parseInt(testHourEnd.split(":")[1]));
+	end.setSeconds(0);
+	end.setMilliseconds(0);
+	
+	// Evaluation
+	if (begin < now && now < end) { return true }
+	else { return false }
+}
+/* end of sandbox */
+
 function restoreCheckBox(checkboxID, condition){
 	if (condition == 'true' )
 		{ $("#" + checkboxID).attr('checked', true); }
@@ -120,6 +178,105 @@ function enableSliders(){
 }
 
 function enableCheckboxes(){
+	// Active days
+	$("#sundayActive").change(function(){
+		localStorage.sundayActive = $(this).prop( "checked" );
+	});
+	$("#mondayActive").change(function(){
+		localStorage.mondayActive = ($(this).prop( "checked" ));
+	});
+	$("#tuesdayActive").change(function(){
+		localStorage.tuesdayActive = $(this).prop( "checked" );
+	});
+	$("#wednesdayActive").change(function(){
+		localStorage.wednesdayActive = $(this).prop( "checked" );
+	});
+	$("#thursdayActive").change(function(){
+		localStorage.thursdayActive = $(this).prop( "checked" );
+	});
+	$("#fridayActive").change(function(){
+		localStorage.fridayActive = $(this).prop( "checked" );
+	});
+	$("#saturdayActive").change(function(){
+		localStorage.saturdayActive = $(this).prop( "checked" );
+	});
+	$("#eachDay").change( function() {	
+		var advanced = $(this).prop( "checked" );
+		alert("each Day is " + advanced);
+		if ( advanced == true ) { 
+			$("#singleDayTimeTR").css("display", "block");
+		} else {
+			$("#singleDayTimeTR").css("display", "none");
+		}
+	});	
+	
+}
+
+function enableInputs(){
+	$("#generalActiveTimeStart").change( function() {
+		localStorage.generalActiveTimeStart = $(this).val();
+	});
+	
+	$("#generalActiveTimeEnd").change( function() {
+		localStorage.generalActiveTimeEnd = $(this).val();
+	});
+	
+	// Advanced day to day
+	$("#sundayActiveTimeStart").change( function() {	
+		localStorage.sundayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#sundayActiveTimeEnd").change( function() {	
+		localStorage.sundayActiveTimeEnd = $(this).val();
+	});	
+		
+	$("#mondayActiveTimeStart").change( function() {	
+		localStorage.mondayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#mondayActiveTimeEnd").change( function() {	
+		localStorage.mondayActiveTimeEnd = $(this).val();
+	});	
+	
+	$("#tuesdayActiveTimeStart").change( function() {	
+		localStorage.tuesdayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#tuesdayActiveTimeEnd").change( function() {	
+		localStorage.tuesdayActiveTimeEnd = $(this).val();
+	});	
+		
+	$("#wednesdayActiveTimeStart").change( function() {	
+		localStorage.wednesdayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#wednesdayActiveTimeEnd").change( function() {	
+		localStorage.wednesdayActiveTimeEnd = $(this).val();
+	});	
+		
+	$("#thursdayActiveTimeStart").change( function() {	
+		localStorage.thursdayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#thursdayActiveTimeEnd").change( function() {	
+		localStorage.thursdayActiveTimeEnd = $(this).val();
+	});	
+		
+	$("#fridayActiveTimeStart").change( function() {	
+		localStorage.fridayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#fridayActiveTimeEnd").change( function() {	
+		localStorage.fridayActiveTimeEnd = $(this).val();
+	});	
+
+	$("#saturdayActiveTimeStart").change( function() {	
+		localStorage.fridayActiveTimeStart = $(this).val();
+	});	
+		
+	$("#saturdayActiveTimeEnd").change( function() {	
+		localStorage.fridayActiveTimeEnd = $(this).val();
+	});	
 	
 }
 
@@ -170,11 +327,24 @@ function restore_options() {
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
 
+	var startHour = localStorage.generalActiveTimeStart;
+	$("#generalActiveTimeStart").val(startHour);
+	var endHour = localStorage.generalActiveTimeEnd;
+	$("#generalActiveTimeEnd").val(endHour);
+	
 	// Checkboxes
 	restoreCheckBox('zapOnClose', localStorage.zapOnClose);
 	restoreCheckBox('notifyZap', localStorage.notifyZap);
 	restoreCheckBox('notifyVibration', localStorage.notifyVibration);
 	restoreCheckBox('notifyBeep', localStorage.notifyBeep);
+	
+	restoreCheckBox('sundayActive', localStorage.sundayActive);
+	restoreCheckBox('mondayActive', localStorage.mondayActive);
+	restoreCheckBox('tuesdayActive', localStorage.tuesdayActive);
+	restoreCheckBox('wednesdayActive', localStorage.wednesdayActive);
+	restoreCheckBox('thursdayActive', localStorage.thursdayActive);
+	restoreCheckBox('fridayActive', localStorage.fridayActive);
+	restoreCheckBox('saturdayActive', localStorage.saturdayActive);
 	
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 
@@ -274,11 +444,12 @@ function initialize() {
 	enableButtons();
 	enableSliders();
 	enableTables();
-	
+	enableCheckboxes();
+	enableInputs();
 	$(".linked")
 		.click( 
 			function() {
-				$("a", this).click();
+				$("a", this).click(); // Gotta fix this to remove the circular loop
 			});
 }
 

@@ -150,7 +150,7 @@ div.auth{
 	display: none;
 }
 
-#dayTimeTable thead th {
+th {
 	width: 130px;
     border: 1px solid white;
 	border-collapse: collapse;
@@ -176,4 +176,8 @@ div.auth{
 
 .50px {
 	width: 50px;
+}
+
+.100px {
+	width: 100px;
 }

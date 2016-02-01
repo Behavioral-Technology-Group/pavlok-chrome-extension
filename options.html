@@ -150,8 +150,19 @@
 				<a href="#" id="rescueTimeOAuth" class="noDisplay">Connect to GitHub</a>
 				<div id="rescueTimeData" class="noDisplay"></div>
 				<div id="stimuliNotificationsDiv"</div>
-					<h2>Stimuli Notifications</h2>
-					<p>You might find too many popups before stimuli annoying and want to turn it off. We advise you keep at least the Zap one active, as it will help you understand better why you get that. And, being more conscious about it, you will be better off tackling the habit changes. Check off the ones you wish to disable.</p>
+					<h2>Stimuli Notifications<img src="/images/help.ico" class="helpIcon" title='
+						<p>
+							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
+						</p>
+						<p>
+							We advise you <span class="yellow"><i>keep at least the Zap popup active</i></span>, as it will help you understand better why you get that zap. Being more conscious about it, you will be better off tackling the habit changes.
+						</p>
+						<p>
+							Note that you will only get the popup notifications checked here.
+						</p>
+						'>
+					</h2>
+					<p> Check the ones you wish to keep.</p>
 					<table>
 						<tr>
 							<td>
@@ -169,10 +180,25 @@
 					</table>
 					<br/>
 				</div>
-				<div id="timeDaysDiv" class="noDisplay">
-					<h2>Conform it to you schedule</h2>
-					
-					<p>Select days for Pavlok to help you focus</p>
+				<hr>
+				<div id="timeDaysDiv" class="Display">
+					<h2>Conform it to you schedule 
+					<img src="/images/help.ico" class="helpIcon" title='
+						<p>
+							Pavlok will only work in the days you checked and while you are between the start and end times.
+						</p>
+						<p>
+							For instance: you set a 9-to-5 (check weekdays and put <span class="yellow"><i>Start at 09:00</i></span> and <span class="yellow"><i>End at 17:00</i></span>. If you visit some blocked site (say, Facebook) at 10:30, you will get notifications and a zap, just as you would expect.
+						</p>
+						<p>
+							If you happen  to get to Facebook by 08:00, there will be nothing going on from Pavlok for you.
+						</p>
+						<p>
+							You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
+						</p>
+						'>
+					</h2>
+					<p>Select days and hours for Pavlok to help you focus</p>
 					<table id="activeDaysTable">
 						<tr>
 							<th>
@@ -204,7 +230,18 @@
 								<label for="saturdayActive">Saturday</label>
 							</th>
 						</tr>
-						<tr class="noDisplay">
+						<tr class="display" id="generalActiveHours">
+							<td colspan="3">
+								<p>Start <input class="100px timeSelectors" id="generalActiveTimeStart"></p>
+							</td>
+							<td colspan="3">
+								<p>End <input class="100px timeSelectors" id="generalActiveTimeEnd"></p>
+							</td>
+							<td class="noDisplay">
+								<input id="eachDay" type="checkbox">Each day
+							</td>
+						</tr>
+						<tr id="singleDayTimeTR" class="noDisplay">
 							<td>
 								<p>Start<br/><input class="50px timeSelectors" id="sundayActiveTimeStart"></p>
 								<p>End<br/><input class="50px timeSelectors" id="sundayActiveTimeEnd"></p>
