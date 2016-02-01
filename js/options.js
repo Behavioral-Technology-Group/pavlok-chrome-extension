@@ -107,7 +107,7 @@ function enableAutoZapper(){
 					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
-						stimuli('vibration', localStorage.trainingSessionZI, localStorage.accessToken, '', 'false');
+						stimuli('shock', localStorage.trainingSessionZI, localStorage.accessToken, '', 'false');
 					}, parseInt(localStorage.trainingSessionZF));
 					
 					var endTraining = setTimeout(function(){ 

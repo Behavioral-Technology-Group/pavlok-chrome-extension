@@ -8,7 +8,7 @@
 */
 
 // Defaults
-var usage = "local"; // local OR test OR production
+var usage = "test"; // local OR test OR production
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
