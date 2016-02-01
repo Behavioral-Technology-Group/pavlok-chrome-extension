@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "name": "LOCAL P.A.V.L.O.K. Chrome Extension",
+  "name": "TEST P.A.V.L.O.K.",
   "version": "0.4.9",
  
   "description": "Stay Focused. Eliminate Distraction.",

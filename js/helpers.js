@@ -8,6 +8,7 @@
 */
 
 // Defaults
+var usage = "test"; // local OR test OR production
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
@@ -19,6 +20,17 @@ if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
+
+// Active Days and Hours
+if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
+if (!localStorage.generalActiveTimeEnd) { localStorage.generalActiveTimeEnd = "23:59"; }
+if (!localStorage.sundayActive) { localStorage.sundayActive = 'true'; }
+if (!localStorage.mondayActive) { localStorage.mondayActive = 'true'; }
+if (!localStorage.tuesdayActive) { localStorage.tuesdayActive = 'true'; }
+if (!localStorage.wednesdayActive) { localStorage.wednesdayActive = 'true'; }
+if (!localStorage.thursdayActive) { localStorage.thursdayActive = 'true'; }
+if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
+if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
 
 // Notifications
 if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'true'; }
@@ -252,13 +264,19 @@ function save_options() {
 
 function oauth() { 
 	var redirectURL = chrome.identity.getRedirectURL();
-	// Local
-	var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
-	var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
 	
-	// // Deployed
-	// var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
-	// var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
+	if ( usage == "local" ) {
+		var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
+		var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
+	}
+	else if ( usage == "production" ){
+		var clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		var clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";		
+	}
+	else if ( usage == "test" ){
+		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
+		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";		
+	}
 	
 	var authURL = "https://pavlok-stage.herokuapp.com/oauth/authorize?" + 
 		'client_id=' + clientID +
