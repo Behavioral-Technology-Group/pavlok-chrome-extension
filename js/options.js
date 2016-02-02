@@ -62,30 +62,48 @@ function checkActiveHour(start, end){	// start and End are for debugging
 }
 /* end of sandbox */
 
+function enableSelects(){
+	$("#timeFormat").change(function(){
+		var timeFormat = $(this).val();
+		localStorage.timeFormat = timeFormat;
+		if (timeFormat == '24') {
+			$('.timeSelectors').timepicker({
+				// "option", "showPeriod", false
+			});
+		}
+		else {
+			$('.timeSelectors').timepicker({
+				showPeriod: true,
+				showLeadingZero: true
+			});
+		}
+	});
+}
+
 function enableAutoZapper(){
-		var intensity = $( "#autoZapperIntensity" ).spinner({
-			min: 0,
-			max: 100,
-			page: 10,
-			step: 10
-		});
-		intensity.val(60);
-	
-		var duration = $( "#autoZapperDuration" ).spinner({
-			min: 0,
-			max: 60,
-			page: 1,
-			step: 1
-		});
-		duration.val(5);
-	
-		var frequency = $( "#autoZapperFrequency" ).spinner({
-			min: 2,
-			max: 30,
-			page: 1,
-			step: 1
-		});
-		frequency.val(5);
+	var intensity = $( "#autoZapperIntensity" ).spinner({
+		min: 10,
+		max: 100,
+		page: 10,
+		step: 10
+	});
+	intensity.val(60);
+
+	var duration = $( "#autoZapperDuration" ).spinner({
+		min: 1,
+		max: 60,
+		page: 1,
+		step: 1
+	});
+	duration.val(5);
+
+	var frequency = $( "#autoZapperFrequency" ).spinner({
+		min: 2,
+		max: 30,
+		page: 1,
+		step: 1
+	});
+	frequency.val(5);
 	
 	$("#autoZapperStart").click(function(){
 		$.prompt("Starting <b>zaps on " + intensity.val() + "%</b>...<br />" +
@@ -125,6 +143,18 @@ function enableAutoZapper(){
 	});
 }
 
+function enableSelecatbles(){
+	$("#selectable").selectable({
+		filter: ".tdSelectable",
+		stop: function() {
+			var result = $( "#select-result" ).empty();
+			$( ".ui-selected", this ).each(function() {
+				var index = $( "#selectable td" ).index( this );
+				result.append( " #" + ( index + 1 ) );
+			});
+		}
+	});
+}
 function restoreCheckBox(checkboxID, condition){
 	if (condition == 'true' )
 		{ $("#" + checkboxID).attr('checked', true); }
@@ -181,11 +211,11 @@ function enableButtons(){
 	});
 
 	$("#testZapInt").click(function(){
-		stimuli('shock', localStorage.zapIntensity, localStorage.accessToken);
+		stimuli('shock', localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
 		
 	$("#testVibrationInt").click(function(){
-		stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken);
+		stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
 	$("#signIn").click(function(){
@@ -204,7 +234,8 @@ function enableButtons(){
 function enableTables(){
 	// $('#sundayActiveTimeStart').timepicker({
 	$('.timeSelectors').timepicker({
-		showPeriodLabels: false,
+		showPeriod: true,
+		showLeadingZero: true
 	});
 	
 }
@@ -503,6 +534,8 @@ function initialize() {
 	});
 	
 	// Enablers]
+	enableSelecatbles();
+	enableSelects();
 	enableAutoZapper();
 	enableTooltips();
 	enableButtons();
@@ -510,6 +543,8 @@ function initialize() {
 	enableTables();
 	enableCheckboxes();
 	enableInputs();
+	
+	$(".allCaps").text().toUpperCase();
 	$(".linked")
 		.click( 
 			function() {

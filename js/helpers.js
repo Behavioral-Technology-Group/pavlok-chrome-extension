@@ -8,7 +8,7 @@
 */
 
 // Defaults
-var usage = "test"; // local OR test OR production
+var usage = "local"; // local OR test OR production
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
@@ -53,9 +53,9 @@ function isValid(token){
 	else { return false }
 
 	// Tries the code against API
-	console.log('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken);
+	console.log('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken);
 	
-	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
 	.done(function (data) {
 		console.log(data);
 		console.log("GOOD token. Works on API.");
@@ -115,7 +115,7 @@ function showSignOut(){
 
 function signOut(){ 
 	// Logging out of providers
-	signOutURL = " https://pavlok-stage.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
+	signOutURL = " https://pavlok.mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
 	console.log("url for Sign Out is " + signOutURL)
 	
 	// Proper way of handling it in our server
@@ -281,7 +281,7 @@ function oauth() {
 		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
 	}
 	
-	var authURL = "https://pavlok-stage.herokuapp.com/oauth/authorize?" + 
+	var authURL = "https://pavlok.mvp.herokuapp.com/oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&response_type=code' +
@@ -299,7 +299,7 @@ function oauth() {
 			console.log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://pavlok-stage.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
+			accessTokenUrl = 'https://pavlok.mvp.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
@@ -382,7 +382,7 @@ function destroyToken(){
 }
 
 function userInfo(accessToken) { 
-	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
 				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
@@ -408,7 +408,7 @@ function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
 	
 	if (notify) { alert(textAlert); }
 	
-	postURL = 	'https://pavlok-stage.herokuapp.com/api/v1/stimuli/' + 
+	postURL = 	'https://pavlok.mvp.herokuapp.com/api/v1/stimuli/' + 
 				stimuli + '/' + 
 				value + 
 				'?access_token=' + accessToken;

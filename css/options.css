@@ -21,16 +21,9 @@ body {
   font-family: Helvetica,Arial,sans-serif;
   font-size:small;
   color:#000;
-  background:
-    linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-    linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-    linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-    linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-    linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-    linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-  background-color: #131313;
-  background-size: 20px 20px;
+  background: linear-gradient(white, #f8e71c);
 }
+
 
 #save{
   background-image: url('../images/save.png');
@@ -123,7 +116,7 @@ div.auth{
 	width: 100%;
 	border-bottom-width: 1px !important;
 	border-right-width: 0 !important;
-	margin: 0 -1px .2em 0;
+	margin: 10px 10px .2em 0;
 }
 
 .ui-tabs-vertical .ui-tabs-nav li a { display:block;
@@ -152,7 +145,7 @@ div.auth{
 
 th {
 	width: 130px;
-    border: 1px solid white;
+    border: 3px solid white;
 	border-collapse: collapse;
 	color: white;
 }
@@ -199,4 +192,55 @@ th {
   width: 85%;
   display: block;
 }
+
+#selectable td {
+	color: white;
+}
+
+#selectable .ui-selecting {
+    background: #ffff60;
+}
+#selectable .ui-selected {
+    background: #fec93d;
+}
+
+.roundedBorders{
+	border-top-left-radius: 16px;
+	border-bottom-left-radius: 16px;
+	border-top-right-radius: 16px;
+	border-bottom-right-radius: 16px;
+	border: 2px solid white;
+}
+
+.whiteContour{
+	border: 1px solid white;
+}
+
+.allCaps{
+	text-transform: uppercase;
+	font-size: 130%;
+}
+
+.smallLetters{
+	font-size: 75%;
+}
+
+.toRight {
+	text-align: right;
+}
+
+ul {
+    background: black;
+}
+
+.helpIconSpan{
+	border-radius: 30px;
+    background-color:rgba(248, 231, 28, 1);
+	color:black;
+    padding-left:6px;
+    padding-right: 6px;
+    padding-top:2px;
+    padding-bottom:2px;
+    font-size:0.6em;
+
 }

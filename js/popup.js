@@ -5,7 +5,7 @@
 */
 function showName(){
 	// Tries the code against API
-	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
 	.done(function () {
 		console.log("GOOD token. Works on API.");
 		return true

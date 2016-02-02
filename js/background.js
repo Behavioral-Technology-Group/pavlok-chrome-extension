@@ -138,18 +138,18 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			// How is number of tabs compared to tab limit (maxTabs)?
 			if(tabs.length > maxTabs) {
 				situation.status = "over";
-				stimuli("shock", 180, localStorage.accessToken);
+				stimuli("shock", 180, localStorage.accessToken, "Incoming Zap. Too many tabs");
 				console.log("total tabs over max tabs");
 			}
 			else if (tabs.length == maxTabs ){ 
 				situation.status = "limit";
-				stimuli("beep", 3, localStorage.accessToken);
+				stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
 			 
 			}
 			else if (tabs.length == maxTabs - 1){ 
 				situation.status = "borderline";
 				// stimuli("vibration", 230, localStorage.accessToken);
-				stimuli("vibration", 230, localStorage.accessToken);
+				stimuli("vibration", 230, localStorage.accessToken "Incoming vibration. You're nearing the limit on tabs");
 			}
 			else { situation.status = "wayBellow"};
 			

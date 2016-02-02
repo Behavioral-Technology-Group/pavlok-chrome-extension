@@ -128,3 +128,7 @@ div.auth{
 	height: 50px;
 }
 
+
+.noDisplay {
+	display: none;
+}
