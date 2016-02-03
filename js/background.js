@@ -1,4 +1,4 @@
- /* To-do:
+﻿/* To-do:
 - get values for stimuli from our server, instead of hardcoding it
 
 
@@ -55,6 +55,18 @@ var accessToken = localStorage.accessToken;
 /*--------                                                           --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+function convert12To24(time){
+	if (time.indexOf("AM") == -1 && time.indexOf("PM") == -1) { return time }
+	
+	hour = parseInt(time.split(":")[0]);
+	minute = time.split(":")[1].split(" ")[0];
+	code = time.split(":")[1].split(" ")[1];
+
+	if (code == "PM") { hour = hour + 12;}
+	
+	return hour + ":" + minute
+}
 
 function notifyUser(title, message, notID){
 	var opt = {
@@ -113,7 +125,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 		
 	
 	var _result = localStorage.blackListEval;
-	_result = ( _result === "true" ); // converst string to boolean
+	_result = ( _result === "true" ); // converts string to boolean
 	return _result
 }
 
@@ -149,7 +161,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			else if (tabs.length == maxTabs - 1){ 
 				situation.status = "borderline";
 				// stimuli("vibration", 230, localStorage.accessToken);
-				stimuli("vibration", 230, localStorage.accessToken "Incoming vibration. You're nearing the limit on tabs");
+				stimuli("vibration", 230, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
 			}
 			else { situation.status = "wayBellow"};
 			
@@ -206,6 +218,8 @@ function checkActiveDayHour(){
 	var start = localStorage.generalActiveTimeStart;
 	var end = localStorage.generalActiveTimeEnd;
 	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	start = convert12To24(start);
+	end = convert12To24(end);
 	
 	var dayActive = checkActiveDay(now);
 	var hourActive = checkActiveHour(start, end);

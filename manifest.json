@@ -3,7 +3,7 @@
 
   "manifest_version": 2,
   "name": "TEST P.A.V.L.O.K.",
-  "version": "0.4.12",
+  "version": "0.4.14",
  
   "description": "Stay Focused. Eliminate Distraction.",
   "icons": {
@@ -24,7 +24,7 @@
   "permissions": [
 	"background",
     "https://pavlok.herokuapp.com/*",
-    "https://pavlok-stage.herokuapp.com/*",
+    "https://pavlok-mvp.herokuapp.com/*",
     "identity",
 	"notifications",
 	"tabs",

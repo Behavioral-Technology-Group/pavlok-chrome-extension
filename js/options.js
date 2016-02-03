@@ -5,11 +5,15 @@
 */
 
 /* sandbox */
+
+
 function checkActiveDayHour(){
 	var now = new Date();
 	var start = localStorage.generalActiveTimeStart;
 	var end = localStorage.generalActiveTimeEnd;
 	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	start = from12To24(start);
+	end = from12to24(end);
 	
 	var dayActive = checkActiveDay(now);
 	var hourActive = checkActiveHour(start, end);
@@ -62,21 +66,50 @@ function checkActiveHour(start, end){	// start and End are for debugging
 }
 /* end of sandbox */
 
-function enableSelects(){
-	$("#timeFormat").change(function(){
-		var timeFormat = $(this).val();
-		localStorage.timeFormat = timeFormat;
-		if (timeFormat == '24') {
-			$('.timeSelectors').timepicker({
-				// "option", "showPeriod", false
-			});
-		}
-		else {
-			$('.timeSelectors').timepicker({
-				showPeriod: true,
-				showLeadingZero: true
-			});
-		}
+function enableTimers(){
+	$.widget( "ui.timespinner", $.ui.spinner, {
+    options: {
+      // seconds
+      step: 15 * 60 * 1000,
+      // hours
+      page: 60
+    },
+ 
+    _parse: function( value ) {
+      if ( typeof value === "string" ) {
+        // already a timestamp
+        if ( Number( value ) == value ) {
+          return Number( value );
+        }
+        return +Globalize.parseDate( value );
+      }
+      return value;
+    },
+ 
+    _format: function( value ) {
+      return Globalize.format( new Date(value), "t" );
+    }
+  });
+ 
+  $(function() {
+    $( "#generalActiveTimeStart" ).timespinner({
+		change: function( event, ui ) { localStorage.generalActiveTimeStart = $(this).val();},
+	});
+    $( "#generalActiveTimeEnd" ).timespinner({
+		change: function( event, ui ) { localStorage.generalActiveTimeEnd = $(this).val();}
+	});
+ 
+    $( "#timeFormat" ).change(function() {
+		var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
+		var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
+		var selectedOption = $(this).val();
+		if (selectedOption == "24") { culture = "de-DE" }
+		else if (selectedOption == "12") { culture = "en-EN"};
+
+		Globalize.culture( culture );
+		$( "#generalActiveTimeStart" ).timespinner( "value", currentStart );
+		$( "#generalActiveTimeEnd" ).timespinner( "value", currentEnd );
+	});
 	});
 }
 
@@ -231,12 +264,16 @@ function enableButtons(){
 	});
 }
 
-function enableTables(){
+function enableSpiners() {
+	$("#autoZapperIntensity").spiner();
+}
+
+function enableTables(){ // TO-do update or remove
 	// $('#sundayActiveTimeStart').timepicker({
-	$('.timeSelectors').timepicker({
-		showPeriod: true,
-		showLeadingZero: true
-	});
+	// // // // $('.timeSelectors').timepicker({
+		// // // // showPeriod: true,
+		// // // // showLeadingZero: true
+	// // // // });
 	
 }
 
@@ -306,15 +343,7 @@ function enableCheckboxes(){
 	
 }
 
-function enableInputs(){
-	$("#generalActiveTimeStart").change( function() {
-		localStorage.generalActiveTimeStart = $(this).val();
-	});
-	
-	$("#generalActiveTimeEnd").change( function() {
-		localStorage.generalActiveTimeEnd = $(this).val();
-	});
-	
+function enableInputs(){	
 	// Advanced day to day
 	$("#sundayActiveTimeStart").change( function() {	
 		localStorage.sundayActiveTimeStart = $(this).val();
@@ -535,7 +564,7 @@ function initialize() {
 	
 	// Enablers]
 	enableSelecatbles();
-	enableSelects();
+	enableTimers();
 	enableAutoZapper();
 	enableTooltips();
 	enableButtons();

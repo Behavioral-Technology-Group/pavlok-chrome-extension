@@ -33,9 +33,9 @@ if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
 if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
 
 // Notifications
-if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'true'; }
-if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'true'; }
-if (!localStorage.notifyZap ) { localStorage.notifyZap = 'true'; }
+if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
+if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
+if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
 
 /*---------------------------------------------------------------------------*/
@@ -53,9 +53,9 @@ function isValid(token){
 	else { return false }
 
 	// Tries the code against API
-	console.log('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken);
+	console.log('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken);
 	
-	$.get('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
 	.done(function (data) {
 		console.log(data);
 		console.log("GOOD token. Works on API.");
@@ -115,7 +115,7 @@ function showSignOut(){
 
 function signOut(){ 
 	// Logging out of providers
-	signOutURL = " https://pavlok.mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
+	signOutURL = " https://pavlok-mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
 	console.log("url for Sign Out is " + signOutURL)
 	
 	// Proper way of handling it in our server
@@ -269,19 +269,19 @@ function oauth() {
 	var redirectURL = chrome.identity.getRedirectURL();
 	
 	if ( usage == "local" ) {
-		var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
-		var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
+		var clientID = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
+		var clientSecret = "220898a0635c04696dd3aab7b6990b6735cc7fc2817eed5be9f1bb1b5063e288";
 	}
 	else if ( usage == "test" ){
-		var clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
-		var clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";		
+		var clientID = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
+		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";		
 	}
 	else if ( usage == "production" ){
 		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
 		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
 	}
 	
-	var authURL = "https://pavlok.mvp.herokuapp.com/oauth/authorize?" + 
+	var authURL = "https://pavlok-mvp.herokuapp.com/oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&response_type=code' +
@@ -299,7 +299,7 @@ function oauth() {
 			console.log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://pavlok.mvp.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
+			accessTokenUrl = 'https://pavlok-mvp.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
@@ -382,7 +382,7 @@ function destroyToken(){
 }
 
 function userInfo(accessToken) { 
-	$.get('https://pavlok.mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
 				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
@@ -408,7 +408,7 @@ function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
 	
 	if (notify) { alert(textAlert); }
 	
-	postURL = 	'https://pavlok.mvp.herokuapp.com/api/v1/stimuli/' + 
+	postURL = 	'https://pavlok-mvp.herokuapp.com/api/v1/stimuli/' + 
 				stimuli + '/' + 
 				value + 
 				'?access_token=' + accessToken;
@@ -484,3 +484,13 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 		return localStorage.lastAccessToken
 	}
 }
+
+
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+/*--------															--------*/
+/*--------						5.Data Treatment					--------*/
+/*--------															--------*/
+/*--------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------*/
+
