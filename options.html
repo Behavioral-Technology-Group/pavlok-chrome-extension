@@ -593,20 +593,49 @@
 						<table>
 							<tr>
 								<td>
-									<p>Your API Key is:</p>
-									<p><span id="RTAPIKeySpan"></span></p>
-									<br/>
-									<input type="button" value="Change it?" id="changeRTAPIKey" />
+									<p>Integration is:</p>
 								</td>
-								<td style="text-align:right">
-								<select id="RTOnOffSelect">
-									<option value="On">On</option>
-									<option value="Off">Off</option>
-								</select>
+								<td>
+									<select id="RTOnOffSelect">
+										<option value="On">On</option>
+										<option value="Off">Off</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Updates Frequency:
+									</p>
+								</td>
+								<td>
+									<p>
+										<select id="RTFrequencySelect">
+											<option value="3">3</option>
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="15">15</option>
+											<option value="30">30</option>
+										</select>
+										Minutes <img src="images/help.png" class="helpIcon" title="
+										<p>Pavlok will get your productivity according to the inverval you set.</p>
+										<p><b>There are differences in the frequency you'll get an updated pulse from rescue time</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
+										<p>For instance: if you have a <b>free account</b> on Rescue Time and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
+										<p><b>We advise<span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
+										"
+										/>
+									</p>
 								</td>
 							</tr>
 						</table>
-						
+							
+						<hr>
+				
+						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
+						<p><input type="button" value="Remove Key?" id="removeRTAPIKey" /> <img src="images/help.png" class="helpIcon" title='
+							<p>This buttons will make Pavlok forget about your key, but nothing will happen to the key itself. If you type in the same key again after removing it, the Rescue Time Integration should work normally.</p>
+							<p>If you mistyped it and want to change, just click here and reinsert the key.</p>'
+						/>
+			
 						
 					</div>
 				</div>

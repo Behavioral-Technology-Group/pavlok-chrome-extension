@@ -262,6 +262,9 @@ h2 .helpIconSpan{
 	height: 50px;
 }
 
+.display{
+	display: "block"
+}
 /* New css styles. Gotta create sprites for checked and unchecked and adjust position there
 input[type="checkbox"] {
     display:none;

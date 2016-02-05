@@ -65,7 +65,7 @@ function createTimeout(){
 		RTTimeOut = false;
 		localStorage.RTTimeout = false;
 		// alert("Timeout Ended");
-	}, 10 * 60 * 1000); // Gotta put this on 3 minutes
+	}, parseInt(localStorage.RTFrequency) * 60 * 1000); // Gotta put this on 3 minutes
 	localStorage.RTTimeOut = x;
 	return x
 }
@@ -93,6 +93,9 @@ function fireRescueTime(APIKey){
 		else if (prod > 80 ){
 			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");
 			stimuli("vibration", 255, localStorage.accessToken, "You rock! Let Pavlok massage your wrist a bit!");
+		}
+		else if (prod < 80){
+			notifyUser("Way to go!", "Pulse of " + localStorage.RTPulse + " a good start! Keep improving!", "RTNotify");
 		}
 		
 		

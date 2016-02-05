@@ -12,19 +12,19 @@ function updateProductivity(){
 			$("#RTResultsHolder").text("Last pulse was " + localStorage.RTPulse);
 			
 		}
-	}, 3 * 60 * 1000);
+	}, parseInt(localStorage.RTFrequency) * 60 * 1000);
 }
 
 function changeRTVisibility(){
 	APIKey = localStorage.RTAPIKey;
 	if (APIKey == undefined || APIKey == 'null' || APIKey == false) {
-		$("#RTCodeOnly").addClass("noDisplay");
-		$("#NoRTCodeOnly").addClass("display");
+		$("#RTCodeOnly").removeClass("display").addClass("noDisplay");
+		$("#NoRTCodeOnly").addClass("display").removeClass("noDisplay");
 		$("#RTAPIKeySpan").text('');
 		
 	} else {
-		$("#RTCodeOnly").addClass("display");
-		$("#NoRTCodeOnly").addClass("noDisplay");
+		$("#RTCodeOnly").addClass("display").removeClass("noDisplay");
+		$("#NoRTCodeOnly").removeClass("display").addClass("noDisplay");
 		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
 	}
 }
@@ -35,7 +35,7 @@ function enableRescueTime(){
 		fireRescueTime(APIKey);
 	});
 	// changeRTVisibility();
-	if (localStorage.RTPulse && localStorage.RTOnOffSelect)
+	if (localStorage.RTPulse && localStorage.RTOnOffSelect) {changeRTVisibility();}
 	
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
@@ -43,6 +43,25 @@ function enableRescueTime(){
 		if (RTOnOffSelect == "On") { updateProductivity(); }
 	});
 	
+	$( "#RTFrequencySelect" ).change(function(){
+		localStorage.RTFrequency = $(this).val()
+	});
+	
+	$("#removeRTAPIKey").click(function() {
+		$.prompt("<b>Pavlok will forget about your key</b>, but nothing will happen to the key itself.<br/>If you type in the same key again after removing it, the Rescue Time Integration should work normally.", {
+			title: "Remove the API Key?",
+			buttons: { "Yes, forget it": true, "No, leave it as is": false },
+			submit: function(e,v,m,f){
+				console.log("result was " + v);
+				var result = v;
+				if (result == true){
+					delete localStorage.RTAPIKey;
+					$("#rescueTimeAPIKey").val('');
+					changeRTVisibility();
+				}	
+			}
+		});
+	});
 }
 
 function fireRescueTime(APIKey){
