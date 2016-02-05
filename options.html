@@ -59,6 +59,7 @@
 				<li class="linked roundedBorders"><a href="#tabs-5">AutoZapper</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
 				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox</a></li>
+				<li class="linked roundedBorders display"><a href="#tabs-8">Rescue Time</a></li>
 			</ul>
 						
 			<div id="tabs-1">
@@ -134,7 +135,7 @@
 						<option value="50">50</option>
 					</select>
 					<br/>
-
+					
 					<input type="checkbox" name="zapOnClose" id="zapOnClose">Zap when closing</input>
 					<img src="images/help.png" class="helpIcon" title="
 						<p>For those really inclined to stop opening to many habits!</p>
@@ -169,8 +170,6 @@
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
 			<div id="tabs-4">
-				<a href="#" id="rescueTimeOAuth" class="noDisplay">Connect to GitHub</a>
-				<div id="rescueTimeData" class="noDisplay"></div>
 				<div id="stimuliNotificationsDiv"</div>
 					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
 						<p>
@@ -201,6 +200,18 @@
 						</tr>
 					</table>
 					<br/>
+				</div>
+				<hr>
+				<div id="zapFrequencyBlackListDiv">
+					<h2>Black List zapping countdown</h2>
+					<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
+					<select id="blackListTimeWindow">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="15">15</option>
+						<option value="30">30</option>
+					</select>
 				</div>
 				<hr>
 				<div id="timeDaysDiv" class="Display">
@@ -318,6 +329,7 @@
 				<h4>Tab limit reasoning</h4>
 				<p>It will also help you look at the messy infinite number of open tabs in a more concious way. You set a limit and it will tell you whenever you start to get close or over the limit. If the simple mention of the limit isn't enough to make you ponder why so many tabs, there will be a zap to make it more enlightening. Soon there will be no more 1264376 tabs open and a slow pc because of it!</p>
 				<p>If you want to make a crash change to your behavior, it can be sped up using the <span class="yellow">zap on close</span> option. Pavlok won't zap you when you adjust course (closing excess tabs, for instance). However, it's possible to make yourself way more sensible to the tab numbers by adding more stimulus. This option will make you remember TWICE not to open excess tabs. Not necessary, but sure speed breaking the tabs hoarding habit.</p>
+				<p>This Extension is using <i><span id="server"></span></i> server.</p>.
 			</div>
 			<div id="tabs-7" class="noDisplay">
 				<p id="feedback">
@@ -555,6 +567,51 @@
 						<td class="tdSelectable"></td>
 					</tr>
 				</table>
+			</div>
+			<div id="tabs-8" class="display">
+				<h2>Get help from Rescue Time <img src="images/help.png" class="helpIcon" title="
+					<p>Rescue Time can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
+					<p>Pavlok will make notifications visceral!</p>
+					<ul>
+						<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
+						<li>If your productivity falls <b>bellow 50%</b>, you get a <span class='yellow'>beep</span> reminder to focus again</li>
+						<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
+					<ul>
+				"></h2>
+				<div id="NoRTCodeOnly">
+					<p>Let's get your ball rolling!</p>
+					<ol>
+						<li>Get your Api Key for Pavlok <a href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
+						<li>Then insert your Key here and click GO!</li>
+						<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
+						<li>That's it! Enjoy!</li>
+					</ol>
+				</div>
+				<div id="RTCodeOnly">
+					<div id="RTResultDiv">
+						<p><span id="RTResultsHolder">Gathering data... </span></p>
+						<table>
+							<tr>
+								<td>
+									<p>Your API Key is:</p>
+									<p><span id="RTAPIKeySpan"></span></p>
+									<br/>
+									<input type="button" value="Change it?" id="changeRTAPIKey" />
+								</td>
+								<td style="text-align:right">
+								<select id="RTOnOffSelect">
+									<option value="On">On</option>
+									<option value="Off">Off</option>
+								</select>
+								</td>
+							</tr>
+						</table>
+						
+						
+					</div>
+				</div>
+				
+				
 			</div>
 		</div>
 	</div>

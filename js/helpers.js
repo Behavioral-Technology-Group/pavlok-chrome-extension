@@ -8,7 +8,15 @@
 */
 
 // Defaults
-var usage = "local"; // local OR test OR production
+var server = "MVP" // STAGE or MVP
+var usage = "production"; // local OR test OR production (MVP or STAGE added at the end)
+usage = usage + server;
+
+var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
+localStorage.setItem['baseAddress'] = baseAddress;
+
+localStorage.baseAddress = baseAddress;
+
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
@@ -16,6 +24,7 @@ if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% defa
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 
 // Blacklist and tabs
+if (!localStorage.timeWindow) { localStorage.timeWindow = 15};
 if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
@@ -37,6 +46,8 @@ if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
+// RescueTime
+if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -53,9 +64,9 @@ function isValid(token){
 	else { return false }
 
 	// Tries the code against API
-	console.log('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken);
+	console.log(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken);
 	
-	$.get('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
 	.done(function (data) {
 		console.log(data);
 		console.log("GOOD token. Works on API.");
@@ -268,20 +279,32 @@ function save_options() {
 function oauth() { 
 	var redirectURL = chrome.identity.getRedirectURL();
 	
-	if ( usage == "local" ) {
-		var clientID = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
-		var clientSecret = "220898a0635c04696dd3aab7b6990b6735cc7fc2817eed5be9f1bb1b5063e288";
+	if ( usage == "localMVP" ) {
+		var clientID = "430d8023d115852a325790bf47787dfd4013c27d72311ada3eea2afbb7d2b16a";
+		var clientSecret = "050cc4b381cca7f382573dc603af660aaf4e69a38e19ab1f7c0055df2283c1b1";
 	}
-	else if ( usage == "test" ){
+	else if (usage == "localSTAGE") {
+		var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
+		var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
+	}
+	else if ( usage == "testMVP" ){
 		var clientID = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
-		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";		
+		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
-	else if ( usage == "production" ){
+	else if (usage == "testSTAGE") {
+		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
+	}
+	else if ( usage == "productionSTAGE" ){
 		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
 		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
 	}
+	else if ( usage == "productionMVP" ) {
+		var clientID = "24d3e11fd9b64098732724c7e0364e6b57155789405f08fa52d2fc70a62fd273";
+		var clientSecret = "1d18bafb082c4c10ff195a3f3b4c899e52018733392a09102d582e6df0273696";
+	}
 	
-	var authURL = "https://pavlok-mvp.herokuapp.com/oauth/authorize?" + 
+	var authURL = localStorage.baseAddress + "oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&response_type=code' +
@@ -299,7 +322,7 @@ function oauth() {
 			console.log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://pavlok-mvp.herokuapp.com/' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
+			accessTokenUrl = localStorage.baseAddress + '' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
@@ -382,7 +405,7 @@ function destroyToken(){
 }
 
 function userInfo(accessToken) { 
-	$.get('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
 				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
@@ -408,7 +431,7 @@ function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
 	
 	if (notify) { alert(textAlert); }
 	
-	postURL = 	'https://pavlok-mvp.herokuapp.com/api/v1/stimuli/' + 
+	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimuli + '/' + 
 				value + 
 				'?access_token=' + accessToken;

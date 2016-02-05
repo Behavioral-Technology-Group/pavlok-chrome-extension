@@ -1,11 +1,77 @@
-﻿/* To-do 
-- Fix test Zap (NaN) bug
-- Fix Tooltip (enable the better one)
+﻿
+/* To-do 
+
 
 */
-
+var RTProdInterval;
 /* sandbox */
 
+function updateProductivity(){
+	RTProdInterval = setInterval(function(){
+		if (localStorage.RTOnOffSelect == "On") {
+			$("#RTResultsHolder").text("Last pulse was " + localStorage.RTPulse);
+			
+		}
+	}, 3 * 60 * 1000);
+}
+
+function changeRTVisibility(){
+	APIKey = localStorage.RTAPIKey;
+	if (APIKey == undefined || APIKey == 'null' || APIKey == false) {
+		$("#RTCodeOnly").addClass("noDisplay");
+		$("#NoRTCodeOnly").addClass("display");
+		$("#RTAPIKeySpan").text('');
+		
+	} else {
+		$("#RTCodeOnly").addClass("display");
+		$("#NoRTCodeOnly").addClass("noDisplay");
+		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
+	}
+}
+
+function enableRescueTime(){
+	$("#fireRTIntegration").click(function(){
+		var APIKey = $("#rescueTimeAPIKey").val();
+		fireRescueTime(APIKey);
+	});
+	// changeRTVisibility();
+	if (localStorage.RTPulse && localStorage.RTOnOffSelect)
+	
+	$("#RTOnOffSelect").change(function(){
+		var RTOnOffSelect = $(this).val();
+		localStorage.RTOnOffSelect = RTOnOffSelect;
+		if (RTOnOffSelect == "On") { updateProductivity(); }
+	});
+	
+}
+
+function fireRescueTime(APIKey){
+	requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
+	localStorage.RTAPIKey = APIKey;
+	
+	var resultHolder = $("#RTResultsHolder");
+	
+	console.log("get request to\n" + requestAddress);
+	$.get(requestAddress)
+	.done(function (data) {
+		var rtData = JSON.stringify(data);
+		console.log("Success with Rescue Time. Pulse is " + data.pulse);
+		localStorage.rtData = rtData;
+		resultHolder.text(data.pulse);
+		
+		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
+		
+		changeRTVisibility();
+		return data.pulse
+	})
+	.fail(function(){
+		resultHolder.text("Failed");
+		console.log("BAD key. Fails on API.");
+		localStorage.removeitem['RTAPIKey'];
+		return false
+	});
+	changeRTVisibility();
+}
 
 function checkActiveDayHour(){
 	var now = new Date();
@@ -158,7 +224,7 @@ function enableAutoZapper(){
 					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
-						stimuli('shock', localStorage.trainingSessionZI, localStorage.accessToken, '', 'false');
+						stimuli("shock", localStorage.trainingSessionZI, localStorage.accessToken, "", "false");
 					}, parseInt(localStorage.trainingSessionZF));
 					
 					var endTraining = setTimeout(function(){ 
@@ -188,6 +254,7 @@ function enableSelecatbles(){
 		}
 	});
 }
+
 function restoreCheckBox(checkboxID, condition){
 	if (condition == 'true' )
 		{ $("#" + checkboxID).attr('checked', true); }
@@ -224,6 +291,12 @@ function rawToPercent(raw){
 	return percN
 }
 
+function enableSelects(){
+	$("#blackListTimeWindow").change(function(){
+		localStorage.timeWindow = $(this).val() ;
+	});
+}
+
 function enableButtons(){
 	$("#resetIntensity").click(function(){
 		var defValue = 60;
@@ -244,7 +317,7 @@ function enableButtons(){
 	});
 
 	$("#testZapInt").click(function(){
-		stimuli('shock', localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
+		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
 		
 	$("#testVibrationInt").click(function(){
@@ -455,6 +528,8 @@ function restore_options() {
 	var endHour = localStorage.generalActiveTimeEnd;
 	$("#generalActiveTimeEnd").val(endHour);
 	
+	$("#blackListTimeWindow").val(localStorage.timeWindow)
+	
 	// Checkboxes
 	restoreCheckBox('zapOnClose', localStorage.zapOnClose);
 	restoreCheckBox('notifyZap', localStorage.notifyZap);
@@ -483,6 +558,10 @@ function restore_options() {
 	} else { var zapSlider = 60; }
 	$( "#sliderZap" ).slider( { "value": zapSlider })
 	$( "#zapIntensity" ).val(zapSlider);
+	
+	// Rescue Time
+	$("#RTOnOffSelect").val(localStorage.RTOnOffSelect);
+	changeRTVisibility();
 	
 }
 
@@ -563,6 +642,7 @@ function initialize() {
 	});
 	
 	// Enablers]
+	enableSelects();
 	enableSelecatbles();
 	enableTimers();
 	enableAutoZapper();
@@ -572,8 +652,13 @@ function initialize() {
 	enableTables();
 	enableCheckboxes();
 	enableInputs();
+	enableRescueTime();
 	
 	$(".allCaps").text().toUpperCase();
+	
+	var serverKind = localStorage.baseAddress;
+	serverKind = serverKind.split("-")[1].split(".")[0];
+	$("#server").text(serverKind);
 	$(".linked")
 		.click( 
 			function() {
@@ -606,3 +691,4 @@ $( document ).ready(function() {
 	// }
 	
 });
+

@@ -2,8 +2,8 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "name": "TEST P.A.V.L.O.K.",
-  "version": "0.4.14",
+  "name": "P.A.V.L.O.K. Chrome Extension",
+  "version": "0.4.19",
  
   "description": "Stay Focused. Eliminate Distraction.",
   "icons": {
@@ -24,10 +24,12 @@
   "permissions": [
 	"background",
     "https://pavlok.herokuapp.com/*",
+    "https://pavlok-stage.herokuapp.com/*",
     "https://pavlok-mvp.herokuapp.com/*",
     "identity",
 	"notifications",
 	"tabs",
-	"https://github.com/login/oauth/*"
+	"https://github.com/login/oauth/*",
+	"https://www.rescuetime.com/*"
     ]
 }

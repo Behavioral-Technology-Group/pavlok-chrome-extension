@@ -3,9 +3,11 @@
 - Fix the maxTabs discrepancy
 - Fix test pairing button
 */
+
+
 function showName(){
 	// Tries the code against API
-	$.get('https://pavlok-mvp.herokuapp.com/api/v1/me?access_token=' + accessToken)
+	$.get(localStorage.baseAddress + '/api/v1/me?access_token=' + accessToken)
 	.done(function () {
 		console.log("GOOD token. Works on API.");
 		return true
@@ -33,9 +35,9 @@ $( document ).ready(function() {
 	if ( !localStorage.userName ) { userInfo(localStorage.accessToken); }
 	if ( localStorage.userName ) { updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
 	
-	$("#signIn").click(function(){
-		oauth();
-	});
+	// $("#signIn").click(function(){
+		// oauth();
+	// });
 	
 	$("#signOut").click(function(){
 		signOut();

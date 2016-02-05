@@ -7,11 +7,11 @@
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
 var elapsedTime = 0;
 var counter = false;
-var timeWindow = 5;
 var situation = {};
+var timeWindow;
 // var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
-var curTimeOut;
+var RTTimeOut;
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -30,8 +30,8 @@ var msgBorderlineTabs = ["Tabs limit approaching", "Keep them at bay and watch o
 var msgLimitTabs = ["Tabs limit reached!", "You're on the verge! Open no more tabs! Stay true to yourself!", "Back to safety, but still on the limit!"]
 
 // For Blacklisted sites
-var msgBlacklisted = ["BLACKLISTED SITE!!!", "Watch out! You have " + timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", ""];
-var msgZaped = ["Ouch!", "Too much time on blacklisted sites! Hurry outta here! Another zap is coming in " + timeWindow + " secs!", ""];
+var msgBlacklisted = ["BLACKLISTED SITE!!!", "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", ""];
+var msgZaped = ["Ouch!", "Too much time on blacklisted sites! Hurry outta here! Another zap is coming in " + localStorage.timeWindow + " secs!", ""];
 
 
 var accessToken = localStorage.accessToken;
@@ -55,6 +55,56 @@ var accessToken = localStorage.accessToken;
 /*--------                                                           --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+function createTimeout(){
+	fireRescueTime(localStorage.RTAPIKey);
+	var x = setTimeout(function(){
+		
+		
+		// Clearing up
+		RTTimeOut = false;
+		localStorage.RTTimeout = false;
+		// alert("Timeout Ended");
+	}, 10 * 60 * 1000); // Gotta put this on 3 minutes
+	localStorage.RTTimeOut = x;
+	return x
+}
+
+function fireRescueTime(APIKey){
+	requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
+	localStorage.RTAPIKey = APIKey;
+	
+	console.log("get request to\n" + requestAddress);
+	$.get(requestAddress)
+	.done(function (data) {
+		localStorage.RTPulse = data.pulse;
+		console.log("Productivity pulse is " + data.pulse)
+		
+		var prod = data.pulse;
+		if ( prod == 0 ) { return }
+		else if (prod < 30) { 
+			notifyUser("Wake up, folk!", "Pulse of " + localStorage.RTPulse + " is bad! Time to get on track!", "RTNotify");
+			stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Time to get on track!");
+		}
+		else if (prod < 50) { 
+			notifyUser("Come on, you can do better!", "Pulse of " + localStorage.RTPulse + " ain't bad, but you are better than that!", "RTNotify");
+			stimuli("beep", 4, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
+		}
+		else if (prod > 80 ){
+			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");
+			stimuli("vibration", 255, localStorage.accessToken, "You rock! Let Pavlok massage your wrist a bit!");
+		}
+		
+		
+		return data.pulse
+	})
+	.fail(function(){
+		resultHolder.text("Failed");
+		console.log("BAD key. Fails on API.");
+		localStorage.removeitem['RTAPIKey'];
+		return false
+	});
+}
 
 function convert12To24(time){
 	if (time.indexOf("AM") == -1 && time.indexOf("PM") == -1) { return time }
@@ -150,7 +200,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 			// How is number of tabs compared to tab limit (maxTabs)?
 			if(tabs.length > maxTabs) {
 				situation.status = "over";
-				stimuli("shock", 180, localStorage.accessToken, "Incoming Zap. Too many tabs");
+				stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
 				console.log("total tabs over max tabs");
 			}
 			else if (tabs.length == maxTabs ){ 
@@ -180,9 +230,7 @@ function notifyTabCount(tabs, situation){
 		notTitle = msgTooManyTabs[0];
 		notID = "tooManyTabs";
 		if(situation.trend != "lowering" ){ 
-			// notMessage = msgTooManyTabs[1]; // Variable is being set at startup, but ain't updated after that. So it's being called manually here, to match latest maxTabs
 			notMessage = "You opened more than " + localStorage.maxTabs + " tabs! Close them down and keep your sanity!";
-			// curTimeOut = setTimeout(function(){ stimuli("shock", 160, localStorage.accessToken}, timeWindow * 1000);
 			}
 		else { notMessage = msgTooManyTabs[1]; }
 	} 
@@ -282,6 +330,24 @@ var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
 
+function rescueTimeChecker(){
+	if (localStorage.RTAPIKey) {
+		if (RTTimeOut){
+			if (localStorage.RTOnOffSelect == "Off") {
+				// StopTimer
+				clearInterval(RTTimeOut);
+				RTTimeout = false;
+				localStorage.RTTimeOut = false;
+			}
+		}
+		else {
+			if (localStorage.RTOnOffSelect == "On") {
+				RTTimeOut = createTimeout(); // Start Timer
+			}
+		}
+	}
+}
+
 function CreateTabListeners(token) {
 	if(!localStorage.maxTabs) {
 		localStorage.maxTabs = 6;
@@ -361,7 +427,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	_result = CheckBlackList(curPAVUrl, curPAVDomain);
 	if(_result == true){
 		if (counter == true){
-			notifyUser(msgBlacklisted[0], msgBlacklisted[1], "blacklisted")
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted")
 			
 			now = new Date();
 			
@@ -371,9 +437,9 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 			
 			document.title = elapsed + "s on blackList"; // Debug. Shows on background.html
 			
-			if (elapsed >= timeWindow){
+			if (elapsed >= parseInt(timeWindow)){
 				notifyUser(msgZaped[0], msgZaped[1], "zapped");
-				stimuli("shock", 160, localStorage.accessToken);
+				stimuli("shock", localStorage.zapIntensity, localStorage.accessToken);
 				
 				timeBegin = new Date();
 			}
@@ -396,8 +462,10 @@ var testInterval = setInterval(
 	function(){
 		if (checkActiveDayHour() == true) {
 			if (isValid(localStorage.accessToken)){
+				timeWindow = localStorage.timeWindow;
 				getTabInfo(evaluateTabURL);
-				
+				rescueTimeChecker();
+				RTTimeOut = localStorage.RTTimeOut;
 				chrome.windows.getLastFocused(function(win) {
 					UpdateTabCount(win.windowId);
 				});
