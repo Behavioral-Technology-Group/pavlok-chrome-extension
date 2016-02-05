@@ -10,7 +10,6 @@ function updateProductivity(){
 	RTProdInterval = setInterval(function(){
 		if (localStorage.RTOnOffSelect == "On") {
 			$("#RTResultsHolder").text("Last pulse was " + localStorage.RTPulse);
-			
 		}
 	}, parseInt(localStorage.RTFrequency) * 60 * 1000);
 }
@@ -241,10 +240,22 @@ function enableAutoZapper(){
 					localStorage.trainingSessionZF = zapFreq;
 					localStorage.trainingSessionZD = zapDur;
 					
+					// Update interface
+					// Hide Start line
+					$("#autoZapperStartLine").addClass("noDisplay");
+					// Show Stop line
+					$("#autoZapperStopLine").removeClass("noDisplay");
+					// Start Count Down Timer
+					var date = new Date(new Date().valueOf() + parseInt(localStorage.trainingSessionZD));
+					$('#countDownTraining').countdown(date, function(event) {
+						$(this).html(event.strftime('%M:%S'));
+					});
+					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
 						stimuli("shock", localStorage.trainingSessionZI, localStorage.accessToken, "", "false");
 					}, parseInt(localStorage.trainingSessionZF));
+					localStorage.trainingSession = trainingSession;
 					
 					var endTraining = setTimeout(function(){ 
 						clearInterval(trainingSession);
@@ -255,9 +266,22 @@ function enableAutoZapper(){
 						localStorage.trainingSessionZF = '';
 						
 					}, parseInt(localStorage.trainingSessionZD));
+					localStorage.endTraining = endTraining;
 				}	
 			}
 		});
+	});
+	
+	$("#autoZapperStop").click(function(){
+		clearInterval(localStorage.trainingSession);
+		clearInterval(localStorage.endTraining);
+		$.prompt("Traning session canceled", "Your training session is now over");
+		// Cancel countdown timer
+		
+		// Hide Stop line
+		$("#autoZapperStopLine").addClass("noDisplay");
+		// Show Start line
+		$("#autoZapperStartLine").removeClass("noDisplay");
 	});
 }
 

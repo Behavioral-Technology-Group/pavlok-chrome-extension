@@ -14,6 +14,7 @@
 	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/jquery.ui.timepicker.js"></script>
 	<script src="js/jquery-impromptu.min.js"></script>
+	<script src="js/jquery.countdown.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/options.js"></script>	
 	
@@ -309,10 +310,16 @@
 						<th>Now we...</th>
 					</thead>
 					<tbody>
-						<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
-						<td><p><input id="autoZapperDuration" class="50px"> (min)</p></td>
-						<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
-						<td><a id="autoZapperStart" type="button" value="GO!">GO!</a></td>
+						<tr id="autoZapperStartLine">
+							<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
+							<td><p><input id="autoZapperDuration" class="50px"> (min)</p></td>
+							<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
+							<td><a id="autoZapperStart" type="button" value="GO!"><b>GO!</b></a></td>
+						</tr>
+						<tr  id="autoZapperStopLine" class="noDisplay">
+							<td colspan="3"><p><span id="countDownTraining"></p></span></td>
+							<td><a id="autoZapperStop" type="button" value="Stop!"><b>Stop!</b></a></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

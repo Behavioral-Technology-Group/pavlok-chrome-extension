@@ -182,10 +182,21 @@ th {
 #autoZapperTable input {
 	width: 50px;
 }
+
 #autoZapperStart {
   text-align: center;
   color: white;
-  background-color: #845221;
+  background-color: #f8e71c;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  width: 85%;
+  display: block;
+}
+#autoZapperStop {
+  text-align: center;
+  color: white;
+  background-color: red;
   padding: 7px 11px 7px 11px;
   margin-bottom: 10px;
   border-radius: 7px;
