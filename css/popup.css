@@ -75,12 +75,27 @@ text-align: left;
 }
 
 #signOut{
-	color: white;
+	color: yellow;
 	/* background-color: #47639E; */
-	background-color: #845221;
-	padding: 7px 11px 7px 11px;
-	margin-bottom: 10px;
+	background-color: black;
+	border: 1px solid white;
+	padding: 2px 0px 2px 0px;
+	margin-bottom: 5px;
 	border-radius: 7px;
+	display: block;
+	text-align: center;
+}
+
+#optionsLink{
+	color: yellow;
+	/* background-color: #47639E; */
+	background-color: black;
+	border: 1px solid white;
+	padding: 2px 11px 2px 11px;
+	margin-bottom: 5px;
+	border-radius: 7px;
+	display: block;
+	text-align: center;
 }
 
 ul.nav{
@@ -138,4 +153,23 @@ div.auth{
 	height: 50px;
 	padding: 5px;
 	
+}
+
+.testStimulusButton{
+	width: 25px;
+	height: 25px;
+}
+
+#navHeader{
+	width: 100%;
+	/* border: 1px solid red; */
+	border-collapse: collapse;
+}
+
+#navHeader td{
+	/* border: 1px solid blue; */
+}
+
+.centered {
+	text-align: center;
 }

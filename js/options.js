@@ -1,10 +1,12 @@
 ﻿/* To-do 
-	- Gather productivity data from local Storage
-	- Let people decide on the ranges (below and above) and stimulus (shock, zap, beep)
-	- Implement the time range for the input (prod pulse measured from x to y)
+BOOM	- Gather productivity data from local Storage
+BOOM	- Let people decide on the ranges (below and above) and stimulus (shock, zap, beep)
+BOOM	- Implement the time range for the input (prod pulse measured from x to y)
+BOOM	- Declutter code not being used
+BOOM	- Make code more readable
 	- Fix autozapper multiple ok messages (update countdown?)
-	- Declutter code not being used
-	- Make code more readable
+	- Implement a check for valid API Key and warn user if it's invalid
+	- Fix prompt for Disconnect from RT. Buttons are ugly as hell being too large
 
 */
 var RTProdInterval;
@@ -61,6 +63,45 @@ function changeRTVisibility(){
 	}
 }
 
+function updateRTLimits(){
+	var PosLimitMax = 100;
+	// var PosLimitMin = parseInt(localStorage.RTWarnLimit);
+	var PosLimitMin = $( "#RTWarnLimit" ).spinner( "value" );
+	var PosValue = $( "#RTPosLimit" ).spinner( "value" );
+	
+	var WarnLimitMax = $( "#RTPosLimit" ).spinner( "value" );
+	var WarnLimitMin = $( "#RTNegLimit" ).spinner( "value" );
+	var WarnValue = $( "#RTWarnLimit" ).spinner( "value" );
+	
+	var NegLimitMax = $( "#RTWarnLimit" ).spinner( "value" );
+	var NegLimitMin = 0;
+	var NegValue = $( "#RTNegLimit" ).spinner( "value" );
+	
+	// There should be no cross over
+	if ( NegLimitMax > WarnLimitMax ) {
+		WarnValue = WarnLimitMax;
+	}
+	
+	var PosLimit = $( "#RTPosLimit" ).spinner({
+		max: PosLimitMax,
+		min: PosLimitMin
+	});
+	var WarnLimit = $( "#RTWarnLimit" ).spinner({
+		max: WarnLimitMax,
+		min: WarnLimitMin
+	});
+	var NegLimit = $( "#RTNegLimit" ).spinner({
+		max: NegLimitMax,
+		min: NegLimitMin
+	});
+	
+	localStorage.RTPosLimit = PosValue;
+	localStorage.RTWarnLimit = WarnValue;
+	localStorage.RTNegLimit = NegValue;
+	
+	return
+}
+
 function enableRescueTime(){
 	$("#fireRTIntegration").click(function(){
 		var APIKey = $("#rescueTimeAPIKey").val();
@@ -104,45 +145,105 @@ function enableRescueTime(){
 		});
 	});
 	
+	// Enable spinners
+	var PosLimit = $( "#RTPosLimit" ).spinner({
+		min: parseInt(localStorage.RTWarnLimit),
+		max: 100,
+		page: 10,
+		step: 5,
+		change: function(event, ui) { 
+			updateRTLimits(); 
+		}
+	});
+	
+	var WarnLimit = $( "#RTWarnLimit" ).spinner({
+		min: parseInt(localStorage.RTNegLimit),
+		max: parseInt(localStorage.RTPosLimit),
+		page: 10,
+		step: 5,
+		change: function(event, ui){ updateRTLimits() }
+	});
+	
+	var NegLimit = $( "#RTNegLimit" ).spinner({
+		min: 0,
+		max: parseInt(localStorage.RTWarnLimit),
+		page: 10,
+		step: 5,
+		change: function(event, ui){ updateRTLimits() }
+	});
+	
 	$(".RTThreshold").change(function(){
-		alert("changed");
-		$("#badRT").css("width", $(this).val());
+		var PosLimitMax = 100;
+		var PosLimitMin = parseInt(localStorage.RTPosLimit);
+		var PosValue = $( "#RTPosLimit" ).spinner( "value" );
 		
-		var badWidth = bad.val();
-		var warningWidth = warn.val() - bad.val();
-		var veutralWidth = pos.val() - warn.val();
-		var positiveWidth = total - pos.val();
+		var WarnLimitMax = parseInt(localStorage.RTWarnLimit);
+		var WarnLimitMin = parseInt(localStorage.RTNegLimit);
+		var WarnValue = $( "#RTWarnLimit" ).spinner( "value" );
+		
+		var NegLimitMax = parseInt(localStorage.RTNegLimit);
+		var NegLimitMin = 0;
+		var NegValue = $( "#RTNegLimit" ).spinner( "value" );
+		
+		// There should be no cross over
+		if ( NegLimitMax > WarnLimitMax ) {
+			WarnValue = WarnLimitMax;
+		}
+		
+		localStorage.RTPosLimit = PosValue;
+		localStorage.RTWarnLimit = WarnValue;
+		localStorage.RTNegLimit = NegValue;
 		
 	});
+	
+	// Restore values
+	$("#RTPosLimit").val(parseInt(localStorage.RTPosLimit));
+	$("#RTWarnLimit").val(parseInt(localStorage.RTWarnLimit));
+	$("#RTNegLimit").val(parseInt(localStorage.RTNegLimit));
+	
+	$("#RTPosSti").val(localStorage.RTPosSti);
+	$("#RTWarnSti").val(localStorage.RTWarnSti);
+	$("#RTNegSti").val(localStorage.RTNegSti);
+	
+	// Save Values:
+	$("#RTPosLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTWarnLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTNegLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
+	
+	$("#RTPosSti").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTWarnSti").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTNegSti").change(function(){localStorage.RTPosLimit = $(this).val();});
+
+	
 }
 
-function fireRescueTime(APIKey){
-	requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
-	localStorage.RTAPIKey = APIKey;
+// // // function fireRescueTime(APIKey){
+	// // // requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
+	// // // localStorage.RTAPIKey = APIKey;
 	
-	var resultHolder = $("#RTResultsHolder");
+	// // // var resultHolder = $("#RTResultsHolder");
 	
-	console.log("get request to\n" + requestAddress);
-	$.get(requestAddress)
-	.done(function (data) {
-		var rtData = JSON.stringify(data);
-		console.log("Success with Rescue Time. Pulse is " + data.pulse);
-		localStorage.rtData = rtData;
-		resultHolder.text(data.pulse);
+	// // // console.log("get request to\n" + requestAddress);
+	// // // $.get(requestAddress)
+	// // // .done(function (data) {
+		// // // var rtData = JSON.stringify(data);
+		// // // console.log("Success with Rescue Time. Pulse is " + data.pulse);
+		// // // localStorage.rtData = rtData;
+		// // // resultHolder.text(data.pulse);
 		
-		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
+		// // // $("#RTAPIKeySpan").text(localStorage.RTAPIKey);
 		
-		changeRTVisibility();
-		return data.pulse
-	})
-	.fail(function(){
-		resultHolder.text("Failed");
-		console.log("BAD key. Fails on API.");
-		localStorage.removeitem['RTAPIKey'];
-		return false
-	});
-	changeRTVisibility();
-}
+		// // // changeRTVisibility();
+		// // // return data.pulse
+	// // // })
+	// // // .fail(function(){
+		// // // resultHolder.text("Failed");
+		// // // console.log("BAD key. Fails on API.");
+		// // // localStorage.removeitem['RTAPIKey'];
+		// // // return false
+	// // // });
+	// // // changeRTVisibility();
+// // // }
 
 /* end of sandbox */
 

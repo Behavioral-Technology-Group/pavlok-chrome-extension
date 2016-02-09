@@ -1,6 +1,5 @@
 ﻿/* To-do:
 - DRY code
-- Implement user conditions for rescue time evaluator
 
 
 */
@@ -94,20 +93,20 @@ function fireRescueTime(APIKey){
 		console.log("Productivity pulse from 30 minutes before " + localStorage.RTHour + "is " + data.pulse)
 		
 		var prod = data.pulse;
-		if ( prod == 0 ) { return }
-		else if (prod < 30) { 
+		if ( prod == 0 || prod == null || prod == 'null') { return }
+		else if (prod < parseInt(localStorage.RTNegLimit)) { 
 			notifyUser("Wake up, folk!", "Pulse of " + localStorage.RTPulse + " is bad! Time to get on track!", "RTNotify");
 			stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Time to get on track!");
 		}
-		else if (prod < 50) { 
+		else if (prod < parseInt(localStorage.RTWarnLimit)) { 
 			notifyUser("Come on, you can do better!", "Pulse of " + localStorage.RTPulse + " ain't bad, but you are better than that!", "RTNotify");
 			stimuli("beep", 4, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
 		}
-		else if (prod > 80 ){
+		else if (prod > parseInt(localStorage.RTPosLimit)){
 			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");
 			stimuli("vibration", 255, localStorage.accessToken, "You rock! Let Pavlok massage your wrist a bit!");
 		}
-		else if (prod < 80){
+		else if (prod < parseInt(localStorage.RTPosLimit)){
 			notifyUser("Way to go!", "Pulse of " + localStorage.RTPulse + " a good start! Keep improving!", "RTNotify");
 		}
 		

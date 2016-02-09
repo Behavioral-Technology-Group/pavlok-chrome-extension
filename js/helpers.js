@@ -20,6 +20,7 @@ localStorage.baseAddress = baseAddress;
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
+if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 
@@ -49,6 +50,15 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
 if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
+
+if (!localStorage.RTPosSti) { localStorage.RTPosSti = "vibration" };
+if (!localStorage.RTWarnSti) { localStorage.RTWarnSti = "beep" };
+if (!localStorage.RTNegSti ) { localStorage.RTNegSti = "shock" };
+
+if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
+if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
+if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
+
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -427,10 +437,11 @@ function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
 	if ( stimuli == 'beep' && localStorage.notifyBeep == 'false' ) { notify = false; }
 	else if ( stimuli == 'vibration' && localStorage.notifyVibration == 'false' ) { notify = false; }
 	else if ( stimuli == 'shock' && localStorage.notifyZap == 'false' ) { notify = false; }
-	else if ( forceNotify == 'false' ) { notify = false; }
+	
+	if ( forceNotify == 'false' ) { notify = false; }
 	else if ( forceNotify == 'true' ) { notify = true; }
 	
-	if (notify) { alert(textAlert); }
+	if (notify) { $.prompt(textAlert); }
 	
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimuli + '/' + 

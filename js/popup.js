@@ -43,6 +43,12 @@ $( document ).ready(function() {
 		signOut();
 	});
 	
+	$("#beepTest").click(function(){ 
+		stimuli('beep', localStorage.beepTune, localStorage.accessToken, "You'll get a Beep and a notification on your phone", 'false'); 
+	});
+	$("#vibrateTest").click(function(){ stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken, "You'll get a Vibration and a notification on your phone", 'false'); });
+	$("#zapTest").click(function(){stimuli('shock', localStorage.zapIntensity, localStorage.accessToken, "You'll get a Zap and a notification on your phone", 'false'); });
+	
 	// Restore Max Tabs
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 	$("#maxTabsSelect").change(function(){

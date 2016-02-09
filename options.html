@@ -642,7 +642,7 @@
 								</td>
 							</tr>
 						</table>
-						<div class="noDisplay">	
+						<div class="display">	
 						<hr>
 						<h3>Define your Thresholds</h3>
 							
@@ -658,8 +658,8 @@
 									<td>
 										<select id="RTPosSti">
 											<option value="shock">Zap</option>
-											<option value="shock">Vibrate</option>
-											<option value="shock">Beep</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
 										</select>
 									</td>
 								</tr>
@@ -669,8 +669,8 @@
 									<td>
 										<select id="RTWarnSti">
 											<option value="shock">Zap</option>
-											<option value="shock">Vibrate</option>
-											<option value="shock">Beep</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
 										</select>
 									</td>
 								</tr>
@@ -680,19 +680,18 @@
 									<td>
 										<select id="RTNegSti">
 											<option value="shock">Zap</option>
-											<option value="shock">Vibrate</option>
-											<option value="shock">Beep</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
 										</select>
 									</td>
 								</tr>
 							</table>
 							
-							<div id="miniChart">
+							<div class="noDisplay" id="miniChart">
 								<div id="badRT" class="miniChartDiv">Negative</div>
 								<div id="warnRT" class="miniChartDiv">Warning</div>
 								<div id="notifyRT" class="miniChartDiv">Neutral</div>
 								<div id="goodRT" class="miniChartDiv">Positive</div>
-								<div id="chartContainer"></div>
 							</div>
 						
 						</div>
