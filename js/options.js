@@ -1,17 +1,50 @@
-﻿
-/* To-do 
-
+﻿/* To-do 
+	- Gather productivity data from local Storage
+	- Let people decide on the ranges (below and above) and stimulus (shock, zap, beep)
+	- Implement the time range for the input (prod pulse measured from x to y)
+	- Fix autozapper multiple ok messages (update countdown?)
+	- Declutter code not being used
+	- Make code more readable
 
 */
 var RTProdInterval;
 /* sandbox */
-
+function regressRTHour(deltaMinutes){
+	var original = localStorage.Comment;
+	var originalDate = [original.split(" ")[8], original.split(" ")[9]];
+	
+	var year = originalDate[0].split("-")[0];
+	var month = originalDate[0].split("-")[1];
+	var day = originalDate[0].split("-")[2];
+	
+	var hours = originalDate[1].split(":")[0];
+	var minutes = originalDate[1].split(":")[1];
+	var seconds = originalDate[1].split(":")[2];
+	var milliseconds = 0;
+	
+	var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+	
+	var d2 = new Date(d);
+	d2.setMinutes(d.getMinutes() + deltaMinutes);
+	
+	return d2
+}
+	
 function updateProductivity(){
 	RTProdInterval = setInterval(function(){
 		if (localStorage.RTOnOffSelect == "On") {
-			$("#RTResultsHolder").text("Last pulse was " + localStorage.RTPulse);
+			var beginCycle = regressRTHour(-30);
+			var beginHours = beginCycle.getHours() + ":" + beginCycle.getMinutes() + ":" + beginCycle.getSeconds();
+			if (parseInt(localStorage.RTPulse) > 0) {
+				$("#RTResultsHolder").html("Your Productivity pulse was <b>" + localStorage.RTPulse + "</b>.");
+				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + localStorage.RTHour);
+			}
+			else {
+				$("#RTResultsHolder").html("Too little time evaluated from <b>" + localStorage.RTHour + "</b>. Check back in 15 minutes or so.");
+				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + localStorage.RTHour);
+			}
 		}
-	}, parseInt(localStorage.RTFrequency) * 60 * 1000);
+	}, 3 * 1000);
 }
 
 function changeRTVisibility(){
@@ -31,10 +64,12 @@ function changeRTVisibility(){
 function enableRescueTime(){
 	$("#fireRTIntegration").click(function(){
 		var APIKey = $("#rescueTimeAPIKey").val();
-		fireRescueTime(APIKey);
+		localStorage.RTAPIKey = APIKey;
+		changeRTVisibility();
 	});
-	// changeRTVisibility();
+	
 	if (localStorage.RTPulse && localStorage.RTOnOffSelect) {changeRTVisibility();}
+	if (localStorage.RTOnOffSelect == "On") { updateProductivity(); }
 	
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
@@ -47,9 +82,16 @@ function enableRescueTime(){
 	});
 	
 	$("#removeRTAPIKey").click(function() {
-		$.prompt("<b>Pavlok will forget about your key</b>, but nothing will happen to the key itself.<br/>If you type in the same key again after removing it, the Rescue Time Integration should work normally.", {
-			title: "Remove the API Key?",
-			buttons: { "Yes, forget it": true, "No, leave it as is": false },
+		var msg = "Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?<br/><br/>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?";
+		
+		var options = {
+			
+		};
+		$.prompt(msg, {
+			title: "Your Pavlok will disconnect from RescueTime. But are you sure you want to do that?",
+			html: msg,
+			defaultButton: 1,
+			buttons: { "No, I want to be productive": false, "Yes, disconnect from RescueTime": true },
 			submit: function(e,v,m,f){
 				console.log("result was " + v);
 				var result = v;
@@ -60,6 +102,17 @@ function enableRescueTime(){
 				}	
 			}
 		});
+	});
+	
+	$(".RTThreshold").change(function(){
+		alert("changed");
+		$("#badRT").css("width", $(this).val());
+		
+		var badWidth = bad.val();
+		var warningWidth = warn.val() - bad.val();
+		var veutralWidth = pos.val() - warn.val();
+		var positiveWidth = total - pos.val();
+		
 	});
 }
 
@@ -91,63 +144,6 @@ function fireRescueTime(APIKey){
 	changeRTVisibility();
 }
 
-function checkActiveDayHour(){
-	var now = new Date();
-	var start = localStorage.generalActiveTimeStart;
-	var end = localStorage.generalActiveTimeEnd;
-	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
-	start = from12To24(start);
-	end = from12to24(end);
-	
-	var dayActive = checkActiveDay(now);
-	var hourActive = checkActiveHour(start, end);
-	console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
-	
-	if (dayActive == true && hourActive == true) { return true }
-	else { return false }
-}
-
-function checkActiveDay(date){	
-	// Creates a list of active days from local Storage
-	var activeDaysList = [];
-	if (localStorage.sundayActive == 'true') { activeDaysList.push(0); }
-	if (localStorage.mondayActive == 'true') { activeDaysList.push(1); }
-	if (localStorage.tuesdayActive == 'true') { activeDaysList.push(2); }
-	if (localStorage.wednesdayActive == 'true') { activeDaysList.push(3); }
-	if (localStorage.thursdayActive == 'true') { activeDaysList.push(4); }
-	if (localStorage.fridayActive == 'true') { activeDaysList.push(5); }
-	if (localStorage.saturdayActive == 'true') { activeDaysList.push(6); }
-	
-	// Checks if current day is set as active
-	if ( activeDaysList.indexOf(date.getDay()) != -1 ) { return true } 
-	else { return false}
-}
-	
-function checkActiveHour(start, end){	// start and End are for debugging
-	// Checks if it's on an active day
-	var now = new Date();
-	
-	// Checks if it's on an active hour
-	var testHourStart = start;			// localStorage.xActiveStart
-	var testHourEnd = end;				// localStorage.xActiveEnd
-	
-	// New dates using today, but with begin and end times set
-	var begin = new Date();
-	begin.setHours(parseInt(testHourStart.split(":")[0]));
-	begin.setMinutes(parseInt(testHourStart.split(":")[1]));
-	begin.setSeconds(0);
-	begin.setMilliseconds(0);
-	
-	var end = new Date();
-	end.setHours(parseInt(testHourEnd.split(":")[0]));
-	end.setMinutes(parseInt(testHourEnd.split(":")[1]));
-	end.setSeconds(0);
-	end.setMilliseconds(0);
-	
-	// Evaluation
-	if (begin < now && now < end) { return true }
-	else { return false }
-}
 /* end of sandbox */
 
 function enableTimers(){
@@ -197,6 +193,18 @@ function enableTimers(){
 	});
 }
 
+function toggleAutoZapperConf(toState){
+	if (toState == "configure"){
+		$(".autoZapperConf").removeClass("noDisplay");
+		$(".autoZapperActive").addClass("noDisplay");
+		
+	}
+	else if (toState == "train"){
+		$(".autoZapperActive").removeClass("noDisplay");
+		$(".autoZapperConf").addClass("noDisplay");
+	}
+}
+
 function enableAutoZapper(){
 	var intensity = $( "#autoZapperIntensity" ).spinner({
 		min: 10,
@@ -241,14 +249,22 @@ function enableAutoZapper(){
 					localStorage.trainingSessionZD = zapDur;
 					
 					// Update interface
-					// Hide Start line
-					$("#autoZapperStartLine").addClass("noDisplay");
-					// Show Stop line
-					$("#autoZapperStopLine").removeClass("noDisplay");
+					toggleAutoZapperConf("train");
 					// Start Count Down Timer
 					var date = new Date(new Date().valueOf() + parseInt(localStorage.trainingSessionZD));
 					$('#countDownTraining').countdown(date, function(event) {
 						$(this).html(event.strftime('%M:%S'));
+					})
+					.on('finish.countdown', function(event) {
+						$.prompt("Session Finished! Congratulations!");
+						clearInterval(trainingSession);
+						localStorage.trainingSession = 'false';
+						localStorage.trainingSessionZI = '';
+						localStorage.trainingSessionZD = '';
+						localStorage.trainingSessionZF = '';
+						
+						toggleAutoZapperConf("configure");
+						
 					});
 					
 					var trainingSession = setInterval(function() {
@@ -257,16 +273,16 @@ function enableAutoZapper(){
 					}, parseInt(localStorage.trainingSessionZF));
 					localStorage.trainingSession = trainingSession;
 					
-					var endTraining = setTimeout(function(){ 
-						clearInterval(trainingSession);
-						$.prompt("Session is over");
-						localStorage.trainingSession = 'false';
-						localStorage.trainingSessionZI = '';
-						localStorage.trainingSessionZD = '';
-						localStorage.trainingSessionZF = '';
+					// var endTraining = setTimeout(function(){ 
+						// clearInterval(trainingSession);
+						// $.prompt("Congratulations! Session is over!");
+						// localStorage.trainingSession = 'false';
+						// localStorage.trainingSessionZI = '';
+						// localStorage.trainingSessionZD = '';
+						// localStorage.trainingSessionZF = '';
 						
-					}, parseInt(localStorage.trainingSessionZD));
-					localStorage.endTraining = endTraining;
+					// }, parseInt(localStorage.trainingSessionZD));
+					// localStorage.endTraining = endTraining;
 				}	
 			}
 		});
@@ -274,14 +290,9 @@ function enableAutoZapper(){
 	
 	$("#autoZapperStop").click(function(){
 		clearInterval(localStorage.trainingSession);
-		clearInterval(localStorage.endTraining);
 		$.prompt("Traning session canceled", "Your training session is now over");
-		// Cancel countdown timer
 		
-		// Hide Stop line
-		$("#autoZapperStopLine").addClass("noDisplay");
-		// Show Start line
-		$("#autoZapperStartLine").removeClass("noDisplay");
+		toggleAutoZapperConf("configure");
 	});
 }
 
@@ -734,4 +745,3 @@ $( document ).ready(function() {
 	// }
 	
 });
-

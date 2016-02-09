@@ -14,6 +14,7 @@
 	<script src="js/jquery-ui.min.js"></script>
 	<script src="js/jquery.ui.timepicker.js"></script>
 	<script src="js/jquery-impromptu.min.js"></script>
+	<script src="js/jquery.canvasjs.min.js"></script>
 	<script src="js/jquery.countdown.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/options.js"></script>	
@@ -29,7 +30,7 @@
 			</td>
 			<td>
 				<div class="onlyLogged toRight">
-					<a href="#" id="test_pairing" name="test_pairing">Test  pairing</a> 
+					<a href="#" id="test_pairing" name="test_pairing">Test  pairing</a>
 					<a href="#" class="onlyLogged" id="signOut">Sign Out</a>
 				</div>
 			</td>
@@ -60,7 +61,7 @@
 				<li class="linked roundedBorders"><a href="#tabs-5">AutoZapper</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
 				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox</a></li>
-				<li class="linked roundedBorders display"><a href="#tabs-8">Rescue Time</a></li>
+				<li class="linked roundedBorders display"><a href="#tabs-8">RescueTime</a></li>
 			</ul>
 						
 			<div id="tabs-1">
@@ -312,13 +313,19 @@
 					<tbody>
 						<tr id="autoZapperStartLine">
 							<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
-							<td><p><input id="autoZapperDuration" class="50px"> (min)</p></td>
+							<td style="text-align: center">
+								<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> (min)</p>
+								<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
+							</td>
 							<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
-							<td><a id="autoZapperStart" type="button" value="GO!"><b>GO!</b></a></td>
-						</tr>
-						<tr  id="autoZapperStopLine" class="noDisplay">
-							<td colspan="3"><p><span id="countDownTraining"></p></span></td>
-							<td><a id="autoZapperStop" type="button" value="Stop!"><b>Stop!</b></a></td>
+							<td>
+								<p class="autoZapperConf">
+									<a id="autoZapperStart" ><b>GO!</b></a>
+								</p>
+								<p class="autoZapperActive noDisplay">
+									<a id="autoZapperStop" ><b>Stop!</b></a>
+								</p>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -576,8 +583,8 @@
 				</table>
 			</div>
 			<div id="tabs-8" class="display">
-				<h2>Get help from Rescue Time <img src="images/help.png" class="helpIcon" title="
-					<p>Rescue Time can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
+				<h2>Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
+					<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
 					<p>Pavlok will make notifications visceral!</p>
 					<ul>
 						<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
@@ -597,6 +604,8 @@
 				<div id="RTCodeOnly">
 					<div id="RTResultDiv">
 						<p><span id="RTResultsHolder">Gathering data... </span></p>
+					</div>
+					<div id="RTConfiguration">
 						<table>
 							<tr>
 								<td>
@@ -611,8 +620,7 @@
 							</tr>
 							<tr>
 								<td>
-									<p>Updates Frequency:
-									</p>
+									<p>Updates Frequency:</p>
 								</td>
 								<td>
 									<p>
@@ -625,8 +633,8 @@
 										</select>
 										Minutes <img src="images/help.png" class="helpIcon" title="
 										<p>Pavlok will get your productivity according to the inverval you set.</p>
-										<p><b>There are differences in the frequency you'll get an updated pulse from rescue time</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
-										<p>For instance: if you have a <b>free account</b> on Rescue Time and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
+										<p><b>There are differences in the frequency you'll get an updated pulse from RescueTime</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
+										<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
 										<p><b>We advise<span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
 										"
 										/>
@@ -634,16 +642,73 @@
 								</td>
 							</tr>
 						</table>
-							
+						<div class="noDisplay">	
 						<hr>
-				
-						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
-						<p><input type="button" value="Remove Key?" id="removeRTAPIKey" /> <img src="images/help.png" class="helpIcon" title='
-							<p>This buttons will make Pavlok forget about your key, but nothing will happen to the key itself. If you type in the same key again after removing it, the Rescue Time Integration should work normally.</p>
-							<p>If you mistyped it and want to change, just click here and reinsert the key.</p>'
-						/>
-			
+						<h3>Define your Thresholds</h3>
+							
+							<table>
+								<tr>
+									<th>Stimulus</th>
+									<th>Threshold</th>
+									<th>Triggers</th>
+								</tr>
+								<tr>
+									<td><p>Positive</p></td>
+									<td><p>Above <input id="RTPosLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTPosSti">
+											<option value="shock">Zap</option>
+											<option value="shock">Vibrate</option>
+											<option value="shock">Beep</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><p>Warning</td>
+									<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTWarnSti">
+											<option value="shock">Zap</option>
+											<option value="shock">Vibrate</option>
+											<option value="shock">Beep</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><p>Negative</td>
+									<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTNegSti">
+											<option value="shock">Zap</option>
+											<option value="shock">Vibrate</option>
+											<option value="shock">Beep</option>
+										</select>
+									</td>
+								</tr>
+							</table>
+							
+							<div id="miniChart">
+								<div id="badRT" class="miniChartDiv">Negative</div>
+								<div id="warnRT" class="miniChartDiv">Warning</div>
+								<div id="notifyRT" class="miniChartDiv">Neutral</div>
+								<div id="goodRT" class="miniChartDiv">Positive</div>
+								<div id="chartContainer"></div>
+							</div>
 						
+						</div>
+					</div>
+						
+					<hr>
+					
+					<div id="RTAPIKeyDiv">
+						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
+						<p><input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" /> <img src="images/help.png" class="helpIcon" title='
+							<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
+
+							<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
+
+							<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
+						/>
 					</div>
 				</div>
 				

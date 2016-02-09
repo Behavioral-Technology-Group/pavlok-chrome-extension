@@ -1,5 +1,6 @@
 ﻿/* To-do:
-- get values for stimuli from our server, instead of hardcoding it
+- DRY code
+- Implement user conditions for rescue time evaluator
 
 
 */
@@ -56,6 +57,15 @@ var accessToken = localStorage.accessToken;
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+function validateTimeOut(RTTimeOut){
+	if (RTTimeOut == undefined) { RTTimeOut = false }
+	else if (RTTimeOut == 'false' ) { RTTimeOut = false }
+	else if (RTTimeOut == false ) { RTTimeOut = false }
+	else if ( parseInt(RTTimeOut) > 0 ) { RTTimeOut = parseInt(RTTimeOut) }
+	
+	return RTTimeOut
+}
+
 function createTimeout(){
 	fireRescueTime(localStorage.RTAPIKey);
 	var x = setTimeout(function(){
@@ -63,7 +73,7 @@ function createTimeout(){
 		
 		// Clearing up
 		RTTimeOut = false;
-		localStorage.RTTimeout = false;
+		localStorage.RTTimeOut = false;
 		// alert("Timeout Ended");
 	}, parseInt(localStorage.RTFrequency) * 60 * 1000); // Gotta put this on 3 minutes
 	localStorage.RTTimeOut = x;
@@ -78,7 +88,10 @@ function fireRescueTime(APIKey){
 	$.get(requestAddress)
 	.done(function (data) {
 		localStorage.RTPulse = data.pulse;
-		console.log("Productivity pulse is " + data.pulse)
+		localStorage.RTHour = data.comment.split(" ")[9];
+		localStorage.Comment = data.comment;
+		
+		console.log("Productivity pulse from 30 minutes before " + localStorage.RTHour + "is " + data.pulse)
 		
 		var prod = data.pulse;
 		if ( prod == 0 ) { return }
@@ -335,11 +348,12 @@ var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
 
 function rescueTimeChecker(){
 	if (localStorage.RTAPIKey) {
+		RTTimeOut = validateTimeOut(RTTimeOut);
 		if (RTTimeOut){
 			if (localStorage.RTOnOffSelect == "Off") {
 				// StopTimer
 				clearInterval(RTTimeOut);
-				RTTimeout = false;
+				RTTimeOut = false;
 				localStorage.RTTimeOut = false;
 			}
 		}

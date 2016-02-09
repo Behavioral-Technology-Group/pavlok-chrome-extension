@@ -8,7 +8,7 @@
 */
 
 // Defaults
-var server = "MVP" // STAGE or MVP
+var server = "STAGE" // STAGE or MVP
 var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
@@ -48,7 +48,7 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
-if (!localStorage.RTFrequency) { localStorage.RTOnOffSelect = "Off" };
+if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
