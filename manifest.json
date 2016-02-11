@@ -2,8 +2,9 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "name": "P.A.V.L.O.K. Chrome Extension",
-  "version": "0.4.21",
+  "version": "0.5.4",
+  "name": "PAVLOK Productivity (ANDROID)",
+  "short_name": "PAVLOK Prod DROID",
  
   "description": "Stay Focused. Eliminate Distraction.",
   "icons": {

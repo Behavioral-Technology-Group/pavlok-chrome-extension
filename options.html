@@ -60,8 +60,9 @@
 				<li class="linked roundedBorders"><a href="#tabs-4">Advanced Options</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-5">AutoZapper</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
-				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox</a></li>
-				<li class="linked roundedBorders display"><a href="#tabs-8">RescueTime</a></li>
+				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox Advanced Timer</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-8">RescueTime</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-9">To-do List</a></li>
 			</ul>
 						
 			<div id="tabs-1">
@@ -74,7 +75,7 @@
 					
 					<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
 					<div class="tagcontainer">
-						<input name="blackList" id="blackList" value=""></input>
+						<input name="blackList" id="blackList" value="">
 					</div>
 				</div>
 					
@@ -89,7 +90,7 @@
 					
 					<p>Please tell your exceptions for black sites, separated by commas. </p>
 					<div class="tagcontainer">
-						<input name="whiteList" id="whiteList" value=""></input>
+						<input name="whiteList" id="whiteList" value="">
 					</div>
 				</div>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
@@ -138,7 +139,7 @@
 					</select>
 					<br/>
 					
-					<input type="checkbox" name="zapOnClose" id="zapOnClose">Zap when closing</input>
+					<input type="checkbox" name="zapOnClose" id="zapOnClose">Zap when closing
 					<img src="images/help.png" class="helpIcon" title="
 						<p>For those really inclined to stop opening to many habits!</p>
 						<p>This will send a zap whenever you are above your tab limit, <b><span class='yellow'>EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You'll sure think about opening more tabs after that!</p>
@@ -172,7 +173,7 @@
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
 			<div id="tabs-4">
-				<div id="stimuliNotificationsDiv"</div>
+				<div id="stimuliNotificationsDiv">
 					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
 						<p>
 							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
@@ -320,10 +321,10 @@
 							<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
 							<td>
 								<p class="autoZapperConf">
-									<a id="autoZapperStart" ><b>GO!</b></a>
+									<a id="autoZapperStart" href="#"><b>GO!</b></a>
 								</p>
 								<p class="autoZapperActive noDisplay">
-									<a id="autoZapperStop" ><b>Stop!</b></a>
+									<a id="autoZapperStop" href="#"><b>Stop!</b></a>
 								</p>
 							</td>
 						</tr>
@@ -590,14 +591,16 @@
 						<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
 						<li>If your productivity falls <b>bellow 50%</b>, you get a <span class='yellow'>beep</span> reminder to focus again</li>
 						<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
-					<ul>
+					</ul>
+					<p>The limits and stimulus for fired can be changed in the <span class='yellow'>Define your Thresholds</span> section</p>
 				"></h2>
 				<div id="NoRTCodeOnly">
 					<p>Let's get your ball rolling!</p>
 					<ol>
-						<li>Get your Api Key for Pavlok <a href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
-						<li>Then insert your Key here and click GO!</li>
+						<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
+						<li>Then insert your Key here and click GO!
 						<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
+						</li>
 						<li>That's it! Enjoy!</li>
 					</ol>
 				</div>
@@ -635,7 +638,7 @@
 										<p>Pavlok will get your productivity according to the inverval you set.</p>
 										<p><b>There are differences in the frequency you'll get an updated pulse from RescueTime</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
 										<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
-										<p><b>We advise<span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
+										<p><b>We advise <span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
 										"
 										/>
 									</p>
@@ -675,7 +678,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td><p>Negative</td>
+									<td><p>Negative</p></td>
 									<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
 									<td>
 										<select id="RTNegSti">
@@ -701,17 +704,69 @@
 					
 					<div id="RTAPIKeyDiv">
 						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
-						<p><input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" /> <img src="images/help.png" class="helpIcon" title='
-							<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
+						<p>
+							<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
+							
+							<img src="images/help.png" class="helpIcon" title='
+								<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
 
-							<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
+								<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
 
-							<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
-						/>
+								<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
+							/>
+						</p>
 					</div>
 				</div>
 				
 				
+			</div>
+			<div class="display" id="tabs-9">
+				<div id="toDoDiv">
+					<h2>Your To-do List</h2>
+					<div id="toDoAction">
+						<table id="toDoTable">
+							<thead>
+								<tr id="toDoTableHeader">
+									<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td id="toDoNItemsLeft">1 Item Left</td>
+									<td id="allToDo" class="toDoScopes">
+										<a href="#" id="allToDoLink">All</a>
+									</td>
+									<td id="todayToDo" class="toDoScopes">
+										<a href="#" id="todayToDoLink">Today</a>
+									</td>
+									<td id="completedToDo" class="toDoScopes">
+										<a href="#" id="doneToDoLink">Done</a>
+									</td>
+									<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+				<hr>
+				<div id="musicControlDiv">
+					<h2>Pomodoro on Steroids</h2>
+					<p>Want to get hyper focused? 
+						<select id="audioSelectPomodoro">
+							<option id="audioTrue" value="music">Yes, get me there!</option>
+							<option id="audioTrue" value="silence">No, I'm fine.</option>
+						</select>
+					<div class="musicOnly">
+						<p>Great! Get some good earphones and let [[xxx]] audio help you easy into the zone.</p>
+						<p>
+							<audio controls="" autoplay="" name="media">
+								<source src="https://stream.brain.fm/?tkn=82ecbb60-d003-11e5-a701-1d9907f83ba4" type="audio/mpeg">
+							</audio>
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

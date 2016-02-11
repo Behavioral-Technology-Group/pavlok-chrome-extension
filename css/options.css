@@ -281,22 +281,6 @@ h2 .helpIconSpan{
 .display{
 	display: "block"
 }
-/* New css styles. Gotta create sprites for checked and unchecked and adjust position there
-input[type="checkbox"] {
-    display:none;
-}
-input[type="checkbox"] + label span {
-    display:inline-block;
-    width:19px;
-    height:19px;
-    margin:-1px 4px 0 0;
-    vertical-align:middle;
-    background:url(check_radio_sheet.png) left top no-repeat;
-    cursor:pointer;
-}
-input[type="checkbox"]:checked + label span {
-    background:url(check_radio_sheet.png) -19px top no-repeat;
-} */
 
 #chartContainer{
 	width: 500px;
@@ -330,4 +314,102 @@ input[type="checkbox"]:checked + label span {
 #goodRT{
 	background-color: green;
 	width: 22%;
+}
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           To-Do session           *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+#toDoAction {
+	width: 100%;
+	background-color: #fff;
+	border: 1px solid white;
+}
+
+#toDoAction table {
+	width: 100%;
+}
+
+/* Items themselves */
+.toDoItemTR{
+	width: 100%;
+	background: rgb(230, 230, 230);
+	vertical-align: center;
+	border-bottom: 1px solid gray;
+}
+
+.toDoItemTR:hover{
+	background: #f8e71c;
+	
+}
+
+.toDoItemTR > td {
+	vertical-align: center;
+	padding-left: 5px;
+}
+.toDoItemTR > td > div {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	height: 26px;
+}
+
+.toDoOKerTD {
+	width: 5%;
+}
+
+.toDoOTaskTD {
+	width: 87%;
+}
+
+.toDoORemoverTD {
+	text-align: right;
+	width: 5%;
+}
+
+.doneTask {
+	text-decoration: line-through;
+	color: gray;
+}
+/* Footer buttons and fields */
+#toDoNItemsLeft {
+	width: 28%;
+	text-align: left;
+}
+
+#clearCompletedToDo{
+	width: 28%;
+	text-align: right;
+}
+
+#clearCompletedToDo a{
+	text-decoration: none;
+	color: black;
+}
+
+.toDoScopes{
+	width: 14.5%;
+	text-align: center;
+}
+
+.toDoScopes a{
+	text-decoration: none;
+	color: black;
+	text-align: center;
+}
+/* Header and to-do adding buttons */
+#completeAllButton{
+	width: 5%;
+}
+
+#toDOAdd{
+	width: 95%;
+}
+
+/* debug */
+#toDoAction table, #toDoAction tr, #toDoAction td {
+	/* border: 1px solid blue; */
+	border-collapse: collapse;
 }

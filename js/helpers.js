@@ -8,8 +8,8 @@
 */
 
 // Defaults
-var server = "STAGE" // STAGE or MVP
-var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
+var server = "MVP" // STAGE or MVP
+var usage = "production"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
@@ -303,16 +303,16 @@ function oauth() {
 		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
 	else if (usage == "testSTAGE") {
-		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
-		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
+		clientID = "4178326597e9a470f86a12379ef3d450b15aa3ccf8701461b3e9c2f6792eef7e";
+		clientSecret = "44818bfff68ca701f46ffff5e3b9f026748847f8770a1bf4f9118c461a23c0c4";
 	}
 	else if ( usage == "productionSTAGE" ){
 		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
 		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
 	}
 	else if ( usage == "productionMVP" ) {
-		var clientID = "24d3e11fd9b64098732724c7e0364e6b57155789405f08fa52d2fc70a62fd273";
-		var clientSecret = "1d18bafb082c4c10ff195a3f3b4c899e52018733392a09102d582e6df0273696";
+		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
+		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
 	}
 	
 	var authURL = localStorage.baseAddress + "oauth/authorize?" + 

@@ -56,6 +56,7 @@ var accessToken = localStorage.accessToken;
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+// RescueTime Integration
 function validateTimeOut(RTTimeOut){
 	if (RTTimeOut == undefined) { RTTimeOut = false }
 	else if (RTTimeOut == 'false' ) { RTTimeOut = false }
@@ -121,56 +122,7 @@ function fireRescueTime(APIKey){
 	});
 }
 
-function convert12To24(time){
-	if (time.indexOf("AM") == -1 && time.indexOf("PM") == -1) { return time }
-	
-	hour = parseInt(time.split(":")[0]);
-	minute = time.split(":")[1].split(" ")[0];
-	code = time.split(":")[1].split(" ")[1];
-
-	if (code == "PM") { hour = hour + 12;}
-	
-	return hour + ":" + minute
-}
-
-function notifyUser(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
-	
-	chrome.notifications.create(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
-		}
-	});
-}
-
-function updateNotification(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
-	
-	chrome.notifications.update(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
-		}
-	});
-}
-
-function clearNotifications(){
-	chrome.notifications.clear("firstWarning");
-	chrome.notifications.clear("secondWarning");
-	chrome.notifications.clear("relief");
-	chrome.notifications.clear("blacklisted");
-	chrome.notifications.clear("zapped");
-}
-
+// Black List
 function CheckBlackList(curTabURL, curTabDomain) {
 	
 	var _result = "";
@@ -194,6 +146,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	return _result
 }
 
+// Tab counting
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 	if (isValid(token) && checkActiveDayHour()){
 		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
@@ -236,6 +189,7 @@ function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 	}
 }
 
+// Notifications
 function notifyTabCount(tabs, situation){
 	var notTitle = "";
 	var notMessage = "";
@@ -274,6 +228,57 @@ function notifyTabCount(tabs, situation){
 	}
 	
 	notifyUser(notTitle, notMessage, notID);
+}
+
+function notifyUser(title, message, notID){
+	var opt = {
+		type: "basic",
+		title: title,
+		message: message,
+		iconUrl: "icon.png"
+	};
+	
+	chrome.notifications.create(notID, opt, function(notID) {
+		if (chrome.runtime.lastError){
+			console.error(chrome.runtime.lastError);
+		}
+	});
+}
+
+function updateNotification(title, message, notID){
+	var opt = {
+		type: "basic",
+		title: title,
+		message: message,
+		iconUrl: "icon.png"
+	};
+	
+	chrome.notifications.update(notID, opt, function(notID) {
+		if (chrome.runtime.lastError){
+			console.error(chrome.runtime.lastError);
+		}
+	});
+}
+
+function clearNotifications(){
+	chrome.notifications.clear("firstWarning");
+	chrome.notifications.clear("secondWarning");
+	chrome.notifications.clear("relief");
+	chrome.notifications.clear("blacklisted");
+	chrome.notifications.clear("zapped");
+}
+
+// General use
+function convert12To24(time){
+	if (time.indexOf("AM") == -1 && time.indexOf("PM") == -1) { return time }
+	
+	hour = parseInt(time.split(":")[0]);
+	minute = time.split(":")[1].split(" ")[0];
+	code = time.split(":")[1].split(" ")[1];
+
+	if (code == "PM") { hour = hour + 12;}
+	
+	return hour + ":" + minute
 }
 
 function checkActiveDayHour(){

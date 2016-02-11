@@ -1,16 +1,104 @@
 ﻿/* To-do 
-BOOM	- Gather productivity data from local Storage
-BOOM	- Let people decide on the ranges (below and above) and stimulus (shock, zap, beep)
-BOOM	- Implement the time range for the input (prod pulse measured from x to y)
-BOOM	- Declutter code not being used
-BOOM	- Make code more readable
-	- Fix autozapper multiple ok messages (update countdown?)
 	- Implement a check for valid API Key and warn user if it's invalid
 	- Fix prompt for Disconnect from RT. Buttons are ugly as hell being too large
-
+	- Implement a Pomodoro timer (with notifications on certain intervals)
+	- Implement To-do list
+	- Prepare integration with sounds
 */
 var RTProdInterval;
 /* sandbox */
+
+function enableToDo(){
+	// Add item on Enter
+	$("#toDoAdd").keydown(function(e){
+		if (e.keyCode == 13) {
+			var task = $(this).val();
+			if (task.length > 0){
+				addToDoItem($(this).val());
+				$(this).val('');
+				updateTasksCounter();
+			}
+		}
+	});
+	
+	// delete on X
+	$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
+		var itemRow = $(this).parent().parent().parent();
+		itemRow.remove();
+		updateTasksCounter();
+	});
+	
+	// Complete if checked
+	$("#toDoTable tbody ").on('change', '.doneCheckbox', function(){
+		var done = ($(this).prop( "checked" ) == true);
+		var itemRow = $(this).parent().parent().parent();
+		var task = itemRow.children().children()[1];
+		
+		if (done == true){ 
+			$(task).addClass('doneTask'); 
+			$(itemRow).addClass('doneTaskRow');
+		}
+		else { 
+			$(task).removeClass('doneTask'); 
+			$(itemRow).addClass('doneTaskRow');
+		}
+		updateTasksCounter();
+	});
+	
+	// Filter tasks: ALL
+	$("#allToDoLink").click(function(){
+		$( "#toDoTable tbody > tr").removeClass('noDisplay');
+	});
+	
+	// Filter tasks: TODAY
+	
+	
+	// Filter tasks: DONE
+	$("#doneToDoLink").click(function(){
+		$( "#toDoTable tbody > tr:not(.doneTaskRow)" ).addClass('noDisplay');
+		$( "#toDoTable tbody > tr.doneTaskRow" ).removeClass('noDisplay');
+	});
+	
+	// Clear Completed
+	$("#clearToDoLink").click(function(){
+		$( "#toDoTable tbody > tr.doneTaskRow" ).remove();
+		updateTasksCounter();
+	});
+	
+	// Items counter:
+	updateTasksCounter();
+}
+
+function updateTasksCounter(){
+	var count = $( "#toDoTable tbody > tr:not(.doneTaskRow)" ).length;
+	if (count == 0) { text = "No items left!" }
+	else if (count == 1) { text = "1 item left" }
+	else if (count > 1) { text = count + " items left" }
+	else { text = "problems counting" }
+	
+	$("#toDoNItemsLeft").html(text);
+}
+
+function addToDoItem(task){
+	var newLine = '<tr class="toDoItemTR">' +
+									'<td colspan="5">' +
+										'<div class="toDoOKerTD">' +
+											'<input type="checkbox" class="doneCheckbox"/>' + 
+										'</div>' + 
+										'<div class="toDoOTaskTD">' + 
+											task + 
+										'</div>' +
+										'<div class="toDoORemoverTD">' + 
+											'<input type="button" value="X" class="removeToDoItem" />' + 
+										'</div>' + 
+									'</td>'
+	;
+	$('#toDoTable > tbody').append(newLine);
+	// $('#toDoTable > tbody').css('border', '1 px solid blue');
+}
+/* end of sandbox */
+
+// RESCUETIME SECTION
 function regressRTHour(deltaMinutes){
 	var original = localStorage.Comment;
 	var originalDate = [original.split(" ")[8], original.split(" ")[9]];
@@ -217,36 +305,15 @@ function enableRescueTime(){
 	
 }
 
-// // // function fireRescueTime(APIKey){
-	// // // requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
-	// // // localStorage.RTAPIKey = APIKey;
+function deltaTime(seconds){
+	var now = new Date()
+	var future = new Date()
+	future.setTime(now.getTime() + seconds * 1000)
 	
-	// // // var resultHolder = $("#RTResultsHolder");
-	
-	// // // console.log("get request to\n" + requestAddress);
-	// // // $.get(requestAddress)
-	// // // .done(function (data) {
-		// // // var rtData = JSON.stringify(data);
-		// // // console.log("Success with Rescue Time. Pulse is " + data.pulse);
-		// // // localStorage.rtData = rtData;
-		// // // resultHolder.text(data.pulse);
-		
-		// // // $("#RTAPIKeySpan").text(localStorage.RTAPIKey);
-		
-		// // // changeRTVisibility();
-		// // // return data.pulse
-	// // // })
-	// // // .fail(function(){
-		// // // resultHolder.text("Failed");
-		// // // console.log("BAD key. Fails on API.");
-		// // // localStorage.removeitem['RTAPIKey'];
-		// // // return false
-	// // // });
-	// // // changeRTVisibility();
-// // // }
+	return future
+}
 
-/* end of sandbox */
-
+// AUTOZAPPER SECTION
 function enableTimers(){
 	$.widget( "ui.timespinner", $.ui.spinner, {
     options: {
@@ -283,6 +350,7 @@ function enableTimers(){
     $( "#timeFormat" ).change(function() {
 		var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
 		var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
+		
 		var selectedOption = $(this).val();
 		if (selectedOption == "24") { culture = "de-DE" }
 		else if (selectedOption == "12") { culture = "en-EN"};
@@ -307,6 +375,23 @@ function toggleAutoZapperConf(toState){
 }
 
 function enableAutoZapper(){
+	// var date = new Date(new Date().valueOf() + parseInt(localStorage.trainingSessionZD));
+	$('#countDownTraining').countdown(new Date(), function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		$.prompt("Session Finished! Congratulations!");
+		clearInterval(localStorage.trainingSession);
+		localStorage.trainingSession = 'false';
+		localStorage.trainingSessionZI = '';
+		localStorage.trainingSessionZD = '';
+		localStorage.trainingSessionZF = '';
+		
+		toggleAutoZapperConf("configure");
+		
+	});
+	
+	
 	var intensity = $( "#autoZapperIntensity" ).spinner({
 		min: 10,
 		max: 100,
@@ -357,8 +442,8 @@ function enableAutoZapper(){
 						$(this).html(event.strftime('%M:%S'));
 					})
 					.on('finish.countdown', function(event) {
-						$.prompt("Session Finished! Congratulations!");
-						clearInterval(trainingSession);
+						// // // $.prompt("Session Finished! Congratulations!");
+						clearInterval(localStorage.trainingSession);
 						localStorage.trainingSession = 'false';
 						localStorage.trainingSessionZI = '';
 						localStorage.trainingSessionZD = '';
@@ -808,6 +893,7 @@ function initialize() {
 	enableCheckboxes();
 	enableInputs();
 	enableRescueTime();
+	enableToDo();
 	
 	$(".allCaps").text().toUpperCase();
 	
