@@ -750,22 +750,32 @@
 						</table>
 					</div>
 				</div>
-				<hr>
-				<div id="musicControlDiv">
+				<br/>
+				<div id="musicControlDiv" class="noDisplay">
 					<h2>Pomodoro on Steroids</h2>
-					<p>Want to get hyper focused? 
-						<select id="audioSelectPomodoro">
-							<option id="audioTrue" value="music">Yes, get me there!</option>
-							<option id="audioTrue" value="silence">No, I'm fine.</option>
-						</select>
-					<div class="musicOnly">
-						<p>Great! Get some good earphones and let [[xxx]] audio help you easy into the zone.</p>
-						<p>
-							<audio controls="" autoplay="" name="media">
-								<source src="https://stream.brain.fm/?tkn=82ecbb60-d003-11e5-a701-1d9907f83ba4" type="audio/mpeg">
-							</audio>
-						</p>
-					</div>
+					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
+					<p>
+						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+						<img src="images/help.png" class="helpIcon" title='
+						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+						'/>
+					</p>
+					<p>
+						<input type="checkbox" id="audioFocus">Binaural Soundtrack
+						<img src="images/help.png" class="helpIcon" title='
+						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
+						'/>
+					</p>
+				</div>
+				<div id="pomodoroFocusDiv" class="noDisplay">
+					<h2><span id="pomoFocusTask"></span></h2>
+					<p>Remaining Time: <span id="pomoFocusRemainingTime"></span></p>
+					<p>Image for completeness</p>
+					<p>
+						<input value="done" id="pomoFocusCompleteTask" />
+						<input value="stop" id="pomoFocusStop" />
+						<input value="5 minutes" id="pomoFocus5minutes" />
+					</p>
 				</div>
 			</div>
 		</div>

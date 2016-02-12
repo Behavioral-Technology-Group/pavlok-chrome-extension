@@ -430,13 +430,19 @@ function userInfo(accessToken) {
 		});
 }
 
-function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
-	var notify = true;
-	if (!textAlert){ textAlert = "Incoming " + stimuli; }
+function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
+	stimuliTypes = ['shock', 'vibration', 'beep'];
+	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepTune]; // zap, vibration, beep
 	
-	if ( stimuli == 'beep' && localStorage.notifyBeep == 'false' ) { notify = false; }
-	else if ( stimuli == 'vibration' && localStorage.notifyVibration == 'false' ) { notify = false; }
-	else if ( stimuli == 'shock' && localStorage.notifyZap == 'false' ) { notify = false; }
+	if (!value || value == 'defInt' || '') { value = defIntensities[stimuliTypes.indexOf(stimulus)]; }
+	if (!accessToken || accessToken == 'defAT' || '') { accessToken = localStorage.accessToken; }
+	if (!textAlert){ textAlert = "Incoming " + stimulus; }
+	
+	var notify = true;
+	
+	if ( stimulus == 'beep' && localStorage.notifyBeep == 'false' ) { notify = false; }
+	else if ( stimulus == 'vibration' && localStorage.notifyVibration == 'false' ) { notify = false; }
+	else if ( stimulus == 'shock' && localStorage.notifyZap == 'false' ) { notify = false; }
 	
 	if ( forceNotify == 'false' ) { notify = false; }
 	else if ( forceNotify == 'true' ) { notify = true; }
@@ -444,19 +450,19 @@ function stimuli(stimuli, value, accessToken, textAlert, forceNotify) {
 	if (notify) { $.prompt(textAlert); }
 	
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
-				stimuli + '/' + 
+				stimulus + '/' + 
 				value + 
 				'?access_token=' + accessToken;
 	console.log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
 		.done(function (data, result) {
-			return console.log(stimuli + ' succeeded!\n' + data + " " + result);
+			return console.log(stimulus + ' succeeded!\n' + data + " " + result);
 		})
 		.fail( function() {
 			console.log('Failed the new API. Trying the old one');
 			objectCode = localStorage.objectCode;
-			if (stimuli == "vibration") { stimuli = "vibro"; }
-			console.log(stimuli + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			if (stimulus == "vibration") { stimulus = "vibro"; }
+			console.log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
 			$.get('https://pavlok.herokuapp.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
 			
 			return 

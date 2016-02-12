@@ -30,7 +30,7 @@ body {
   margin-top: 1em;
 }
 
-p {
+body > p {
   color: white;
   font-family: Helvetica;
 }
@@ -318,26 +318,40 @@ h2 .helpIconSpan{
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
-/* ***************           To-Do session           *************** */
+/* ***************           To-Do Section           *************** */
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
 #toDoAction {
 	width: 100%;
-	background-color: #fff;
-	border: 1px solid white;
+	background-color: black;
+	/* border: 1px solid white; */
+	color: white;
 }
 
 #toDoAction table {
 	width: 100%;
+	color: white;
+}
+
+#toDoAction table > tfoot > tr{
+	font-weight: bold;
+	background-color: rgb(100, 100, 100);
+	border-bottom: 1px solid white;
+}
+
+#toDoAction table > tfoot > tr{
+	font-weight: bold;
+	background-color: rgb(100, 100, 100);
+	border-bottom: 1px solid white;
 }
 
 /* Items themselves */
 .toDoItemTR{
 	width: 100%;
-	background: rgb(230, 230, 230);
+	background: rgb(10, 10, 10);
 	vertical-align: center;
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid white;
 }
 
 .toDoItemTR:hover{
@@ -361,12 +375,12 @@ h2 .helpIconSpan{
 }
 
 .toDoOTaskTD {
-	width: 87%;
+	width: 77%;
 }
 
 .toDoORemoverTD {
 	text-align: right;
-	width: 5%;
+	width: 15%;
 }
 
 .doneTask {
@@ -386,17 +400,19 @@ h2 .helpIconSpan{
 
 #clearCompletedToDo a{
 	text-decoration: none;
-	color: black;
+	color: white;
 }
 
 .toDoScopes{
 	width: 14.5%;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 	text-align: center;
 }
 
 .toDoScopes a{
 	text-decoration: none;
-	color: black;
+	color: white;
 	text-align: center;
 }
 /* Header and to-do adding buttons */
@@ -408,8 +424,17 @@ h2 .helpIconSpan{
 	width: 95%;
 }
 
+#toDoAction .imgIcon{
+	width: 28px;
+	height: 28px;
+}
+
+.todayToDoItem{
+}
+
 /* debug */
 #toDoAction table, #toDoAction tr, #toDoAction td {
 	/* border: 1px solid blue; */
 	border-collapse: collapse;
 }
+

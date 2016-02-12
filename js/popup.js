@@ -1,7 +1,5 @@
 /* To-do
-- Enable login through here
-- Fix the maxTabs discrepancy
-- Fix test pairing button
+
 */
 
 
@@ -31,7 +29,7 @@ function showOptions(accessToken){
 
 $( document ).ready(function() {
 	enableTooltips();
-	
+	enableToDo();
 	if ( !localStorage.userName ) { userInfo(localStorage.accessToken); }
 	if ( localStorage.userName ) { updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
 	
@@ -78,7 +76,6 @@ $( document ).ready(function() {
 		// Toggle visibility for options
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
-		
 	}
 	
 });
