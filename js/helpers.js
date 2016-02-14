@@ -8,8 +8,8 @@
 */
 
 // Defaults
-var server = "MVP" // STAGE or MVP
-var usage = "production"; // local OR test OR production (MVP or STAGE added at the end)
+var server = "STAGE" // STAGE or MVP
+var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
@@ -452,7 +452,8 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimulus + '/' + 
 				value + 
-				'?access_token=' + accessToken;
+				'?access_token=' + accessToken+
+				'&reason=' + textAlert;
 	console.log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
 		.done(function (data, result) {

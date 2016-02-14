@@ -1,10 +1,15 @@
 ﻿/* To-do 
 	- Create Pomodoro Focus view
 	- Put Pomodoro CountDown on the Background
-	- Insert CountDown and Progress Bar for countdown on Options
-	- Adjust buttons for the actions
+BOOM	- Insert CountDown and Progress Bar for countdown on Options
+BOOM	- Adjust buttons for the actions
 	- Adjust interface on Popup
 */
+var focusCompleteMsg = "Keep the zone going, you rock star!";
+var focusStopMsg = ''; 
+var defInt = '';			// Use default intensity for stimuli
+var defAT = '';				// Use default Access Token for stimuli
+var PFpromptForce = false;
 var RTProdInterval;
 /* sandbox */
 
@@ -14,20 +19,8 @@ var RTProdInterval;
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+// Status for the tasks are put as classes on the ROW of the item.
 // TO-DO Helpers
-function togglePomodoroFocus(toState){
-	if (toState == 'focus'){
-		$("#pomodoroFocusDiv").removeClass('noDisplay');
-		$("#toDoDiv").addClass('noDisplay');
-		$("#pomoFocusTask").text("Focusing on ");
-		$("#pomoFocusRemainingTime").text("05:00");
-	}
-	else {
-		$("#pomodoroFocusDiv").addClass('noDisplay');
-		$("#toDoDiv").removeClass('noDisplay');
-	}
-}
-
 function activateTaskFilterButtons(){
 	// Filter tasks: ALL
 	$("#allToDoLink").click(function(){
@@ -35,13 +28,38 @@ function activateTaskFilterButtons(){
 	});
 	
 	// Filter tasks: TODAY
-	
+	$("#todayToDoLink").click(function(){
+		$( "#toDoTable tbody > tr:not(.todayTaskRow)" ).addClass('noDisplay');
+		$( "#toDoTable tbody > tr.todayTaskRow" ).removeClass('noDisplay');
+	});
 	
 	// Filter tasks: DONE
 	$("#doneToDoLink").click(function(){
 		$( "#toDoTable tbody > tr:not(.doneTaskRow)" ).addClass('noDisplay');
 		$( "#toDoTable tbody > tr.doneTaskRow" ).removeClass('noDisplay');
 	});
+}
+
+function addToDoItem(task){
+	var newLine = '<tr class="toDoItemTR">' +
+					'<td colspan="5">' +
+						'<div class="toDoOKerTD">' +
+							'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
+						'</div>' + 
+						'<div class="toDoOTaskTD">' + 
+							task + 
+						'</div>' +
+						'<div class="toDoORemoverTD" >' + 
+							'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 							
+							'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon grayscale" title="<p>You will do it <b>today</b></p>"/>' + 
+							'<input type="image" src="images/redXIcon.png" alt="Cancel" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
+						'</div>' + 
+					'</td>'
+	;
+	$('#toDoTable > tbody').append(newLine);
+	var newTR = $('#toDoTable > tbody > tr').last();
+	
+	return newTR
 }
 
 function addToDoOnEnter(){
@@ -58,26 +76,17 @@ function addToDoOnEnter(){
 	});
 }
 
-function addToDoItem(task){
-	var newLine = '<tr class="toDoItemTR">' +
-									'<td colspan="5">' +
-										'<div class="toDoOKerTD">' +
-											'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
-										'</div>' + 
-										'<div class="toDoOTaskTD">' + 
-											task + 
-										'</div>' +
-										'<div class="toDoORemoverTD" >' + 
-											'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 
-											'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon" title="<p>You will do it <b>today</b></p>"/>' + 
-											'<input type="image" src="images/redXIcon.png" alt="Cancel" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
-										'</div>' + 
-									'</td>'
-	;
-	$('#toDoTable > tbody').append(newLine);
-	var newTR = $('#toDoTable > tbody > tr').last();
+function cancelPomoFocus(){
+	// Background will check for this
+	delete localStorage.pomoFocusSession;
 	
-	return newTR
+	// Stop / End countdown
+	PFpromptForce = false;
+	$('#pomoFocusRemainingTime').countdown(new Date());
+	
+	// Return to general screen
+	PFpromptForce = true;
+	togglePomodoroFocus("configure");
 }
 
 function clearCompletedTasks(){
@@ -87,8 +96,76 @@ function clearCompletedTasks(){
 	});
 }
 
+function createPomoFocusCountDown(){
+	$('#pomoFocusRemainingTime').countdown(new Date(), function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		var msg = "If you're really close, try it for 5 more minutes.";
+		if (PFpromptForce == true){
+			$.prompt(msg, {
+				title: "Focus Session Finished! Did you finish your task?",
+				html: "If you're really close, try it for 5 more minutes.",
+				defaultButton: 1,
+				buttons: { "Yes, I just made it!": true, "No, zap me out of distraction!": false },
+				submit: function(e,v,m,f){
+					console.log("result was " + v);
+					var result = v;
+					if (result == true){
+						cancelPomoFocus();
+						notifyUser("Well done!", "Keep the zone going, you rock star!", "PFNotify");
+						stimuli("vibration", defInt, defAT, "Productivity rocks!");
+					}
+					else{
+						notifyUser("Ouch, folk!", "Let's try some more focus next time!", "PFNotify");
+						stimuli("shock", "", "", "PomoFocus timed out.");
+					}
+				}
+			});
+		}
+		clearInterval(localStorage.pomoFocusSession);
+		localStorage.pomoFocusSession = 'false';
+		localStorage.trainingSessionZF = '';
+		
+		togglePomodoroFocus("configure");
+		PFpromptForce = true;
+	});
+}
+
+function completeTask(taskRow, override){
+	if (!override) { override = false }
+	// Gather current status
+	var itemTD = $(taskRow).children();
+	var itemDoneField = $($(itemTD).children()[0]).children();
+	var itemDone = $(itemDoneField).prop("checked");
+	if (override == true) { itemDone = itemDone == false; } // Inverts true and false
+	
+	// Adjust to match
+	if (itemDone == false){ // it was already done and now is undone
+		// Uncheck
+		$(itemDoneField).prop("checked", false);
+		
+		// Remove classes
+		$(taskRow).removeClass("doneTaskRow");		
+	}
+	else if(itemDone == true){ // it was NOT done and nos IS done
+		// Check
+		$(itemDoneField).prop("checked", true);
+		
+		// Add classes
+		$(taskRow).addClass("doneTaskRow");
+
+		// Reward stimulus
+		stimuli("vibration", defInt, defAT, focusCompleteMsg);
+	}
+	
+	updateTasksCounter();
+	updateTasksLog();
+}
+
 function deleteTask(){
 	$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
+		var item = PFGetClickedRow($(this));
 		var itemRow = $(this).parent().parent().parent();
 		itemRow.remove();
 		updateTasksCounter();
@@ -96,9 +173,54 @@ function deleteTask(){
 	});
 }
 
+function hyperFocus(){
+	$("#audioSelectPomodoro").change(function(){
+		
+	});
+}
+
+function markTaskToday(){
+	$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
+		var item = PFGetClickedRow($(this));
+		var todayImage = $($(item.Row).children().children()[2]).children()[1];
+		if (item.Today == 'today') { 
+			$(item.Row).removeClass("todayTaskRow"); 
+			$(todayImage).addClass("grayscale");
+		}
+		else { 
+			$(item.Row).addClass("todayTaskRow"); 
+			$(todayImage).removeClass("grayscale");
+			
+		}
+		updateTasksLog();
+	});
+}
+
+function PFGetClickedRow(object){
+	var itemRow = $(object).parent().parent().parent();
+	var itemChecker = $($(itemRow).children().children()[0]).children().prop("checked")
+	var itemTask = $(itemRow.children().children()[1]).text();
+	var itemToday = $(itemRow).attr("class");
+	itemToday = itemToday.split(" ");
+	if (itemToday.indexOf("todayTaskRow") != -1) { itemToday = "today"; }
+	else { itemToday = ""; }
+	
+	var item = {};
+	item.Row = itemRow;
+	item.Checker = itemChecker;
+	item.Task = itemTask;
+	item.Today = itemToday;
+	
+	return item
+}
+
 function pomodoroOnSteroids(){
 	$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
 		var itemRow = $(this).parent().parent().parent();
+		var task = $(itemRow).children().children()[1].innerHTML;
+		localStorage.pomoFocusTask = task;
+		$(itemRow).addClass("nowTaskRow");
+		
 		var msg = "" + 
 			"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
 			"<p>" + 
@@ -131,44 +253,108 @@ function pomodoroOnSteroids(){
 			title: "Great! Let's tackle this!",
 			html: msg,
 			defaultButton: 1,
-			buttons: { "Ready! Let me start": true, "No, I don't want help": true },
+			buttons: { "Ready! Let me start": true, "No, I don't want help": false },
 			submit: function(e,v,m,f){
-				console.log("result was " + v);
+				console.log("Enter PomoFocus result was " + v);
 				var result = v;
 				if (result == true){
+					localStorage.pomoFocusDuration = $("#minutesPomodoro").val();
 					togglePomodoroFocus('focus');
-					alert("Pomodoro start!");
-				}	
+				}
+				else{
+					delete localStorage.pomoFocusTask;
+					$(".nowTaskRow").removeClass("nowTaskRow");
+				}
 			}
 		});
 		
 	});
 }
 
+function pomoFocusButtons(){
+	$("#pomoFocusCompleteTask").click(function(){
+		var itemRow = $(".nowTaskRow");
+		$(itemRow).removeClass("nowTaskRow");
+		completeTask(itemRow, true); 
+		notifyUser("Well done!", focusCompleteMsg, "PFNotify");
+		cancelPomoFocus();
+	});
+	
+	$("#pomoFocusStop").click(function(){
+		var msg = "Your focus session will be over if you continue.";
+		$.prompt(msg, {
+			title: "Are you sure you want to stop being productive?",
+			// html: "Your focus session will be over if you continue.",
+			defaultButton: 1,
+			buttons: { "No, I'm gonna finish this!": false, "Yes, I'll flint": true },
+			submit: function(e,v,m,f){
+				console.log("Cancel PomoFocus result was " + v);
+				var result = v;
+				if (result == true){
+					cancelPomoFocus();
+				}
+				else{
+					// do nothing
+				}
+			}
+		});
+	});
+	
+	$("#pomoFocus5minutes").click(function(){
+		alert("5 minutes more to the task!");
+	});
+}
+
 function restoreTaskList(){
+	if (localStorage.ToDoTasks == undefined || localStorage.ToDoTasks == 'null' || localStorage.ToDoTasks == ''){ return }
+	
 	var TaskList = JSON.parse(localStorage.ToDoTasks);
 	var totalTasks = TaskList.length;
 	
 	// Restore the tasks
 	for (t = 0; t < totalTasks ; t++){
-		var z = addToDoItem(TaskList[t].task);
+		var newItem = addToDoItem(TaskList[t].task);
 		// Restore Task Today
-		var completedDiv = $(z).children().children()[0];
+		var completedDiv = $(newItem).children().children()[0];
 		var completedCheckbox = $(completedDiv).children()[0];
 		if (TaskList[t].done == true){
 			$(completedCheckbox).prop("checked",  TaskList[t].done);
-			$(z).addClass('doneTaskRow');
+			$(newItem).addClass('doneTaskRow');
 		}
 		else {
 			$(completedCheckbox).prop("checked",  TaskList[t].done);
 		}
-		var taskDiv = $(z).children().children()[1];
-		var todayDiv = $(z).children().children()[2];
-		var nowDiv = $(z).children().children()[2];
-		console.log(z);
+		var taskDiv = $(newItem).children().children()[1];
+		var todayDiv = $(newItem).children().children()[2];
+		if (TaskList[t].today == true) { 
+			$(newItem).addClass("todayTaskRow");
+			$($(todayDiv).children()[1]).removeClass("grayscale");
+		}
+		else{
+			$(newItem).removeClass("todayTaskRow");
+			$($(todayDiv).children()[1]).addClass("grayscale");
+		}
+		var nowDiv = $(newItem).children().children()[2];
 	}
 	
 	updateTasksCounter();
+}
+
+function togglePomodoroFocus(toState){
+	if (toState == 'focus'){
+		$("#pomodoroFocusDiv").removeClass('noDisplay');
+		$("#toDoDiv").addClass('noDisplay');
+		
+		$("#pomoFocusTask").html("Focusing on <span class='yellow'>" + localStorage.pomoFocusTask + "</span>");
+		$('#pomoFocusRemainingTime').countdown(deltaTime(parseInt(localStorage.pomoFocusDuration) * 60), function(event) {
+			$(this).html(event.strftime('%M:%S'));
+		})
+		
+	}
+	else {
+		$("#pomodoroFocusDiv").addClass('noDisplay');
+		$("#toDoDiv").removeClass('noDisplay');
+	}
 }
 
 function updateCompletedTasks(){
@@ -177,17 +363,7 @@ function updateCompletedTasks(){
 		var itemRow = $(this).parent().parent().parent();
 		var task = itemRow.children().children()[1];
 		
-		if (done == true){ 
-			$(task).addClass('doneTask'); 
-			$(itemRow).addClass('doneTaskRow');
-			stimuli("vibration")
-		}
-		else { 
-			$(task).removeClass('doneTask'); 
-			$(itemRow).removeClass('doneTaskRow');
-		}
-		updateTasksCounter();
-		updateTasksLog();
+		completeTask(itemRow);
 	});
 }
 
@@ -201,12 +377,6 @@ function updateTasksCounter(){
 	$("#toDoNItemsLeft").html(text);
 }
 
-function hyperFocus(){
-	$("#audioSelectPomodoro").change(function(){
-		
-	});
-}
-
 function updateTasksLog(){
 	tasks = []
 	allTasks = $( "#toDoTable tbody > tr" );
@@ -218,7 +388,10 @@ function updateTasksLog(){
 		var itemDivs = $(itemTd).children();
 		var itemTask = itemDivs[1].innerHTML;
 		var itemDone = $(itemDivs[0]).children().prop("checked");
-		var itemToday = '';
+		var itemToday = $(itemRow).attr("class").split(" ").indexOf("todayTaskRow");
+		if (itemToday != -1) { itemToday = true; }
+		else { itemToday = false; }
+		
 		var itemNow = '';
 		
 		newTask.task = itemTask;
@@ -229,17 +402,22 @@ function updateTasksLog(){
 		tasks.push(newTask);
 	}
 	localStorage.ToDoTasks = JSON.stringify(tasks);
-	console.log(tasks);
+	// console.log(tasks);
 }
+
 
 // TO-DO enabler
 function enableToDo(){
+	
 	// Enablers
 	addToDoOnEnter();			// Add item on Enter
 	activateTaskFilterButtons();	// Filters like All, Today and Done
 	clearCompletedTasks();		// Clear Completed
+	createPomoFocusCountDown();	// Initialize the timer and the on finish events
 	deleteTask();				// delete on X
+	markTaskToday();			// Tags task for being done/not done today
 	pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
+	pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
 	restoreTaskList();			// Restore items
 	updateCompletedTasks();		// Complete if checked
 	updateTasksCounter();		// Items counter:
@@ -618,7 +796,7 @@ function enableAutoZapper(){
 					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
-						stimuli("shock", localStorage.trainingSessionZI, localStorage.accessToken, "", "false");
+						stimuli("shock", defInt, defAT, "Training Session. Keep going!", "false");
 					}, parseInt(localStorage.trainingSessionZF));
 					localStorage.trainingSession = trainingSession;
 					
@@ -717,15 +895,15 @@ function enableButtons(){
 	});
 	
 	$("#test_pairing").click(function(){
-		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
 	$("#testZapInt").click(function(){
-		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
+		stimuli("shock", defInt, defAT, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
 		
 	$("#testVibrationInt").click(function(){
-		stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+		stimuli("vibration", defInt, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
 	$("#signIn").click(function(){

@@ -30,7 +30,7 @@ body {
   margin-top: 1em;
 }
 
-body > p {
+body p {
   color: white;
   font-family: Helvetica;
 }
@@ -383,17 +383,24 @@ h2 .helpIconSpan{
 	width: 15%;
 }
 
-.doneTask {
+.doneTaskRow .toDoOTaskTD {
 	text-decoration: line-through;
 	color: gray;
 }
+
+.todayTaskRow .todayToDoItem  {
+	
+}
+
 /* Footer buttons and fields */
 #toDoNItemsLeft {
+	padding-left: 15px;
 	width: 28%;
 	text-align: left;
 }
 
 #clearCompletedToDo{
+	padding-right: 15px;
 	width: 28%;
 	text-align: right;
 }
@@ -429,12 +436,36 @@ h2 .helpIconSpan{
 	height: 28px;
 }
 
-.todayToDoItem{
-}
-
 /* debug */
 #toDoAction table, #toDoAction tr, #toDoAction td {
 	/* border: 1px solid blue; */
 	border-collapse: collapse;
 }
 
+#pomoFocusRemainingTime{
+	font-size: 200%;
+}
+
+.noDecoration{
+	text-decoration: none;
+}
+
+.pomoFocusButtons {
+	height: 35px;
+	width: 35px;
+}
+
+.pomoFocusButtons > span{
+	font-size: 35px;
+	text-align: center;
+	height: 35px;
+	width: 35px;
+}
+
+.grayScale {
+	-webkit-filter: grayscale(100%);
+}
+
+.jqimessage > p{
+	color: rgb(68, 68, 68);
+}
