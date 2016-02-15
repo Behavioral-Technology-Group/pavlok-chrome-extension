@@ -326,3 +326,7 @@ div.auth{
 	/* border: 1px solid blue; */
 	border-collapse: collapse;
 }
+
+.jqimessage p {
+	color: rgb(80, 80, 80);
+}
