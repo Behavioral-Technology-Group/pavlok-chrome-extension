@@ -383,10 +383,15 @@ h2 .helpIconSpan{
 	width: 15%;
 }
 
-.doneTask {
+.doneTaskRow .toDoOTaskTD {
 	text-decoration: line-through;
 	color: gray;
 }
+
+.todayTaskRow .todayToDoItem  {
+	
+}
+
 /* Footer buttons and fields */
 #toDoNItemsLeft {
 	width: 28%;
@@ -429,12 +434,32 @@ h2 .helpIconSpan{
 	height: 28px;
 }
 
-.todayToDoItem{
-}
-
 /* debug */
 #toDoAction table, #toDoAction tr, #toDoAction td {
 	/* border: 1px solid blue; */
 	border-collapse: collapse;
 }
 
+#pomoFocusRemainingTime{
+	font-size: 200%;
+}
+
+.noDecoration{
+	text-decoration: none;
+}
+
+.pomoFocusButtons {
+	height: 35px;
+	width: 35px;
+}
+
+.pomoFocusButtons > span{
+	font-size: 35px;
+	text-align: center;
+	height: 35px;
+	width: 35px;
+}
+
+.grayScale {
+	-webkit-filter: grayscale(100%);
+}

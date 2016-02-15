@@ -6,7 +6,6 @@
 	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	
 	<script src="js/jquery.min.js"></script>
 	<script src="js/helpers.js"></script>
@@ -63,7 +62,7 @@
 				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
 				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox Advanced Timer</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-8">RescueTime</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-9">To-do List</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-9">Pomodoro</a></li>
 			</ul>
 						
 			<div id="tabs-1">
@@ -73,6 +72,7 @@
 						<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on your blacklist. If you visit the site, you will get zapped.</p>
 						<p>For listing sites, type in the address and hit Enter or click Save.</p>'/>
 					</h2>
+					
 					<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
 					<div class="tagcontainer">
 						<input name="blackList" id="blackList" value="">
@@ -173,7 +173,7 @@
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
 			<div id="tabs-4">
-				<div id="stimuliNotificationsDiv">
+				<div id="stimuliNotificationsDiv"></div>
 					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
 						<p>
 							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
@@ -305,13 +305,12 @@
 				</ol>
 				
 				<table id="autoZapperTable">
-					<thead>
-						<th>Intensity</th>
-						<th>Duration</th>
-						<th>Frequency</th>
-						<th>Now we...</th>
-					</thead>
-					<tbody>
+						<tr>
+							<th>Intensity</th>
+							<th>Duration</th>
+							<th>Frequency</th>
+							<th>Now we...</th>
+						</tr>
 						<tr id="autoZapperStartLine">
 							<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
 							<td style="text-align: center">
@@ -328,7 +327,6 @@
 								</p>
 							</td>
 						</tr>
-					</tbody>
 				</table>
 			</div>
 			<div id="tabs-6">
@@ -597,7 +595,7 @@
 				<div id="NoRTCodeOnly">
 					<p>Let's get your ball rolling!</p>
 					<ol>
-						<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
+						<li>Get your Api Key for Pavlok <a href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
 						<li>Then insert your Key here and click GO!
 						<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
 						</li>
@@ -719,83 +717,6 @@
 				</div>
 				
 				
-			</div>
-			<div class="display" id="tabs-9">
-				<div id="toDoDiv" class="nooDisplay">
-					<h2>Your To-do List</h2>
-					<p class="testCheckboxes">
-						Test for checkbox
-						<input type="checkbox" id="c1" name="cc"/>
-						<label for="c1"><span></span>Styled Check Box</label>
-					</p>
-					<div id="toDoAction">
-						<table id="toDoTable">
-							<thead>
-								<tr id="toDoTableHeader">
-									<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td id="toDoNItemsLeft">1 Item Left</td>
-									<td id="allToDo" class="toDoScopes">
-										<a href="#" id="allToDoLink">All</a>
-									</td>
-									<td id="todayToDo" class="toDoScopes">
-										<a href="#" id="todayToDoLink">Today</a>
-									</td>
-									<td id="completedToDo" class="toDoScopes">
-										<a href="#" id="doneToDoLink">Done</a>
-									</td>
-									<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-				<br/>
-				<div id="musicControlDiv" class="noDisplay">
-					<h2>Pomodoro on Steroids</h2>
-					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-					<p>
-						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-						<img src="images/help.png" class="helpIcon" title='
-						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-						'/>
-					</p>
-					<p>
-						<input type="checkbox" id="audioFocus">Binaural Soundtrack
-						<img src="images/help.png" class="helpIcon" title='
-						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
-						'/>
-					</p>
-				</div>
-				<div id="pomodoroFocusDiv" class="noDisplay">
-					<h2><span id="pomoFocusTask"></span></h2>
-					<p>Remaining Time: 
-						<span id="pomoFocusRemainingTime" class="yellow"></span>
-					</p>
-					<p>Image for completeness</p>
-					<p>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-check-square-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-stop-circle-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-plus"></i>
-							</span>
-						</a>
-					</p>
-				</div>
 			</div>
 		</div>
 	</div>
