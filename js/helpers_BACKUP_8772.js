@@ -9,7 +9,11 @@
 
 // Defaults
 var server = "STAGE" // STAGE or MVP
+<<<<<<< HEAD
+var usage = "test"; // local OR test OR production (MVP or STAGE added at the end)
+=======
 var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
+>>>>>>> origin/Pavlok-Productivity
 usage = usage + server;
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";

@@ -1,0 +1,96 @@
+[33mcommit 6b57dcf22b8880c0a720b9e708a98601a42bf969[m
+Author: Igor Galvão de Britto <igor.galvao@gmail.com>
+Date:   Mon Feb 15 19:00:09 2016 -0300
+
+    Last Working Deployment
+
+[1mdiff --git a/js/helpers.js b/js/helpers.js[m
+[1mindex 34b0cf9..da67eba 100644[m
+[1m--- a/js/helpers.js[m
+[1m+++ b/js/helpers.js[m
+[36m@@ -9,7 +9,7 @@[m
+ [m
+ // Defaults[m
+ var server = "STAGE" // STAGE or MVP[m
+[31m-var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)[m
+[32m+[m[32mvar usage = "test"; // local OR test OR production (MVP or STAGE added at the end)[m
+ usage = usage + server;[m
+ [m
+ var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";[m
+
+[33mcommit 639d898e5ab0db1d744e3ff7beaa6446af646ffd[m
+Author: Igor Galvão de Britto <igor.galvao@gmail.com>
+Date:   Mon Feb 15 18:55:45 2016 -0300
+
+    Back to yesterday
+
+[1mdiff --git a/js/helpers.js b/js/helpers.js[m
+[1mindex ecf3e0e..34b0cf9 100644[m
+[1m--- a/js/helpers.js[m
+[1m+++ b/js/helpers.js[m
+[36m@@ -8,8 +8,8 @@[m
+ */[m
+ [m
+ // Defaults[m
+[31m-var server = "MVP" // STAGE or MVP[m
+[31m-var usage = "production"; // local OR test OR production (MVP or STAGE added at the end)[m
+[32m+[m[32mvar server = "STAGE" // STAGE or MVP[m
+[32m+[m[32mvar usage = "local"; // local OR test OR production (MVP or STAGE added at the end)[m
+ usage = usage + server;[m
+ [m
+ var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";[m
+[36m@@ -452,7 +452,8 @@[m [mfunction stimuli(stimulus, value, accessToken, textAlert, forceNotify) {[m
+ 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + [m
+ 				stimulus + '/' + [m
+ 				value + [m
+[31m-				'?access_token=' + accessToken;[m
+[32m+[m				[32m'?access_token=' + accessToken+[m
+[32m+[m				[32m'&reason=' + textAlert;[m
+ 	console.log("URL being POSTED is:\n" + postURL);[m
+ 	$.post(postURL)[m
+ 		.done(function (data, result) {[m
+
+[33mcommit 72d41115a9e037088e69021e517a602e242adb5a[m
+Author: Igor Galvão de Britto <igor.galvao@gmail.com>
+Date:   Sun Feb 14 11:55:00 2016 -0300
+
+    Stimuli Reason AND PomoFocus Options
+    
+    HELPERS
+    - Stimuli now receives a REASON argument
+    
+    OPTIONS
+    - today buttons now work and change from gray to color when active
+    - Add To Do item function works
+    - Cancel PomoFocus now has a proper function
+    - Create PomoFocusCountDown with optional argument for prompts
+    - Complete Task can be done via function
+    - Item information can be gathered via function (PFGetClickedRow)
+    - PomoFocus now works (but only in the options, not in the Background.
+    Bummer. Also, it won't work if you CLOSE the options tab)
+
+[1mdiff --git a/js/helpers.js b/js/helpers.js[m
+[1mindex ecf3e0e..34b0cf9 100644[m
+[1m--- a/js/helpers.js[m
+[1m+++ b/js/helpers.js[m
+[36m@@ -8,8 +8,8 @@[m
+ */[m
+ [m
+ // Defaults[m
+[31m-var server = "MVP" // STAGE or MVP[m
+[31m-var usage = "production"; // local OR test OR production (MVP or STAGE added at the end)[m
+[32m+[m[32mvar server = "STAGE" // STAGE or MVP[m
+[32m+[m[32mvar usage = "local"; // local OR test OR production (MVP or STAGE added at the end)[m
+ usage = usage + server;[m
+ [m
+ var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";[m
+[36m@@ -452,7 +452,8 @@[m [mfunction stimuli(stimulus, value, accessToken, textAlert, forceNotify) {[m
+ 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + [m
+ 				stimulus + '/' + [m
+ 				value + [m
+[31m-				'?access_token=' + accessToken;[m
+[32m+[m				[32m'?access_token=' + accessToken+[m
+[32m+[m				[32m'&reason=' + textAlert;[m
+ 	console.log("URL being POSTED is:\n" + postURL);[m
+ 	$.post(postURL)[m
+ 		.done(function (data, result) {[m
