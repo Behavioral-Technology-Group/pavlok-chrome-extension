@@ -84,7 +84,7 @@
 	<hr>
 	<div class="onlyLogged" id="optionsDiv">
 
-		<div class="noDisplay">
+		<div class="Display">
 			<h2>Tab Number Control <img alt="blackList Help" src="/images/help.png" id="tabNumberControlHelp"
 			class="helpIcon" title='
 				<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
@@ -169,47 +169,47 @@
 			</form>
 		</div>
 		
-		<div id="toDoDiv">
-		<h2>Your To-do List</h2>
-		<div id="toDoAction">
-			<table id="toDoTable">
-				<thead>
-					<tr id="toDoTableHeader">
-						<td colspan="5" id="completeAllTD"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
-					</tr>
-				</thead>
-				<tbody>
-				</tbody>
-				<tfoot>
-					<tr>
-						<td id="toDoNItemsLeft">1 Item Left</td>
-						<td id="allToDo" class="toDoScopes">
-							<a href="#" id="allToDoLink">All</a>
-						</td>
-						<td id="todayToDo" class="toDoScopes">
-							<a href="#" id="todayToDoLink">Today</a>
-						</td>
-						<td id="completedToDo" class="toDoScopes">
-							<a href="#" id="doneToDoLink">Done</a>
-						</td>
-						<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
-					</tr>
-				</tfoot>
-			</table>
+		<div id="toDoDiv" class="noDisplay">
+			<h2>Your To-do List</h2>
+			<div id="toDoAction">
+				<table id="toDoTable">
+					<thead>
+						<tr id="toDoTableHeader">
+							<td colspan="5" id="completeAllTD"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td id="toDoNItemsLeft">1 Item Left</td>
+							<td id="allToDo" class="toDoScopes">
+								<a href="#" id="allToDoLink">All</a>
+							</td>
+							<td id="todayToDo" class="toDoScopes">
+								<a href="#" id="todayToDoLink">Today</a>
+							</td>
+							<td id="completedToDo" class="toDoScopes">
+								<a href="#" id="doneToDoLink">Done</a>
+							</td>
+							<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<hr>
+			<div id="musicControlDiv">
+				<h2>Pomodoro on Steroids</h2>
+				<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
+				<p>
+					<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+					<img src="images/help.png" class="helpIcon" title='
+					<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+					'/>
+				</p>
+				<p><input type="checkbox" id="audioFocus">Binaural Soundtrack</p>
+			</div>
 		</div>
-	</div>
-	<hr>
-	<div id="musicControlDiv">
-		<h2>Pomodoro on Steroids</h2>
-		<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-		<p>
-			<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-			<img src="images/help.png" class="helpIcon" title='
-			<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-			'/>
-		</p>
-		<p><input type="checkbox" id="audioFocus">Binaural Soundtrack</p>
-	</div>
 	</div>
 </body>
 </html>
