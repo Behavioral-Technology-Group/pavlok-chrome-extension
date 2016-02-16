@@ -8,6 +8,7 @@ var defInt = '';			// Use default intensity for stimuli
 var defAT = '';				// Use default Access Token for stimuli
 var PFpromptForce = false;
 var RTProdInterval;
+var checkInterval
 
 /* sandbox */
 
@@ -72,7 +73,7 @@ function createPomoFocusCountDown(){
 }
 
 function hyperFocus(){
-	$("#audioSelectPomodoro").change(function(){
+	$("#hyperFocusSelect").change(function(){
 		
 	});
 }
@@ -95,11 +96,11 @@ function pomodoroOnSteroids(){
 					"<option value='45'>45 minutes</option>" + 
 				"</select>" + 
 			"</p>" +
-			"<div class='noDisplay'>" + 
+			"<div>" + 
 				"<p>Want to get hyper focused?</p>" +
-				"<p><select id='audioSelectPomodoro'>" + 
-					"<option id='audioTrue' value='music'>Yes, get me there!</option>" + 
-					"<option id='audioFalse' value='silence'>No, I'm fine.</option>" + 
+				"<p><select id='hyperFocusSelect'>" + 
+					"<option id='audioTrue' value='true'>Yes, get me there!</option>" + 
+					"<option id='audioFalse' value='false'>No, I'm fine.</option>" + 
 				"</select></p>" + 
 				"<div class='musicOnly noDisplay'>" + 
 					"<p>Great! Get some good earphones and let [[xxx]] audio help you easy into the zone.</p>" + 
@@ -122,6 +123,7 @@ function pomodoroOnSteroids(){
 				var result = v;
 				if (result == true){
 					localStorage.pomoFocusDuration = $("#minutesPomodoro").val();
+					localStorage.pomoFocusHyper = $("#hyperFocusSelect").val();
 					togglePomodoroFocus('focus');
 				}
 				else{
@@ -205,6 +207,15 @@ function togglePomodoroFocus(toState, restoration){
 		$("#pomodoroFocusDiv").removeClass('noDisplay');
 		$("#toDoDiv").addClass('noDisplay');
 		
+		startPomoFocus(restoration);
+	}
+	else {
+		$("#pomodoroFocusDiv").addClass('noDisplay');
+		$("#toDoDiv").removeClass('noDisplay');
+	}
+}
+
+function startPomoFocus(restoration){
 		$("#pomoFocusTask").html("Focusing on <span class='yellow'>" + localStorage.pomoFocusTask + "</span>");
 		
 		if (restoration == 'restore'){
@@ -220,13 +231,14 @@ function togglePomodoroFocus(toState, restoration){
 			$(this).html(event.strftime('%M:%S'));
 		});
 		
-	}
-	else {
-		$("#pomodoroFocusDiv").addClass('noDisplay');
-		$("#toDoDiv").removeClass('noDisplay');
-	}
+		if (localStorage.pomoFocusHyper == 'true') {
+			$(".hyperFocusControlDiv").removeClass("noDisplay");
+		} else { $(".hyperFocusControlDiv").addClass("noDisplay"); }
 }
 
+function endPomoFocus(silent){
+	
+}
 
 // List Display Handling
 function activateTaskFilterButtons(){
@@ -508,13 +520,13 @@ function enableToDo(){
 function changeRTVisibility(){
 	APIKey = localStorage.RTAPIKey;
 	if (APIKey == undefined || APIKey == 'null' || APIKey == false) {
-		$("#RTCodeOnly").removeClass("display").addClass("noDisplay");
-		$("#NoRTCodeOnly").addClass("display").removeClass("noDisplay");
+		$("#RTCodeOnly").addClass("noDisplay");
+		$("#NoRTCodeOnly").removeClass("noDisplay");
 		$("#RTAPIKeySpan").text('');
 		
 	} else {
-		$("#RTCodeOnly").addClass("display").removeClass("noDisplay");
-		$("#NoRTCodeOnly").removeClass("display").addClass("noDisplay");
+		$("#RTCodeOnly").removeClass("noDisplay");
+		$("#NoRTCodeOnly").addClass("noDisplay");
 		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
 	}
 }
@@ -720,7 +732,7 @@ function enableRescueTime(){
 	$("#RTWarnSti").change(function(){localStorage.RTPosLimit = $(this).val();});
 	$("#RTNegSti").change(function(){localStorage.RTPosLimit = $(this).val();});
 
-	
+	changeRTVisibility();
 }
 
 
@@ -1350,4 +1362,7 @@ $( document ).ready(function() {
 	
 	restorePomoFocus();
 	
+	checkInterval = setInterval(function(){
+		
+	}, 500);
 });

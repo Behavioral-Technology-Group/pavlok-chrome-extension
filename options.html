@@ -584,7 +584,7 @@
 					</tr>
 				</table>
 			</div>
-			<div id="tabs-8" class="display">
+			<div id="tabs-8">
 				<h2>Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
 					<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
 					<p>Pavlok will make notifications visceral!</p>
@@ -594,7 +594,7 @@
 						<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
 					</ul>
 					<p>The limits and stimulus for fired can be changed in the <span class='yellow'>Define your Thresholds</span> section</p>
-				"></h2>
+				"/></h2>
 				<div id="NoRTCodeOnly">
 					<p>Let's get your ball rolling!</p>
 					<ol>
@@ -646,7 +646,7 @@
 								</td>
 							</tr>
 						</table>
-						<div class="display">	
+						<div class="noDisplay">	
 						<hr>
 						<h3>Define your Thresholds</h3>
 							
@@ -668,7 +668,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td><p>Warning</td>
+									<td><p>Warning</p></td>
 									<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
 									<td>
 										<select id="RTWarnSti">
@@ -721,7 +721,7 @@
 				
 				
 			</div>
-			<div class="display" id="tabs-9">
+			<div id="tabs-9">
 				<div id="toDoDiv" class="nooDisplay">
 					<h2>Your To-do List</h2>
 					<div id="toDoAction">
@@ -770,10 +770,10 @@
 				</div>
 				<div id="pomodoroFocusDiv" class="noDisplay">
 					<h2><span id="pomoFocusTask"></span></h2>
-					<p>Remaining Time: 
+					<h3>Remaining Time: 
 						<span id="pomoFocusRemainingTime" class="yellow"></span>
-					</p>
-					<p>Image for completeness</p>
+					</h3>
+					
 					<p>
 						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
 							<span class="fa-stack fa-lg yellow">
@@ -791,6 +791,15 @@
 							</span>
 						</a>
 					</p>
+					
+					<div class="hyperFocusControlDiv noDisplay">
+						<h3>Hyper Focus Controls</p>
+						<h4>Binaural Audio Controls</h4>
+						<audio controls>
+							<source src="audio/focus1.mp3" type="audio/ogg">
+							Your browser does not support the audio element.
+						</audio>
+					</div>
 				</div>
 			</div>
 		</div>
