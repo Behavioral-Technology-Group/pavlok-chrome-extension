@@ -29,7 +29,7 @@ function showOptions(accessToken){
 
 $( document ).ready(function() {
 	enableTooltips();
-	enableToDo();
+	// enableToDo();
 	if ( !localStorage.userName ) { userInfo(localStorage.accessToken); }
 	if ( localStorage.userName ) { updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
 	
