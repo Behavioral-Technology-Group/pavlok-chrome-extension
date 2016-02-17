@@ -1,7 +1,7 @@
 /* To-do
 
 */
-
+var todayDivTest;
 /* ***************************************************************** */
 /* ***************                                   *************** */
 /* ***************           To-Do Section           *************** */
@@ -320,6 +320,8 @@ function restoreTaskList(){
 		}
 		else{
 			$(newItem).removeClass("todayTaskRow");
+			todayDivTest = todayDiv;
+			console.log(todayDivTest);
 			$($(todayDiv).children()[1]).addClass("grayscale");
 		}
 		var nowDiv = $(newItem).children().children()[2];
@@ -567,6 +569,7 @@ $( document ).ready(function() {
 		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 	
+	enableToDo();
 	if (localStorage.logged == 'true') {
 		// Toggle visibility for options
 		$(".onlyLogged").css('visibility', 'visible');

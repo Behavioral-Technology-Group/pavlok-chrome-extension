@@ -536,3 +536,14 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function deltaTime(seconds, baseDate){
+	if (!baseDate){ 
+		var baseDate = new Date();
+	}
+	
+	var future = new Date();
+	future.setTime(baseDate.getTime() + seconds * 1000);
+	
+	return future
+}
+

@@ -531,17 +531,6 @@ function changeRTVisibility(){
 	}
 }
 
-function deltaTime(seconds, baseDate){
-	if (!baseDate){ 
-		var baseDate = new Date();
-	}
-	
-	var future = new Date();
-	future.setTime(baseDate.getTime() + seconds * 1000);
-	
-	return future
-}
-
 function regressRTHour(deltaMinutes){
 	var original = localStorage.Comment;
 	var originalDate = [original.split(" ")[8], original.split(" ")[9]];
@@ -981,7 +970,7 @@ function enableButtons(){
 		localStorage.vibrationIntensity = percentToRaw(defValue);
 	});
 	
-	$("#test_pairing").click(function(){
+	$("#testPairing").click(function(){
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
@@ -1029,7 +1018,7 @@ function enableSliders(){
 			slide: function( event, ui ) {
 				$( "#zapIntensity" ).val( ui.value );
 				localStorage.zapPosition = ui.value ;
-				save_options();
+				saveOptions();
 			}
 		});
 		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
@@ -1042,7 +1031,7 @@ function enableSliders(){
 			slide: function( event, ui ) {
 				$( "#vibrationIntensity" ).val( ui.value );
 				localStorage.vibrationPosition = ui.value ;
-				save_options();
+				saveOptions();
 			}
 		});
 		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
@@ -1153,7 +1142,7 @@ function saveWhiteList(){
 	localStorage.whiteList = $("#whiteList")[0].value;
 }
 
-function save_options() {
+function saveOptions() {
 	
 	var blackList = $("#blackList")[0].value;
 	localStorage.blackList = blackList;
@@ -1178,7 +1167,7 @@ function save_options() {
 	localStorage.vibrationIntensity = vibrationIntensity;
 }
 
-function restore_options() {
+function restoreOptions() {
 	// User name and email
 	updateNameAndEmail(localStorage.userName, localStorage.userEmail);
 	
@@ -1310,7 +1299,7 @@ function initialize() {
 		alert("changed black list");
 	});
 	
-	// Enablers]
+	// Enablers
 	enableSelects();
 	enableSelecatbles();
 	enableTimers();
@@ -1329,11 +1318,6 @@ function initialize() {
 	var serverKind = localStorage.baseAddress;
 	serverKind = serverKind.split("-")[1].split(".")[0];
 	$("#server").text(serverKind);
-	$(".linked")
-		.click( 
-			function() {
-				$("a", this).click(); // Gotta fix this to remove the circular loop
-			});
 }
 
 
@@ -1361,8 +1345,9 @@ $( document ).ready(function() {
 	// }
 	
 	restorePomoFocus();
+	restoreOptions();
 	
-	checkInterval = setInterval(function(){
+	// checkInterval = setInterval(function(){
 		
-	}, 500);
+	// }, 500);
 });

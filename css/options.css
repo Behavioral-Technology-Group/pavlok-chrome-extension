@@ -54,7 +54,11 @@ text-align: left;
   border-radius: 7px;
 }
 
-#test_pairing{
+a.ui-tabs-anchor {
+	width: 85%;
+}
+
+#testPairing{
   text-align: left;
   color: white;
   background-color: #ffc106;
