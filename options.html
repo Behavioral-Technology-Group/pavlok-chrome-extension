@@ -8,15 +8,15 @@
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	
-	<script src="js/jquery.min.js"></script>
+	<script src="js/external/jquery.min.js"></script>
 	<script src="js/helpers.js"></script>
-	<script src="js/globalize.js"></script>
-	<script src="js/globalize.culture.de-DE.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.ui.timepicker.js"></script>
-	<script src="js/jquery-impromptu.min.js"></script>
-	<script src="js/jquery.canvasjs.min.js"></script>
-	<script src="js/jquery.countdown.js"></script>
+	<script src="js/external/globalize.js"></script>
+	<script src="js/external/globalize.culture.de-DE.js"></script>
+	<script src="js/external/jquery-ui.min.js"></script>
+	<script src="js/external/jquery.ui.timepicker.js"></script>
+	<script src="js/external/jquery-impromptu.min.js"></script>
+	<script src="js/external/jquery.canvasjs.min.js"></script>
+	<script src="js/external/jquery.countdown.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/options.js"></script>	
 	
@@ -65,6 +65,7 @@
 				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox Advanced Timer</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-8">RescueTime</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-9">To-do List</a></li>
+				<li class="linked roundedBorders noDisplay"><a href="#tabs-10">SandBox Background</a></li>
 			</ul>
 						
 			<div id="tabs-1">
@@ -802,10 +803,16 @@
 					</div>
 				</div>
 			</div>
+			<div id="tabs-10" class="noDisplay">
+				<input type="button" id="startClick" value="1 min" />
+				<input type="button" id="testClick" value="+5" />
+				<input type="button" id="zeroOut" value="0" />
+				<span id="renderBG">white</span>
+				<div id="renderBGClock"></div>
+			</div>
 		</div>
 	</div>
 </body>
 </html>
-
 <!-- <script src="js/globalize-1.1.0/dist/globalize.js"></script> -->
 <script src="js/options.js"></script>	

@@ -2,9 +2,9 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.5.4",
-  "name": "PAVLOK Productivity (ANDROID)",
-  "short_name": "PAVLOK Prod DROID",
+  "version": "0.6.1",
+  "name": "PAVLOK Productivity",
+  "short_name": "PAVLOK Prod",
  
   "description": "Stay Focused. Eliminate Distraction.",
   "icons": {

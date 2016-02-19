@@ -18,17 +18,14 @@ var PFpromptForce = false;
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
-// Status for the tasks are put as classes on the ROW of the item.
-// TO-DO Helpers
+
+// Create, Update, Start, End/Cancel, Toggle, 
 
 // PomoFocus
-var lastUpdate = 0;
-
 function createPomoFocusCountDown(){
-	pomoFocusB = getPomoFocus('background');
-	var endDate = dateFromTime(pomoFocusB.endTime);
+	pomoFocusO = getPomoFocus('pomoFocusO');
 	
-	$('#pomoFocusRemainingTime').countdown(endDate, function(event) {
+	$('#pomoFocusRemainingTime').countdown(new Date(), function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
@@ -54,103 +51,24 @@ function createPomoFocusCountDown(){
 				}
 			});
 		}
-		clearInterval(localStorage.pomoFocusSession);
-		localStorage.pomoFocusSession = 'false';
-		localStorage.trainingSessionZF = '';
-		
-		togglePomodoro("configure");
+		togglePomodoroFocus("configure");
 		PFpromptForce = true;
 	});
 }
 
-function updateCountdown(){
-	var pomoFocusB = getPomoFocus('background');
-	var now = deltaTime(0).getTime();
-	
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
-	
-	if (pomoFocusB.endTime > now){
-		togglePomodoro('focus');
-		$(taskSpan).html("Focusing on <span class='yellow'>" + pomoFocusB.task + "</span>");
-		$(clockDiv).countdown(dateFromTime(pomoFocusB.endTime), function(event) {
-			$(this).html(event.strftime('%M:%S'));
-		})
-	}
-	else{
-		togglePomodoro('configure');
-		$(clockDiv).countdown(new Date());
-	}
-}
-
-function checkForUpdate(){
-	var pomoFocusB = getPomoFocus('background');
-	
-	if (pomoFocusB.lastUpdate > lastUpdate) {
-		updateCountdown();
-		lastUpdate = pomoFocusB.lastUpdate;
-	}
-}
-
-function pomoFocusButtons(){
-	$("#pomoFocusCompleteTask").click(function(){
-		var pomoFocus = getPomoFocus('background');
-		var itemRow = $(".nowTaskRow");
-		if (itemRow.length == 0){ console.log("no Now Task"); return }
-		$(itemRow).removeClass("nowTaskRow");
-		completeTask(itemRow, true);
-		notifyUser("Well done!", focusCompleteMsg, "PFNotify");
-		
-		togglePomodoro('configure');
-		PFpromptForce = false;
-		pomoFocus.endTime = new Date().getTime();
-		savePomoFocus(pomoFocus, 'options');
-	});
-	
-	$("#pomoFocusStop").click(function(){
-		var pomoFocus = getPomoFocus('background');
-		PFpromptForce = false;
-		pomoFocus.endTime = new Date().getTime();;
-		savePomoFocus(pomoFocus, 'options');
-	});
-	
-	$("#pomoFocus5minutes").click(function(){
-		var pomoFocus = getPomoFocus('background');
-		var endTime = pomoFocus.endTime;
-		var newEndTime = endTime + 5 * 60 * 1000;
-		pomoFocus.endTime = newEndTime;
-		
-		savePomoFocus(pomoFocus, 'options');
-	});
-}
-
-function togglePomodoro(toState){
-	var confDiv = $("#toDoDiv");
-	var focusDiv = $("#pomodoroFocusDiv");
-	
-	if (toState == 'focus'){
-		$(confDiv).addClass('noDisplay');
-		$(focusDiv).removeClass('noDisplay');
-	}
-	else {
-		$(confDiv).removeClass('noDisplay');
-		$(focusDiv).addClass('noDisplay');
-	}
-}
-
 function pomodoroOnSteroids(){
 	$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
-		var pomoFocus = getPomoFocus('background');
-		
 		var item = PFGetClickedRow($(this));
 		$(item.Row).addClass("nowTaskRow");
 		updateTasksLog();
 		
 		// Set the pomoFocus Object
-		pomoFocus.active		= true;
-		pomoFocus.task			= item.Task;
-		pomoFocus.silent		= 'promptOnEnd';
-		pomoFocus.lastUpdate	= new Date().getTime();
+		pomoFocusO.active		= true;
+		pomoFocusO.task			= item.Task;
+		pomoFocusO.silent		= 'promptOnEnd';
+		pomoFocusO.lastUpdate	= new Date();
+
+		localStorage.pomoFocusTask = item.Task;
 		
 		// Prepare the prompt
 		var msg = "" + 
@@ -190,19 +108,67 @@ function pomodoroOnSteroids(){
 				if (result == true){
 					localStorage.pomoFocusDuration = $("#minutesPomodoro").val();
 					localStorage.pomoFocusHyper = $("#hyperFocusSelect").val();
-					togglePomodoro('focus');
+					togglePomodoroFocus('focus');
 					
-					pomoFocus.duration		= parseInt($("#minutesPomodoro").val());
-					pomoFocus.endTime		= deltaTime(pomoFocus.duration * 60).getTime();
-					pomoFocus.hyper		= $("#hyperFocusSelect").val()
-					savePomoFocus(pomoFocus, 'options');
+					pomoFocusO.duration		= parseInt($("#minutesPomodoro").val());
+					pomoFocusO.endTime		= deltaTime(pomoFocusO.endTime * 60)
+					pomoFocusO.hyper		= $("#hyperFocusSelect").val()
 				}
 				else{
 					delete localStorage.pomoFocusTask;
 					$(".nowTaskRow").removeClass("nowTaskRow");
 				}
+				
+				// localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
+				savePomoFocus(pomoFocusO);
 				updateTasksLog();
 			}
+		});
+		
+	});
+}
+
+function pomoFocusButtons(){
+	$("#pomoFocusCompleteTask").click(function(){
+		var itemRow = $(".nowTaskRow");
+		if (itemRow.length == 0){ console.log("no Now Task"); return }
+		$(itemRow).removeClass("nowTaskRow");
+		completeTask(itemRow, true);
+		notifyUser("Well done!", focusCompleteMsg, "PFNotify");
+		cancelPomoFocus();
+	});
+	
+	$("#pomoFocusStop").click(function(){
+		var msg = "Your focus session will be over if you continue.";
+		$.prompt(msg, {
+			title: "Are you sure you want to stop being productive?",
+			// html: "Your focus session will be over if you continue.",
+			defaultButton: 1,
+			buttons: { "No, I'm gonna finish this!": false, "Yes, I'll flint": true },
+			submit: function(e,v,m,f){
+				console.log("Cancel PomoFocus result was " + v);
+				var result = v;
+				if (result == true){
+					cancelPomoFocus();
+				}
+				else{
+					// do nothing
+				}
+			}
+		});
+	});
+	
+	$("#pomoFocus5minutes").click(function(){
+		var oldTime = parseInt(localStorage.endPomoFocusTime);
+		var oldDate = new Date();
+		oldDate.setTime(oldTime);
+		
+		var newDate = new Date();
+		newDate = deltaTime(5 * 60, oldDate);
+		localStorage.endPomoFocusTime = newDate.getTime();
+		
+		$('#pomoFocusRemainingTime').countdown(newDate, function(event) {
+			$(this).html(event.strftime('%M:%S'));
 		});
 		
 	});
@@ -272,7 +238,6 @@ function clearCompletedTasks(){
 }
 
 function restoreTaskList(){
-	// alert("restoreTaskList on the go");
 	if (localStorage.ToDoTasks == undefined || localStorage.ToDoTasks == 'null' || localStorage.ToDoTasks == ''){ return }
 	
 	var TaskList = JSON.parse(localStorage.ToDoTasks);
@@ -281,6 +246,8 @@ function restoreTaskList(){
 	// Restore the tasks
 	for (t = 0; t < totalTasks ; t++){
 		var newItem = addToDoItem(TaskList[t].task);
+
+		// PFGetClickedRow(newItem);
 		
 		// Restore Task Today
 		var completedDiv = $(newItem).children().children()[0];
@@ -300,6 +267,8 @@ function restoreTaskList(){
 		}
 		else{
 			$(newItem).removeClass("todayTaskRow");
+			todayDivTest = todayDiv;
+			console.log(todayDivTest);
 			$($(todayDiv).children()[1]).addClass("grayscale");
 		}
 		var nowDiv = $(newItem).children().children()[2];
@@ -450,41 +419,11 @@ function updateTasksLog(){
 		
 		tasks.push(newTask);
 	}
+	localStorage.ToDoTasksO = JSON.stringify(tasks);
 	localStorage.ToDoTasks = JSON.stringify(tasks);
-	// console.log(tasks);
+	localStorage.changedPart = "To-Do";
 }
 
-function updateToDo(changedPart){
-	pomoFocusP = readPomoFocus('pomoFocusP');
-	pomoFocusO = readPomoFocus('pomoFocusO');
-	pomoFocusB = readPomoFocus('pomoFocusB');
-	
-	if (pomoFocusB.lastUpdate > pomoFocusO.lastUpdate){
-		pomoFocusO = pomoFocusB;
-		// localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
-		savePomoFocus(pomoFocusO);
-	}
-	// Updates the list and the focus
-	
-	// Delete all TR. Recreate all TR
-	$(".toDoItemTR").remove()
-	restoreTaskList();
-	// Save last update date
-	var now = new Date().getTime();
-	console.log("Last update at " + new Date());
-	
-	// Checks if it is active
-	if (pomoFocusO.active == true && pomoFocusO.endTime > now){
-		updatePomoFocus(pomoFocusO.endTime, pomoFocusO.task, 'prompt');
-		togglePomodoroFocus('focus');
-	}
-		
-	delete localStorage.changedPart;
-		
-		
-		
-	
-}
 
 // TO-DO enabler
 function enableToDo(){
@@ -502,11 +441,39 @@ function enableToDo(){
 	updateCompletedTasks();		// Complete if checked
 	updateTasksCounter();		// Items counter:
 	
+	// Check for active PomoFocus
+	restorePomoFocus();
 }
 
-var testInt = setInterval(function(){ 
-	checkForUpdate(); 
-}, 200);
+function checkForUpdatePomo(){
+	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
+	var oCounter = getPomoFocus('options');
+	var pCounter = getPomoFocus('popup');
+	var bCounter = getPomoFocus('background');
+	
+	if (oCounter.lastUpdate == pCounter.lastUpdate == bCounter.lastUpdate) { return }
+	else {
+		// Gather data from the windows and compare to get the latest one. Others follow it.
+		var countersArray = [ oCounter, pCounter, bCounter ];
+		var indexesArray = [0, 1, 2];
+		
+		var lastUpdateArray = [ oCounter.lastUpdate, pCounter.lastUpdate, bCounter.lastUpdate ];
+		var maxIndex = lastUpdateArray.indexOf(Math.max.apply(null, lastUpdateArray));
+		
+		// Capture the latest and the others as separate. Others become equal to latest
+		latest = countersArray[maxIndex];
+		indexesArray.splice(maxIndex, 1);
+		
+		for (c = 0; c < indexesArray.length; c++){
+			countersArray[indexesArray[c]] = latest;
+		}
+		
+		// updateCountdown();
+		updatePomoFocus(latest.endTime, latest.task, 'prompt');
+	}
+}
+
+var testInt = setInterval(function(){ checkForUpdatePomo(); }, 200);
 
 ////////////////////////////////////////////////////////////////////////////////////
 
@@ -580,4 +547,5 @@ $( document ).ready(function() {
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
 	}
+	
 });

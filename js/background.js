@@ -12,7 +12,10 @@ var timeWindow;
 // var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
 var RTTimeOut;
+var testInterval;
 
+var defAT = '';
+var defInt = '';
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -55,6 +58,15 @@ var accessToken = localStorage.accessToken;
 /*--------                                                           --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+// To-do
+function savePomoFocusB(pomoFocusB){
+	pomoFocusB.lastUpdate = new Date();
+	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	// localStorage.pomoFocusB = JSON.stringify('pomoFocusB');
+	savePomoFocus(pomoFocusB);
+	localStorage.changedPart = 'To-Do';
+	return pomoFocusB
+}
 
 // RescueTime Integration
 function validateTimeOut(RTTimeOut){
@@ -136,7 +148,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 				return true
 		}
 		else{
-			console.log(curTabURL + " is not blacklisted");
+			// console.log(curTabURL + " is not blacklisted");
 			return false
 		}
 		
@@ -285,13 +297,13 @@ function checkActiveDayHour(){
 	var now = new Date();
 	var start = localStorage.generalActiveTimeStart;
 	var end = localStorage.generalActiveTimeEnd;
-	console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	// console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
 	start = convert12To24(start);
 	end = convert12To24(end);
 	
 	var dayActive = checkActiveDay(now);
 	var hourActive = checkActiveHour(start, end);
-	console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
+	// console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
 	
 	if (dayActive == true && hourActive == true) { return true }
 	else { return false }
@@ -350,6 +362,14 @@ var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
 
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*--------                                                           --------*/
+/*--------                     RescueTime Section                    --------*/
+/*--------                                                           --------*/
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 function rescueTimeChecker(){
 	if (localStorage.RTAPIKey) {
 		RTTimeOut = validateTimeOut(RTTimeOut);
@@ -368,6 +388,90 @@ function rescueTimeChecker(){
 		}
 	}
 }
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*--------                                                           --------*/
+/*--------                       To-Do Section                       --------*/
+/*--------                                                           --------*/
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
+function equalizePomoFocus(latest){
+	localStorage.pomoFocusB = JSON.stringify(latest);
+	localStorage.pomoFocusO = JSON.stringify(latest);
+	localStorage.pomoFocusP = JSON.stringify(latest);
+}
+
+function updateCountdown(){
+	var pomoFocusB = getPomoFocus('background');
+	var clockDiv = $('#pomoFocusRemainingTime');
+	var taskSpan = $('#pomoFocusTask');
+	
+	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	});
+}
+
+function checkForUpdate(){
+	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
+	var oCounter = getPomoFocus('options');
+	var pCounter = getPomoFocus('popup');
+	var bCounter = getPomoFocus('background');
+	
+	if (oCounter.lastUpdate == pCounter.lastUpdate && pCounter.lastUpdate == bCounter.lastUpdate) { return }
+	else {
+		// Gather data from the windows and compare to get the latest one. Others follow it.
+		var countersArray = [ oCounter, pCounter, bCounter ];
+		var indexesArray = [0, 1, 2];
+		
+		var lastUpdateArray = [ oCounter.lastUpdate, pCounter.lastUpdate, bCounter.lastUpdate ];
+		var maxIndex = lastUpdateArray.indexOf(Math.max.apply(null, lastUpdateArray));
+		
+		// Capture the latest and the others as separate. Others become equal to latest
+		latest = countersArray[maxIndex];
+		indexesArray.splice(maxIndex, 1);
+		
+		for (c = 0; c < indexesArray.length; c++){
+			countersArray[indexesArray[c]] = latest;
+		}
+		
+		equalizePomoFocus(latest);
+		updateCountdown();
+	}
+}
+
+function createPomoFocusCountDown(){
+	pomoFocusB = getPomoFocus('background');
+	var endDate = dateFromTime(pomoFocusB.endTime);
+	
+	var clockDiv = $('#pomoFocusRemainingTime');
+	var taskSpan = $('#pomoFocusTask');
+	
+	$(clockDiv).countdown(endDate, function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+		togglePomodoro("configure");
+		PFpromptForce = true;
+	});
+}
+
+var countDownSafetyCheck = setInterval(function(){ updateCountdown();}, 2000);
+var testInt = setInterval(function(){ checkForUpdate(); }, 100);
+$( document ).ready( function() { updateCountdown(); });
+
+
+
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*--------                                                           --------*/
+/*--------                     Tabs and Blacklist                    --------*/
+/*--------                                                           --------*/
+/*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+
 
 function CreateTabListeners(token) {
 	if(!localStorage.maxTabs) {
@@ -478,23 +582,25 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	}
 }
 
-
-var testInterval = setInterval(
-	function(){
-		if (checkActiveDayHour() == true) {
-			if (isValid(localStorage.accessToken)){
-				timeWindow = localStorage.timeWindow;
-				getTabInfo(evaluateTabURL);
-				rescueTimeChecker();
-				RTTimeOut = localStorage.RTTimeOut;
-				chrome.windows.getLastFocused(function(win) {
-					UpdateTabCount(win.windowId);
-				});
-			}
-		} else {
-			UpdateBadgeOnOff("Zzz");
-		}
-	}
-,100);
-
 initialize();
+
+$( document ).ready(function() {
+	testInterval = setInterval(
+		function(){
+			if (checkActiveDayHour() == true) {
+				if (isValid(localStorage.accessToken)){
+					timeWindow = localStorage.timeWindow;
+					getTabInfo(evaluateTabURL);
+					rescueTimeChecker();
+					RTTimeOut = localStorage.RTTimeOut;
+					chrome.windows.getLastFocused(function(win) {
+						UpdateTabCount(win.windowId);
+					});
+				}
+			} else {
+				UpdateBadgeOnOff("Zzz");
+			}
+		}
+	,100);
+	
+});

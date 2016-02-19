@@ -7,8 +7,37 @@
 
 */
 
+
+		
+$( document ).ready(function(){
+	var updateMessage = '' +
+			'<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
+			'<p>If you have any trouble getting the stimulus (zaps, vibrations, beeps) to your Pavlok, check on the AppStore (iOS) or PlayStore (Android) if you already have it up to date!</p>' +
+			"<p>Best,</p>" + 
+			"<p>Pavlok Team</p>" + 
+		'';
+	if (localStorage.showAgain == 'false') { return }
+	else {
+		$.prompt(updateMessage, {
+			title: "Update your App to use the extension with your Pavlok",
+			defaultButton: 1,
+			buttons: { "Ok, don't tell me again": true, "Remind me again": false },
+			submit: function(e,v,m,f){
+				console.log("result was " + v);
+				var result = v;
+				if (result == true){
+					localStorage.showAgain = 'false';
+				}
+				else{
+					// do nothing
+				}
+			}
+		});
+	}
+});
+
 // Defaults
-var server = "STAGE" // STAGE or MVP
+var server = "MVP" // STAGE or MVP
 var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
@@ -58,6 +87,96 @@ if (!localStorage.RTNegSti ) { localStorage.RTNegSti = "shock" };
 if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
 if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
 if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
+
+// To-Do
+if (!localStorage.pomoFocusO) { 
+	var pomoFocusO = {}
+	pomoFocusO.lastUpdate = new Date().getTime();
+	localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
+}
+if (!localStorage.pomoFocusB) { 
+	var pomoFocusB = {}
+	pomoFocusB.lastUpdate = new Date().getTime();
+	localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+}
+if (!localStorage.pomoFocusP) { 
+	var pomoFocusP = {}
+	pomoFocusP.lastUpdate = new Date().getTime();
+	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
+}
+
+if (!localStorage.oTestObj) { 
+	var oTestObj = {}
+	oTestObj.lastUpdate = new Date().getTime();
+	localStorage.oTestObj = JSON.stringify(oTestObj);
+}
+if (!localStorage.bTestObj) { 
+	var bTestObj = {}
+	bTestObj.lastUpdate = new Date().getTime();
+	localStorage.bTestObj = JSON.stringify(bTestObj);
+}
+if (!localStorage.pTestObj) { 
+	var pTestObj = {}
+	pTestObj.lastUpdate = new Date().getTime();
+	localStorage.pTestObj = JSON.stringify(pTestObj);
+}
+
+var defInt = '';
+var defAT = '';
+
+function getPomoFocus(win){
+	var obj;
+	if (win == 'background') 	{ 
+		if (localStorage.pomoFocusB == 'undefined') { 
+			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
+		}
+		else { obj = JSON.parse(localStorage.pomoFocusB); }
+	}
+	else if (win == 'options') 	{ 
+		if (localStorage.pomoFocusO == 'undefined') { 
+			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
+		}
+		else { obj = JSON.parse(localStorage.pomoFocusO); }
+	}
+	else if (win == 'popup') {
+		if (localStorage.pomoFocusP == 'undefined') { 
+			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
+		}else { obj = JSON.parse(localStorage.pomoFocusP); }
+	}
+	
+	return obj
+}
+
+function savePomoFocus(pomoFocus, win){
+	var now = new Date().getTime();
+	pomoFocus.lastUpdate = now;
+	if (win == 'options') 			{ localStorage.pomoFocusO = JSON.stringify(pomoFocus); }
+	else if (win == 'background') 	{ localStorage.pomoFocusB = JSON.stringify(pomoFocus); }
+	else if (win == 'popup') 		{ localStorage.pomoFocusP = JSON.stringify(pomoFocus); }
+	
+	return pomoFocus
+}
+
+function readPomoFocus(x){
+	var PF;
+	var longAgo = deltaTime(-365 * 24 * 60 * 60, new Date()).getTime();
+	if (x == 'pomoFocusO') {
+		if (localStorage.pomoFocusO){ PF = JSON.parse(localStorage.pomoFocusO); } 
+		else { PF = {}; }
+	}
+	else if (x == 'pomoFocusB') {
+		if (localStorage.pomoFocusB){ PF = JSON.parse(localStorage.pomoFocusB); }
+		else { PF = {}; }
+	}
+	if (x == 'pomoFocusP') {
+		if (localStorage.pomoFocusP){ PF = JSON.parse(localStorage.pomoFocusP); }
+		else { PF = {}; }
+	}
+	
+	if (!PF.lastUpdate) { PF.lastUpdate = longAgo; }
+	return PF
+}
+
 
 
 /*---------------------------------------------------------------------------*/
@@ -144,11 +263,9 @@ function signOut(){
 	$.post(signOutURL)
 		.done(function(data){
 			console.log("Signed out. Data is: " + JSON.stringify(data) + " !");
-			// location.reload();
 		})
 		.fail(function(){
 			console.log("Failed to sign out")
-			// location.reload();
 		});
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
@@ -452,8 +569,10 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimulus + '/' + 
 				value + 
-				'?access_token=' + accessToken+
-				'&reason=' + textAlert;
+				'?access_token=' + accessToken;
+				
+	if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	
 	console.log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
 		.done(function (data, result) {
@@ -546,4 +665,11 @@ function deltaTime(seconds, baseDate){
 	
 	return future
 }
+
+function dateFromTime(time){
+	var date = new Date();
+	date.setTime(time);
+	return date
+}
+
 
