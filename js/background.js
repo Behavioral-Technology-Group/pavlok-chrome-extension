@@ -9,6 +9,9 @@ var elapsedTime = 0;
 var counter = false;
 var situation = {};
 var timeWindow;
+var myAudio = new Audio('../Audio/focus1min.mp3');
+var playing = false;
+
 // var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
 var RTTimeOut;
@@ -58,16 +61,6 @@ var accessToken = localStorage.accessToken;
 /*--------                                                           --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-// To-do
-function savePomoFocusB(pomoFocusB){
-	pomoFocusB.lastUpdate = new Date();
-	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
-	// localStorage.pomoFocusB = JSON.stringify('pomoFocusB');
-	savePomoFocus(pomoFocusB);
-	localStorage.changedPart = 'To-Do';
-	return pomoFocusB
-}
-
 // RescueTime Integration
 function validateTimeOut(RTTimeOut){
 	if (RTTimeOut == undefined) { RTTimeOut = false }
@@ -397,6 +390,53 @@ function rescueTimeChecker(){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+function savePomoFocusB(pomoFocusB){
+	pomoFocusB.lastUpdate = new Date();
+	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	// localStorage.pomoFocusB = JSON.stringify('pomoFocusB');
+	savePomoFocus(pomoFocusB, 'background');
+	localStorage.changedPart = 'To-Do';
+	return pomoFocusB
+}
+
+function playAudio(){
+	if (playing == false){
+		myAudio = new Audio('../Audio/focus1min.mp3');
+		myAudio.addEventListener('ended', function() {
+			this.currentTime = 20;
+			this.play();
+		}, false);
+		
+		myAudio.play();
+		playing = true;
+	}
+}
+
+function stopAudio(){
+	myAudio.pause();
+	myAudio.currentTime = 0;
+	playing = false;
+}
+
+function shortCount(){
+	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
+	pomoFocusB.endTime = deltaTime(5).getTime();
+	savePomoFocusB(pomoFocusB);
+}
+
+function checkForAudio(){
+	var audioAddress = '../audio/focus1min.mp3';
+	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
+	var now = deltaTime(0).getTime();
+	
+	if (pomoFocusB.endTime > now && pomoFocusB.audio == true){
+		playAudio();
+	}
+	else {
+		stopAudio();
+	}
+}
+
 function equalizePomoFocus(latest){
 	localStorage.pomoFocusB = JSON.stringify(latest);
 	localStorage.pomoFocusO = JSON.stringify(latest);
@@ -448,18 +488,23 @@ function createPomoFocusCountDown(){
 	var clockDiv = $('#pomoFocusRemainingTime');
 	var taskSpan = $('#pomoFocusTask');
 	
-	$(clockDiv).countdown(endDate, function(event) {
+	var timer = $(clockDiv).countdown(endDate, function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
 		stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-		togglePomodoro("configure");
+		console.log("PomoFocus ended");
+		pomoFocusB.audio = false;
+		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 	});
 }
 
 var countDownSafetyCheck = setInterval(function(){ updateCountdown();}, 2000);
-var testInt = setInterval(function(){ checkForUpdate(); }, 100);
+var testInt = setInterval(function(){ 
+	checkForUpdate();
+	checkForAudio();
+	}, 100);
 $( document ).ready( function() { updateCountdown(); });
 
 
@@ -602,5 +647,5 @@ $( document ).ready(function() {
 			}
 		}
 	,100);
-	
+	createPomoFocusCountDown();
 });

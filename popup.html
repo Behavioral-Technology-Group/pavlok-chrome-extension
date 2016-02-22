@@ -5,6 +5,8 @@
 <head>
 
 	<title>Controlled multi-tab browsing</title>
+	
+	<!-- CSS -->
 	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
@@ -12,14 +14,15 @@
 	<link rel="stylesheet" href="css/popup.css" type="text/css" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	
+	<!-- JS -->
 	<script src="js/external/jquery.min.js" type="text/javascript"></script>
 	<script src="js/external/jquery-ui.js"></script>
 	<script src="js/external/jquery.ui.timepicker.js"></script>
-	<script src="js/external/jquery-impromptu.min.js"></script>
-	<script src="js/external/jquery.canvasjs.min.js"></script>
 	<script src="js/external/jquery.countdown.js"></script>
+	<script src="js/external/jquery-impromptu.min.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/helpers.js" type="text/javascript"></script>
+	<script src="js/ToDo.js" type="text/javascript"></script>
 	<script src="js/popup.js" type="text/javascript"></script>
 </head>
 
@@ -243,10 +246,10 @@
 						<hr>
 						<h3>Hyper Focus Controls</p>
 						<p>
-							<span><i class="fa fa-play-circle-o"></i></span>
-							<span><i class="fa fa-stop-circle-o"></i></span>
-							<span><i class="fa fa-volume-down"></i></span>
-							<span><i class="fa fa-volume-up"></i></span>
+							<span><i class="fa fa-play-circle-o" id="playBinauralButton"></i></span>
+							<span><i class="fa fa-stop-circle-o" id="stopBinauralButton"></i></span>
+							<span><i class="fa fa-volume-down" id="vDownBinaural"></i></span>
+							<span><i class="fa fa-volume-up" id="vUpBinaural"></i></span>
 						</p>
 						
 					</div>
