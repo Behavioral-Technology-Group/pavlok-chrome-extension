@@ -444,6 +444,7 @@ function equalizePomoFocus(latest){
 }
 
 function updateCountdown(){
+	fixNoEndTime();
 	var pomoFocusB = getPomoFocus('background');
 	var clockDiv = $('#pomoFocusRemainingTime');
 	var taskSpan = $('#pomoFocusTask');
@@ -597,7 +598,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	_result = CheckBlackList(curPAVUrl, curPAVDomain);
 	if(_result == true){
 		if (counter == true){
-			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted")
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
 			
 			now = new Date();
 			
@@ -616,6 +617,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 		}
 		else {
 			counter = true;
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
 			timeBegin = new Date();
 		}
 	}

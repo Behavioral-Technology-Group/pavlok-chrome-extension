@@ -8,7 +8,7 @@
 */
 
 
-		
+/* Greetings popup		
 $( document ).ready(function(){
 	var updateMessage = '' +
 			'<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
@@ -35,10 +35,11 @@ $( document ).ready(function(){
 		});
 	}
 });
+*/
 
 // Defaults
 var server = "MVP" // STAGE or MVP
-var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
+var usage = "test"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
@@ -102,44 +103,50 @@ if (!localStorage.pomoFocusB) {
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
+	pomoFocusP.endTime = timeDelta(0).getTime();
 	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 }
 
-if (!localStorage.oTestObj) { 
-	var oTestObj = {}
-	oTestObj.lastUpdate = new Date().getTime();
-	localStorage.oTestObj = JSON.stringify(oTestObj);
-}
-if (!localStorage.bTestObj) { 
-	var bTestObj = {}
-	bTestObj.lastUpdate = new Date().getTime();
-	localStorage.bTestObj = JSON.stringify(bTestObj);
-}
-if (!localStorage.pTestObj) { 
-	var pTestObj = {}
-	pTestObj.lastUpdate = new Date().getTime();
-	localStorage.pTestObj = JSON.stringify(pTestObj);
-}
 
 var defInt = '';
 var defAT = '';
 
+function fixNoEndTime(){
+	var ps = [localStorage.pomoFocusO, localStorage.pomoFocusP, localStorage.pomoFocusB];
+	var pages = ['options', 'popup', 'background'];
+	var now = deltaTime(0).getTime();
+	
+	for (p=0; p<ps.length; p++){
+		var pomoFocus = JSON.parse(ps[p]);
+		if (pomoFocus.endTime * 2 / 2 == pomoFocus.endTime){
+			return
+		}
+		else {
+			pomoFocus.endTime = now;
+			savePomoFocus(pomoFocus, pages[p]);
+		}
+	}
+}
+
 function getPomoFocus(win){
 	var obj;
-	if (win == 'background') 	{ 
-		if (localStorage.pomoFocusB == 'undefined') { 
+	if (win == 'background') 	{
+		var t = localStorage.pomoFocusB;
+		if (t == undefined || t == 'undefined') { 
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
 		}
 		else { obj = JSON.parse(localStorage.pomoFocusB); }
 	}
-	else if (win == 'options') 	{ 
-		if (localStorage.pomoFocusO == 'undefined') { 
+	else if (win == 'options') 	{
+		var t = localStorage.pomoFocusO;
+		if (t == undefined || t == 'undefined') { 
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
 		}
 		else { obj = JSON.parse(localStorage.pomoFocusO); }
 	}
 	else if (win == 'popup') {
-		if (localStorage.pomoFocusP == 'undefined') { 
+		var t = localStorage.pomoFocusP;
+		if (t == undefined || t == 'undefined') { 
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
 		}else { obj = JSON.parse(localStorage.pomoFocusP); }
 	}
