@@ -8,7 +8,7 @@
 */
 
 
-/* Greetings popup		
+// Greetings popup		
 $( document ).ready(function(){
 	var updateMessage = '' +
 			'<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
@@ -35,11 +35,10 @@ $( document ).ready(function(){
 		});
 	}
 });
-*/
 
 // Defaults
 var server = "MVP" // STAGE or MVP
-var usage = "test"; // local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; // local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";

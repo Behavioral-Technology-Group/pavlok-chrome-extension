@@ -445,6 +445,7 @@ function equalizePomoFocus(latest){
 
 function updateCountdown(){
 	fixNoEndTime();
+	localStorage.endReason = 'time';
 	var pomoFocusB = getPomoFocus('background');
 	var clockDiv = $('#pomoFocusRemainingTime');
 	var taskSpan = $('#pomoFocusTask');
@@ -483,6 +484,7 @@ function checkForUpdate(){
 }
 
 function createPomoFocusCountDown(){
+	localStorage.endReason = 'time';
 	pomoFocusB = getPomoFocus('background');
 	var endDate = dateFromTime(pomoFocusB.endTime);
 	
@@ -493,7 +495,11 @@ function createPomoFocusCountDown(){
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
-		stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+		
+		if (localStorage.endReason == 'time') {
+			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+		}
 		console.log("PomoFocus ended");
 		pomoFocusB.audio = false;
 		savePomoFocus(pomoFocusB, 'background');

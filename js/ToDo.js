@@ -33,29 +33,6 @@ function createPomoFocusCountDown(){
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
-		var msg = "If you're really close, try it for 5 more minutes.";
-		// if (PFpromptForce == true){
-			// $.prompt(msg, {
-				// title: "Focus Session Finished! Did you finish your task?",
-				// html: "If you're really close, try it for 5 more minutes.",
-				// defaultButton: 1,
-				// buttons: { "Yes, I just made it!": true, "No, zap me out of distraction!": false },
-				// submit: function(e,v,m,f){
-					// console.log("result was " + v);
-					// var result = v;
-					// if (result == true){
-						// cancelPomoFocus();
-						// notifyUser("Well done!", "Keep the zone going, you rock star!", "PFNotify");
-						// stimuli("vibration", defInt, defAT, "Productivity rocks!");
-					// }
-					// else{
-						// notifyUser("Ouch, folk!", "Let's try some more focus next time!", "PFNotify");
-						// stimuli("shock", "", "", "PomoFocus timed out.");
-					// }
-				// }
-			// });
-		// }
-		
 		togglePomodoro("configure");
 		PFpromptForce = true;
 	});
@@ -93,6 +70,7 @@ function checkForUpdate(){
 
 function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
+		localStorage.endReason = 'done';
 		var pomoFocus = getPomoFocus('background');
 		var itemRow = $(".nowTaskRow");
 		if (itemRow.length == 0){ console.log("no Now Task"); return }
@@ -107,9 +85,10 @@ function pomoFocusButtons(){
 	});
 	
 	$("#pomoFocusStop").click(function(){
+		localStorage.endReason = 'stop';
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
-		pomoFocus.endTime = new Date().getTime();;
+		pomoFocus.endTime = new Date().getTime();
 		savePomoFocus(pomoFocus, 'options');
 	});
 	
@@ -357,6 +336,7 @@ function completeTask(taskRow, override){
 		$(item.Row).addClass("doneTaskRow");			// Add classes
 
 		// Reward stimulus
+		notifyUser("One down!", "Keep going, you rockstar!", "PFNotify");
 		stimuli("vibration", defInt, defAT, focusCompleteMsg);
 	}
 	
