@@ -24,18 +24,6 @@ var defAT = '';				// Use default Access Token for stimuli
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-function showName(){
-	// Tries the code against API
-	$.get(localStorage.baseAddress + '/api/v1/me?access_token=' + accessToken)
-	.done(function () {
-		console.log("GOOD token. Works on API.");
-		return true
-	})
-	.fail(function(){
-		console.log("BAD token. Fails on API.");
-		return false
-	});
-}
 
 function showOptions(accessToken){
 	if (isValid(localStorage.accessToken)){
@@ -50,15 +38,15 @@ function showOptions(accessToken){
 
 $( document ).ready(function() {
 	enableTooltips();
-	if ( !localStorage.userName ) { userInfo(localStorage.accessToken); }
-	if ( localStorage.userName ) { updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
+	if ( !localStorage.userName ) 	{ userInfo(localStorage.accessToken); }
+	if ( localStorage.userName ) 	{ updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
 	
 	$("#signOut").click(function(){
 		signOut();
 	});
 	
 	$("#beepTest").click(function(){ 
-		stimuli('beep', localStorage.beepTune, localStorage.accessToken, "You'll get a Beep and a notification on your phone", 'false'); 
+		stimuli('beep', '255', localStorage.accessToken, "You'll get a Beep and a notification on your phone", 'false'); 
 	});
 	$("#vibrateTest").click(function(){ stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken, "You'll get a Vibration and a notification on your phone", 'false'); });
 	$("#zapTest").click(function(){stimuli('shock', localStorage.zapIntensity, localStorage.accessToken, "You'll get a Zap and a notification on your phone", 'false'); });

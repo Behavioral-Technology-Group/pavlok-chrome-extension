@@ -154,43 +154,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 // Tab counting
 function CheckTabCount(tab, token, stimulus) { // checked. All working fine
 	if (isValid(token) && checkActiveDayHour()){
-		chrome.tabs.getAllInWindow(tab.windowId, function(tabs, callback) {
-			var maxTabs = parseInt(localStorage.maxTabs);
-			if(!maxTabs) {
-				return;
-			}
-
-			var previousTabs = localStorage[tab.windowId];
-			console.log("There were " + previousTabs + " open on this window.");
-			UpdateTabCount(tab.windowId);
-			console.log("There are " + localStorage[tab.windowID] + " open on this window.");
-			
-			// Trends for tabs. Is it going up, going down or is it stable?
-			if (previousTabs < tab.WindowID) { situation.trend = "lowering"; }
-			else if ( previousTabs > tab.WindowID ) { situation.trend = "growing"; }
-			else { situation.trend = "stable"; }
-			
-			// How is number of tabs compared to tab limit (maxTabs)?
-			if(tabs.length > maxTabs) {
-				situation.status = "over";
-				stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
-				console.log("total tabs over max tabs");
-			}
-			else if (tabs.length == maxTabs ){ 
-				situation.status = "limit";
-				stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
-			 
-			}
-			else if (tabs.length == maxTabs - 1){ 
-				situation.status = "borderline";
-				// stimuli("vibration", 230, localStorage.accessToken);
-				stimuli("vibration", 230, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
-			}
-			else { situation.status = "wayBellow"};
-			
-			previousTabs = tabs.length;
-			notifyTabCount(tabs.length, situation);
-		});
+		countTabs(localStorage.tabCountAll, evaluateTabCount);
 	}
 }
 
@@ -418,12 +382,6 @@ function stopAudio(){
 	playing = false;
 }
 
-function shortCount(){
-	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
-	pomoFocusB.endTime = deltaTime(5).getTime();
-	savePomoFocusB(pomoFocusB);
-}
-
 function checkForAudio(){
 	var audioAddress = '../audio/focus1min.mp3';
 	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
@@ -526,52 +484,45 @@ $( document ).ready( function() { updateCountdown(); });
 
 
 function CreateTabListeners(token) {
-	if(!localStorage.maxTabs) {
-		localStorage.maxTabs = 6;
-	}
-
-	
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
-		CheckTabCount(tab, accessToken, "shock");
+		countTabs(localStorage.tabCountAll, evaluateTabCount);
 	});
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
 		if ( localStorage.zapOnClose == 'true' ){
-			CheckTabCount(tab, accessToken, "shock");
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
 		}
 		else{
 			console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
-			// CheckTabCount(tab, "falseToken", 'no stimuli');
 		}
 	});
 
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-		CheckTabCount(tab, accessToken, "shock");
+		countTabs(localStorage.tabCountAll, evaluateTabCount);
 	});
 
 	// When tab is attached
 	chrome.tabs.onAttached.addListener(function(tab) {
-		CheckTabCount(tab, accessToken, "shock");
+		countTabs(localStorage.tabCountAll, evaluateTabCount);
 	});
 
 	// last windows focused
 	chrome.windows.getLastFocused(function(win) {
-		UpdateTabCount(win.windowId);
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 	});
 
 	// When new window is created
 	chrome.windows.onCreated.addListener(function(win) {
-		UpdateTabCount(win.windowId);
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 	});
 
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
-		UpdateTabCount(win.windowId);
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 	});
-	
 }
 
 function initialize() {	
@@ -579,6 +530,22 @@ function initialize() {
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
+		testInterval = setInterval(
+		function(){
+			if (checkActiveDayHour() == true) {
+				if (isValid(localStorage.accessToken)){
+					timeWindow = localStorage.timeWindow;
+					getTabInfo(evaluateTabURL);
+					rescueTimeChecker();
+					RTTimeOut = localStorage.RTTimeOut;
+					countTabs(localStorage.tabCountAll, UpdateTabCount);
+				}
+			} else {
+				UpdateBadgeOnOff("Zzz");
+			}
+		}
+	,100);
+	createPomoFocusCountDown();
 }
 
 function getTabInfo(callback){
@@ -636,24 +603,3 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 }
 
 initialize();
-
-$( document ).ready(function() {
-	testInterval = setInterval(
-		function(){
-			if (checkActiveDayHour() == true) {
-				if (isValid(localStorage.accessToken)){
-					timeWindow = localStorage.timeWindow;
-					getTabInfo(evaluateTabURL);
-					rescueTimeChecker();
-					RTTimeOut = localStorage.RTTimeOut;
-					chrome.windows.getLastFocused(function(win) {
-						UpdateTabCount(win.windowId);
-					});
-				}
-			} else {
-				UpdateBadgeOnOff("Zzz");
-			}
-		}
-	,100);
-	createPomoFocusCountDown();
-});

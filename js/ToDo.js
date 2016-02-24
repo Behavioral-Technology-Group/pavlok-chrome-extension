@@ -21,9 +21,58 @@ if (!localStorage.pomoFocusP) {
 	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 }
 
+
+function checkTaskIDs(){
+	if (!localStorage.ToDoTasks) { localStorage.lastID = 0; return}
+	// Check if there's an ID for every task. If not, create from 1. If so, feeds the others according to the greatest one.
+	var taskList = JSON.parse(localStorage.ToDoTasks);
+	var indexesList = [];
+	
+	// Get current IDs
+	for (t = 0; t < taskList.length; t++) {
+		var curID = taskList[t].id;
+		indexesList.push(curID);
+	}
+	
+	// Search for undefined IDs
+	if ( indexesList.indexOf(undefined) != -1 ){
+		var maxID = _.max(indexesList);
+		if (maxID > 0){ // There are undefineds, but also numbers. So next IDs are increments of numbers.
+			for (t = 0; t < taskList.length; t++) {
+				if (taskList[t].id == undefined){
+					var lastID = maxID + 1 + t;
+					taskList[t].id = lastID;
+				}
+			}
+		}
+		else { // There are no numbers, only undefineds. So count comes from 0.
+			for (t = 0; t < taskList.length; t++) {
+				var lastID = 1 + t;
+				taskList[t].id = lastID;
+			}
+		}
+	}
+	
+	var newIDList = [];
+	for (t = 0; t < taskList.length; t++) {
+		var curID = taskList[t].id;
+		newIDList.push(curID);
+	}
+	var maxID = _.max(newIDList);
+	
+	localStorage.lastID = maxID;
+	localStorage.ToDoTasks = JSON.stringify(taskList);
+}
+
 // PomoFocus
 var lastUpdate = 0;
 var PFpromptForce = false;
+
+function shortCount(){
+	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
+	pomoFocusB.endTime = deltaTime(5).getTime();
+	savePomoFocus(pomoFocusB, 'background');
+}
 
 function createPomoFocusCountDown(){
 	pomoFocusB = getPomoFocus('background');
@@ -72,7 +121,10 @@ function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
 		var pomoFocus = getPomoFocus('background');
-		var itemRow = $(".nowTaskRow");
+		// var itemRow = $(".nowTaskRow");
+		var taskID = pomoFocus.taskID;
+		var itemRow = $("#" + taskID);
+		
 		if (itemRow.length == 0){ console.log("no Now Task"); return }
 		$(itemRow).removeClass("nowTaskRow");
 		completeTask(itemRow, true);
@@ -156,6 +208,7 @@ function pomodoroOnSteroids(){
 		
 		// Set the pomoFocus Object
 		pomoFocus.active		= true;
+		pomoFocus.taskID		= item.id;
 		pomoFocus.task			= item.Task;
 		pomoFocus.silent		= 'promptOnEnd';
 		pomoFocus.lastUpdate	= new Date().getTime();
@@ -237,8 +290,16 @@ function activateTaskFilterButtons(){
 	});
 }
 
-function addToDoItem(task){
-	var newLine = '<tr class="toDoItemTR">' +
+function addToDoItem(task, taskID){
+	if (!taskID){
+		var lastID = parseInt(localStorage.lastID);
+		lastID = lastID + 1;		
+		localStorage.lastID = lastID;
+		
+	}
+	else { var lastID = taskID };
+	
+	var newLine = '<tr id="' + lastID + '" class="toDoItemTR">' +
 					'<td colspan="5">' +
 						'<div class="toDoOKerTD">' +
 							'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
@@ -282,6 +343,8 @@ function clearCompletedTasks(){
 
 function restoreTaskList(){
 	// alert("restoreTaskList on the go");
+	checkTaskIDs();
+	
 	if (localStorage.ToDoTasks == undefined || localStorage.ToDoTasks == 'null' || localStorage.ToDoTasks == ''){ return }
 	
 	var TaskList = JSON.parse(localStorage.ToDoTasks);
@@ -289,21 +352,23 @@ function restoreTaskList(){
 	
 	// Restore the tasks
 	for (t = 0; t < totalTasks ; t++){
-		var newItem = addToDoItem(TaskList[t].task);
+		curTask = TaskList[t];
+		
+		var newItem = addToDoItem(curTask.task, curTask.id);
 		
 		// Restore Task Today
 		var completedDiv = $(newItem).children().children()[0];
 		var completedCheckbox = $(completedDiv).children()[0];
-		if (TaskList[t].done == true){
-			$(completedCheckbox).prop("checked",  TaskList[t].done);
+		if (curTask.done == true){
+			$(completedCheckbox).prop("checked",  curTask.done);
 			$(newItem).addClass('doneTaskRow');
 		}
 		else {
-			$(completedCheckbox).prop("checked",  TaskList[t].done);
+			$(completedCheckbox).prop("checked",  curTask.done);
 		}
 		var taskDiv = $(newItem).children().children()[1];
 		var todayDiv = $(newItem).children().children()[2];
-		if (TaskList[t].today == true) { 
+		if (curTask.today == true) { 
 			$(newItem).addClass("todayTaskRow");
 			$($(todayDiv).children()[1]).removeClass("grayscale");
 		}
@@ -312,12 +377,11 @@ function restoreTaskList(){
 			$($(todayDiv).children()[1]).addClass("grayscale");
 		}
 		var nowDiv = $(newItem).children().children()[2];
-		if (TaskList[t].now == true){ $(newItem).addClass("nowTaskRow"); }
+		if (curTask.now == true){ $(newItem).addClass("nowTaskRow"); }
 	}
 	
 	updateTasksCounter();
 }
-
 
 // Task Status Handling
 function completeTask(taskRow, override){
@@ -388,6 +452,7 @@ function PFGetClickedRow(object){
 		}
 	}
 	
+	var itemID = $(itemRow).attr('id');
 	var itemChecker = $($(itemRow).children().children()[0]).children().prop("checked");
 	var itemCheckerDOM = $($(itemRow).children().children()[0]).children();
 	
@@ -404,6 +469,8 @@ function PFGetClickedRow(object){
 	var itemNowDOM = $($(itemRow).children().children()[2]).children()[0];
 	
 	var item = {};
+	
+	item.id = itemID;
 	item.Row = itemRow;
 	item.Checker = itemChecker;
 	item.CheckerDOM = itemCheckerDOM;
@@ -441,6 +508,7 @@ function updateTasksLog(){
 	for (t = 0; t < totalTasks; t++){
 		newTask = {}
 		var itemRow = allTasks[t];
+		itemID = $(itemRow).attr('id');
 		var itemTd = $(itemRow).children();
 		var itemDivs = $(itemTd).children();
 		var itemTask = itemDivs[1].innerHTML;
@@ -453,6 +521,7 @@ function updateTasksLog(){
 		if (itemNow != -1) { itemNow = true; }
 		else { itemNow = false; }
 		
+		newTask.id = itemID;
 		newTask.task = itemTask;
 		newTask.done = itemDone;
 		newTask.today = itemToday;
