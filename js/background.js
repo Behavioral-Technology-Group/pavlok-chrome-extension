@@ -1,4 +1,6 @@
-﻿/* To-do:
+﻿
+
+/* To-do:
 - DRY code
 
 
@@ -546,6 +548,7 @@ function initialize() {
 		}
 	,100);
 	createPomoFocusCountDown();
+	
 }
 
 function getTabInfo(callback){

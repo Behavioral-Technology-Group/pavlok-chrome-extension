@@ -2,17 +2,6 @@
 	- Put Pomodoro CountDown on the Background
 	- Adjust interface on Popup
 */
-// if (!localStorage.pomoFocusB || localStorage.pomoFocusB == 0) {pomoFocusB = {}}
-// else { var pomoFocusB = JSON.parse(localStorage.pomoFocusB) || {};}
-
-// if (!localStorage.pomoFocusO || localStorage.pomoFocusO == 0) {pomoFocusO = {}}
-// else { var pomoFocusO = JSON.parse(localStorage.pomoFocusO) || {}; }
-
-// if (!localStorage.pomoFocusP || localStorage.pomoFocusP == 0) {pomoFocusP = {}}
-// else {var pomoFocusP = JSON.parse(localStorage.pomoFocusP) || {};}
-
-
-
 
 var focusCompleteMsg = "Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
@@ -565,26 +554,26 @@ function enableSliders(){
 
 function enableCheckboxes(){
 	// Active days
-	$("#sundayActive").change(function(){
-		localStorage.sundayActive = $(this).prop( "checked" );
+		$("#sundayActive").change(function(){
+		lsSet('sundayActive', $(this).prop( "checked" ));
 	});
 	$("#mondayActive").change(function(){
-		localStorage.mondayActive = ($(this).prop( "checked" ));
+		lsSet('mondayActive', $(this).prop( "checked" ));
 	});
 	$("#tuesdayActive").change(function(){
-		localStorage.tuesdayActive = $(this).prop( "checked" );
+		lsSet('tuesdayActive', $(this).prop( "checked" ));
 	});
 	$("#wednesdayActive").change(function(){
-		localStorage.wednesdayActive = $(this).prop( "checked" );
+		lsSet('wednesdayActive', $(this).prop( "checked" ));
 	});
 	$("#thursdayActive").change(function(){
-		localStorage.thursdayActive = $(this).prop( "checked" );
+		lsSet('thursdayActive', $(this).prop( "checked" ));
 	});
 	$("#fridayActive").change(function(){
-		localStorage.fridayActive = $(this).prop( "checked" );
+		lsSet('fridayActive', $(this).prop( "checked" ));
 	});
 	$("#saturdayActive").change(function(){
-		localStorage.saturdayActive = $(this).prop( "checked" );
+		lsSet('saturdayActive', $(this).prop( "checked" ));
 	});
 	$("#eachDay").change( function() {	
 		var advanced = $(this).prop( "checked" );
@@ -600,95 +589,95 @@ function enableCheckboxes(){
 
 function enableInputs(){	
 	// Advanced day to day
-	$("#sundayActiveTimeStart").change( function() {	
-		localStorage.sundayActiveTimeStart = $(this).val();
+		$("#sundayActiveTimeStart").change( function() {	
+		lsSet('sundayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#sundayActiveTimeEnd").change( function() {	
-		localStorage.sundayActiveTimeEnd = $(this).val();
+		lsSet('sundayActiveTimeEnd', $(this).val() );
 	});	
 		
 	$("#mondayActiveTimeStart").change( function() {	
-		localStorage.mondayActiveTimeStart = $(this).val();
+		lsSet('mondayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#mondayActiveTimeEnd").change( function() {	
-		localStorage.mondayActiveTimeEnd = $(this).val();
+		lsSet('mondayActiveTimeEnd', $(this).val() );
 	});	
 	
 	$("#tuesdayActiveTimeStart").change( function() {	
-		localStorage.tuesdayActiveTimeStart = $(this).val();
+		lsSet('tuesdayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#tuesdayActiveTimeEnd").change( function() {	
-		localStorage.tuesdayActiveTimeEnd = $(this).val();
+		lsSet('tuesdayActiveTimeEnd', $(this).val() );
 	});	
 		
 	$("#wednesdayActiveTimeStart").change( function() {	
-		localStorage.wednesdayActiveTimeStart = $(this).val();
+		lsSet('wednesdayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#wednesdayActiveTimeEnd").change( function() {	
-		localStorage.wednesdayActiveTimeEnd = $(this).val();
+		lsSet('wednesdayActiveTimeEnd', $(this).val() );
 	});	
 		
 	$("#thursdayActiveTimeStart").change( function() {	
-		localStorage.thursdayActiveTimeStart = $(this).val();
+		lsSet('thursdayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#thursdayActiveTimeEnd").change( function() {	
-		localStorage.thursdayActiveTimeEnd = $(this).val();
+		lsSet('thursdayActiveTimeEnd', $(this).val() );
 	});	
 		
 	$("#fridayActiveTimeStart").change( function() {	
-		localStorage.fridayActiveTimeStart = $(this).val();
+		lsSet('fridayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#fridayActiveTimeEnd").change( function() {	
-		localStorage.fridayActiveTimeEnd = $(this).val();
+		lsSet('fridayActiveTimeEnd', $(this).val() );
 	});	
 
 	$("#saturdayActiveTimeStart").change( function() {	
-		localStorage.fridayActiveTimeStart = $(this).val();
+		lsSet('fridayActiveTimeStart', $(this).val() );
 	});	
 		
 	$("#saturdayActiveTimeEnd").change( function() {	
-		localStorage.fridayActiveTimeEnd = $(this).val();
+		lsSet('fridayActiveTimeEnd', $(this).val() );
 	});	
 	
 }
 
 function saveBlackList(){
-	localStorage.blackList = $("#blackList")[0].value;
+	lsSet('blackList', $("#blackList")[0].value);
 }
 
 function saveWhiteList(){
-	localStorage.whiteList = $("#whiteList")[0].value;
+	lsSet('whiteList', $("#whiteList")[0].value);
 }
 
 function saveOptions() {
 	
 	var blackList = $("#blackList")[0].value;
-	localStorage.blackList = blackList;
+	lsSet('blackList = blackList);
 	
 	var whiteList = $("#whiteList")[0].value;
-	localStorage.whiteList = whiteList;
+	lsSet('whiteList = whiteList);
 	
 	var maxTabs = $("#maxTabsSelect").val();
-	localStorage.maxTabs = maxTabs;
+	lsSet('maxTabs = maxTabs);
 	
 	var zapOnClose = $("#zapOnClose").prop('checked');
-	localStorage.zapOnClose = zapOnClose;
+	lsSet('zapOnClose = zapOnClose);
 	
 	var zapPosition = $("#zapIntensity").val();
 	var zapIntensity = $("#zapIntensity").val();
 	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
-	localStorage.zapIntensity = zapIntensity;
+	lsSet('zapIntensity = zapIntensity);
 	
 	var vibrationPosition = $("#vibrationIntensity").val();
 	var vibrationIntensity = $("#vibrationIntensity").val();
 	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
-	localStorage.vibrationIntensity = vibrationIntensity;
+	lsSet('vibrationIntensity = vibrationIntensity);
 }
 
 function restoreOptions() {
@@ -700,7 +689,6 @@ function restoreOptions() {
 	if (blackList == undefined) { blackList = ' '; }
 	$("#blackList").val(blackList);
 
-	
 	var whiteList = localStorage.whiteList;
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
@@ -754,7 +742,6 @@ function restoreOptions() {
 
 // Create the vertical tabs
 function initialize() {
-	
 	// Black and WhiteLists
 	var blackListContent = localStorage.blackList;
 	
@@ -841,6 +828,7 @@ function initialize() {
 	enableInputs();
 	enableRescueTime();
 	enableToDo();
+	syncToDo('options');
 	
 	$(".allCaps").text().toUpperCase();
 	
@@ -864,9 +852,6 @@ $( document ).ready(function() {
 	// else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);
-		
-	// }
 	
-	// restorePomoFocus();
 	restoreOptions();
 });

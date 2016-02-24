@@ -73,6 +73,7 @@ $( document ).ready(function() {
 	});
 
 	enableToDo();
+	syncToDo('options');
 	if (localStorage.logged == 'true') {
 		// Toggle visibility for options
 		$(".onlyLogged").css('visibility', 'visible');

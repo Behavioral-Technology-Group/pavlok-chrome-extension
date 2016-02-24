@@ -1,3 +1,13 @@
+/* Next Steps
+
+BOOM!	- Sync tasks in real time
+		- Fix lastID not being updated
+		- Create daily (repeated) tasks
+		- Change the blacklist and whitelist during daily pomoFocus
+		- Create daily tasks display
+
+*/
+
 /* ***************************************************************** */
 /* ***************                                   *************** */
 /* ***************           To-Do Section           *************** */
@@ -7,18 +17,21 @@
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
-	localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
+	// localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
+	lsSet('pomoFocusO', pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
 	var pomoFocusB = {}
 	pomoFocusB.lastUpdate = new Date().getTime();
-	localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	lsSet('pomoFocusB', pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
 	pomoFocusP.endTime = timeDelta(0).getTime();
-	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
+	// localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
+	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
 
 
@@ -64,7 +77,14 @@ function checkTaskIDs(){
 	localStorage.ToDoTasks = JSON.stringify(taskList);
 }
 
-// PomoFocus
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************             PomoFocus             *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+
+
 var lastUpdate = 0;
 var PFpromptForce = false;
 
@@ -270,7 +290,16 @@ function pomodoroOnSteroids(){
 	});
 }
 
-// List Display Handling
+
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           List Display            *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+
+
 function activateTaskFilterButtons(){
 	// Filter tasks: ALL
 	$("#allToDoLink").click(function(){
@@ -344,6 +373,7 @@ function clearCompletedTasks(){
 function restoreTaskList(){
 	// alert("restoreTaskList on the go");
 	checkTaskIDs();
+	$(".toDoItemTR").remove()
 	
 	if (localStorage.ToDoTasks == undefined || localStorage.ToDoTasks == 'null' || localStorage.ToDoTasks == ''){ return }
 	
@@ -383,7 +413,26 @@ function restoreTaskList(){
 	updateTasksCounter();
 }
 
-// Task Status Handling
+function syncToDo(page){
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.action == "TaskList" && request.target == page){
+				restoreTaskList();
+			}
+		}
+	);
+}
+
+
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           Task Status             *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+
+
 function completeTask(taskRow, override){
 	if (!override) { override = false }
 	var item = PFGetClickedRow(taskRow);
@@ -435,7 +484,12 @@ function markTaskToday(){
 	});
 }
 
-// Backend
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************              BackEnd              *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
 function PFGetClickedRow(object){
 	var itemRow = false;
 	var investigated = object;
@@ -530,6 +584,11 @@ function updateTasksLog(){
 		tasks.push(newTask);
 	}
 	localStorage.ToDoTasks = JSON.stringify(tasks);
+	
+	// Propagate changes to every window
+	// msgExt('TaskList', 'background');
+	msgExt('TaskList', 'popup');
+	msgExt('TaskList', 'options');
 }
 
 function updateToDo(changedPart){
@@ -564,7 +623,14 @@ function updateToDo(changedPart){
 	
 }
 
-// TO-DO enabler
+
+
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************              Enabler              *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
 function enableToDo(){
 	
 	// Enablers

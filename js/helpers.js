@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -20,7 +20,8 @@ $( document ).ready(function(){
 			"<p>Best,</p>" + 
 			"<p>Pavlok Team</p>" + 
 		'';
-	if (localStorage.showAgain == 'false') { return }
+	// if (localStorage.showAgain == 'false') { return }
+	if (lsGet('showAgain') == 'false' || lsGet('showAgain') == false) { return }
 	else {
 		$.prompt(updateMessage, {
 			title: "Update your App to use the extension with your Pavlok",
@@ -31,7 +32,8 @@ $( document ).ready(function(){
 				console.log("result was " + v);
 				var result = v;
 				if (result == true){
-					localStorage.showAgain = 'false';
+					// localStorage.showAgain = 'false';
+					lsSet('showAgain', 'false');
 				}
 				else{
 					// do nothing
@@ -41,9 +43,41 @@ $( document ).ready(function(){
 	}
 });
 
-// Defaults
+// // Defaults
+// var defaults = {};
+
+// // 'Key|value|optionalDOM'
+
+// defaults.blackList = [
+// 'timeWindow|15',
+// 'blackList| |#blackList',
+// 'whitelist| |#whiteList',
+// 'zapOnClose|false|#zapOnClose',
+// 'maxTabs|15|#maxTabsSelect',
+// 'tabCountAll|allWindows|#allTabsCountSelect'
+// ];
+
+// function breakDefault(array){
+	// for (d = 0; d < array.length; d++){
+		// var parts = array[d].split('|');
+		// var key = parts[0];
+		// var value = parts[1];
+		
+		// if (!localStorage.getItem(key)){
+			// localStorage.setItem(key, value);
+		// }
+
+		// if (parts.length == 3){ 
+			// var DOM = parts[2]; 
+			// $(DOM).val(value);
+		// }
+	// }
+// }
+
+
+
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
-localStorage.setItem['baseAddress'] = baseAddress;
+lsSet('baseAddress', baseAddress);
 
 localStorage.baseAddress = baseAddress;
 
@@ -111,6 +145,12 @@ if (!localStorage.pomoFocusP) {
 
 var defInt = '';
 var defAT = '';
+
+function msgExt(_action, _target){
+	// Action is used to tell what to act upon
+	// Target is used to tell which page should respond to the stimulus
+	chrome.extension.sendMessage({action: _action, target: _target})
+}
 
 function fixNoEndTime(){
 	var ps = [localStorage.pomoFocusO, localStorage.pomoFocusP, localStorage.pomoFocusB];
@@ -185,7 +225,30 @@ function readPomoFocus(x){
 	return PF
 }
 
+function lsSet(key, data, dataType){
+	if (!dataType) { dataType = 'string'; }
+	var returnData;
+	if (dataType == 'object') { 
+		returnData = JSON.stringify(data); 
+	}
+	else { returnData = data; }
+	
+	return localStorage.setItem(key, returnData);
+}
 
+function lsGet(key, parse){
+	if (!parse) { parse = 'string' };
+	var returnData;
+	
+	if (parse == 'parse') { returnData = JSON.parse(localStorage.getItem(key)); }
+	else { returnData = localStorage.getItem(key); }
+	
+	return returnData
+}
+
+function lsDel(key){
+	localStorage.removeItem(key);
+}
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
