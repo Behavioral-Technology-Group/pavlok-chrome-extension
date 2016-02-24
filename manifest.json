@@ -2,8 +2,9 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "name": "LOCAL P.A.V.L.O.K. Chrome Extension",
-  "version": "0.4.6",
+  "version": "0.6.3",
+  "name": "PAVLOK Productivity",
+  "short_name": "PAVLOK Prod",
  
   "description": "Stay Focused. Eliminate Distraction.",
   "icons": {
@@ -25,8 +26,11 @@
 	"background",
     "https://pavlok.herokuapp.com/*",
     "https://pavlok-stage.herokuapp.com/*",
+    "https://pavlok-mvp.herokuapp.com/*",
     "identity",
 	"notifications",
-	"tabs"
+	"tabs",
+	"https://github.com/login/oauth/*",
+	"https://www.rescuetime.com/*"
     ]
 }
