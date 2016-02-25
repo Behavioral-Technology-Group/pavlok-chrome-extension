@@ -1,4 +1,9 @@
 /* Next Steps
+		- Page Controls should determine if BlackList and WhiteList are editable or not
+		- Update Black and WhiteList to show proper lists without the backspace
+		- Instazap has to be thought;
+		- Test Binaural button should work
+
 
 BOOM!	- Sync tasks in real time
 BOOM!	- Fix lastID not being updated
@@ -36,7 +41,9 @@ if (!localStorage.pomoFocusP) {
 	// localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
-
+// if (!localStorage.dailyList) {
+	// lsSet('dailyList', [], 'object');
+// }
 function checkTaskIDs(){
 	if (!localStorage.ToDoTasks) { localStorage.lastID = 0; return}
 	

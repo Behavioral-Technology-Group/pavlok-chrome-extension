@@ -85,11 +85,9 @@ function expandDailyDetails(dailyId){
 	$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
 	
 	var dailyId = parseInt(dailyId);
-	var dailyList = lsGet('dailyList', 'parse');
-	var daily = _.where(dailyList, {id: dailyId});
+	var daily = dailyFromId(dailyId)
 	
-	if (!daily) { return }
-	else { daily = daily[0];}
+	if (daily == false ) { return }
 	
 	var id 			= daily.id || parseInt(lsGet('lastDailyID')) + 1;
 	var task 		= daily.task || '';
@@ -110,8 +108,8 @@ function expandDailyDetails(dailyId){
 	$('#pomosPerDaySelect')	.val(pomodoros);
 	$('#dailyPomoDuration')	.val(duration);
 	$('#specialListsInput')	.prop('checked', specialList);
-	$('#blackListDaily')	.val(blackList);
-	$('#whiteListDaily')	.val(whiteList);
+	$('#blackListDaily')	.importTags(blackList);
+	$('#whiteListDaily')	.importTags(whiteList);
 	$('#binauralDaily')		.prop('checked', binaural);
 	$('#instaZapDaily')		.prop('checked', instaZap);
 	$('#dailyDescriptionInput').val(description);
@@ -138,7 +136,7 @@ function gatherDailyInfo(){
 // on click, open details for that daily task
 	
 function enableBlackDaily(){
-	$('#blackListDaily')[0].value = '';
+	$('#blackListDaily')[0].value = ' ';
 	$('#blackListDaily').tagsInput({
 		'defaultText':'Add site',
 		'removeWithBackspace' : true

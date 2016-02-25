@@ -43,43 +43,8 @@ $( document ).ready(function(){
 	}
 });
 
-// // Defaults
-// var defaults = {};
-
-// // 'Key|value|optionalDOM'
-
-// defaults.blackList = [
-// 'timeWindow|15',
-// 'blackList| |#blackList',
-// 'whitelist| |#whiteList',
-// 'zapOnClose|false|#zapOnClose',
-// 'maxTabs|15|#maxTabsSelect',
-// 'tabCountAll|allWindows|#allTabsCountSelect'
-// ];
-
-// function breakDefault(array){
-	// for (d = 0; d < array.length; d++){
-		// var parts = array[d].split('|');
-		// var key = parts[0];
-		// var value = parts[1];
-		
-		// if (!localStorage.getItem(key)){
-			// localStorage.setItem(key, value);
-		// }
-
-		// if (parts.length == 3){ 
-			// var DOM = parts[2]; 
-			// $(DOM).val(value);
-		// }
-	// }
-// }
-
-
-
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
 lsSet('baseAddress', baseAddress);
-
-localStorage.baseAddress = baseAddress;
 
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
@@ -141,7 +106,10 @@ if (!localStorage.pomoFocusP) {
 	pomoFocusP.endTime = timeDelta(0).getTime();
 	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 }
-
+if (!localStorage.dailyList) {
+	lsSet('dailyList', [], 'object');
+}
+if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';
