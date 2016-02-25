@@ -1,6 +1,4 @@
 ﻿/* To-do 
-	- Put Pomodoro CountDown on the Background
-	- Adjust interface on Popup
 */
 
 var focusCompleteMsg = "Keep the zone going, you rock star!";
@@ -35,9 +33,9 @@ function fillDailyList(){
 		
 		var newLine = '' +
 			'<tr id="daily' + daily.id + '" class="dailyListTR">' +
-				'<td>' + daily.task + '</td>' + 
-				'<td>' + daily.pomodoros + '</td>' +
-				'<td>' + specialList + '</td>' +
+				'<td>' + daily.task 		+ '</td>' + 
+				'<td>' + daily.pomodoros 	+ '</td>' +
+				'<td>' + specialList 		+ '</td>' +
 			'</tr>';
 			
 		$('#dailyListTable > tbody').append(newLine);
@@ -57,6 +55,19 @@ function listenDailyListClick(){
 		gatherDailyInfo()
 		fillDailyList();
 	});
+	
+	$("#deleteDaily").click(function(){
+		var dailyId = parseInt($('#dailyTaskIdInput').val());
+		var daily = dailyFromId(dailyId);
+		var dailyList = lsGet('dailyList', 'parse');
+		var index = dailyTaskIndex(daily);
+		dailyList.splice(index, 1);
+		
+		lsSet('dailyList', dailyList, 'object');
+		fillDailyList();
+		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
+	});
+	
 	
 	$("#createNewDailyTaskButton").click(function(){
 		var newTaskName = $("#newDailyTaskInput").val()

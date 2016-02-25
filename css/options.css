@@ -508,6 +508,7 @@ h2 .helpIconSpan{
 	padding-bottom: 5px;
 	border-collapse: collapse;
 	border-bottom: 1px solid white;
+	text-align: center;
 }
 
 #dailyListTable tbody > tr:hover{
@@ -560,4 +561,25 @@ h2 .helpIconSpan{
 
 #newDailyTaskInput{
 	width: 88%;
+}
+
+div.buttonHolder{
+	width:106px;
+}
+
+#saveDaily {
+	vertical-align: bottom;
+}
+
+#deleteDaily {
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: orange;
+	color: red;
+	width: 106px;
+	font-weight: bold;
+	border-radius: 25px;
+	text-decoration: none;
 }

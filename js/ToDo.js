@@ -6,8 +6,8 @@ BOOM!	- Create daily (repeated) tasks
 BOOM!	- Change the blacklist and whitelist during daily pomoFocus
 BOOM!	- Create daily tasks display
 BOOM!	- Add new Daily tasks
-		- Delete Daily tasks
-		- Update Daily on PopUp
+BOOM!	- Delete Daily tasks
+BOOM!	- Update Daily on PopUp
 
 */
 
@@ -102,6 +102,7 @@ function checkTaskIDs(){
 // Graphical Interface
 function restoreDailyList(container){
 	// remove the TRs, 
+	$('.dailyItemTR').remove();
 	var dailyList = lsGet('dailyList', 'parse');
 	for (d = 0; d < dailyList.length; d++){
 		var daily = dailyList[d];
@@ -131,9 +132,24 @@ function restoreDailyList(container){
 	}
 }
 
+function enableDailyPomoFocus(){
+	$(".dailyContainer tbody ").on('click', '.dailyPomoNow', function(){
+		// Get ID via TR
+		var line = $(this).parent().parent().parent().parent()[0];
+		// Removes the 'daily' from the ID, returning the id#
+		var dailyId = $(line).attr('id').split('y')[1];
+		var dailyId = parseInt(dailyId);
+
+		// Get daily via ID
+		var dailyList = lsGet('dailyList', 'parse');
+		var daily = _.where(dailyList, {id: dailyId})[0];
+		startDailyPomodoro(daily);
+	});
+}
+
 // Interface engines
 function startDailyPomodoro(daily){
-	// lsSet('dailyPomo', daily, 'object');]
+	lsSet('dailyPomo', daily, 'object');
 	
 	var pomoFocus = {}
 	pomoFocus.active = true;
@@ -149,16 +165,18 @@ function startDailyPomodoro(daily){
 	
 	savePomoFocus(pomoFocus, 'options');
 	
-	return // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
-	
+	return
 }
 
 function completeDailyPomodoro(daily){
 	var now = deltaTime(0).getTime();
 	daily.donePomos = daily.donePomos + 1;
 	daily.lastUpdate = now;
+	if (!daily.completed){ daily.completed = [];}
 	daily.completed.push(now);
 	updateDailyTask(daily);
+	lsDel('dailyPomo');
+	restoreDailyList('.dailyContainer');
 }
 
 function cancelDailyPomodoro(daily){
@@ -191,6 +209,15 @@ function gatherDailyChanges(){
 }
 
 // Backend
+function dailyFromId(dailyId){
+	var dailyId = parseInt(dailyId);
+	var dailyList = lsGet('dailyList', 'parse');
+	var daily = _.where(dailyList, {id: dailyId});
+	if (daily.length == 1) { daily = daily[0]; }
+	else { daily = false; }
+	return daily
+}
+
 function dailyTaskIndex(daily){
 	var dailyList = lsGet('dailyList', 'parse');
 	var oldDaily;
@@ -295,6 +322,7 @@ function createPomoFocusCountDown(){
 	.on('finish.countdown', function(event) {
 		togglePomodoro("configure");
 		PFpromptForce = true;
+		lsDel('dailyPomo');
 	});
 }
 
@@ -335,6 +363,7 @@ function pomoFocusButtons(){
 		if (pomoFocus.daily = true){ // daily tasks pomofocuses
 			var dailyList = lsGet('dailyList', 'parse');
 			var daily = _.where(dailyList, {id: pomoFocus.taskID});
+			if (daily.length == 1){ daily = daily[0]; }
 			completeDailyPomodoro(daily);
 		}
 		else { // Regular tasks pomofocuses
@@ -345,13 +374,12 @@ function pomoFocusButtons(){
 			$(itemRow).removeClass("nowTaskRow");
 			completeTask(itemRow, true);
 			notifyUser("Well done!", focusCompleteMsg, "PFNotify");
-			
-			togglePomodoro('configure');
-			PFpromptForce = false;
-			pomoFocus.endTime = new Date().getTime();
-			savePomoFocus(pomoFocus, 'options');
 		}
 		
+		togglePomodoro('configure');
+		PFpromptForce = false;
+		pomoFocus.endTime = new Date().getTime();
+		savePomoFocus(pomoFocus, 'options');
 		
 	});
 	
@@ -362,6 +390,8 @@ function pomoFocusButtons(){
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.daily = false;
 		savePomoFocus(pomoFocus, 'options');
+		lsDel('dailyPomo');
+		
 	});
 	
 	$("#pomoFocus5minutes").click(function(){
@@ -482,6 +512,7 @@ function pomodoroOnSteroids(){
 				else{
 					delete localStorage.pomoFocusTask;
 					$(".nowTaskRow").removeClass("nowTaskRow");
+					lsDel('dailyPomo');
 				}
 				updateTasksLog();
 			}
@@ -840,6 +871,7 @@ function enableToDo(){
 	clearCompletedTasks();		// Clear Completed
 	createPomoFocusCountDown();	// Initialize the timer and the on finish events
 	deleteTask();				// delete on X
+	enableDailyPomoFocus()		// tomatoes from dailies trigger focus
 	markTaskToday();			// Tags task for being done/not done today
 	pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
 	pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
