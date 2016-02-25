@@ -131,10 +131,17 @@ function fireRescueTime(APIKey){
 
 // Black List
 function CheckBlackList(curTabURL, curTabDomain) {
+	var daily = lsGet('dailyPomo', 'parse');
 	
 	var _result = "";
-	var _whiteList = localStorage.whiteList.split(",");
-	var _blackList = localStorage.blackList.split(",");
+	if (daily && daily.specialList != false) {
+		var _whiteList = daily.whiteList.split(",");
+		var _blackList = daily.blackList.split(",");
+	}
+	else {
+		var _whiteList = localStorage.whiteList.split(",");
+		var _blackList = localStorage.blackList.split(",");
+	}
 		
 		// Checks for blackList.
 		if (_blackList.indexOf(curTabDomain) != -1 && 
@@ -358,8 +365,6 @@ function rescueTimeChecker(){
 
 function savePomoFocusB(pomoFocusB){
 	pomoFocusB.lastUpdate = new Date();
-	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
-	// localStorage.pomoFocusB = JSON.stringify('pomoFocusB');
 	savePomoFocus(pomoFocusB, 'background');
 	localStorage.changedPart = 'To-Do';
 	return pomoFocusB

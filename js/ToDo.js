@@ -1,10 +1,13 @@
 /* Next Steps
 
 BOOM!	- Sync tasks in real time
-		- Fix lastID not being updated
-		- Create daily (repeated) tasks
-		- Change the blacklist and whitelist during daily pomoFocus
-		- Create daily tasks display
+BOOM!	- Fix lastID not being updated
+BOOM!	- Create daily (repeated) tasks
+BOOM!	- Change the blacklist and whitelist during daily pomoFocus
+BOOM!	- Create daily tasks display
+BOOM!	- Add new Daily tasks
+		- Delete Daily tasks
+		- Update Daily on PopUp
 
 */
 
@@ -34,9 +37,9 @@ if (!localStorage.pomoFocusP) {
 	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
 
-
 function checkTaskIDs(){
 	if (!localStorage.ToDoTasks) { localStorage.lastID = 0; return}
+	
 	// Check if there's an ID for every task. If not, create from 1. If so, feeds the others according to the greatest one.
 	var taskList = JSON.parse(localStorage.ToDoTasks);
 	var indexesList = [];
@@ -73,9 +76,197 @@ function checkTaskIDs(){
 	}
 	var maxID = _.max(newIDList);
 	
+	if ( localStorage.lastID > maxID ) { return }
+	
 	localStorage.lastID = maxID;
 	localStorage.ToDoTasks = JSON.stringify(taskList);
 }
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           Daily Tasks             *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+/*
+	Daily Tasks are tasks that should be repeated every day. Therefore, they are stored apart from regular tasks and are "unCompleted" every day.
+	
+	They also can have a number of PomoFocuses attached to it (think writte for 2 pomodoros everyday)
+	
+	They can have custom and separated black and whitelists
+	
+	They can be set on the options page ONLY, but can be seen from both Options and Popup
+	
+*/
+
+// Graphical Interface
+function restoreDailyList(container){
+	// remove the TRs, 
+	var dailyList = lsGet('dailyList', 'parse');
+	for (d = 0; d < dailyList.length; d++){
+		var daily = dailyList[d];
+		
+		var pomoFocuses = '';
+		var maxPomos = parseInt(daily.pomodoros);
+		var donePomos = parseInt(daily.donePomos) || 0;
+		var remainingPomos = maxPomos - donePomos;
+		
+		for (p = 0; p < remainingPomos; p++){
+			pomoFocuses = pomoFocuses + '<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
+		}
+		
+		var newLine = '' +
+			'<tr id="daily' + daily.id + '" class="dailyItemTR">' +
+				'<td>' +
+					'<div class="dailyTaskName">' +
+						'<span>' + daily.task + '</span>' + 
+					'</div>' + 
+					'<div class="pomoFocusHolders" >' + 
+						'<span>' + pomoFocuses + '</span>' +
+					'</div>' + 
+				'</td>' +
+			'</tr>'
+		;
+		$(container).append(newLine);	
+	}
+}
+
+// Interface engines
+function startDailyPomodoro(daily){
+	// lsSet('dailyPomo', daily, 'object');]
+	
+	var pomoFocus = {}
+	pomoFocus.active = true;
+	pomoFocus.audio = daily.binaural;
+	pomoFocus.duration = daily.duration;
+	pomoFocus.endTime = deltaTime(parseInt(pomoFocus.duration) * 60).getTime();
+	pomoFocus.hyper = daily.hyper || false;
+	pomoFocus.lastUpdate = deltaTime(0).getTime();
+	pomoFocus.silent = 'promptOnEnd';
+	pomoFocus.task = daily.task
+	pomoFocus.taskID = daily.id
+	pomoFocus.daily = true;
+	
+	savePomoFocus(pomoFocus, 'options');
+	
+	return // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
+	
+}
+
+function completeDailyPomodoro(daily){
+	var now = deltaTime(0).getTime();
+	daily.donePomos = daily.donePomos + 1;
+	daily.lastUpdate = now;
+	daily.completed.push(now);
+	updateDailyTask(daily);
+}
+
+function cancelDailyPomodoro(daily){
+	lsDel('dailyPomo');
+	return // // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
+}
+
+function gatherDailyChanges(){
+	// Values come from some DOM
+	var id = '';
+	var task = '';
+	var pomodoros = '';
+	var blackList = '';
+	var whiteList = '';
+	var hyper = '';
+	
+	var dailyList = lsGet('dailyList', 'parse');
+	var daily = {}
+	daily.id = id;
+	
+	var index = dailyTaskIndex(daily);
+	daily = dailyList[index];
+	daily.task = task;
+	daily.pomodoros = pomodoros;
+	daily.blackList = blackList;
+	daily.whiteList = whiteList;
+	daily.hyper = hyper;
+	
+	return daily
+}
+
+// Backend
+function dailyTaskIndex(daily){
+	var dailyList = lsGet('dailyList', 'parse');
+	var oldDaily;
+	
+	for (d = 0; d < dailyList.length; d++){
+		oldDaily = dailyList[d]
+		if (oldDaily.id == daily.id) { 
+			return d
+		}
+	}
+	console.log('something went wrong. Could not find daily task');
+	return false
+}
+
+function addDailyTask(task){
+	var newDaily = {};
+	newDaily.id = parseInt(lsGet('lastDailyID')) + 1;
+	newDaily.task = task;
+	newDaily.pomodoros = 1;
+	newDaily.donePomos = 0;
+	newDaily.specialList = false;
+	newDaily.blackList = ' ';
+	newDaily.whiteList = ' ';
+	newDaily.hyper = false;
+	newDaily.binaural = false;
+	newDaily.instaZap = false;
+	newDaily.description = '';
+	newDaily.lastUpdate = deltaTime(0).getTime();
+	newDaily.completed = [];
+	
+	var dailyList = lsGet('dailyList', 'parse') || [];
+	dailyList.push(newDaily);
+	lsSet('lastDailyID', newDaily.id);
+	lsSet('dailyList', dailyList, 'object');
+	
+	return newDaily;
+}
+
+function updateDailyTask(daily){
+	var dailyList = lsGet('dailyList', 'parse');
+	var index = dailyTaskIndex(daily);
+	
+	daily.lastUpdate = deltaTime(0).getTime();
+	dailyList[index] = daily;
+		
+	lsSet('dailyList', dailyList, 'object');
+}
+
+function removeDailyTask(daily){
+	var dailyList = lsGet('dailyList', 'parse');
+	var index = dailyTaskIndex(daily);
+	
+	dailyList.splice(index, 1);
+		
+	lsSet('dailyList', dailyList, 'object');
+}
+
+function renewDailyTask(){
+	var dailyList = lsGet('dailyList', 'parse');
+	for (d = 0; d < dailyList.length; d++){
+		dailyList[d].donePomos = 0;
+		dailyList[d].lastUpdate = deltaTime(0).getTime();
+	}
+	lsSet('dailyList', dailyList, 'object');
+}
+
+function syncDailies(page){
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.action == "DailyTasks" && request.target == page){
+				restoreTaskList();
+			}
+		}
+	);
+}
+
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
@@ -141,19 +332,27 @@ function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
 		var pomoFocus = getPomoFocus('background');
-		// var itemRow = $(".nowTaskRow");
-		var taskID = pomoFocus.taskID;
-		var itemRow = $("#" + taskID);
+		if (pomoFocus.daily = true){ // daily tasks pomofocuses
+			var dailyList = lsGet('dailyList', 'parse');
+			var daily = _.where(dailyList, {id: pomoFocus.taskID});
+			completeDailyPomodoro(daily);
+		}
+		else { // Regular tasks pomofocuses
+			var taskID = pomoFocus.taskID;
+			var itemRow = $("#" + taskID);
+			
+			if (itemRow.length == 0){ console.log("no Now Task"); return }
+			$(itemRow).removeClass("nowTaskRow");
+			completeTask(itemRow, true);
+			notifyUser("Well done!", focusCompleteMsg, "PFNotify");
+			
+			togglePomodoro('configure');
+			PFpromptForce = false;
+			pomoFocus.endTime = new Date().getTime();
+			savePomoFocus(pomoFocus, 'options');
+		}
 		
-		if (itemRow.length == 0){ console.log("no Now Task"); return }
-		$(itemRow).removeClass("nowTaskRow");
-		completeTask(itemRow, true);
-		notifyUser("Well done!", focusCompleteMsg, "PFNotify");
 		
-		togglePomodoro('configure');
-		PFpromptForce = false;
-		pomoFocus.endTime = new Date().getTime();
-		savePomoFocus(pomoFocus, 'options');
 	});
 	
 	$("#pomoFocusStop").click(function(){
@@ -161,6 +360,7 @@ function pomoFocusButtons(){
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
 		pomoFocus.endTime = new Date().getTime();
+		pomoFocus.daily = false;
 		savePomoFocus(pomoFocus, 'options');
 	});
 	
@@ -289,6 +489,7 @@ function pomodoroOnSteroids(){
 		
 	});
 }
+
 
 
 
@@ -642,7 +843,8 @@ function enableToDo(){
 	markTaskToday();			// Tags task for being done/not done today
 	pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
 	pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
-	restoreTaskList();			// Restore items
+	restoreTaskList();			// Restore from To Do
+	restoreDailyList();			// Restore from Dailies
 	updateCompletedTasks();		// Complete if checked
 	updateTasksCounter();		// Items counter:
 	

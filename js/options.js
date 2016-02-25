@@ -19,6 +19,139 @@ var toDoChecker;
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
+/* ***************           TO-DO SECTION           *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+// fill the daily tasks listStyleType
+function fillDailyList(){
+	$('.dailyListTR').remove()
+	var dailyList = lsGet('dailyList', 'parse');
+	for (d = 0; d < dailyList.length; d++ ) {
+		var daily = dailyList[d];
+		var speciaList;
+		if (daily.specialList == true) { specialList = 'Using'; }
+		else { specialList = 'Not Using'; }
+		
+		var newLine = '' +
+			'<tr id="daily' + daily.id + '" class="dailyListTR">' +
+				'<td>' + daily.task + '</td>' + 
+				'<td>' + daily.pomodoros + '</td>' +
+				'<td>' + specialList + '</td>' +
+			'</tr>';
+			
+		$('#dailyListTable > tbody').append(newLine);
+	}
+}
+
+function listenDailyListClick(){
+	$("#dailyListTable tbody ").on('click', '.dailyListTR', function(){
+		var clickedId = $(this).attr('id');
+		var dailyId = clickedId.split('y')[1];
+		
+		expandDailyDetails(dailyId);
+	});
+	
+	$("#saveDaily").click(function(){
+		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
+		gatherDailyInfo()
+		fillDailyList();
+	});
+	
+	$("#createNewDailyTaskButton").click(function(){
+		var newTaskName = $("#newDailyTaskInput").val()
+		if (newTaskName.length > 0 && newTaskName != " "){
+			$('#newDailyTaskInput').val('');
+			var newDaily = addDailyTask(newTaskName);
+			fillDailyList();
+			expandDailyDetails(newDaily.id)
+		} else{
+			
+		}
+	});
+}
+
+function expandDailyDetails(dailyId){
+	$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
+	
+	var dailyId = parseInt(dailyId);
+	var dailyList = lsGet('dailyList', 'parse');
+	var daily = _.where(dailyList, {id: dailyId});
+	
+	if (!daily) { return }
+	else { daily = daily[0];}
+	
+	var id 			= daily.id || parseInt(lsGet('lastDailyID')) + 1;
+	var task 		= daily.task || '';
+	var pomodoros	= daily.pomodoros 	|| '1';
+	var duration	= daily.duration 	|| '15';
+	var specialList = daily.specialList || false;
+	var blackList	= daily.blackList 	|| ' ';
+	var whiteList	= daily.whiteList 	|| ' ';
+	var binaural	= daily.binaural 	|| false;
+	var instaZap	= daily.instaZap 	|| false;
+	var description	= daily.description || '';
+	
+	// Fill fields
+	$('#dailyTaskTitleSpan').html(task);
+	
+	$('#dailyTaskIdInput')	.val(id);
+	$('#dailyTaskNameInput').val(task);
+	$('#pomosPerDaySelect')	.val(pomodoros);
+	$('#dailyPomoDuration')	.val(duration);
+	$('#specialListsInput')	.prop('checked', specialList);
+	$('#blackListDaily')	.val(blackList);
+	$('#whiteListDaily')	.val(whiteList);
+	$('#binauralDaily')		.prop('checked', binaural);
+	$('#instaZapDaily')		.prop('checked', instaZap);
+	$('#dailyDescriptionInput').val(description);
+	
+}
+
+function gatherDailyInfo(){
+	var newDaily = {};
+	newDaily.id				= parseInt($('#dailyTaskIdInput').val());
+	newDaily.task 			= $('#dailyTaskNameInput').val();
+	newDaily.pomodoros 		= $('#pomosPerDaySelect').val();
+	newDaily.duration 		= $('#dailyPomoDuration').val();
+	newDaily.specialList	= $('#specialListsInput').prop('checked')
+	newDaily.blackList 		= $('#blackListDaily').val();
+	newDaily.whiteList 		= $('#whiteListDaily').val();
+	newDaily.binaural 		= $('#binauralDaily').prop('checked');
+	newDaily.instaZap 		= $('#instaZapDaily').prop('checked');
+	newDaily.description 	= $('#dailyDescriptionInput').val();
+	
+	updateDailyTask(newDaily);
+}
+// button to add new daily task
+// on click, open details for that daily task
+	
+function enableBlackDaily(){
+	$('#blackListDaily')[0].value = '';
+	$('#blackListDaily').tagsInput({
+		'defaultText':'Add site',
+		'removeWithBackspace' : true
+	});
+	$('#blackListDaily_tagsinput').attr('style', '');
+	
+	
+	$('#whiteListDaily')[0].value = '';
+	$('#whiteListDaily').tagsInput({
+		'defaultText':'Add site',
+		'removeWithBackspace' : true
+	});
+	$('#whiteListDaily_tagsinput').attr('style', '');
+}
+
+function enableDaily(){
+	fillDailyList();
+	listenDailyListClick();
+	
+}
+// 
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
 /* ***************        RESCUETIME SECTION         *************** */
 /* ***************                                   *************** */
 /* ***************************************************************** */
@@ -658,26 +791,26 @@ function saveWhiteList(){
 function saveOptions() {
 	
 	var blackList = $("#blackList")[0].value;
-	lsSet('blackList = blackList);
+	lsSet('blackList', blackList);
 	
 	var whiteList = $("#whiteList")[0].value;
-	lsSet('whiteList = whiteList);
+	lsSet('whiteList', whiteList);
 	
 	var maxTabs = $("#maxTabsSelect").val();
-	lsSet('maxTabs = maxTabs);
+	lsSet('maxTabs', maxTabs);
 	
 	var zapOnClose = $("#zapOnClose").prop('checked');
-	lsSet('zapOnClose = zapOnClose);
+	lsSet('zapOnClose', zapOnClose);
 	
 	var zapPosition = $("#zapIntensity").val();
 	var zapIntensity = $("#zapIntensity").val();
 	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
-	lsSet('zapIntensity = zapIntensity);
+	lsSet('zapIntensity', zapIntensity);
 	
 	var vibrationPosition = $("#vibrationIntensity").val();
 	var vibrationIntensity = $("#vibrationIntensity").val();
 	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
-	lsSet('vibrationIntensity = vibrationIntensity);
+	lsSet('vibrationIntensity', vibrationIntensity);
 }
 
 function restoreOptions() {
@@ -829,6 +962,7 @@ function initialize() {
 	enableRescueTime();
 	enableToDo();
 	syncToDo('options');
+	enableDaily();
 	
 	$(".allCaps").text().toUpperCase();
 	
@@ -854,4 +988,6 @@ $( document ).ready(function() {
 		$('#userName').html(" " + localStorage.userName);
 	
 	restoreOptions();
+	if ($('#blackListDaily_tagsinput').length > 0){ return }
+	enableBlackDaily();
 });

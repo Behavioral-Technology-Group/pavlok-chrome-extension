@@ -61,16 +61,14 @@
 				<li class="linked roundedBorders"><a href="#tabs-1">Black List</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-2">Tab Numbers</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-3">Stimuli</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-4">Advanced Options</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-4">To-do List</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-5">AutoZapper</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
-				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox Advanced Timer</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-8">RescueTime</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-9">To-do List</a></li>
-				<li class="linked roundedBorders noDisplay"><a href="#tabs-10">SandBox Background</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-6">RescueTime</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-7">Advanced Options</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-8">About</a></li>
 			</ul>
 						
-			<div id="tabs-1">
+			<div id="tabs-1"> <!-- Black and WhiteList-->
 				<div id="blackListContainer">
 					<h2>Black List <img src="images/help.png" class="helpIcon" title='
 						<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
@@ -99,7 +97,7 @@
 				</div>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-2">
+			<div id="tabs-2"> <!-- Tab Numbers-->
 				<h2>Settings</h2>
 				<div id="settingsDIV">
 					<h2>Tab Number Control <img src="images/help.png" class="helpIcon" title='
@@ -151,7 +149,7 @@
 				
 				</div>
 			</div>
-			<div id="tabs-3">
+			<div id="tabs-3"> <!-- Stimuli -->
 				<h2><label for="zapInt">Zap Intensity (10% increments):</label></h2>
 				<p>
 					<input type="text" id="zapIntensity" readonly style="border:0; color:#f6931f; font-weight:bold;">        <input type="button" id="testZapInt" value="Test Zap">
@@ -171,143 +169,168 @@
 				<a href="#" id="resetIntensity">Reset values</a><br/>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-4">
-				<div id="stimuliNotificationsDiv">
-					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
-						<p>
-							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
-						</p>
-						<p>
-							We advise you <span class="yellow"><i>keep at least the Zap popup active</i></span>, as it will help you understand better why you get that zap. Being more conscious about it, you will be better off tackling the habit changes.
-						</p>
-						<p>
-							Note that you will only get the popup notifications checked here.
-						</p>
-						'>
-					</h2>
-					<p> Check the ones you wish to keep.</p>
-					<table>
-						<tr>
-							<td>
-								<p>
-									<input type="checkbox" id="notifyZap">Zap
-								</p>
-							</td>
-							<td>
-								<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
-							</td>
-							<td>
-								<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
-							</td>
-						</tr>
-					</table>
-					<br/>
+			<div id="tabs-4"> <!-- To-Do -->
+				<div id="toDoDiv" class="nooDisplay">
+					<h2>Your To-do List</h2>
+					<p>Your list can be seen and acted upon clicking in the extension icon, which is always a click away from you.</p>
+					<h3>Dailies</h3>
+					<div id="dailiesDiv">
+						<p>Dailies are actions that you want to repeat, such as creating habits. You can set quite a few things for them</p>
+						<div id="dailiesListDiv">
+							<table id="dailyListTable">
+								<thead>
+									<tr>
+										<th>Daily Task</th>
+										<th>Pomodoros</th>
+										<th>Special Lists</th>
+									</tr>
+									<tr>
+										<td colspan="3" id="newDailyTaskTD">
+											<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task"/>
+											<input type="button" id="createNewDailyTaskButton" value="Create"/>
+										</td>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<br/>
+							<div id="dailyListDetailsDIV"  class="noDisplay">
+							<hr>
+							<br/>
+								<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
+								<table id="dailyListDetails">
+									<tbody>
+										<tr class="nooDisplay">
+											<td class="categoryName">Daily ID</td>
+											<td id="dailyTaskIdTD">
+												<input type="text" id="dailyTaskIdInput" disabled/>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Daily Task</td>
+											<td id="dailyTaskTD">
+												<input type="text" id="dailyTaskNameInput" />
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Pomodoros per day</td>
+											<td id="pomodorosPerDayTD">
+												<select id="pomosPerDaySelect">
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+												</select>
+												 lasting for 
+												 <select id="dailyPomoDuration">
+													<option value="15">15</option>
+													<option value="25">25</option>
+													<option value="35">35</option>
+												 </select>
+												  minutes
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Page controls</td>
+											<td id="specialListsTD">
+												<input id="specialListsInput" type="checkbox" />Use special black and whitelists
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">BlackList</td>
+											<td id="blackListTD">
+												<div class="tagcontainer">
+													<input id="blackListDaily" value="">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">WhiteList</td>
+											<td id="whiteListTD">
+												<div class="tagcontainer">
+													<input id="whiteListDaily" value="">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Hyper Focus</td>
+											<td id="hyperFocusTD">
+												<div id="dailyHiperOptions">
+													<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
+													<input type="checkbox" id="instaZapDaily" />Instant zap on blacklist
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Description</td>
+											<td id="descriptionTD">
+												<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>
+											</td>
+										</tr>
+									
+									</tbody>
+								</table>
+								<input type="image" src="images/save.png" name="saveForm" class="submit" id="saveDaily"/>
+							</div>
+						</div>
+						
+					</div>
 				</div>
-				<hr>
-				<div id="zapFrequencyBlackListDiv">
-					<h2>Black List zapping countdown</h2>
-					<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
-					<select id="blackListTimeWindow">
-						<option value="3">3</option>
-						<option value="5">5</option>
-						<option value="10">10</option>
-						<option value="15">15</option>
-						<option value="30">30</option>
-					</select>
+				<br/>
+				<div id="musicControlDiv" class="noDisplay">
+					<h2>Pomodoro on Steroids</h2>
+					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
+					<p>
+						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+						<img src="images/help.png" class="helpIcon" title='
+						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+						'/>
+					</p>
+					<p>
+						<input type="checkbox" id="audioFocus">Binaural Soundtrack
+						<img src="images/help.png" class="helpIcon" title='
+						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
+						'/>
+					</p>
 				</div>
-				<hr>
-				<div id="tabNumbersAdvancedDiv">
-					<h2>Tab Numbers extras</h2>
-					<input type="checkbox" name="zapOnClose" id="zapOnClose" />Zap when closing
-					<img src="images/help.png" class="helpIcon" title="
-						<p>For those really inclined to stop opening to many habits!</p>
-						<p>This will send a zap whenever you are above your tab limit, <b><span class='yellow'>EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You'll sure think about opening more tabs after that!</p>
-						<p>If not checked, you'll only get zaps when opening tabs above the your limit.</p>
-					">
-					<p>Count tabs on 
-					<select id="allTabsCountSelect">
-						<option value="allWindows">ALL windows</option>
-						<option value="activeWindow">CURRENT Window</option>
-					</select>
-					<img src="images/help.png" class="helpIcon" title="
-						<p>This option makes the Extension count either the tabs on the window you are working or on all windows open!</p>
-						<p><b><span class='yellow'>If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class='yellow'>YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You'll sure think about opening more tabs after that!</p>
-						<p>If not checked, you'll Chrome will only work on your current window. In the same example above, <b><span class='yellow'>YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
-					"></p>
+				<div id="pomodoroFocusDiv" class="noDisplay">
+					<h2><span id="pomoFocusTask"></span></h2>
+					<h3>Remaining Time: 
+						<span id="pomoFocusRemainingTime" class="yellow"></span>
+					</h3>
+					
+					<p>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-check-square-o"></i>
+							</span>
+						</a>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-stop-circle-o"></i>
+							</span>
+						</a>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-plus"></i>
+							</span>
+						</a>
+					</p>
+					
+					<!-- <div class="hyperFocusControlDiv noDisplay">
+						<h3>Hyper Focus Controls</p>
+						<h4>Binaural Audio Controls</h4>
+						<audio controls>
+							<source src="audio/focus1.mp3" type="audio/ogg">
+							Your browser does not support the audio element.
+						</audio>
+					</div> -->
 				</div>
-				<hr>
-				<div id="timeDaysDiv" class="Display">
-					<h2>Conform it to you schedule 
-					<img src="images/help.png" class="helpIcon" title='
-						<p>
-							Pavlok will only work in the days you checked and while you are between the start and end times.
-						</p>
-						<p>
-							For instance: you set a 9-to-5 (check weekdays and put <span class="yellow"><i>Start at 09:00</i></span> and <span class="yellow"><i>End at 17:00</i></span>. If you visit some blocked site (say, Facebook) at 10:30, you will get notifications and a zap, just as you would expect.
-						</p>
-						<p>
-							If you happen  to get to Facebook by 08:00, there will be nothing going on from Pavlok for you.
-						</p>
-						<p>
-							You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
-						</p>
-						'>
-					</h2>
-					<p>Select days and hours for Pavlok to help you focus</p>
-					<table id="activeDaysTable">
-						<tr>
-							<th>
-								<input type="checkbox" id="sundayActive" class="activeDay"><br />
-								<label for="sundayActive">Sunday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="mondayActive" class="activeDay"><br />
-								<label for="mondayActive">Monday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="tuesdayActive" class="activeDay"><br />
-								<label for="tuesdayActive">Tuesday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="wednesdayActive" class="activeDay"><br />
-								<label for="wednesdayActive">Wednesday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="thursdayActive" class="activeDay"><br />
-								<label for="thursdayActive">Thursday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="fridayActive" class="activeDay"><br />
-								<label for="fridayActive">Friday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="saturdayActive" class="activeDay"><br />
-								<label for="saturdayActive">Saturday</label>
-							</th>
-						</tr>
-						<tr class="display" id="generalActiveHours">
-							<td>
-								<select id="timeFormat">
-									<option value="12">AM/PM</option>
-									<option value="24">24H</option>
-								</select>
-							</td>
-							<td colspan="3">
-								<p>Start <input class="100px timeSelectors" id="generalActiveTimeStart"></p>
-							</td>
-							<td colspan="3">
-								<p>End <input class="100px timeSelectors" id="generalActiveTimeEnd"></p>
-							</td>
-							<td class="noDisplay">
-								<input id="eachDay" type="checkbox">Each day
-							</td>
-						</tr>
-					</table>
-
-				</div>
-				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-5">
+			<div id="tabs-5"> <!-- AutoZapper -->
 				<h2>Free up your hands!</h2>
 				<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
 				<p>Here is how it works:</p>
@@ -350,259 +373,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div id="tabs-6">
-				<h2>About extension</h2>
-				<p>This extension is all about getting you on track to <b>your</b> habit goals.</p>
-				<p>If you struggle to keep distraction at bay when near the computer, this comes to rescue. There will be clear stakes here, as you'll be simultaneously made aware of the bad habit (and to a fix!) and get uncomfortable stimuli to assotiate with the bad habit.</p>
-				
-				<h4>BlackList reasoning</h4>
-				<p>When you get on a Blacklisted site, you'll be notified about it and prompted to change your behavior (aka <i>"Get the hell outta here!"</i>). This will remind you to think <b>why</b> are you going there and decide if it's worth doing it. To help you ponder, the extension adds a zap every 5 seconds you stay in the bad bad bad sites.</p>
-				<p>It gets way easier to stick and change your behavior when consequences are real AND you get called in real time about the bad behavior, with a chance to fix it. You'll soon get rid of bad browsing habits with it!</p>
-				<p>There are also some advanced options, like Whitelist. It came in because sometimes there are gems amidst the dirty. For instance, there should be no problem is listening to music using Amazon, but you don't want to loosen your wallet nor your evening browsing it's seductive shop. So you can Blacklist <span class="yellow">amazon.com</span>, but create an exception (whitelist) for <span class="yellow">amazon.com<b>/music</b></span></p>
-				
-				<h4>Tab limit reasoning</h4>
-				<p>It will also help you look at the messy infinite number of open tabs in a more concious way. You set a limit and it will tell you whenever you start to get close or over the limit. If the simple mention of the limit isn't enough to make you ponder why so many tabs, there will be a zap to make it more enlightening. Soon there will be no more 1264376 tabs open and a slow pc because of it!</p>
-				<p>If you want to make a crash change to your behavior, it can be sped up using the <span class="yellow">zap on close</span> option. Pavlok won't zap you when you adjust course (closing excess tabs, for instance). However, it's possible to make yourself way more sensible to the tab numbers by adding more stimulus. This option will make you remember TWICE not to open excess tabs. Not necessary, but sure speed breaking the tabs hoarding habit.</p>
-				<p>This Extension is using <i><span id="server"></span></i> server.</p>.
-			</div>
-			<div id="tabs-7" class="noDisplay">
-				<p id="feedback">
-					<span>You've selected:</span> <span id="select-result">none</span>.
-				</p>
-				<table id="selectable">
-					<tr>
-						<th>Day</th>
-						<th>00</th>
-						<th>01</th>
-						<th>02</th>
-						<th>03</th>
-						<th>04</th>
-						<th>05</th>
-						<th>06</th>
-						<th>07</th>
-						<th>08</th>
-						<th>09</th>
-						<th>10</th>
-						<th>11</th>
-						<th>12</th>
-						<th>13</th>
-						<th>14</th>
-						<th>15</th>
-						<th>16</th>
-						<th>17</th>
-						<th>18</th>
-						<th>19</th>
-						<th>20</th>
-						<th>21</th>
-						<th>22</th>
-						<th>23</th>
-					</tr>
-					<tr>
-						<td>Monday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Tuesday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Wednesday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Thursday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Friday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Saturday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Sunday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-				</table>
-			</div>
-			<div id="tabs-8">
+			<div id="tabs-6"> <!-- RescueTime -->
 				<h2>Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
 					<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
 					<p>Pavlok will make notifications visceral!</p>
@@ -739,94 +510,158 @@
 				
 				
 			</div>
-			<div id="tabs-9">
-				<div id="toDoDiv" class="nooDisplay">
-					<h2>Your To-do List</h2>
-					<div id="toDoAction">
-						<table id="toDoTable">
-							<thead>
-								<tr id="toDoTableHeader">
-									<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td id="toDoNItemsLeft">1 Item Left</td>
-									<td id="allToDo" class="toDoScopes">
-										<a href="#" id="allToDoLink">All</a>
-									</td>
-									<td id="todayToDo" class="toDoScopes">
-										<a href="#" id="todayToDoLink">Today</a>
-									</td>
-									<td id="completedToDo" class="toDoScopes">
-										<a href="#" id="doneToDoLink">Done</a>
-									</td>
-									<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
+			<div id="tabs-7"> <!-- Advanced Options -->
+				<div id="stimuliNotificationsDiv">
+					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
+						<p>
+							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
+						</p>
+						<p>
+							We advise you <span class="yellow"><i>keep at least the Zap popup active</i></span>, as it will help you understand better why you get that zap. Being more conscious about it, you will be better off tackling the habit changes.
+						</p>
+						<p>
+							Note that you will only get the popup notifications checked here.
+						</p>
+						'>
+					</h2>
+					<p> Check the ones you wish to keep.</p>
+					<table>
+						<tr>
+							<td>
+								<p>
+									<input type="checkbox" id="notifyZap">Zap
+								</p>
+							</td>
+							<td>
+								<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
+							</td>
+							<td>
+								<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
+							</td>
+						</tr>
+					</table>
+					<br/>
 				</div>
-				<br/>
-				<div id="musicControlDiv" class="noDisplay">
-					<h2>Pomodoro on Steroids</h2>
-					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-					<p>
-						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-						<img src="images/help.png" class="helpIcon" title='
-						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-						'/>
-					</p>
-					<p>
-						<input type="checkbox" id="audioFocus">Binaural Soundtrack
-						<img src="images/help.png" class="helpIcon" title='
-						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
-						'/>
-					</p>
+				<hr>
+				<div id="zapFrequencyBlackListDiv">
+					<h2>Black List zapping countdown</h2>
+					<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
+					<select id="blackListTimeWindow">
+						<option value="3">3</option>
+						<option value="5">5</option>
+						<option value="10">10</option>
+						<option value="15">15</option>
+						<option value="30">30</option>
+					</select>
 				</div>
-				<div id="pomodoroFocusDiv" class="noDisplay">
-					<h2><span id="pomoFocusTask"></span></h2>
-					<h3>Remaining Time: 
-						<span id="pomoFocusRemainingTime" class="yellow"></span>
-					</h3>
-					
-					<p>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-check-square-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-stop-circle-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-plus"></i>
-							</span>
-						</a>
-					</p>
-					
-					<!-- <div class="hyperFocusControlDiv noDisplay">
-						<h3>Hyper Focus Controls</p>
-						<h4>Binaural Audio Controls</h4>
-						<audio controls>
-							<source src="audio/focus1.mp3" type="audio/ogg">
-							Your browser does not support the audio element.
-						</audio>
-					</div> -->
+				<hr>
+				<div id="tabNumbersAdvancedDiv">
+					<h2>Tab Numbers extras</h2>
+					<input type="checkbox" name="zapOnClose" id="zapOnClose" />Zap when closing
+					<img src="images/help.png" class="helpIcon" title="
+						<p>For those really inclined to stop opening to many habits!</p>
+						<p>This will send a zap whenever you are above your tab limit, <b><span class='yellow'>EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You'll sure think about opening more tabs after that!</p>
+						<p>If not checked, you'll only get zaps when opening tabs above the your limit.</p>
+					">
+					<p>Count tabs on 
+					<select id="allTabsCountSelect">
+						<option value="allWindows">ALL windows</option>
+						<option value="activeWindow">CURRENT Window</option>
+					</select>
+					<img src="images/help.png" class="helpIcon" title="
+						<p>This option makes the Extension count either the tabs on the window you are working or on all windows open!</p>
+						<p><b><span class='yellow'>If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class='yellow'>YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You'll sure think about opening more tabs after that!</p>
+						<p>If not checked, you'll Chrome will only work on your current window. In the same example above, <b><span class='yellow'>YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
+					"></p>
 				</div>
+				<hr>
+				<div id="timeDaysDiv" class="Display">
+					<h2>Conform it to you schedule 
+					<img src="images/help.png" class="helpIcon" title='
+						<p>
+							Pavlok will only work in the days you checked and while you are between the start and end times.
+						</p>
+						<p>
+							For instance: you set a 9-to-5 (check weekdays and put <span class="yellow"><i>Start at 09:00</i></span> and <span class="yellow"><i>End at 17:00</i></span>. If you visit some blocked site (say, Facebook) at 10:30, you will get notifications and a zap, just as you would expect.
+						</p>
+						<p>
+							If you happen  to get to Facebook by 08:00, there will be nothing going on from Pavlok for you.
+						</p>
+						<p>
+							You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
+						</p>
+						'>
+					</h2>
+					<p>Select days and hours for Pavlok to help you focus</p>
+					<table id="activeDaysTable">
+						<tr>
+							<th>
+								<input type="checkbox" id="sundayActive" class="activeDay"><br />
+								<label for="sundayActive">Sunday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="mondayActive" class="activeDay"><br />
+								<label for="mondayActive">Monday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="tuesdayActive" class="activeDay"><br />
+								<label for="tuesdayActive">Tuesday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="wednesdayActive" class="activeDay"><br />
+								<label for="wednesdayActive">Wednesday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="thursdayActive" class="activeDay"><br />
+								<label for="thursdayActive">Thursday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="fridayActive" class="activeDay"><br />
+								<label for="fridayActive">Friday</label>
+							</th>
+							<th>
+								<input type="checkbox" id="saturdayActive" class="activeDay"><br />
+								<label for="saturdayActive">Saturday</label>
+							</th>
+						</tr>
+						<tr class="display" id="generalActiveHours">
+							<td>
+								<select id="timeFormat">
+									<option value="12">AM/PM</option>
+									<option value="24">24H</option>
+								</select>
+							</td>
+							<td colspan="3">
+								<p>Start <input class="100px timeSelectors" id="generalActiveTimeStart"></p>
+							</td>
+							<td colspan="3">
+								<p>End <input class="100px timeSelectors" id="generalActiveTimeEnd"></p>
+							</td>
+							<td class="noDisplay">
+								<input id="eachDay" type="checkbox">Each day
+							</td>
+						</tr>
+					</table>
+
+				</div>
+				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-10" class="noDisplay">
-				<input type="button" id="startClick" value="1 min" />
-				<input type="button" id="testClick" value="+5" />
-				<input type="button" id="zeroOut" value="0" />
-				<span id="renderBG">white</span>
-				<div id="renderBGClock"></div>
+			<div id="tabs-8"> <!-- About -->
+				<h2>About extension</h2>
+				<p>This extension is all about getting you on track to <b>your</b> habit goals.</p>
+				<p>If you struggle to keep distraction at bay when near the computer, this comes to rescue. There will be clear stakes here, as you'll be simultaneously made aware of the bad habit (and to a fix!) and get uncomfortable stimuli to assotiate with the bad habit.</p>
+				
+				<h4>BlackList reasoning</h4>
+				<p>When you get on a Blacklisted site, you'll be notified about it and prompted to change your behavior (aka <i>"Get the hell outta here!"</i>). This will remind you to think <b>why</b> are you going there and decide if it's worth doing it. To help you ponder, the extension adds a zap every 5 seconds you stay in the bad bad bad sites.</p>
+				<p>It gets way easier to stick and change your behavior when consequences are real AND you get called in real time about the bad behavior, with a chance to fix it. You'll soon get rid of bad browsing habits with it!</p>
+				<p>There are also some advanced options, like Whitelist. It came in because sometimes there are gems amidst the dirty. For instance, there should be no problem is listening to music using Amazon, but you don't want to loosen your wallet nor your evening browsing it's seductive shop. So you can Blacklist <span class="yellow">amazon.com</span>, but create an exception (whitelist) for <span class="yellow">amazon.com<b>/music</b></span></p>
+				
+				<h4>Tab limit reasoning</h4>
+				<p>It will also help you look at the messy infinite number of open tabs in a more concious way. You set a limit and it will tell you whenever you start to get close or over the limit. If the simple mention of the limit isn't enough to make you ponder why so many tabs, there will be a zap to make it more enlightening. Soon there will be no more 1264376 tabs open and a slow pc because of it!</p>
+				<p>If you want to make a crash change to your behavior, it can be sped up using the <span class="yellow">zap on close</span> option. Pavlok won't zap you when you adjust course (closing excess tabs, for instance). However, it's possible to make yourself way more sensible to the tab numbers by adding more stimulus. This option will make you remember TWICE not to open excess tabs. Not necessary, but sure speed breaking the tabs hoarding habit.</p>
+				<p>This Extension is using <i><span id="server"></span></i> server.</p>.
 			</div>
+			
 		</div>
 	</div>
 </body>

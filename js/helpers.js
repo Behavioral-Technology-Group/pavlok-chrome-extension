@@ -314,13 +314,19 @@ function UpdateTabCount(tabCount) {
 }
 
 function countTabs(mode, callback){
+	accountedWindowsId = [];
 	totalTabs = 0;
+	lastWindowID = 0;
 	if (mode == 'allWindows') {
 		chrome.windows.getAll({populate:true},function(windows){
 			windows.forEach(function(window){
-				var winTabs = window.tabs.length;
-				totalTabs = totalTabs + winTabs;
+				if (accountedWindowsId.indexOf(window.id) == -1){
+					accountedWindowsId.push(window.id);
+					var winTabs = window.tabs.length;
+					totalTabs = totalTabs + winTabs;
+				}
 			});
+			
 			
 			if (typeof callback === "function"){
 				callback(totalTabs);
