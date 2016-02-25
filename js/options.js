@@ -67,8 +67,7 @@ function listenDailyListClick(){
 		fillDailyList();
 		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
 	});
-	
-	
+		
 	$("#createNewDailyTaskButton").click(function(){
 		var newTaskName = $("#newDailyTaskInput").val()
 		if (newTaskName.length > 0 && newTaskName != " "){
@@ -131,6 +130,7 @@ function gatherDailyInfo(){
 	newDaily.binaural 		= $('#binauralDaily').prop('checked');
 	newDaily.instaZap 		= $('#instaZapDaily').prop('checked');
 	newDaily.description 	= $('#dailyDescriptionInput').val();
+	newDaily.hyper			= true;
 	
 	updateDailyTask(newDaily);
 }

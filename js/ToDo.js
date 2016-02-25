@@ -184,30 +184,6 @@ function cancelDailyPomodoro(daily){
 	return // // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
 }
 
-function gatherDailyChanges(){
-	// Values come from some DOM
-	var id = '';
-	var task = '';
-	var pomodoros = '';
-	var blackList = '';
-	var whiteList = '';
-	var hyper = '';
-	
-	var dailyList = lsGet('dailyList', 'parse');
-	var daily = {}
-	daily.id = id;
-	
-	var index = dailyTaskIndex(daily);
-	daily = dailyList[index];
-	daily.task = task;
-	daily.pomodoros = pomodoros;
-	daily.blackList = blackList;
-	daily.whiteList = whiteList;
-	daily.hyper = hyper;
-	
-	return daily
-}
-
 // Backend
 function dailyFromId(dailyId){
 	var dailyId = parseInt(dailyId);
@@ -241,7 +217,7 @@ function addDailyTask(task){
 	newDaily.specialList = false;
 	newDaily.blackList = ' ';
 	newDaily.whiteList = ' ';
-	newDaily.hyper = false;
+	newDaily.hyper = true;
 	newDaily.binaural = false;
 	newDaily.instaZap = false;
 	newDaily.description = '';
@@ -365,6 +341,7 @@ function pomoFocusButtons(){
 			var daily = _.where(dailyList, {id: pomoFocus.taskID});
 			if (daily.length == 1){ daily = daily[0]; }
 			completeDailyPomodoro(daily);
+			restoreDailyList('.dailyContainer');
 		}
 		else { // Regular tasks pomofocuses
 			var taskID = pomoFocus.taskID;
@@ -439,7 +416,9 @@ function togglePomodoro(toState){
 		$(confDiv).addClass('noDisplay');
 		$(focusDiv).removeClass('noDisplay');
 		
-		if ( pomoFocus.hyper == 'true' ) { $(hyperControl).removeClass('noDisplay'); }
+		if ( pomoFocus.hyper == 'true' || pomoFocus.hyper == true) { 
+			$(hyperControl).removeClass('noDisplay'); 
+		}
 		else { $(hyperControl).addClass('noDisplay'); }
 	}
 	else {
