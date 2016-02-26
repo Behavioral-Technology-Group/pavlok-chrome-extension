@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "test"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -534,7 +534,10 @@ function oauth() {
 		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
 		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
 	}
-	
+	else if (usage == "varunSTAGE" || usage || "varunMVP" ){
+		var clientID = "f55f448e93f68a8a3b9e4723be626e62553d6d54c9ebe2924bf022c4e88695e0";
+		var clientSecret = "7cf4d85e884193dab1365845dcb1593c5c6529c538d9310df3b7c485daf40682";
+	}
 	var authURL = localStorage.baseAddress + "oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +

@@ -573,6 +573,7 @@ function initialize() {
 				myAudio.volume = newAudioVol;
 			}
 			
+			
 		}
 	);
 }

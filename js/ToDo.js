@@ -184,13 +184,16 @@ function startDailyPomodoro(daily){
 
 function completeDailyPomodoro(daily){
 	var now = deltaTime(0).getTime();
+	if (!daily.donePomos) { daily.donePomos = 0}
 	daily.donePomos = daily.donePomos + 1;
 	daily.lastUpdate = now;
 	if (!daily.completed){ daily.completed = [];}
 	daily.completed.push(now);
 	updateDailyTask(daily);
 	
-	var missing = daily.pomodoros - daily.donePomos;
+	
+	
+	var missing = parseInt(daily.pomodoros) - parseInt(daily.donePomos);
 	var msg;
 	
 	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
