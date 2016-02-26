@@ -583,3 +583,7 @@ div.buttonHolder{
 	border-radius: 25px;
 	text-decoration: none;
 }
+
+*{
+    outline:none;
+}
