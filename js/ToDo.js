@@ -1,10 +1,12 @@
 /* Next Steps
+
 		- Page Controls should determine if BlackList and WhiteList are editable or not
-BOOM!	- Update Black and WhiteList to show proper lists without the backspace
 		- Instazap has to be thought;
-		- Test Binaural button should work
+		- Put a counter on every tab when in pomoFocus
+		
 
-
+BOOM!	- Update Black and WhiteList to show proper lists without the backspace
+BOOM!	- Test Binaural button should work
 BOOM!	- Sync tasks in real time
 BOOM!	- Fix lastID not being updated
 BOOM!	- Create daily (repeated) tasks
@@ -433,10 +435,12 @@ function pomoFocusButtons(){
 		
 	});
 	$("#vDownBinaural").click(function(){
-		alert("v down");
+		// alert("v down");
+		msgExt('volumeDown', 'background');
 	});
 	$("#vUpBinaural").click(function(){
-		alert("v up");
+		// alert("v up");
+		msgExt('volumeUp', 'background');
 	});
 }
 
