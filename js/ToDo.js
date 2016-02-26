@@ -1,6 +1,6 @@
 /* Next Steps
 		- Page Controls should determine if BlackList and WhiteList are editable or not
-		- Update Black and WhiteList to show proper lists without the backspace
+BOOM!	- Update Black and WhiteList to show proper lists without the backspace
 		- Instazap has to be thought;
 		- Test Binaural button should work
 
@@ -22,6 +22,7 @@ BOOM!	- Update Daily on PopUp
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+if (!localStorage.lastDay) { localStorage.lastDay = new Date().toDateString() }
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
@@ -108,6 +109,8 @@ function checkTaskIDs(){
 
 // Graphical Interface
 function restoreDailyList(container){
+	renewDailyTask();
+	
 	// remove the TRs, 
 	$('.dailyItemTR').remove();
 	var dailyList = lsGet('dailyList', 'parse');
@@ -137,6 +140,8 @@ function restoreDailyList(container){
 		;
 		$(container).append(newLine);	
 	}
+	
+	
 }
 
 function enableDailyPomoFocus(){
@@ -182,6 +187,15 @@ function completeDailyPomodoro(daily){
 	if (!daily.completed){ daily.completed = [];}
 	daily.completed.push(now);
 	updateDailyTask(daily);
+	
+	var missing = daily.pomodoros - daily.donePomos;
+	var msg;
+	
+	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
+	else { msg = "Good job there! Only " + missing + " to go now!"; }
+	notifyUser('Way to go!', msg, 'PFNotify');
+	stimuli('vibration');
+	
 	lsDel('dailyPomo');
 	restoreDailyList('.dailyContainer');
 }
@@ -259,12 +273,17 @@ function removeDailyTask(daily){
 }
 
 function renewDailyTask(){
-	var dailyList = lsGet('dailyList', 'parse');
-	for (d = 0; d < dailyList.length; d++){
-		dailyList[d].donePomos = 0;
-		dailyList[d].lastUpdate = deltaTime(0).getTime();
+	var today = new Date().toDateString();
+	if ( today == localStorage.lastDay ) { return }
+	else {
+		var dailyList = lsGet('dailyList', 'parse');
+		for (d = 0; d < dailyList.length; d++){
+			dailyList[d].donePomos = 0;
+			dailyList[d].lastUpdate = deltaTime(0).getTime();
+		}
+		lsSet('dailyList', dailyList, 'object');
+		lsSet('lastDay', today);
 	}
-	lsSet('dailyList', dailyList, 'object');
 }
 
 function syncDailies(page){
@@ -277,6 +296,15 @@ function syncDailies(page){
 	);
 }
 
+function sampleBinaural(){
+	// Play for 5 seconds
+	var testAudio = new Audio('../Audio/focus1min.mp3');
+	testAudio.play();
+	var endTestAudio = setTimeout(function(){
+		testAudio.pause();
+		testAudio.currentTime = 0;
+	}, 5 * 1000);
+}
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
@@ -506,8 +534,6 @@ function pomodoroOnSteroids(){
 		
 	});
 }
-
-
 
 
 /* ***************************************************************** */

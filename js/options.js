@@ -79,6 +79,11 @@ function listenDailyListClick(){
 			
 		}
 	});
+
+	$("#testBinaural").click(function(){
+		sampleBinaural();
+	});
+	
 }
 
 function expandDailyDetails(dailyId){
@@ -132,8 +137,6 @@ function gatherDailyInfo(){
 	
 	updateDailyTask(newDaily);
 }
-// button to add new daily task
-// on click, open details for that daily task
 	
 function enableBlackDaily(){
 	$('#blackListDaily')[0].value = ' ';

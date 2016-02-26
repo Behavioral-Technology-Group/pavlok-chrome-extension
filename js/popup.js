@@ -52,7 +52,6 @@ $( document ).ready(function() {
 	showOptions(localStorage.accessToken);
 	restoreDailyList('.dailyContainer');
 	
-	
 	$("#signOut").click(function(){
 		signOut();
 	});
