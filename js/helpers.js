@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -42,6 +42,90 @@ $( document ).ready(function(){
 		});
 	}
 });
+
+/* Future universal settings object
+
+var settings = {};
+settings.siteLists = {};
+settings.tabsControl = {};
+settings.stimuli = {};
+settings.toDos = {};
+settings.autoZapper = {};
+settings.integrations = {};
+settings.schedule = {};
+settings.user = {};
+
+// Site lists (black and whitelists)
+settings.siteLists.blackList = localStorage.blackList;
+settings.siteLists.blackList = localStorage.whiteList;
+settings.siteLists.blackList = localStorage.timeWindow;
+
+
+// Tab numbers
+settings.tabsControl.maxTabs = localStorage.maxTabs;
+settings.tabsControl.zapOnClose = localStorage.zapOnClose;
+settings.tabsControl.allWindows = localStorage.allWindows;
+
+
+// Stimuli intensity
+settings.stimuli.baseAddress = localStorage.baseAddress;
+settings.stimuli.zapIntensity = localStorage.zapIntensity;
+settings.stimuli.vibrationIntensity = localStorage.vibrationIntensity;
+settings.stimuli.beepVolume = localStorage.beepVolume;
+
+settings.stimuli.zapNotify = localStorage.notifyZap;
+settings.stimuli.vibrationNotify = localStorage.notifyVibration;
+settings.stimuli.beepNotify = localStorage.notifyBeep;
+
+
+// To-do Lists
+settings.toDos.dailies = localStorage.dailies;
+settings.toDos.lastDailyID = localStorage.lastDailyID;
+
+settings.toDos.tasks = localStorage.ToDoTasks;
+settings.toDos.timeConstraints = '';
+settings.toDos.pomoFocus = localStorage.pomoFocus;
+
+
+// AutoZapper
+settings.AutoZapper.intensity = '';
+settings.AutoZapper.duration = '';
+settings.AutoZapper.frequency = '';
+settings.AutoZapper.lastSession = '';
+
+
+// Integrations
+settings.integrations.rescueTime.active = '';
+settings.integrations.rescueTime.APIKey = '';
+settings.integrations.rescueTime.frequency = '';
+settings.integrations.rescueTime.NegLimit = '';
+settings.integrations.rescueTime.NegStimulus = '';
+settings.integrations.rescueTime.NegStimulus = '';
+settings.integrations.rescueTime.PosStimulus = '';
+settings.integrations.rescueTime.PosStimulus = '';
+settings.integrations.rescueTime.WarnStimulus = '';
+settings.integrations.rescueTime.WarnStimulus = '';
+
+
+// Scheduler
+settings.schedule.timeStart = '';
+settings.schedule.timeEnd = '';
+settings.activeDays = [];
+
+
+// User
+settings.user.name = '';
+settings.user.email = '';
+settings.user.accessToken = '';
+
+
+// User prompts
+settings.prompts.listOfPrompts = [];
+settings.prompts.lastShown = '';
+settings.prompts.showAgain = '';
+
+*/
+
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
 lsSet('baseAddress', baseAddress);

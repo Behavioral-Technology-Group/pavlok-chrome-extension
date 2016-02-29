@@ -39,10 +39,6 @@ function showOptions(accessToken){
 	}
 }
 
-function enableDailyFocusButtons(){
-	
-}
-
 $( document ).ready(function() {
 	enableTooltips();
 	presentName();
@@ -51,33 +47,12 @@ $( document ).ready(function() {
 	syncToDo('options');
 	showOptions(localStorage.accessToken);
 	restoreDailyList('.dailyContainer');
-	
+		
 	$("#signOut").click(function(){
 		signOut();
 	});
 	
-	
-	
-	/* Legacy code. Max tabs and black/white lists moved to options
-	// // Restore Max Tabs
-	// $("#maxTabsSelect").val(localStorage.maxTabs);
-	// $("#maxTabsSelect").change(function(){
-		// localStorage.maxTabs = $(this).val();
-	// });
-	
-	// // Restore values for Black and White Lists along with enabling tags
-	// $('#blackList')[0].value = localStorage["blackList"];
-	// $('#blackList').tagsInput({
-		// 'onChange' : saveBlackList,
-		// 'defaultText':'Add site',
-		// 'removeWithBackspace' : true
-	// });
-	
-	// $('#whiteList')[0].value = localStorage["whiteList"];
-	// $('#whiteList').tagsInput({
-		// 'onChange' : saveWhiteList,
-		// 'defaultText':'Add site',
-		// 'removeWithBackspace' : true
-	// });
-	*/
+	$("#instaZap").change(function(){
+		lsSet('instaZap', $(this).prop( "checked" ));
+	});
 });

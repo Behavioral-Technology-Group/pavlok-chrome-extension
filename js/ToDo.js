@@ -376,7 +376,7 @@ function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
 		var pomoFocus = getPomoFocus('background');
-		if (pomoFocus.daily = true){ // daily tasks pomofocuses
+		if (pomoFocus.daily == true){ // daily tasks pomofocuses
 			var dailyList = lsGet('dailyList', 'parse');
 			var daily = _.where(dailyList, {id: pomoFocus.taskID});
 			if (daily.length == 1){ daily = daily[0]; }
@@ -395,6 +395,7 @@ function pomoFocusButtons(){
 		
 		togglePomodoro('configure');
 		PFpromptForce = false;
+		localStorage.instaZap = 'false';
 		pomoFocus.endTime = new Date().getTime();
 		savePomoFocus(pomoFocus, 'options');
 		
@@ -406,6 +407,7 @@ function pomoFocusButtons(){
 		PFpromptForce = false;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.daily = false;
+		localStorage.instaZap = 'false';
 		savePomoFocus(pomoFocus, 'options');
 		lsDel('dailyPomo');
 		
@@ -416,7 +418,6 @@ function pomoFocusButtons(){
 		var endTime = pomoFocus.endTime;
 		var newEndTime = endTime + 5 * 60 * 1000;
 		pomoFocus.endTime = newEndTime;
-		
 		savePomoFocus(pomoFocus, 'options');
 	});
 
@@ -450,6 +451,10 @@ function pomoFocusButtons(){
 function togglePomodoro(toState){
 	var pomoFocus = getPomoFocus('background');
 	
+	var instaZap = lsGet('instaZap');
+	instaZap = instaZap == 'true';
+	$("#instaZap").prop( "checked", instaZap);
+
 	var confDiv = $("#toDoDiv");
 	var focusDiv = $("#pomodoroFocusDiv");
 	var hyperControl = $(".hyperFocusControlDiv");
@@ -528,6 +533,7 @@ function pomodoroOnSteroids(){
 					pomoFocus.duration		= parseInt($("#minutesPomodoro").val());
 					pomoFocus.endTime		= deltaTime(pomoFocus.duration * 60).getTime();
 					pomoFocus.hyper		= $("#hyperFocusSelect").val()
+					pomoFocus.daily		= false;
 					savePomoFocus(pomoFocus, 'options');
 				}
 				else{

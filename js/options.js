@@ -699,7 +699,7 @@ function enableSliders(){
 
 function enableCheckboxes(){
 	// Active days
-		$("#sundayActive").change(function(){
+	$("#sundayActive").change(function(){
 		lsSet('sundayActive', $(this).prop( "checked" ));
 	});
 	$("#mondayActive").change(function(){
