@@ -1,5 +1,18 @@
 ﻿/* To-do 
+	- Put Pomodoro CountDown on the Background
+	- Adjust interface on Popup
 */
+// if (!localStorage.pomoFocusB || localStorage.pomoFocusB == 0) {pomoFocusB = {}}
+// else { var pomoFocusB = JSON.parse(localStorage.pomoFocusB) || {};}
+
+// if (!localStorage.pomoFocusO || localStorage.pomoFocusO == 0) {pomoFocusO = {}}
+// else { var pomoFocusO = JSON.parse(localStorage.pomoFocusO) || {}; }
+
+// if (!localStorage.pomoFocusP || localStorage.pomoFocusP == 0) {pomoFocusP = {}}
+// else {var pomoFocusP = JSON.parse(localStorage.pomoFocusP) || {};}
+
+
+
 
 var focusCompleteMsg = "Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
@@ -14,153 +27,6 @@ var toDoChecker;
 
 
 /* end of sandbox */
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           TO-DO SECTION           *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-// fill the daily tasks listStyleType
-function fillDailyList(){
-	$('.dailyListTR').remove()
-	var dailyList = lsGet('dailyList', 'parse');
-	for (d = 0; d < dailyList.length; d++ ) {
-		var daily = dailyList[d];
-		var speciaList;
-		if (daily.specialList == true) { specialList = 'Using'; }
-		else { specialList = 'Not Using'; }
-		
-		var newLine = '' +
-			'<tr id="daily' + daily.id + '" class="dailyListTR">' +
-				'<td>' + daily.task 		+ '</td>' + 
-				'<td>' + daily.pomodoros 	+ '</td>' +
-				'<td>' + specialList 		+ '</td>' +
-			'</tr>';
-			
-		$('#dailyListTable > tbody').append(newLine);
-	}
-}
-
-function listenDailyListClick(){
-	$("#dailyListTable tbody ").on('click', '.dailyListTR', function(){
-		var clickedId = $(this).attr('id');
-		var dailyId = clickedId.split('y')[1];
-		
-		expandDailyDetails(dailyId);
-	});
-	
-	$("#saveDaily").click(function(){
-		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-		gatherDailyInfo()
-		fillDailyList();
-	});
-	
-	$("#deleteDaily").click(function(){
-		var dailyId = parseInt($('#dailyTaskIdInput').val());
-		var daily = dailyFromId(dailyId);
-		var dailyList = lsGet('dailyList', 'parse');
-		var index = dailyTaskIndex(daily);
-		dailyList.splice(index, 1);
-		
-		lsSet('dailyList', dailyList, 'object');
-		fillDailyList();
-		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-	});
-		
-	$("#createNewDailyTaskButton").click(function(){
-		var newTaskName = $("#newDailyTaskInput").val()
-		if (newTaskName.length > 0 && newTaskName != " "){
-			$('#newDailyTaskInput').val('');
-			var newDaily = addDailyTask(newTaskName);
-			fillDailyList();
-			expandDailyDetails(newDaily.id)
-		} else{
-			
-		}
-	});
-
-	$("#testBinaural").click(function(){
-		sampleBinaural();
-	});
-	
-}
-
-function expandDailyDetails(dailyId){
-	$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-	
-	var dailyId = parseInt(dailyId);
-	var daily = dailyFromId(dailyId)
-	
-	if (daily == false ) { return }
-	
-	var id 			= daily.id || parseInt(lsGet('lastDailyID')) + 1;
-	var task 		= daily.task || '';
-	var pomodoros	= daily.pomodoros 	|| '1';
-	var duration	= daily.duration 	|| '15';
-	var specialList = daily.specialList || false;
-	var blackList	= daily.blackList 	|| ' ';
-	var whiteList	= daily.whiteList 	|| ' ';
-	var binaural	= daily.binaural 	|| false;
-	var instaZap	= daily.instaZap 	|| false;
-	var description	= daily.description || '';
-	
-	// Fill fields
-	$('#dailyTaskTitleSpan').html(task);
-	
-	$('#dailyTaskIdInput')	.val(id);
-	$('#dailyTaskNameInput').val(task);
-	$('#pomosPerDaySelect')	.val(pomodoros);
-	$('#dailyPomoDuration')	.val(duration);
-	$('#specialListsInput')	.prop('checked', specialList);
-	$('#blackListDaily')	.importTags(blackList);
-	$('#whiteListDaily')	.importTags(whiteList);
-	$('#binauralDaily')		.prop('checked', binaural);
-	$('#instaZapDaily')		.prop('checked', instaZap);
-	$('#dailyDescriptionInput').val(description);
-	
-}
-
-function gatherDailyInfo(){
-	var newDaily = {};
-	newDaily.id				= parseInt($('#dailyTaskIdInput').val());
-	newDaily.task 			= $('#dailyTaskNameInput').val();
-	newDaily.pomodoros 		= $('#pomosPerDaySelect').val();
-	newDaily.duration 		= $('#dailyPomoDuration').val();
-	newDaily.specialList	= $('#specialListsInput').prop('checked')
-	newDaily.blackList 		= $('#blackListDaily').val();
-	newDaily.whiteList 		= $('#whiteListDaily').val();
-	newDaily.binaural 		= $('#binauralDaily').prop('checked');
-	newDaily.instaZap 		= $('#instaZapDaily').prop('checked');
-	newDaily.description 	= $('#dailyDescriptionInput').val();
-	newDaily.hyper			= true;
-	
-	updateDailyTask(newDaily);
-}
-	
-function enableBlackDaily(){
-	$('#blackListDaily')[0].value = ' ';
-	$('#blackListDaily').tagsInput({
-		'defaultText':'Add site',
-		'removeWithBackspace' : true
-	});
-	$('#blackListDaily_tagsinput').attr('style', '');
-	
-	
-	$('#whiteListDaily')[0].value = '';
-	$('#whiteListDaily').tagsInput({
-		'defaultText':'Add site',
-		'removeWithBackspace' : true
-	});
-	$('#whiteListDaily_tagsinput').attr('style', '');
-}
-
-function enableDaily(){
-	fillDailyList();
-	listenDailyListClick();
-	
-}
-// 
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
@@ -700,25 +566,25 @@ function enableSliders(){
 function enableCheckboxes(){
 	// Active days
 	$("#sundayActive").change(function(){
-		lsSet('sundayActive', $(this).prop( "checked" ));
+		localStorage.sundayActive = $(this).prop( "checked" );
 	});
 	$("#mondayActive").change(function(){
-		lsSet('mondayActive', $(this).prop( "checked" ));
+		localStorage.mondayActive = ($(this).prop( "checked" ));
 	});
 	$("#tuesdayActive").change(function(){
-		lsSet('tuesdayActive', $(this).prop( "checked" ));
+		localStorage.tuesdayActive = $(this).prop( "checked" );
 	});
 	$("#wednesdayActive").change(function(){
-		lsSet('wednesdayActive', $(this).prop( "checked" ));
+		localStorage.wednesdayActive = $(this).prop( "checked" );
 	});
 	$("#thursdayActive").change(function(){
-		lsSet('thursdayActive', $(this).prop( "checked" ));
+		localStorage.thursdayActive = $(this).prop( "checked" );
 	});
 	$("#fridayActive").change(function(){
-		lsSet('fridayActive', $(this).prop( "checked" ));
+		localStorage.fridayActive = $(this).prop( "checked" );
 	});
 	$("#saturdayActive").change(function(){
-		lsSet('saturdayActive', $(this).prop( "checked" ));
+		localStorage.saturdayActive = $(this).prop( "checked" );
 	});
 	$("#eachDay").change( function() {	
 		var advanced = $(this).prop( "checked" );
@@ -734,95 +600,95 @@ function enableCheckboxes(){
 
 function enableInputs(){	
 	// Advanced day to day
-		$("#sundayActiveTimeStart").change( function() {	
-		lsSet('sundayActiveTimeStart', $(this).val() );
+	$("#sundayActiveTimeStart").change( function() {	
+		localStorage.sundayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#sundayActiveTimeEnd").change( function() {	
-		lsSet('sundayActiveTimeEnd', $(this).val() );
+		localStorage.sundayActiveTimeEnd = $(this).val();
 	});	
 		
 	$("#mondayActiveTimeStart").change( function() {	
-		lsSet('mondayActiveTimeStart', $(this).val() );
+		localStorage.mondayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#mondayActiveTimeEnd").change( function() {	
-		lsSet('mondayActiveTimeEnd', $(this).val() );
+		localStorage.mondayActiveTimeEnd = $(this).val();
 	});	
 	
 	$("#tuesdayActiveTimeStart").change( function() {	
-		lsSet('tuesdayActiveTimeStart', $(this).val() );
+		localStorage.tuesdayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#tuesdayActiveTimeEnd").change( function() {	
-		lsSet('tuesdayActiveTimeEnd', $(this).val() );
+		localStorage.tuesdayActiveTimeEnd = $(this).val();
 	});	
 		
 	$("#wednesdayActiveTimeStart").change( function() {	
-		lsSet('wednesdayActiveTimeStart', $(this).val() );
+		localStorage.wednesdayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#wednesdayActiveTimeEnd").change( function() {	
-		lsSet('wednesdayActiveTimeEnd', $(this).val() );
+		localStorage.wednesdayActiveTimeEnd = $(this).val();
 	});	
 		
 	$("#thursdayActiveTimeStart").change( function() {	
-		lsSet('thursdayActiveTimeStart', $(this).val() );
+		localStorage.thursdayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#thursdayActiveTimeEnd").change( function() {	
-		lsSet('thursdayActiveTimeEnd', $(this).val() );
+		localStorage.thursdayActiveTimeEnd = $(this).val();
 	});	
 		
 	$("#fridayActiveTimeStart").change( function() {	
-		lsSet('fridayActiveTimeStart', $(this).val() );
+		localStorage.fridayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#fridayActiveTimeEnd").change( function() {	
-		lsSet('fridayActiveTimeEnd', $(this).val() );
+		localStorage.fridayActiveTimeEnd = $(this).val();
 	});	
 
 	$("#saturdayActiveTimeStart").change( function() {	
-		lsSet('fridayActiveTimeStart', $(this).val() );
+		localStorage.fridayActiveTimeStart = $(this).val();
 	});	
 		
 	$("#saturdayActiveTimeEnd").change( function() {	
-		lsSet('fridayActiveTimeEnd', $(this).val() );
+		localStorage.fridayActiveTimeEnd = $(this).val();
 	});	
 	
 }
 
 function saveBlackList(){
-	lsSet('blackList', $("#blackList")[0].value);
+	localStorage.blackList = $("#blackList")[0].value;
 }
 
 function saveWhiteList(){
-	lsSet('whiteList', $("#whiteList")[0].value);
+	localStorage.whiteList = $("#whiteList")[0].value;
 }
 
 function saveOptions() {
 	
 	var blackList = $("#blackList")[0].value;
-	lsSet('blackList', blackList);
+	localStorage.blackList = blackList;
 	
 	var whiteList = $("#whiteList")[0].value;
-	lsSet('whiteList', whiteList);
+	localStorage.whiteList = whiteList;
 	
 	var maxTabs = $("#maxTabsSelect").val();
-	lsSet('maxTabs', maxTabs);
+	localStorage.maxTabs = maxTabs;
 	
 	var zapOnClose = $("#zapOnClose").prop('checked');
-	lsSet('zapOnClose', zapOnClose);
+	localStorage.zapOnClose = zapOnClose;
 	
 	var zapPosition = $("#zapIntensity").val();
 	var zapIntensity = $("#zapIntensity").val();
 	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
-	lsSet('zapIntensity', zapIntensity);
+	localStorage.zapIntensity = zapIntensity;
 	
 	var vibrationPosition = $("#vibrationIntensity").val();
 	var vibrationIntensity = $("#vibrationIntensity").val();
 	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
-	lsSet('vibrationIntensity', vibrationIntensity);
+	localStorage.vibrationIntensity = vibrationIntensity;
 }
 
 function restoreOptions() {
@@ -834,6 +700,7 @@ function restoreOptions() {
 	if (blackList == undefined) { blackList = ' '; }
 	$("#blackList").val(blackList);
 
+	
 	var whiteList = localStorage.whiteList;
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
@@ -887,6 +754,7 @@ function restoreOptions() {
 
 // Create the vertical tabs
 function initialize() {
+	
 	// Black and WhiteLists
 	var blackListContent = localStorage.blackList;
 	
@@ -973,8 +841,6 @@ function initialize() {
 	enableInputs();
 	enableRescueTime();
 	enableToDo();
-	syncToDo('options');
-	enableDaily();
 	
 	$(".allCaps").text().toUpperCase();
 	
@@ -998,8 +864,9 @@ $( document ).ready(function() {
 	// else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);
+		
+	// }
 	
+	// restorePomoFocus();
 	restoreOptions();
-	if ($('#blackListDaily_tagsinput').length > 0){ return }
-	enableBlackDaily();
 });
