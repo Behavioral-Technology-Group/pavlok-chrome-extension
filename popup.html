@@ -86,175 +86,90 @@
 	</div>
 	<hr>
 	<div class="onlyLogged" id="optionsDiv">
-
-		<div class="noDisplay">
-			<h2>Tab Number Control <img alt="blackList Help" src="/images/help.png" id="tabNumberControlHelp"
-			class="helpIcon" title='
-				<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
-
-				<p>For instance: say you have a <b>10 tabs limit</b>.</p>
-				<ul>
-				<li>When you <b>get close to your limit</b> (think 9 tabs, one step away from the red line), Pavlok will <span class="yellow">Vibrate</span>.</li>
+		<div id="toDoDiv" class="Display">
+			<h2>Your To-do List</h2>
+			<h3>Dailies</h3>
+			<div id="dailyTasks">
+				<table class="dailyContainer">
+					<tbody>
+					</tbody>
+					<tfoot>
+					</tfoot>
+				</table>
+			</div>
+			<div id="toDoAction">
+				<h3>Others</h3>
+				<table id="toDoTable">
+					<thead>
+						<tr id="toDoTableHeader">
+							<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td id="toDoNItemsLeft">1 Item Left</td>
+							<td id="allToDo" class="toDoScopes">
+								<a href="#" id="allToDoLink">All</a>
+							</td>
+							<td id="todayToDo" class="toDoScopes">
+								<a href="#" id="todayToDoLink">Today</a>
+							</td>
+							<td id="completedToDo" class="toDoScopes">
+								<a href="#" id="doneToDoLink">Done</a>
+							</td>
+							<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<br/>
+		<div id="pomodoroFocusDiv" class="noDisplay">
+			<h2><span id="pomoFocusTask"></span></h2>
+			<h3>Remaining Time: 
+				<span id="pomoFocusRemainingTime" class="yellow"></span>
+			</h3>
+			
+			<p>
+				<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
+					<span class="fa-stack fa-lg yellow">
+						<i class="fa fa-check-square-o"></i>
+					</span>
+				</a>
+				<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
+					<span class="fa-stack fa-lg yellow">
+						<i class="fa fa-stop-circle-o"></i>
+					</span>
+				</a>
+				<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
+					<span class="fa-stack fa-lg yellow">
+						<i class="fa fa-plus"></i>
+					</span>
+				</a>
+			</p>
+			
+			<div class="hyperFocusControlDiv noDisplay">
+				<hr>
+				<h3>Hyper Focus Controls</p>
+				<p>
+					<span id="playBinauralButton"><i class="fa fa-play-circle-o"></i></span>
+					<span id="stopBinauralButton"><i class="fa fa-stop-circle-o noDisplay"></i></span>
+					<span id="vDownBinaural"><i class="fa fa-volume-down"></i></span>
+					<span id="vUpBinaural"><i class="fa fa-volume-up"></i></span>
+				</p>
+				<p>
+					<input type="checkbox" id="instaZap">InstaZap on blacklisted sites
+					<img src="images/help.png" class="helpIcon" title='
+					<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+					'/>
+				</p>
 				
-				<li>If you get <b>to the limit</b>, it will <span class="yellow">Beep</span>.</li>
-
-				<li>If you <b>cross that limit</b>, it will <span class="yellow">shock you as long as you keep opening more tabs.</span></li>
-				</ul>
-			'/></h2>
-			<span id="label-text">Set tab limit:</span> 
-			<select id="maxTabsSelect">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>
-				<option value="11">11</option>
-				<option value="12">12</option>
-				<option value="13">13</option>
-				<option value="14">14</option>
-				<option value="15">15</option>
-				<option value="20">20</option>
-				<option value="25">25</option>
-				<option value="30">30</option>
-				<option value="35">35</option>
-				<option value="40">40</option>
-				<option value="45">45</option>
-				<option value="50">50</option>	
-			</select>
-
-			<div id="blackListContainer">
-				<h2>Black List <img alt="blackList Help" src="/images/help.png" id="blackListHelp"
-				class="helpIcon" name="blackListHelp" title='
-					<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you
-					want to avoid.</p>
-
-					<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on
-					your blacklist. If you visit the site, you will get zapped.</p>
-
-					<p>For listing sites, type in the address and hit Enter or click Save.</p>
-				'/></h2>
-
-				<p>Please choose your black sites, minus the "www." and separated by commas (<span class="yellow">facebook.com, reddit.com</span>) and hit Enter key:</p>
-
-				<div class="tagcontainer">
-					<input name="blackList" id="blackList" value="" />
-				</div>
 			</div>
-
-			<div class="noDisplay" id="whiteListContainer">
-				<h2>Exception List <img alt="whiteList Help" src="/images/help.png" id=
-				"whiteListHelp" class="helpIcon" name="whiteListHelp" title='
-					<p>Exception addresses allow you to use a part of some site without triggering
-					stimuli.</p>
-
-					<p>For instance: <span class="yellow"><i>"amazon.com"</i></span> might be on
-					your blacklist. But you want to use <span class=
-					"yellow"><i>"amazon.com<b>/music</b>"</i></span> without being shocked.</p>
-
-					<p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>
-				'/></h2>
-
-				<p>Please tell your exceptions for black sites, separated by commas.</p>
-
-				<div class="tagcontainer">
-					<input name="whiteList" id="whiteList" value="" />
-				</div>
-			</div>
-
-			<form>
-				<input type="image" src="images/save.png" name="saveForm" class="submit" id=
-				"save" /><br />
-			</form>
+		</div>
 		</div>
 		
-
-				<div id="toDoDiv" class="Display">
-					<h2>Your To-do List</h2>
-					<div id="toDoAction">
-						<table id="toDoTable">
-							<thead>
-								<tr id="toDoTableHeader">
-									<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td id="toDoNItemsLeft">1 Item Left</td>
-									<td id="allToDo" class="toDoScopes">
-										<a href="#" id="allToDoLink">All</a>
-									</td>
-									<td id="todayToDo" class="toDoScopes">
-										<a href="#" id="todayToDoLink">Today</a>
-									</td>
-									<td id="completedToDo" class="toDoScopes">
-										<a href="#" id="doneToDoLink">Done</a>
-									</td>
-									<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-				<br/>
-				<div id="musicControlDiv" class="noDisplay">
-					<h2>Pomodoro on Steroids</h2>
-					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-					<p>
-						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-						<img src="images/help.png" class="helpIcon" title='
-						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-						'/>
-					</p>
-					<p>
-						<input type="checkbox" id="audioFocus">Binaural Soundtrack
-						<img src="images/help.png" class="helpIcon" title='
-						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
-						'/>
-					</p>
-				</div>
-				<div id="pomodoroFocusDiv" class="noDisplay">
-					<h2><span id="pomoFocusTask"></span></h2>
-					<h3>Remaining Time: 
-						<span id="pomoFocusRemainingTime" class="yellow"></span>
-					</h3>
-					
-					<p>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-check-square-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-stop-circle-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-plus"></i>
-							</span>
-						</a>
-					</p>
-					
-					<div class="hyperFocusControlDiv noDisplay">
-						<hr>
-						<h3>Hyper Focus Controls</p>
-						<p>
-							<span id="playBinauralButton"><i class="fa fa-play-circle-o"></i></span>
-							<span id="stopBinauralButton"><i class="fa fa-stop-circle-o noDisplay"></i></span>
-							<span id="vDownBinaural"><i class="fa fa-volume-down"></i></span>
-							<span id="vUpBinaural"><i class="fa fa-volume-up"></i></span>
-						</p>
-						
-					</div>
-				</div>
 	</div>
 </body>
 </html>

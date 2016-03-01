@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>Controlled multi-tab browsing</title>
+	<title>PAVLOK Productivity</title>
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
@@ -61,16 +61,14 @@
 				<li class="linked roundedBorders"><a href="#tabs-1">Black List</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-2">Tab Numbers</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-3">Stimuli</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-4">Advanced Options</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-4">To-do List</a></li>
 				<li class="linked roundedBorders"><a href="#tabs-5">AutoZapper</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-6">About</a></li>
-				<li class="linked roundedBorders noDisplay"><a href="#tabs-7">SandBox Advanced Timer</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-8">RescueTime</a></li>
-				<li class="linked roundedBorders"><a href="#tabs-9">To-do List</a></li>
-				<li class="linked roundedBorders noDisplay"><a href="#tabs-10">SandBox Background</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-6">RescueTime</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-7">Advanced Options</a></li>
+				<li class="linked roundedBorders"><a href="#tabs-8">About</a></li>
 			</ul>
 						
-			<div id="tabs-1">
+			<div id="tabs-1"> <!-- Black and WhiteList-->
 				<div id="blackListContainer">
 					<h2>Black List <img src="images/help.png" class="helpIcon" title='
 						<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
@@ -99,7 +97,7 @@
 				</div>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-2">
+			<div id="tabs-2"> <!-- Tab Numbers-->
 				<h2>Settings</h2>
 				<div id="settingsDIV">
 					<h2>Tab Number Control <img src="images/help.png" class="helpIcon" title='
@@ -151,7 +149,7 @@
 				
 				</div>
 			</div>
-			<div id="tabs-3">
+			<div id="tabs-3"> <!-- Stimuli -->
 				<h2><label for="zapInt">Zap Intensity (10% increments):</label></h2>
 				<p>
 					<input type="text" id="zapIntensity" readonly style="border:0; color:#f6931f; font-weight:bold;">        <input type="button" id="testZapInt" value="Test Zap">
@@ -171,7 +169,351 @@
 				<a href="#" id="resetIntensity">Reset values</a><br/>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-4">
+			<div id="tabs-4"> <!-- To-Do -->
+				<div id="toDoDiv" class="nooDisplay">
+					<h2>Your To-do List</h2>
+					<p>Your list can be seen and acted upon clicking in the extension icon, which is always a click away from you. It is divided in regular <span class="yellow">regular</span> and <span class="yellow">daily</span> tasks.</p>
+					<p>Regular tasks are just what you're used to: a list task to be dealt and BOOM, done. Dailies differ a bit.</p>
+					<h3>Dailies</h3>
+					<div id="dailiesDiv">
+						<p>Dailies are actions that you want to repeat, such as creating habits. They can get you organized with things you need to do on a recurring basis. Also, we add a layer of Pomodoro here, so that you can skyrocket your productivity and habits formation</p>
+						<div id="dailiesListDiv">
+							<table id="dailyListTable">
+								<thead>
+									<tr>
+										<td colspan="3" id="newDailyTaskTD">
+											<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task"/>
+											<input type="button" id="createNewDailyTaskButton" value="Create"/>
+										</td>
+									</tr>
+									<tr>
+										<th>Daily Task</th>
+										<th>Pomodoros</th>
+										<th>Special Lists</th>
+									</tr>
+				
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+							<br/>
+							<div id="dailyListDetailsDIV"  class="noDisplay">
+							<hr>
+							<br/>
+								<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
+								<table id="dailyListDetails">
+									<tbody>
+										<tr class="nooDisplay">
+											<td class="categoryName">Daily ID</td>
+											<td id="dailyTaskIdTD">
+												<input type="text" id="dailyTaskIdInput" disabled/>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Daily Task</td>
+											<td id="dailyTaskTD">
+												<input type="text" id="dailyTaskNameInput" />
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Pomodoros per day</td>
+											<td id="pomodorosPerDayTD">
+												<select id="pomosPerDaySelect">
+													<option value="1">1</option>
+													<option value="2">2</option>
+													<option value="3">3</option>
+													<option value="4">4</option>
+													<option value="5">5</option>
+													<option value="6">6</option>
+												</select>
+												 lasting for 
+												 <select id="dailyPomoDuration">
+													<option value="15">15</option>
+													<option value="25">25</option>
+													<option value="35">35</option>
+												 </select>
+												  minutes
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Page controls</td>
+											<td id="specialListsTD">
+												<input id="specialListsInput" type="checkbox" />Use special black and whitelists
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">BlackList</td>
+											<td id="blackListTD">
+												<div class="tagcontainer">
+													<input id="blackListDaily" value="">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">WhiteList</td>
+											<td id="whiteListTD">
+												<div class="tagcontainer">
+													<input id="whiteListDaily" value="">
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Hyper Focus</td>
+											<td id="hyperFocusTD">
+												<div id="dailyHiperOptions">
+													<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
+													<span class="noDisplay"<input type="checkbox" id="instaZapDaily" />Instant zap on blacklist</span>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="categoryName">Description</td>
+											<td id="descriptionTD">
+												<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>
+											</td>
+										</tr>
+									
+									</tbody>
+								</table>
+								<input type="image" src="images/save.png" id="saveDaily"/>								
+								<a class="deleteDaily" id="deleteDaily">Remove</a>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<br/>
+				<div id="musicControlDiv" class="noDisplay">
+					<h2>Pomodoro on Steroids</h2>
+					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
+					<p>
+						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+						<img src="images/help.png" class="helpIcon" title='
+						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+						'/>
+					</p>
+					<p>
+						<input type="checkbox" id="audioFocus">Binaural Soundtrack
+						<img src="images/help.png" class="helpIcon" title='
+						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
+						'/>
+					</p>
+				</div>
+				<div id="pomodoroFocusDiv" class="noDisplay">
+					<h2><span id="pomoFocusTask"></span></h2>
+					<h3>Remaining Time: 
+						<span id="pomoFocusRemainingTime" class="yellow"></span>
+					</h3>
+					
+					<p>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-check-square-o"></i>
+							</span>
+						</a>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-stop-circle-o"></i>
+							</span>
+						</a>
+						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
+							<span class="fa-stack fa-lg yellow">
+								<i class="fa fa-plus"></i>
+							</span>
+						</a>
+					</p>
+					
+					<!-- <div class="hyperFocusControlDiv noDisplay">
+						<h3>Hyper Focus Controls</p>
+						<h4>Binaural Audio Controls</h4>
+						<audio controls>
+							<source src="audio/focus1.mp3" type="audio/ogg">
+							Your browser does not support the audio element.
+						</audio>
+					</div> -->
+				</div>
+			</div>
+			<div id="tabs-5"> <!-- AutoZapper -->
+				<h2>Free up your hands!</h2>
+				<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
+				<p>Here is how it works:</p>
+				<ol>
+					<li>Set the <span class="yellow">intensity of the zap</span><img src="/images/help.png" id="blackListHelp" class="helpIcon" title='
+						<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
+						<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
+						<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'/>
+					</li>
+					<li>Set the <span class="yellow">duration</span> of your session</li>
+					<li>Set the <span class="yellow">frequency</span> for the zap to come</li>
+					<li>Get whatever you need (cigarettes, junk food, random sites, etc)</li>
+					<li>Brace yourself and rock on the go button</li>
+				</ol>
+				
+				<table id="autoZapperTable">
+					<thead>
+						<th>Intensity</th>
+						<th>Duration</th>
+						<th>Frequency</th>
+						<th>Now we...</th>
+					</thead>
+					<tbody>
+						<tr id="autoZapperStartLine">
+							<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
+							<td style="text-align: center">
+								<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> (min)</p>
+								<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
+							</td>
+							<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
+							<td>
+								<p class="autoZapperConf">
+									<a id="autoZapperStart" href="#"><b>GO!</b></a>
+								</p>
+								<p class="autoZapperActive noDisplay">
+									<a id="autoZapperStop" href="#"><b>Stop!</b></a>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="tabs-6"> <!-- RescueTime -->
+				<h2>Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
+					<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
+					<p>Pavlok will make notifications visceral!</p>
+					<ul>
+						<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
+						<li>If your productivity falls <b>bellow 50%</b>, you get a <span class='yellow'>beep</span> reminder to focus again</li>
+						<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
+					</ul>
+					<p>The limits and stimulus for fired can be changed in the <span class='yellow'>Define your Thresholds</span> section</p>
+				"/></h2>
+				<div id="NoRTCodeOnly">
+					<p>Let's get your ball rolling!</p>
+					<ol>
+						<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
+						<li>Then insert your Key here and click GO!
+						<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
+						</li>
+						<li>That's it! Enjoy!</li>
+					</ol>
+				</div>
+				<div id="RTCodeOnly">
+					<div id="RTResultDiv">
+						<p><span id="RTResultsHolder">Gathering data... </span></p>
+					</div>
+					<div id="RTConfiguration">
+						<table>
+							<tr>
+								<td>
+									<p>Integration is:</p>
+								</td>
+								<td>
+									<select id="RTOnOffSelect">
+										<option value="On">On</option>
+										<option value="Off">Off</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Updates Frequency:</p>
+								</td>
+								<td>
+									<p>
+										<select id="RTFrequencySelect">
+											<option value="3">3</option>
+											<option value="5">5</option>
+											<option value="10">10</option>
+											<option value="15">15</option>
+											<option value="30">30</option>
+										</select>
+										Minutes <img src="images/help.png" class="helpIcon" title="
+										<p>Pavlok will get your productivity according to the inverval you set.</p>
+										<p><b>There are differences in the frequency you'll get an updated pulse from RescueTime</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
+										<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
+										<p><b>We advise <span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
+										"
+										/>
+									</p>
+								</td>
+							</tr>
+						</table>
+						<div>	
+						<hr>
+						<h3>Define your Thresholds</h3>
+							
+							<table>
+								<tr>
+									<th>Stimulus</th>
+									<th>Threshold</th>
+									<th>Triggers</th>
+								</tr>
+								<tr>
+									<td><p>Positive</p></td>
+									<td><p>Above <input id="RTPosLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTPosSti">
+											<option value="shock">Zap</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><p>Warning</p></td>
+									<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTWarnSti">
+											<option value="shock">Zap</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td><p>Negative</p></td>
+									<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
+									<td>
+										<select id="RTNegSti">
+											<option value="shock">Zap</option>
+											<option value="vibration">Vibrate</option>
+											<option value="beep">Beep</option>
+										</select>
+									</td>
+								</tr>
+							</table>
+							
+							<div class="noDisplay" id="miniChart">
+								<div id="badRT" class="miniChartDiv">Negative</div>
+								<div id="warnRT" class="miniChartDiv">Warning</div>
+								<div id="notifyRT" class="miniChartDiv">Neutral</div>
+								<div id="goodRT" class="miniChartDiv">Positive</div>
+							</div>
+						
+						</div>
+					</div>
+						
+					<hr>
+					
+					<div id="RTAPIKeyDiv">
+						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
+						<p>
+							<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
+							
+							<img src="images/help.png" class="helpIcon" title='
+								<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
+
+								<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
+
+								<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
+							/>
+						</p>
+					</div>
+				</div>
+				
+				
+			</div>
+			<div id="tabs-7"> <!-- Advanced Options -->
 				<div id="stimuliNotificationsDiv">
 					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
 						<p>
@@ -307,50 +649,7 @@
 				</div>
 				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
-			<div id="tabs-5">
-				<h2>Free up your hands!</h2>
-				<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
-				<p>Here is how it works:</p>
-				<ol>
-					<li>Set the <span class="yellow">intensity of the zap</span><img src="/images/help.png" id="blackListHelp" class="helpIcon" title='
-						<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
-						<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
-						<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'/>
-					</li>
-					<li>Set the <span class="yellow">duration</span> of your session</li>
-					<li>Set the <span class="yellow">frequency</span> for the zap to come</li>
-					<li>Get whatever you need (cigarettes, junk food, random sites, etc)</li>
-					<li>Brace yourself and rock on the go button</li>
-				</ol>
-				
-				<table id="autoZapperTable">
-					<thead>
-						<th>Intensity</th>
-						<th>Duration</th>
-						<th>Frequency</th>
-						<th>Now we...</th>
-					</thead>
-					<tbody>
-						<tr id="autoZapperStartLine">
-							<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
-							<td style="text-align: center">
-								<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> (min)</p>
-								<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
-							</td>
-							<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
-							<td>
-								<p class="autoZapperConf">
-									<a id="autoZapperStart" href="#"><b>GO!</b></a>
-								</p>
-								<p class="autoZapperActive noDisplay">
-									<a id="autoZapperStop" href="#"><b>Stop!</b></a>
-								</p>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="tabs-6">
+			<div id="tabs-8"> <!-- About -->
 				<h2>About extension</h2>
 				<p>This extension is all about getting you on track to <b>your</b> habit goals.</p>
 				<p>If you struggle to keep distraction at bay when near the computer, this comes to rescue. There will be clear stakes here, as you'll be simultaneously made aware of the bad habit (and to a fix!) and get uncomfortable stimuli to assotiate with the bad habit.</p>
@@ -365,468 +664,7 @@
 				<p>If you want to make a crash change to your behavior, it can be sped up using the <span class="yellow">zap on close</span> option. Pavlok won't zap you when you adjust course (closing excess tabs, for instance). However, it's possible to make yourself way more sensible to the tab numbers by adding more stimulus. This option will make you remember TWICE not to open excess tabs. Not necessary, but sure speed breaking the tabs hoarding habit.</p>
 				<p>This Extension is using <i><span id="server"></span></i> server.</p>.
 			</div>
-			<div id="tabs-7" class="noDisplay">
-				<p id="feedback">
-					<span>You've selected:</span> <span id="select-result">none</span>.
-				</p>
-				<table id="selectable">
-					<tr>
-						<th>Day</th>
-						<th>00</th>
-						<th>01</th>
-						<th>02</th>
-						<th>03</th>
-						<th>04</th>
-						<th>05</th>
-						<th>06</th>
-						<th>07</th>
-						<th>08</th>
-						<th>09</th>
-						<th>10</th>
-						<th>11</th>
-						<th>12</th>
-						<th>13</th>
-						<th>14</th>
-						<th>15</th>
-						<th>16</th>
-						<th>17</th>
-						<th>18</th>
-						<th>19</th>
-						<th>20</th>
-						<th>21</th>
-						<th>22</th>
-						<th>23</th>
-					</tr>
-					<tr>
-						<td>Monday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Tuesday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Wednesday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Thursday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Friday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Saturday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-					<tr>
-						<td>Sunday</td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-						<td class="tdSelectable"></td>
-					</tr>
-				</table>
-			</div>
-			<div id="tabs-8">
-				<h2>Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
-					<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
-					<p>Pavlok will make notifications visceral!</p>
-					<ul>
-						<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
-						<li>If your productivity falls <b>bellow 50%</b>, you get a <span class='yellow'>beep</span> reminder to focus again</li>
-						<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
-					</ul>
-					<p>The limits and stimulus for fired can be changed in the <span class='yellow'>Define your Thresholds</span> section</p>
-				"/></h2>
-				<div id="NoRTCodeOnly">
-					<p>Let's get your ball rolling!</p>
-					<ol>
-						<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
-						<li>Then insert your Key here and click GO!
-						<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
-						</li>
-						<li>That's it! Enjoy!</li>
-					</ol>
-				</div>
-				<div id="RTCodeOnly">
-					<div id="RTResultDiv">
-						<p><span id="RTResultsHolder">Gathering data... </span></p>
-					</div>
-					<div id="RTConfiguration">
-						<table>
-							<tr>
-								<td>
-									<p>Integration is:</p>
-								</td>
-								<td>
-									<select id="RTOnOffSelect">
-										<option value="On">On</option>
-										<option value="Off">Off</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p>Updates Frequency:</p>
-								</td>
-								<td>
-									<p>
-										<select id="RTFrequencySelect">
-											<option value="3">3</option>
-											<option value="5">5</option>
-											<option value="10">10</option>
-											<option value="15">15</option>
-											<option value="30">30</option>
-										</select>
-										Minutes <img src="images/help.png" class="helpIcon" title="
-										<p>Pavlok will get your productivity according to the inverval you set.</p>
-										<p><b>There are differences in the frequency you'll get an updated pulse from RescueTime</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
-										<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
-										<p><b>We advise <span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
-										"
-										/>
-									</p>
-								</td>
-							</tr>
-						</table>
-						<div class="noDisplay">	
-						<hr>
-						<h3>Define your Thresholds</h3>
-							
-							<table>
-								<tr>
-									<th>Stimulus</th>
-									<th>Threshold</th>
-									<th>Triggers</th>
-								</tr>
-								<tr>
-									<td><p>Positive</p></td>
-									<td><p>Above <input id="RTPosLimit" class="RTThreshold"/></p></td>
-									<td>
-										<select id="RTPosSti">
-											<option value="shock">Zap</option>
-											<option value="vibration">Vibrate</option>
-											<option value="beep">Beep</option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><p>Warning</p></td>
-									<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
-									<td>
-										<select id="RTWarnSti">
-											<option value="shock">Zap</option>
-											<option value="vibration">Vibrate</option>
-											<option value="beep">Beep</option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><p>Negative</p></td>
-									<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
-									<td>
-										<select id="RTNegSti">
-											<option value="shock">Zap</option>
-											<option value="vibration">Vibrate</option>
-											<option value="beep">Beep</option>
-										</select>
-									</td>
-								</tr>
-							</table>
-							
-							<div class="noDisplay" id="miniChart">
-								<div id="badRT" class="miniChartDiv">Negative</div>
-								<div id="warnRT" class="miniChartDiv">Warning</div>
-								<div id="notifyRT" class="miniChartDiv">Neutral</div>
-								<div id="goodRT" class="miniChartDiv">Positive</div>
-							</div>
-						
-						</div>
-					</div>
-						
-					<hr>
-					
-					<div id="RTAPIKeyDiv">
-						<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
-						<p>
-							<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
-							
-							<img src="images/help.png" class="helpIcon" title='
-								<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
-
-								<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
-
-								<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
-							/>
-						</p>
-					</div>
-				</div>
-				
-				
-			</div>
-			<div id="tabs-9">
-				<div id="toDoDiv" class="nooDisplay">
-					<h2>Your To-do List</h2>
-					<div id="toDoAction">
-						<table id="toDoTable">
-							<thead>
-								<tr id="toDoTableHeader">
-									<td colspan="5"><input type="button" id="completeAllButton" value="&#10004;"/><input id="toDoAdd" placeholder="What needs to be done?" /></td>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-							<tfoot>
-								<tr>
-									<td id="toDoNItemsLeft">1 Item Left</td>
-									<td id="allToDo" class="toDoScopes">
-										<a href="#" id="allToDoLink">All</a>
-									</td>
-									<td id="todayToDo" class="toDoScopes">
-										<a href="#" id="todayToDoLink">Today</a>
-									</td>
-									<td id="completedToDo" class="toDoScopes">
-										<a href="#" id="doneToDoLink">Done</a>
-									</td>
-									<td id="clearCompletedToDo"><a href="#" id="clearToDoLink">Clear Completed</a></td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-				<br/>
-				<div id="musicControlDiv" class="noDisplay">
-					<h2>Pomodoro on Steroids</h2>
-					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-					<p>
-						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-						<img src="images/help.png" class="helpIcon" title='
-						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-						'/>
-					</p>
-					<p>
-						<input type="checkbox" id="audioFocus">Binaural Soundtrack
-						<img src="images/help.png" class="helpIcon" title='
-						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
-						'/>
-					</p>
-				</div>
-				<div id="pomodoroFocusDiv" class="noDisplay">
-					<h2><span id="pomoFocusTask"></span></h2>
-					<h3>Remaining Time: 
-						<span id="pomoFocusRemainingTime" class="yellow"></span>
-					</h3>
-					
-					<p>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusCompleteTask" title='BOOM! Done!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-check-square-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocusStop" title='Cancel this pomoFocus'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-stop-circle-o"></i>
-							</span>
-						</a>
-						<a href="#" class="noDecoration pomoFocusButtons" id="pomoFocus5minutes" title='Add 5 minutes!'>
-							<span class="fa-stack fa-lg yellow">
-								<i class="fa fa-plus"></i>
-							</span>
-						</a>
-					</p>
-					
-					<!-- <div class="hyperFocusControlDiv noDisplay">
-						<h3>Hyper Focus Controls</p>
-						<h4>Binaural Audio Controls</h4>
-						<audio controls>
-							<source src="audio/focus1.mp3" type="audio/ogg">
-							Your browser does not support the audio element.
-						</audio>
-					</div> -->
-				</div>
-			</div>
-			<div id="tabs-10" class="noDisplay">
-				<input type="button" id="startClick" value="1 min" />
-				<input type="button" id="testClick" value="+5" />
-				<input type="button" id="zeroOut" value="0" />
-				<span id="renderBG">white</span>
-				<div id="renderBGClock"></div>
-			</div>
+			
 		</div>
 	</div>
 </body>

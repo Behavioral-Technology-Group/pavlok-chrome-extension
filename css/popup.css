@@ -171,6 +171,7 @@ div.auth{
 	background-color: black;
 	/* border: 1px solid white; */
 	color: white;
+	max-height: 200px;
 }
 
 #toDoAction table {
@@ -324,4 +325,61 @@ div.auth{
 
 .nowToDoItem{
 	/* display: none; */
+}
+
+/* ************************************************************ */
+/* ************************************************************ */
+
+/* 							Dailies								*/
+
+/* ************************************************************ */
+/* ************************************************************ */
+
+.dailyContainer{
+	width: 100%;
+	background: rgb(10, 10, 10);
+	vertical-align: center;
+	border-collapse: collapse;
+	border-bottom: 1px solid white;
+	color: white;
+}
+
+.dailyItemTR{
+	width: 100%;
+	border-collapse: collapse;
+	border-bottom: 1px solid white;
+}
+
+.dailyItemTR > * {
+	vertical-align: middle;
+}
+
+.dailyItemTR:hover{
+	background: #f8e71c;
+}
+
+.dailyTaskName {
+	padding-left: 2%;
+	width: 48%;
+	text-align: left;
+	/* border: 1px solid blue; */
+}
+
+
+.pomoFocusHolders {
+	padding-right: 1%;
+	/* border: 1px solid white; */
+	width: 47%;
+	text-align: right;
+}
+
+.dailyPomoNow {
+	vertical-align: middle;
+	width: 28px;
+	height: 28px;
+}
+
+.dailyItemTR > td > div {
+	display: inline-block;
+	height: 26px;
 }
