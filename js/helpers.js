@@ -60,7 +60,6 @@ if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
-if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
 
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
@@ -246,70 +245,12 @@ function UpdateBadgeOnOff(badgeText) {
 	}
 }
 
-function UpdateTabCount(tabCount) {
-	UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+function UpdateTabCount(windowId) {
+	chrome.tabs.getAllInWindow(windowId, function(tabs) {
+		UpdateBadgeOnOff(tabs.length.toString() + '/' + localStorage.maxTabs);
+		localStorage[windowId] = tabs.length;
+	});
 }
-
-function countTabs(mode, callback){
-	totalTabs = 0;
-	if (mode == 'allWindows') {
-		chrome.windows.getAll({populate:true},function(windows){
-			windows.forEach(function(window){
-				var winTabs = window.tabs.length;
-				totalTabs = totalTabs + winTabs;
-			});
-			
-			if (typeof callback === "function"){
-				callback(totalTabs);
-			}
-		});
-	}
-	else {		
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			curPavTab = tabs[0];
-			chrome.tabs.getAllInWindow(curPavTab.windowId, function(tabs) {
-				totalTabs = tabs.length;
-				
-				if (typeof callback === "function"){
-					callback(totalTabs);
-				}
-			});
-		});
-		
-	}
-	
-	
-	
-	return
-}
-
-function evaluateTabCount(tabCount){
-	var maxTabs = parseInt(localStorage.maxTabs);
-	if(!maxTabs) {
-		return;
-	}
-	
-	// How is number of tabs compared to tab limit (maxTabs)?
-	if(tabCount > maxTabs) {
-		situation.status = "over";
-		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
-		console.log("total tabs over max tabs");
-	}
-	else if (tabCount == maxTabs ){ 
-		situation.status = "limit";
-		stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
-	 
-	}
-	else if (tabCount == maxTabs - 1){ 
-		situation.status = "borderline";
-		stimuli("vibration", localStorage.vibrationIntensity, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
-	}
-	else { situation.status = "wayBellow"};
-	
-	previousTabs = tabCount;
-	notifyTabCount(tabCount, situation);
-}
-
 
 function hideSignIn(){ 
 	$('#signIn').hide();
@@ -530,7 +471,7 @@ function oauth() {
 					var logged = document.getElementById("logged");
 					$( "#logged" ).append("<span>in</span>");
 					chrome.windows.getLastFocused(function(win) {
-						countTabs(localStorage.tabCountAll, UpdateTabCount);
+						UpdateTabCount(win.windowId);
 						showOptions(accessToken);
 						userInfo(accessToken);
 					});

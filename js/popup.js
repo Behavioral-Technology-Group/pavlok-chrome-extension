@@ -24,6 +24,18 @@ var defAT = '';				// Use default Access Token for stimuli
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+function showName(){
+	// Tries the code against API
+	$.get(localStorage.baseAddress + '/api/v1/me?access_token=' + accessToken)
+	.done(function () {
+		console.log("GOOD token. Works on API.");
+		return true
+	})
+	.fail(function(){
+		console.log("BAD token. Fails on API.");
+		return false
+	});
+}
 
 function showOptions(accessToken){
 	if (isValid(localStorage.accessToken)){

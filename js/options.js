@@ -467,12 +467,6 @@ function rawToPercent(raw){
 	return percN
 }
 
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************        ALL AROUND SECTION         *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
 function enableSelects(){
 	$("#blackListTimeWindow").change(function(){
 		localStorage.timeWindow = $(this).val() ;
@@ -726,11 +720,6 @@ function restoreOptions() {
 	restoreCheckBox('fridayActive', localStorage.fridayActive);
 	restoreCheckBox('saturdayActive', localStorage.saturdayActive);
 	
-	$("#allTabsCountSelect").val(localStorage.tabCountAll);
-	$("#allTabsCountSelect").change(function(){
-		localStorage.tabCountAll = $(this).val();
-	});
-		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 
 	// Stimuli Intensity
