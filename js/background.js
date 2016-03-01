@@ -1,6 +1,4 @@
-﻿
-
-/* To-do:
+﻿/* To-do:
 - DRY code
 
 
@@ -131,17 +129,10 @@ function fireRescueTime(APIKey){
 
 // Black List
 function CheckBlackList(curTabURL, curTabDomain) {
-	var daily = lsGet('dailyPomo', 'parse');
 	
 	var _result = "";
-	if (daily && daily.specialList != false) {
-		var _whiteList = daily.whiteList.split(",");
-		var _blackList = daily.blackList.split(",");
-	}
-	else {
-		var _whiteList = localStorage.whiteList.split(",");
-		var _blackList = localStorage.blackList.split(",");
-	}
+	var _whiteList = localStorage.whiteList.split(",");
+	var _blackList = localStorage.blackList.split(",");
 		
 		// Checks for blackList.
 		if (_blackList.indexOf(curTabDomain) != -1 && 
@@ -365,6 +356,8 @@ function rescueTimeChecker(){
 
 function savePomoFocusB(pomoFocusB){
 	pomoFocusB.lastUpdate = new Date();
+	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	// localStorage.pomoFocusB = JSON.stringify('pomoFocusB');
 	savePomoFocus(pomoFocusB, 'background');
 	localStorage.changedPart = 'To-Do';
 	return pomoFocusB
@@ -469,7 +462,6 @@ function createPomoFocusCountDown(){
 		pomoFocusB.audio = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
-		localStorage.instaZap = 'false';
 	});
 }
 
@@ -554,29 +546,6 @@ function initialize() {
 		}
 	,100);
 	createPomoFocusCountDown();
-	
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.action == "volumeUp" && request.target == 'background'){
-				var myAudioVol = parseFloat(myAudio.volume);
-				if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
-				else { myAudioVol = myAudioVol + 0.1; }
-				
-				myAudio.volume = myAudioVol;
-			}
-			
-			else if (request.action == "volumeDown" && request.target == 'background'){
-				var prevAudioVol = parseFloat(myAudio.volume);
-				var newAudioVol;
-				if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
-				else { newAudioVol = prevAudioVol - 0.1; }
-				
-				myAudio.volume = newAudioVol;
-			}
-			
-			
-		}
-	);
 }
 
 function getTabInfo(callback){
@@ -600,58 +569,28 @@ function getTabInfo(callback){
 
 function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	_result = CheckBlackList(curPAVUrl, curPAVDomain);
-	
-	if(_result == true){		//blacklisted site
-		// Variables
-		var instaZap = localStorage.instaZap;
-		var firstZap = localStorage.firstZap;
-		var timeWindowZap = localStorage.timeWindow;
-		if (instaZap == 'true'){ var timeWindowZap = 8; }
-		
-		// Logic
-		if (counter == true){	// with timer going on
-			if (instaZap == 'true' && firstZap == 'false'){
-				//Zap & Notify
-				stimuli("shock", defInt, defAT);
-				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				// Substitute timeWindow
-				timeWindowZap = 8;
-				localStorage.firstZap = 'true';
-			}
-			else {				// no timer going on
-				notifyUser(msgBlacklisted[0], "Watch out! You have " + timeWindowZap + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-				
-				now = new Date();
-				
-				// Calculate time delta from timer begin and now. It"s then converted from miliseconds to deciseconds (for rouding) and finally to seconds.
-				elapsed = (now - timeBegin) / 100;
-				elapsed = Math.round(elapsed) / 10;
-				
-				document.title = elapsed + "s on blackList"; // Debug. Shows on background.html
-				
-				// if (elapsed >= parseInt(timeWindow)){
-				if (elapsed >= parseInt(timeWindowZap)){
-					notifyUser(msgZaped[0], msgZaped[1], "zapped");
-					stimuli("shock", defInt, defAT);
-					
-					timeBegin = new Date();
-				}			
-			}
+	if(_result == true){
+		if (counter == true){
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
 			
+			now = new Date();
 			
+			// Calculate time delta from timer begin and now. It"s then converted from miliseconds to deciseconds (for rouding) and finally to seconds.
+			elapsed = (now - timeBegin) / 100;
+			elapsed = Math.round(elapsed) / 10;
+			
+			document.title = elapsed + "s on blackList"; // Debug. Shows on background.html
+			
+			if (elapsed >= parseInt(timeWindow)){
+				notifyUser(msgZaped[0], msgZaped[1], "zapped");
+				stimuli("shock", localStorage.zapIntensity, localStorage.accessToken);
+				
+				timeBegin = new Date();
+			}
 		}
 		else {
 			counter = true;
-			if (localStorage.instaZap == 'true'){
-				//Zap & notify
-				stimuli("shock", defInt, defAT);
-				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				localStorage.firstZap = 'true';
-			}
-			else {
-				notifyUser(msgBlacklisted[0], "Watch out! You have " + timeWindowZap + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-			}
-			
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
 			timeBegin = new Date();
 		}
 	}
@@ -660,7 +599,6 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 		timeBegin = null;
 		clearNotifications();
 		counter = false;
-		localStorage.firstZap = 'false';
 	}
 }
 
