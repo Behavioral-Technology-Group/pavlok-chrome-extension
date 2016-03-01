@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -20,7 +20,8 @@ $( document ).ready(function(){
 			"<p>Best,</p>" + 
 			"<p>Pavlok Team</p>" + 
 		'';
-	if (localStorage.showAgain == 'false') { return }
+	// if (localStorage.showAgain == 'false') { return }
+	if (lsGet('showAgain') == 'false' || lsGet('showAgain') == false) { return }
 	else {
 		$.prompt(updateMessage, {
 			title: "Update your App to use the extension with your Pavlok",
@@ -31,7 +32,8 @@ $( document ).ready(function(){
 				console.log("result was " + v);
 				var result = v;
 				if (result == true){
-					localStorage.showAgain = 'false';
+					// localStorage.showAgain = 'false';
+					lsSet('showAgain', 'false');
 				}
 				else{
 					// do nothing
@@ -41,11 +43,92 @@ $( document ).ready(function(){
 	}
 });
 
-// Defaults
-var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
-localStorage.setItem['baseAddress'] = baseAddress;
+/* Future universal settings object
 
-localStorage.baseAddress = baseAddress;
+var settings = {};
+settings.siteLists = {};
+settings.tabsControl = {};
+settings.stimuli = {};
+settings.toDos = {};
+settings.autoZapper = {};
+settings.integrations = {};
+settings.schedule = {};
+settings.user = {};
+
+// Site lists (black and whitelists)
+settings.siteLists.blackList = localStorage.blackList;
+settings.siteLists.blackList = localStorage.whiteList;
+settings.siteLists.blackList = localStorage.timeWindow;
+
+
+// Tab numbers
+settings.tabsControl.maxTabs = localStorage.maxTabs;
+settings.tabsControl.zapOnClose = localStorage.zapOnClose;
+settings.tabsControl.allWindows = localStorage.allWindows;
+
+
+// Stimuli intensity
+settings.stimuli.baseAddress = localStorage.baseAddress;
+settings.stimuli.zapIntensity = localStorage.zapIntensity;
+settings.stimuli.vibrationIntensity = localStorage.vibrationIntensity;
+settings.stimuli.beepVolume = localStorage.beepVolume;
+
+settings.stimuli.zapNotify = localStorage.notifyZap;
+settings.stimuli.vibrationNotify = localStorage.notifyVibration;
+settings.stimuli.beepNotify = localStorage.notifyBeep;
+
+
+// To-do Lists
+settings.toDos.dailies = localStorage.dailies;
+settings.toDos.lastDailyID = localStorage.lastDailyID;
+
+settings.toDos.tasks = localStorage.ToDoTasks;
+settings.toDos.timeConstraints = '';
+settings.toDos.pomoFocus = localStorage.pomoFocus;
+
+
+// AutoZapper
+settings.AutoZapper.intensity = '';
+settings.AutoZapper.duration = '';
+settings.AutoZapper.frequency = '';
+settings.AutoZapper.lastSession = '';
+
+
+// Integrations
+settings.integrations.rescueTime.active = '';
+settings.integrations.rescueTime.APIKey = '';
+settings.integrations.rescueTime.frequency = '';
+settings.integrations.rescueTime.NegLimit = '';
+settings.integrations.rescueTime.NegStimulus = '';
+settings.integrations.rescueTime.NegStimulus = '';
+settings.integrations.rescueTime.PosStimulus = '';
+settings.integrations.rescueTime.PosStimulus = '';
+settings.integrations.rescueTime.WarnStimulus = '';
+settings.integrations.rescueTime.WarnStimulus = '';
+
+
+// Scheduler
+settings.schedule.timeStart = '';
+settings.schedule.timeEnd = '';
+settings.activeDays = [];
+
+
+// User
+settings.user.name = '';
+settings.user.email = '';
+settings.user.accessToken = '';
+
+
+// User prompts
+settings.prompts.listOfPrompts = [];
+settings.prompts.lastShown = '';
+settings.prompts.showAgain = '';
+
+*/
+
+
+var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
+lsSet('baseAddress', baseAddress);
 
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
@@ -60,6 +143,7 @@ if (!localStorage.blackList) { localStorage.blackList = " "; }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
+if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
 
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
@@ -106,10 +190,19 @@ if (!localStorage.pomoFocusP) {
 	pomoFocusP.endTime = timeDelta(0).getTime();
 	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 }
-
+if (!localStorage.dailyList) {
+	lsSet('dailyList', [], 'object');
+}
+if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';
+
+function msgExt(_action, _target){
+	// Action is used to tell what to act upon
+	// Target is used to tell which page should respond to the stimulus
+	chrome.extension.sendMessage({action: _action, target: _target})
+}
 
 function fixNoEndTime(){
 	var ps = [localStorage.pomoFocusO, localStorage.pomoFocusP, localStorage.pomoFocusB];
@@ -184,7 +277,30 @@ function readPomoFocus(x){
 	return PF
 }
 
+function lsSet(key, data, dataType){
+	if (!dataType) { dataType = 'string'; }
+	var returnData;
+	if (dataType == 'object') { 
+		returnData = JSON.stringify(data); 
+	}
+	else { returnData = data; }
+	
+	return localStorage.setItem(key, returnData);
+}
 
+function lsGet(key, parse){
+	if (!parse) { parse = 'string' };
+	var returnData;
+	
+	if (parse == 'parse') { returnData = JSON.parse(localStorage.getItem(key)); }
+	else { returnData = localStorage.getItem(key); }
+	
+	return returnData
+}
+
+function lsDel(key){
+	localStorage.removeItem(key);
+}
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
@@ -245,12 +361,76 @@ function UpdateBadgeOnOff(badgeText) {
 	}
 }
 
-function UpdateTabCount(windowId) {
-	chrome.tabs.getAllInWindow(windowId, function(tabs) {
-		UpdateBadgeOnOff(tabs.length.toString() + '/' + localStorage.maxTabs);
-		localStorage[windowId] = tabs.length;
-	});
+function UpdateTabCount(tabCount) {
+	UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
 }
+
+function countTabs(mode, callback){
+	accountedWindowsId = [];
+	totalTabs = 0;
+	lastWindowID = 0;
+	if (mode == 'allWindows') {
+		chrome.windows.getAll({populate:true},function(windows){
+			windows.forEach(function(window){
+				if (accountedWindowsId.indexOf(window.id) == -1){
+					accountedWindowsId.push(window.id);
+					var winTabs = window.tabs.length;
+					totalTabs = totalTabs + winTabs;
+				}
+			});
+			
+			
+			if (typeof callback === "function"){
+				callback(totalTabs);
+			}
+		});
+	}
+	else {		
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			curPavTab = tabs[0];
+			chrome.tabs.getAllInWindow(curPavTab.windowId, function(tabs) {
+				totalTabs = tabs.length;
+				
+				if (typeof callback === "function"){
+					callback(totalTabs);
+				}
+			});
+		});
+		
+	}
+	
+	
+	
+	return
+}
+
+function evaluateTabCount(tabCount){
+	var maxTabs = parseInt(localStorage.maxTabs);
+	if(!maxTabs) {
+		return;
+	}
+	
+	// How is number of tabs compared to tab limit (maxTabs)?
+	if(tabCount > maxTabs) {
+		situation.status = "over";
+		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
+		console.log("total tabs over max tabs");
+	}
+	else if (tabCount == maxTabs ){ 
+		situation.status = "limit";
+		stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
+	 
+	}
+	else if (tabCount == maxTabs - 1){ 
+		situation.status = "borderline";
+		stimuli("vibration", localStorage.vibrationIntensity, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
+	}
+	else { situation.status = "wayBellow"};
+	
+	previousTabs = tabCount;
+	notifyTabCount(tabCount, situation);
+}
+
 
 function hideSignIn(){ 
 	$('#signIn').hide();
@@ -438,7 +618,10 @@ function oauth() {
 		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
 		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
 	}
-	
+	else if (usage == "varunSTAGE" || usage || "varunMVP" ){
+		var clientID = "f55f448e93f68a8a3b9e4723be626e62553d6d54c9ebe2924bf022c4e88695e0";
+		var clientSecret = "7cf4d85e884193dab1365845dcb1593c5c6529c538d9310df3b7c485daf40682";
+	}
 	var authURL = localStorage.baseAddress + "oauth/authorize?" + 
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
@@ -471,7 +654,7 @@ function oauth() {
 					var logged = document.getElementById("logged");
 					$( "#logged" ).append("<span>in</span>");
 					chrome.windows.getLastFocused(function(win) {
-						UpdateTabCount(win.windowId);
+						countTabs(localStorage.tabCountAll, UpdateTabCount);
 						showOptions(accessToken);
 						userInfo(accessToken);
 					});
