@@ -587,3 +587,9 @@ div.buttonHolder{
 *{
     outline:none;
 }
+
+/* *********************************** */
+
+.blurred{
+	-webkit-filter: blur(2px);
+}

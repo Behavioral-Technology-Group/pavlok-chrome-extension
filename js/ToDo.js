@@ -469,6 +469,7 @@ function togglePomodoro(toState){
 		else { $(hyperControl).addClass('noDisplay'); }
 	}
 	else {
+		lsSet('instaZap', 'false');
 		$(confDiv).removeClass('noDisplay');
 		$(focusDiv).addClass('noDisplay');
 	}
