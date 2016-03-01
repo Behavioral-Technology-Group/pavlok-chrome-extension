@@ -7,109 +7,23 @@
 		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.svg') format('svg');
 }
 
-#status {
-	background-color: #E2A92B;
-	display: none;
-	color: #E2A92B;
-	height: 110px;
-	width: 355px;
-	text-align: center;
-	vertical-align: middle;
-}
 
 body {
-	font-family: Helvetica,Arial,sans-serif;
-	font-size:small;
-	color:#000;
-	background:
-		linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-		linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-		linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-		linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-		linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-		linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-	background-color: #131313;
-	background-size: 20px 20px;
-	width: 24rem;
-	padding: 1rem;
+  font-family: Helvetica,Arial,sans-serif;
+  font-size:small;
+  color: white;
+  /* background: linear-gradient(white, #f8e71c); */
+  background: black;
 }
 
-#save{
-	background-image: url('../images/save.png');
-	margin-top: 1em;
-}
-
-p {
-	color: white;
-	font-family: Helvetica;
-}
-
-h2 {
-	color: white;
-	font-family: Helvetica;
-	margin-bottom: 0
-}
-
-h3 {
-	color: white;
-	font-family: Helvetica;
-	margin-bottom: 0
-}
 
 #label-text {
-	color: white;
+  color: white;
 }
-
-#signOut{
-	color: yellow;
-	/* background-color: #47639E; */
-	background-color: black;
-	border: 1px solid white;
-	padding: 2px 0px 2px 0px;
-	margin-bottom: 5px;
-	border-radius: 7px;
-	display: block;
-	text-align: center;
-}
-
-#optionsLink{
-	color: yellow;
-	/* background-color: #47639E; */
-	background-color: black;
-	border: 1px solid white;
-	padding: 2px 11px 2px 11px;
-	margin-bottom: 5px;
-	border-radius: 7px;
-	display: block;
-	text-align: center;
-}
-
-ul.nav{
-	list-style-type: none;
-	left:0;
-	padding:0;
-}
-
-div.auth{
-	text-decoration: none;
-}
-
-#optionsDiv{
-	visibility: hidden;
-}
-
 
 .helpIcon {
-	height:20px;
-	width: 20px;
-}
-
-.helpBox {
-	display: none;
-		padding-top: 20px;
-		padding-bottom: 20px;
-		padding-left: 80px;
-
+  height:20px;
+  width: 20px;
 }
 
 .yellow{
@@ -120,44 +34,185 @@ div.auth{
 	visibility: hidden;
 }
 
-.onlyUnlooged{
+.onlyUnlogged{
 	visibility: visible;
 }
 
-.tagContainer {
-	width: 200px;
-	height: 50px;
+.noDisplay{
+	display: none;
 }
 
+th {
+	width: 130px;
+    border: 3px solid white;
+	border-collapse: collapse;
+	color: white;
+}
 
-.noDisplay {
+#dayTimeTable td {
+	width: 130px;
+    border: 1px solid white;
+	border-collapse: collapse;
+	color: white;
+}
+
+#dayTimeTable {
+	border: 1px solid white;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.hasTimePicker {
+	width: 50px;
+}
+
+.50px {
+	width: 50px;
+}
+
+.100px {
+	width: 100px;
+}
+
+#autoZapperTable th {
+	/* width: 400px; */
+	width: 25%;
+}
+#autoZapperTable input {
+	width: 50px;
+}
+
+#autoZapperStart {
+  text-align: center;
+  color: white;
+  background-color: #f8e71c;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  width: 85%;
+  display: block;
+}
+
+#autoZapperStop {
+  text-align: center;
+  color: white;
+  background-color: red;
+  padding: 7px 11px 7px 11px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+  display: block;
+  width: 85%;
+}
+
+.trainingSessionConfigurations{
 	display: none;
+}
+
+#selectable td {
+	color: white;
+}
+
+#selectable .ui-selecting {
+    background: #ffff60;
+}
+#selectable .ui-selected {
+    background: #fec93d;
+}
+
+.roundedBorders{
+	border-top-left-radius: 16px;
+	border-bottom-left-radius: 16px;
+	border-top-right-radius: 16px;
+	border-bottom-right-radius: 16px;
+	border: 2px solid white;
+}
+
+.whiteContour{
+	border: 1px solid white;
+}
+
+.allCaps{
+	text-transform: uppercase;
+	font-size: 130%;
+}
+
+.smallLetters{
+	font-size: 75%;
+}
+
+.toRight {
+	text-align: right;
+}
+
+ul {
+    background: black;
+}
+
+h2 .helpIconSpan{
+	border-radius: 30px;
+    background-color:rgba(248, 231, 28, 1);
+	color:black;
+    padding-left:6px;
+    padding-right: 6px;
+    padding-top:2px;
+    padding-bottom:2px;
+    font-size:15px;
+	font-weight: bold;
+}
+
+.helpIconSpan{
+	border-radius: 30px;
+    background-color:rgba(248, 231, 28, 1);
+	color:black;
+    padding-left:10px;
+    padding-right: 10px;
+    padding-top:2px;
+    padding-bottom:2px;
+    font-size:17px;
+	/* font-weight: bold; */
 }
 
 .logo{
 	width: 190px;
 	height: 50px;
-	padding: 5px;
-	
 }
 
-.testStimulusButton{
-	width: 25px;
-	height: 25px;
+.display{
+	display: "block"
 }
 
-#navHeader{
-	width: 100%;
-	/* border: 1px solid red; */
-	border-collapse: collapse;
+#chartContainer{
+	width: 500px;
+	height: 100px;
 }
 
-#navHeader td{
-	/* border: 1px solid blue; */
+.miniChartDiv{
+	height: 50px;
+	display: inline-block;
 }
 
-.centered {
-	text-align: center;
+#miniChart{
+	width: 500px;
+}
+
+#badRT{
+	background-color: red;
+	width: 22%;
+}
+
+#warnRT{
+	background-color: orange;
+	width: 22%;
+}
+
+#notifyRT{
+	background-color: white;
+	width: 22%;
+}
+
+#goodRT{
+	background-color: green;
+	width: 22%;
 }
 
 /* ***************************************************************** */
@@ -219,12 +274,12 @@ div.auth{
 }
 
 .toDoOTaskTD {
-	width: 60%;
+	width: 77%;
 }
 
 .toDoORemoverTD {
 	text-align: right;
-	width: 35%;
+	width: 15%;
 }
 
 .doneTaskRow .toDoOTaskTD {
@@ -271,8 +326,8 @@ div.auth{
 	width: 5%;
 }
 
-#toDoAdd {
-	width: 90%;
+#toDOAdd{
+	width: 95%;
 }
 
 #toDoAction .imgIcon{
@@ -306,11 +361,11 @@ div.auth{
 	width: 35px;
 }
 
-.grayscale {
+.grayScale {
 	-webkit-filter: grayscale(100%);
 }
 
-.jqimessage p{
+.jqimessage > p{
 	color: rgb(68, 68, 68);
 }
 

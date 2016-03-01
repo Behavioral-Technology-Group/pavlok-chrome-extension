@@ -1,20 +1,29 @@
 /* To-do
-- Enable login through here
-- Fix the maxTabs discrepancy
-- Fix test pairing button
+
 */
-function showName(){
-	// Tries the code against API
-	$.get('https://pavlok-stage.herokuapp.com/api/v1/me?access_token=' + accessToken)
-	.done(function () {
-		console.log("GOOD token. Works on API.");
-		return true
-	})
-	.fail(function(){
-		console.log("BAD token. Fails on API.");
-		return false
-	});
-}
+var pomoFocusP = {};
+var pomoFocusO;
+var pomoFocusB;
+
+var todayDivTest;
+var focusCompleteMsg = "Keep the zone going, you rock star!";
+var focusStopMsg = ''; 
+var defInt = '';			// Use default intensity for stimuli
+var defAT = '';				// Use default Access Token for stimuli
+
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           To-Do Section           *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+// Status for the tasks are put as classes on the ROW of the item.
+// TO-DO Helpers
+
+
+////////////////////////////////////////////////////////////////////////////////////
+
 
 function showOptions(accessToken){
 	if (isValid(localStorage.accessToken)){
@@ -27,32 +36,22 @@ function showOptions(accessToken){
 	}
 }
 
-function adjustOverInteractions(token, userName) {
-	if (isValid(token)) {
-		hideSignIn();
-		showSignOut();
-		showOptions();
-		showName(userName);
-	}
-	else {
-		hideOptions();
-		hideName();
-	}
-	return
-}
-
-
 $( document ).ready(function() {
-	$("#signIn").click(function(){
-		oauth();
-	});
+	enableTooltips();
+	if ( !localStorage.userName ) 	{ userInfo(localStorage.accessToken); }
+	if ( localStorage.userName ) 	{ updateNameAndEmail(localStorage.userName, localStorage.userEmail); }
 	
 	$("#signOut").click(function(){
 		signOut();
 	});
 	
+	$("#beepTest").click(function(){ 
+		stimuli('beep', '255', localStorage.accessToken, "You'll get a Beep and a notification on your phone", 'false'); 
+	});
+	$("#vibrateTest").click(function(){ stimuli('vibration', localStorage.vibrationIntensity, localStorage.accessToken, "You'll get a Vibration and a notification on your phone", 'false'); });
+	$("#zapTest").click(function(){stimuli('shock', localStorage.zapIntensity, localStorage.accessToken, "You'll get a Zap and a notification on your phone", 'false'); });
+	
 	// Restore Max Tabs
-	if (localStorage.maxTabs == undefined) { localStorage.maxTabs = 6; }
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
@@ -72,35 +71,11 @@ $( document ).ready(function() {
 		'defaultText':'Add site',
 		'removeWithBackspace' : true
 	});
-	
-	// Help boxes
-	$('#whiteListHelp').hover(
-	function(){
-		$( '#whiteListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#whiteListHelpBox').fadeOut();
-		}
-	);
-	
-	 $('#blackListHelp').hover(
-	function(){
-		$( '#blackListHelpBox' ).fadeIn();
-	},
-	function(){
-		$( '#blackListHelpBox').fadeOut();
-		}
-	);	
 
-	$("#test_pairing").click(function(){
-		stimuli("vibration", 230, localStorage.accessToken, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
-	});
-	
+	enableToDo();
 	if (localStorage.logged == 'true') {
 		// Toggle visibility for options
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
-		
 	}
-	
 });
