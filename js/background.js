@@ -134,6 +134,8 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	var daily = lsGet('dailyPomo', 'parse');
 	
 	var _result = "";
+	
+	// Checks if it will use regular or daily black and whitelists
 	if (daily && daily.specialList != false) {
 		var _whiteList = daily.whiteList.split(",");
 		var _blackList = daily.blackList.split(",");
@@ -143,21 +145,21 @@ function CheckBlackList(curTabURL, curTabDomain) {
 		var _blackList = localStorage.blackList.split(",");
 	}
 		
-		// Checks for blackList.
-		if (_blackList.indexOf(curTabDomain) != -1 && 
-			_whiteList.indexOf(curTabURL) == -1){
-				console.log(curTabURL + " is blacklisted");
-				return true
-		}
-		else{
-			// console.log(curTabURL + " is not blacklisted");
-			return false
-		}
-		
+	// Checks domain against BlackList and URL agains WhiteList
+	if (_blackList.indexOf(curTabDomain) != -1 && 
+		_whiteList.indexOf(curTabURL) == -1){
+			console.log(curTabURL + " is blacklisted");
+			return true
+	}
+	else{
+		// console.log(curTabURL + " is not blacklisted");
+		return false
+	}
 	
-	var _result = localStorage.blackListEval;
-	_result = ( _result === "true" ); // converts string to boolean
-	return _result
+	
+	// var _result = localStorage.blackListEval;
+	// _result = ( _result === "true" ); // converts string to boolean
+	// return _result
 }
 
 // Tab counting
@@ -408,17 +410,17 @@ function equalizePomoFocus(latest){
 	localStorage.pomoFocusP = JSON.stringify(latest);
 }
 
-function updateCountdown(){
-	fixNoEndTime();
-	localStorage.endReason = 'time';
-	var pomoFocusB = getPomoFocus('background');
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
+// function updateCountdown(){
+	// fixNoEndTime();
+	// localStorage.endReason = 'time';
+	// var pomoFocusB = getPomoFocus('background');
+	// var clockDiv = $('#pomoFocusRemainingTime');
+	// var taskSpan = $('#pomoFocusTask');
 	
-	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	});
-}
+	// $(clockDiv).countdown(pomoFocusB.endTime, function(event) {
+		// $(this).html(event.strftime('%M:%S'));
+	// });
+// }
 
 function checkForUpdate(){
 	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
@@ -448,30 +450,30 @@ function checkForUpdate(){
 	}
 }
 
-function createPomoFocusCountDown(){
-	localStorage.endReason = 'time';
-	pomoFocusB = getPomoFocus('background');
-	var endDate = dateFromTime(pomoFocusB.endTime);
+// function createPomoFocusCountDown(){
+	// localStorage.endReason = 'time';
+	// pomoFocusB = getPomoFocus('background');
+	// var endDate = dateFromTime(pomoFocusB.endTime);
 	
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
+	// var clockDiv = $('#pomoFocusRemainingTime');
+	// var taskSpan = $('#pomoFocusTask');
 	
-	var timer = $(clockDiv).countdown(endDate, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	})
-	.on('finish.countdown', function(event) {
+	// var timer = $(clockDiv).countdown(endDate, function(event) {
+		// $(this).html(event.strftime('%M:%S'));
+	// })
+	// .on('finish.countdown', function(event) {
 		
-		if (localStorage.endReason == 'time') {
-			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
-		}
-		console.log("PomoFocus ended");
-		pomoFocusB.audio = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-	});
-}
+		// if (localStorage.endReason == 'time') {
+			// stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+			// notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+		// }
+		// console.log("PomoFocus ended");
+		// pomoFocusB.audio = false;
+		// savePomoFocus(pomoFocusB, 'background');
+		// PFpromptForce = true;
+		// localStorage.instaZap = 'false';
+	// });
+// }
 
 var countDownSafetyCheck = setInterval(function(){ updateCountdown();}, 2000);
 var testInt = setInterval(function(){ 

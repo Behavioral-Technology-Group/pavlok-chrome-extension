@@ -332,13 +332,23 @@ function createPomoFocusCountDown(){
 	pomoFocusB = getPomoFocus('background');
 	var endDate = dateFromTime(pomoFocusB.endTime);
 	
-	$('#pomoFocusRemainingTime').countdown(endDate, function(event) {
+	var clockDiv = $('#pomoFocusRemainingTime');
+	var taskSpan = $('#pomoFocusTask');
+	
+	var timer = $(clockDiv).countdown(endDate, function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
-		togglePomodoro("configure");
+		
+		if (localStorage.endReason == 'time') {
+			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+		}
+		console.log("PomoFocus ended");
+		pomoFocusB.audio = false;
+		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
-		lsDel('dailyPomo');
+		localStorage.instaZap = 'false';
 	});
 }
 
@@ -351,6 +361,7 @@ function updateCountdown(){
 	var taskSpan = $('#pomoFocusTask');
 	
 	if (pomoFocusB.endTime > now){
+		lsSet('endReason', 'time');
 		togglePomodoro('focus');
 		$(taskSpan).html("Focusing on <span class='yellow'>" + pomoFocusB.task + "</span>");
 		$(clockDiv).countdown(dateFromTime(pomoFocusB.endTime), function(event) {
@@ -495,12 +506,17 @@ function pomodoroOnSteroids(){
 			"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
 			"<p>" + 
 				"<select id='minutesPomodoro'>" + 
-					"<option value='1'>1 minutes</option>" + 
+					"<option value='2'>2 minutes</option>" + 
 					"<option value='5'>5 minutes</option>" + 
 					"<option value='10'>10 minutes</option>" + 
 					"<option value='15'>15 minutes</option>" + 
+					"<option value='20'>20 minutes</option>" + 
+					"<option selected value='25'>25 minutes</option>" + 
 					"<option value='30'>30 minutes</option>" + 
 					"<option value='45'>45 minutes</option>" + 
+					"<option value='60'>1 hour</option>" + 
+					"<option value='90'>1hour and 30 minutes</option>" + 
+					"<option value='120'>2 hours</option>" + 
 				"</select>" + 
 			"</p>" +
 			"<div>" + 
@@ -509,14 +525,6 @@ function pomodoroOnSteroids(){
 					"<option id='audioTrue' value='true'>Yes, get me there!</option>" + 
 					"<option id='audioFalse' value='false'>No, I'm fine.</option>" + 
 				"</select></p>" + 
-				"<div class='musicOnly noDisplay'>" + 
-					"<p>Great! Get some good earphones and let [[xxx]] audio help you easy into the zone.</p>" + 
-					"<p>" + 
-						"<video controls='' autoplay='' name='media'>" + 
-							"<source src='https://www.youtube.com/watch?v=xGvs6uekFnM' type='audio/mpeg'>" +
-						"</video>" +
-					"</p>" + 
-				"</div>" +
 			"</div>"
 			
 			;
