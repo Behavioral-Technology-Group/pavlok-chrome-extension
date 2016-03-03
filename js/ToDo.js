@@ -3,18 +3,7 @@
 		- Page Controls should determine if BlackList and WhiteList are editable or not
 		- Instazap has to be thought;
 		- Put a counter on every tab when in pomoFocus
-		
-
-BOOM!	- Update Black and WhiteList to show proper lists without the backspace
-BOOM!	- Test Binaural button should work
-BOOM!	- Sync tasks in real time
-BOOM!	- Fix lastID not being updated
-BOOM!	- Create daily (repeated) tasks
-BOOM!	- Change the blacklist and whitelist during daily pomoFocus
-BOOM!	- Create daily tasks display
-BOOM!	- Add new Daily tasks
-BOOM!	- Delete Daily tasks
-BOOM!	- Update Daily on PopUp
+		- Find what is reseting the background BEFORE equalizing.
 
 */
 
@@ -465,6 +454,10 @@ function togglePomodoro(toState){
 	instaZap = instaZap == 'true';
 	$("#instaZap").prop( "checked", instaZap);
 
+	var lockZap = lsGet('lockZap');
+	lockZap = lockZap == 'true';
+	$("#lockZap").prop( "checked", lockZap);
+	
 	var confDiv = $("#toDoDiv");
 	var focusDiv = $("#pomodoroFocusDiv");
 	var hyperControl = $(".hyperFocusControlDiv");
@@ -546,6 +539,8 @@ function pomodoroOnSteroids(){
 					lsSet('endReason', 'time');
 					
 					togglePomodoro('focus');
+					myAudio = new Audio('../Audio/ticktock.mp3');
+					myAudio.play();
 				}
 				else{
 					$(".nowTaskRow").removeClass("nowTaskRow");
@@ -857,40 +852,6 @@ function updateTasksLog(){
 	msgExt('TaskList', 'popup');
 	msgExt('TaskList', 'options');
 }
-
-function updateToDo(changedPart){
-	pomoFocusP = readPomoFocus('pomoFocusP');
-	pomoFocusO = readPomoFocus('pomoFocusO');
-	pomoFocusB = readPomoFocus('pomoFocusB');
-	
-	if (pomoFocusB.lastUpdate > pomoFocusO.lastUpdate){
-		pomoFocusO = pomoFocusB;
-		// localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
-		savePomoFocus(pomoFocusO);
-	}
-	// Updates the list and the focus
-	
-	// Delete all TR. Recreate all TR
-	$(".toDoItemTR").remove()
-	restoreTaskList();
-	// Save last update date
-	var now = new Date().getTime();
-	console.log("Last update at " + new Date());
-	
-	// Checks if it is active
-	if (pomoFocusO.active == true && pomoFocusO.endTime > now){
-		updatePomoFocus(pomoFocusO.endTime, pomoFocusO.task, 'prompt');
-		togglePomodoroFocus('focus');
-	}
-		
-	delete localStorage.changedPart;
-		
-		
-		
-	
-}
-
-
 
 
 /* ***************************************************************** */
