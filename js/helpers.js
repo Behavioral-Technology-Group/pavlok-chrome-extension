@@ -205,14 +205,14 @@ function msgExt(_action, _target){
 }
 
 function fixNoEndTime(){
-	var ps = [localStorage.pomoFocusO, localStorage.pomoFocusP, localStorage.pomoFocusB];
-	var pages = ['options', 'popup', 'background'];
+	var ps = [lsGet('pomoFocusO', 'parse'), lsGet('pomoFocusB', 'parse'), lsGet('pomoFocusP', 'parse')];
+	var pages = ['options', 'background', 'popup'];
 	var now = deltaTime(0).getTime();
 	
-	for (p=0; p<ps.length; p++){
-		var pomoFocus = JSON.parse(ps[p]);
+	for ( p = 0; p < ps.length; p++ ){
+		var pomoFocus = ps[p];
 		if (pomoFocus.endTime * 2 / 2 == pomoFocus.endTime){
-			return
+			continue
 		}
 		else {
 			pomoFocus.endTime = now;
@@ -250,10 +250,13 @@ function getPomoFocus(win){
 function savePomoFocus(pomoFocus, win){
 	var now = new Date().getTime();
 	pomoFocus.lastUpdate = now;
-	if (win == 'options') 			{ localStorage.pomoFocusO = JSON.stringify(pomoFocus); }
-	else if (win == 'background') 	{ localStorage.pomoFocusB = JSON.stringify(pomoFocus); }
-	else if (win == 'popup') 		{ localStorage.pomoFocusP = JSON.stringify(pomoFocus); }
+	// if (win == 'options') 			{ lsSet('pomoFocusO', pomoFocus, 'object'); }
+	// else if (win == 'background') 	{ lsSet('pomoFocusB', pomoFocus, 'object'); }
+	// else if (win == 'popup') 		{ lsSet('pomoFocusP', pomoFocus, 'object'); }
 	
+	equalizePomoFocus(pomoFocus);
+	
+	updateCountdown();
 	return pomoFocus
 }
 
@@ -275,6 +278,10 @@ function readPomoFocus(x){
 	
 	if (!PF.lastUpdate) { PF.lastUpdate = longAgo; }
 	return PF
+function equalizePomoFocus(latest){
+	lsSet('pomoFocusB', latest, 'object');
+	lsSet('pomoFocusO', latest, 'object');
+	lsSet('pomoFocusP', latest, 'object');
 }
 
 function lsSet(key, data, dataType){
@@ -302,6 +309,9 @@ function lsDel(key){
 	localStorage.removeItem(key);
 }
 
+function nowTime(){
+	return new Date().getTime();
+}
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/

@@ -177,7 +177,7 @@ function startDailyPomodoro(daily){
 	pomoFocus.taskID = daily.id
 	pomoFocus.daily = true;
 	
-	savePomoFocus(pomoFocus, 'options');
+	savePomoFocus(pomoFocus, 'popup');
 	
 	return
 }
@@ -345,6 +345,7 @@ function createPomoFocusCountDown(){
 			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
 		}
 		console.log("PomoFocus ended");
+		pomoFocusB = lsGet('pomoFocusB', 'parse');
 		pomoFocusB.audio = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
@@ -361,7 +362,6 @@ function updateCountdown(){
 	var taskSpan = $('#pomoFocusTask');
 	
 	if (pomoFocusB.endTime > now){
-		lsSet('endReason', 'time');
 		togglePomodoro('focus');
 		$(taskSpan).html("Focusing on <span class='yellow'>" + pomoFocusB.task + "</span>");
 		$(clockDiv).countdown(dateFromTime(pomoFocusB.endTime), function(event) {
@@ -407,9 +407,10 @@ function pomoFocusButtons(){
 		togglePomodoro('configure');
 		PFpromptForce = false;
 		localStorage.instaZap = 'false';
+		pomoFocus.duration = 0;
 		pomoFocus.endTime = new Date().getTime();
-		savePomoFocus(pomoFocus, 'options');
-		
+		pomoFocus.endReason = 'done';
+		savePomoFocus(pomoFocus, 'popup');
 	});
 	
 	$("#pomoFocusStop").click(function(){
@@ -417,9 +418,10 @@ function pomoFocusButtons(){
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
 		pomoFocus.endTime = new Date().getTime();
+		pomoFocus.duration = 0;
 		pomoFocus.daily = false;
 		localStorage.instaZap = 'false';
-		savePomoFocus(pomoFocus, 'options');
+		savePomoFocus(pomoFocus, 'popup');
 		lsDel('dailyPomo');
 		
 	});
@@ -429,7 +431,7 @@ function pomoFocusButtons(){
 		var endTime = pomoFocus.endTime;
 		var newEndTime = endTime + 5 * 60 * 1000;
 		pomoFocus.endTime = newEndTime;
-		savePomoFocus(pomoFocus, 'options');
+		savePomoFocus(pomoFocus, 'popup');
 	});
 
 	$("#playBinauralButton").click(function(){
@@ -438,7 +440,7 @@ function pomoFocusButtons(){
 		$("#playBinauralButton").addClass('noDisplay');
 		
 		pomoFocus.audio = true;
-		savePomoFocus(pomoFocus, 'options');
+		savePomoFocus(pomoFocus, 'popup');
 	});
 	$("#stopBinauralButton").click(function(){
 		$("#playBinauralButton").removeClass('noDisplay');
@@ -446,7 +448,7 @@ function pomoFocusButtons(){
 		
 		var pomoFocus = getPomoFocus('background');
 		pomoFocus.audio = false;
-		savePomoFocus(pomoFocus, 'options');
+		savePomoFocus(pomoFocus, 'popup');
 		
 	});
 	$("#vDownBinaural").click(function(){
@@ -500,6 +502,7 @@ function pomodoroOnSteroids(){
 		pomoFocus.task			= item.Task;
 		pomoFocus.silent		= 'promptOnEnd';
 		pomoFocus.lastUpdate	= new Date().getTime();
+		pomoFocus.endReason     = 'time';
 		
 		// Prepare the prompt
 		var msg = "" + 
@@ -535,19 +538,21 @@ function pomodoroOnSteroids(){
 				console.log("Enter PomoFocus result was " + v);
 				var result = v;
 				if (result == true){
-					localStorage.pomoFocusDuration = $("#minutesPomodoro").val();
-					localStorage.pomoFocusHyper = $("#hyperFocusSelect").val();
-					togglePomodoro('focus');
-					
-					pomoFocus.duration		= parseInt($("#minutesPomodoro").val());
-					pomoFocus.endTime		= deltaTime(pomoFocus.duration * 60).getTime();
+					pomoFocus.duration	= parseInt($("#minutesPomodoro").val());
+					pomoFocus.endTime	= deltaTime(pomoFocus.duration * 60).getTime();
 					pomoFocus.hyper		= $("#hyperFocusSelect").val()
 					pomoFocus.daily		= false;
-					savePomoFocus(pomoFocus, 'options');
+					pomoFocus.endReason = 'time';
+					pomoFocus.lastUpdate = nowTime();
+					
+					savePomoFocus(pomoFocus, 'popup');
+					lsSet('endReason', 'time');
+					
+					togglePomodoro('focus');
 				}
 				else{
-					delete localStorage.pomoFocusTask;
 					$(".nowTaskRow").removeClass("nowTaskRow");
+					lsDel('pomoFocusTask');
 					lsDel('dailyPomo');
 				}
 				updateTasksLog();
@@ -852,7 +857,6 @@ function updateTasksLog(){
 	localStorage.ToDoTasks = JSON.stringify(tasks);
 	
 	// Propagate changes to every window
-	// msgExt('TaskList', 'background');
 	msgExt('TaskList', 'popup');
 	msgExt('TaskList', 'options');
 }

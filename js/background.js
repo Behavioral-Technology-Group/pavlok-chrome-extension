@@ -394,6 +394,7 @@ function stopAudio(){
 function checkForAudio(){
 	var audioAddress = '../audio/focus1min.mp3';
 	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
+	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	var now = deltaTime(0).getTime();
 	
 	if (pomoFocusB.endTime > now && pomoFocusB.audio == true){
@@ -404,23 +405,19 @@ function checkForAudio(){
 	}
 }
 
-function equalizePomoFocus(latest){
-	localStorage.pomoFocusB = JSON.stringify(latest);
-	localStorage.pomoFocusO = JSON.stringify(latest);
-	localStorage.pomoFocusP = JSON.stringify(latest);
-}
 
-// function updateCountdown(){
-	// fixNoEndTime();
-	// localStorage.endReason = 'time';
-	// var pomoFocusB = getPomoFocus('background');
-	// var clockDiv = $('#pomoFocusRemainingTime');
-	// var taskSpan = $('#pomoFocusTask');
+
+function updateCountdownBack(latest){
+	fixNoEndTime();
+	if (!latest){ var pomoFocusB = getPomoFocus('background'); }
+	else { var pomoFocusB = latest; }
+	var clockDiv = $('#pomoFocusRemainingTime');
+	var taskSpan = $('#pomoFocusTask');
 	
-	// $(clockDiv).countdown(pomoFocusB.endTime, function(event) {
-		// $(this).html(event.strftime('%M:%S'));
-	// });
-// }
+	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	});
+}
 
 function checkForUpdate(){
 	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
@@ -445,42 +442,47 @@ function checkForUpdate(){
 			countersArray[indexesArray[c]] = latest;
 		}
 		
+		console.log(maxIndex);
 		equalizePomoFocus(latest);
-		updateCountdown();
+		updateCountdownBack(latest);
 	}
 }
 
-// function createPomoFocusCountDown(){
-	// localStorage.endReason = 'time';
-	// pomoFocusB = getPomoFocus('background');
-	// var endDate = dateFromTime(pomoFocusB.endTime);
+function createPomoFocusCountDownBack(){
+	pomoFocusB = getPomoFocus('background');
+	pomoFocusB.endReason = 'time';
+	if (localStorage.endReason == 'time' || !localStorage.endReason ){
+		localStorage.endReason = 'time';
+	}
 	
-	// var clockDiv = $('#pomoFocusRemainingTime');
-	// var taskSpan = $('#pomoFocusTask');
+	var endDate = dateFromTime(pomoFocusB.endTime);
 	
-	// var timer = $(clockDiv).countdown(endDate, function(event) {
-		// $(this).html(event.strftime('%M:%S'));
-	// })
-	// .on('finish.countdown', function(event) {
+	var clockDiv = $('#pomoFocusRemainingTime');
+	var taskSpan = $('#pomoFocusTask');
+	
+	var timer = $(clockDiv).countdown(endDate, function(event) {
+		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
 		
-		// if (localStorage.endReason == 'time') {
-			// stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			// notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
-		// }
-		// console.log("PomoFocus ended");
-		// pomoFocusB.audio = false;
-		// savePomoFocus(pomoFocusB, 'background');
-		// PFpromptForce = true;
-		// localStorage.instaZap = 'false';
-	// });
-// }
+		if (localStorage.endReason == 'time') {
+			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
+			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+		}
+		console.log("PomoFocus ended");
+		pomoFocusB.audio = false;
+		savePomoFocus(pomoFocusB, 'background');
+		PFpromptForce = true;
+		localStorage.instaZap = 'false';
+	});
+}
 
-var countDownSafetyCheck = setInterval(function(){ updateCountdown();}, 2000);
+var countDownSafetyCheck = setInterval(function(){ updateCountdownBack();}, 2000);
 var testInt = setInterval(function(){ 
 	checkForUpdate();
 	checkForAudio();
 	}, 100);
-$( document ).ready( function() { updateCountdown(); });
+$( document ).ready( function() { updateCountdownBack(); });
 
 
 
@@ -555,7 +557,7 @@ function initialize() {
 			}
 		}
 	,100);
-	createPomoFocusCountDown();
+	createPomoFocusCountDownBack();
 	
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
