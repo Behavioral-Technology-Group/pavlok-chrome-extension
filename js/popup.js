@@ -28,16 +28,16 @@ function enableTestButtons(){
 	});
 }
 
-function showOptions(accessToken){
-	if (isValid(localStorage.accessToken)){
-		$(".onlyLogged").css('visibility', 'visible'); 
-		$(".onlyUnlogged").css('display', 'none'); 
-	}
-	else { 
-		$(".onlyLogged").css('visibility', 'hidden'); 
-		$(".onlyUnlogged").css('display', 'block'); 
-	}
-}
+// function showOptions(accessToken){
+	// if (isValid(localStorage.accessToken)){
+		// $(".onlyLogged").css('visibility', 'visible'); 
+		// $(".onlyUnlogged").css('display', 'none'); 
+	// }
+	// else { 
+		// $(".onlyLogged").css('visibility', 'hidden'); 
+		// $(".onlyUnlogged").css('display', 'block'); 
+	// }
+// }
 
 $( document ).ready(function() {
 	enableTooltips();

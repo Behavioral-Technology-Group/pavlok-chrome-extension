@@ -1,7 +1,6 @@
 ﻿
 
 /* To-do:
-- DRY code
 
 
 */
@@ -167,13 +166,6 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	
 }
 
-// Tab counting
-function CheckTabCount(tab, token, stimulus) { // checked. All working fine
-	if (isValid(token) && checkActiveDayHour()){
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
-	}
-}
-
 // Notifications
 function notifyTabCount(tabs, situation){
 	var notTitle = "";
@@ -213,36 +205,6 @@ function notifyTabCount(tabs, situation){
 	}
 	
 	notifyUser(notTitle, notMessage, notID);
-}
-
-function notifyUser(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
-	
-	chrome.notifications.create(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
-		}
-	});
-}
-
-function updateNotification(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
-	
-	chrome.notifications.update(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
-			console.error(chrome.runtime.lastError);
-		}
-	});
 }
 
 function clearNotifications(){
@@ -416,7 +378,7 @@ function updateCountdownBack(latest){
 	});
 }
 
-function checkForUpdate(){
+function checkForUpdateBack(){
 	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
 	var oCounter = getPomoFocus('options');
 	var pCounter = getPomoFocus('popup');
@@ -476,7 +438,7 @@ function createPomoFocusCountDownBack(){
 
 var countDownSafetyCheck = setInterval(function(){ updateCountdownBack();}, 2000);
 var testInt = setInterval(function(){ 
-	checkForUpdate();
+	checkForUpdateBack();
 	checkForAudio();
 	}, 100);
 $( document ).ready( function() { updateCountdownBack(); });

@@ -425,14 +425,14 @@ function evaluateTabCount(tabCount){
 }
 
 
-function hideSignIn(){ 
-	$('#signIn').hide();
-}
+// function hideSignIn(){ 
+	// $('#signIn').hide();
+// }
 
-function showSignOut(){ 
-	$('#signOut').html("<a href='#' id='signOut' class='sign_out'>Sign Out!</a>")
-	.click(signOut);
-}
+// function showSignOut(){ 
+	// $('#signOut').html("<a href='#' id='signOut' class='sign_out'>Sign Out!</a>")
+	// .click(signOut);
+// }
 
 function signOut(){ 
 	// Logging out of providers
@@ -469,13 +469,13 @@ function showOptions(accessToken){
 	}
 }
 
-function hideOptions(){ 
-	var options = document.getElementById("optionsDiv");
-	options.style.visibility = "hidden";
-	return
-}
+// function hideOptions(){ 
+	// var options = document.getElementById("optionsDiv");
+	// options.style.visibility = "hidden";
+	// return
+// }
 
-function showName(name){
+function showName(name){ // mark for review
 	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
 		console.log("SHOW NAME has username as undefined. Name is " + name)
 		return
@@ -490,16 +490,16 @@ function showName(name){
 	return
 }
 
-function hideName(){
-	var userName = document.getElementById("userName");
-	userName.style.visibility = "hidden";
-	userName.innerHTML = "";
-	return
-}
+// function hideName(){
+	// var userName = document.getElementById("userName");
+	// userName.style.visibility = "hidden";
+	// userName.innerHTML = "";
+	// return
+// }
 
 function updateNameAndEmail(name, email){
-	if ( $("#userName")) { $("#userName").html(name); }
-	if ( $("#userEmail")) { $("#userEmail").html(email); }
+	if ( $("#userName")  ) 	{ $("#userName").html(name); }
+	if ( $("#userEmail") ) 	{ $("#userEmail").html(email); }
 }
 //
 function enableTooltips(){
@@ -558,16 +558,13 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 
 function saveBlackList(){
-	localStorage.blackList = $("#blackList")[0].value;
+	lsSet('blackList', $("#blackList")[0].value);
 }
 
 function saveWhiteList(){
-	localStorage.whiteList = $("#whiteList")[0].value;
+	lsSet('whiteList', $("#whiteList")[0].value);
 }
 
-function now(){
-	
-}
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -577,7 +574,7 @@ function now(){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-function save_options() {
+function save_options() { // Mark for deletion
 	// Get data and store it in LocalStorage
 	var select = document.getElementById("wantToSave");
 	localStorage.maxTabs = select;

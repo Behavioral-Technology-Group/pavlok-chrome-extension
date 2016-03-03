@@ -792,14 +792,6 @@ function enableInputs(){
 	
 }
 
-function saveBlackList(){
-	lsSet('blackList', $("#blackList")[0].value);
-}
-
-function saveWhiteList(){
-	lsSet('whiteList', $("#whiteList")[0].value);
-}
-
 function saveOptions() {
 	
 	var blackList = $("#blackList")[0].value;

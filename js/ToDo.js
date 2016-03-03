@@ -1,10 +1,8 @@
 /* Next Steps
 
 		- Page Controls should determine if BlackList and WhiteList are editable or not
-		- Instazap has to be thought;
 		- Put a counter on every tab when in pomoFocus
-		- Find what is reseting the background BEFORE equalizing.
-
+		
 */
 
 /* ***************************************************************** */
@@ -189,7 +187,7 @@ function completeDailyPomodoro(daily){
 	restoreDailyList('.dailyContainer');
 }
 
-function cancelDailyPomodoro(daily){
+function cancelDailyPomodoro(daily){ // Mark for deletion
 	lsDel('dailyPomo');
 	return // // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
 }
@@ -252,7 +250,7 @@ function updateDailyTask(daily){
 	lsSet('dailyList', dailyList, 'object');
 }
 
-function removeDailyTask(daily){
+function removeDailyTask(daily){ // mark for deletion
 	var dailyList = lsGet('dailyList', 'parse');
 	var index = dailyTaskIndex(daily);
 	
@@ -275,7 +273,7 @@ function renewDailyTask(){
 	}
 }
 
-function syncDailies(page){
+function syncDailies(page){ // mark for deletion
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.action == "DailyTasks" && request.target == page){
@@ -306,7 +304,7 @@ function sampleBinaural(){
 var lastUpdate = 0;
 var PFpromptForce = false;
 
-function shortCount(){
+function shortCount(){ // Debug function
 	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	pomoFocusB.endTime = deltaTime(5).getTime();
 	savePomoFocus(pomoFocusB, 'popup');
