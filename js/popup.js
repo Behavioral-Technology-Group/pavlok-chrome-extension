@@ -55,4 +55,22 @@ $( document ).ready(function() {
 	$("#instaZap").change(function(){
 		lsSet('instaZap', $(this).prop( "checked" ));
 	});
+	$("#lockZap").change(function(){
+		lsSet('lockZap', $(this).prop( "checked" ));
+		
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			curPAVTab = tabs[0];
+			curPAVUrl = tabs[0].url;
+			curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+			
+			if(curPAVDomain.length == 0){
+				console.log("unable to resolve domain for " + curPAVUrl);
+				curPAVDomain = curPAVUrl;
+			}
+			
+			lsSet('lockedTo', curPAVDomain);
+			
+		});
+		
+	});
 });

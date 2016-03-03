@@ -133,9 +133,16 @@ function fireRescueTime(APIKey){
 function CheckBlackList(curTabURL, curTabDomain) {
 	var daily = lsGet('dailyPomo', 'parse');
 	
-	var _result = "";
+	
+	var locked = lsGet('lockZap');
+	var lockedTo = lsGet('lockedTo');
 	
 	// Checks if it will use regular or daily black and whitelists
+	if (locked == "true") {
+		if (curPAVDomain != lockedTo ) { return true }
+		else { return false }
+	}
+	
 	if (daily && daily.specialList != false) {
 		var _whiteList = daily.whiteList.split(",");
 		var _blackList = daily.blackList.split(",");
