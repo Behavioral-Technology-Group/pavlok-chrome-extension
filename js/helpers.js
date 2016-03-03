@@ -177,18 +177,18 @@ if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
-	localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
+	lsSet('pomoFocusO',  pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
 	var pomoFocusB = {}
 	pomoFocusB.lastUpdate = new Date().getTime();
-	localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
+	lsSet('pomoFocusB',  pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
 	pomoFocusP.endTime = timeDelta(0).getTime();
-	localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
+	lsSet('pomoFocusP',  pomoFocusP, 'object');
 }
 if (!localStorage.dailyList) {
 	lsSet('dailyList', [], 'object');
@@ -224,24 +224,25 @@ function fixNoEndTime(){
 function getPomoFocus(win){
 	var obj;
 	if (win == 'background') 	{
-		var t = localStorage.pomoFocusB;
+		var t = lsGet('pomoFocusB');
 		if (t == undefined || t == 'undefined') { 
-			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
+			obj = {}; 
+			obj.lastUpdate = deltaTime(0).getTime();
 		}
-		else { obj = JSON.parse(localStorage.pomoFocusB); }
+		else { obj = lsGet('pomoFocusB', 'parse'); }
 	}
 	else if (win == 'options') 	{
-		var t = localStorage.pomoFocusO;
+		var t = lsGet('pomoFocusO');
 		if (t == undefined || t == 'undefined') { 
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
 		}
-		else { obj = JSON.parse(localStorage.pomoFocusO); }
+		else { obj = lsGet('pomoFocusO', 'parse'); }
 	}
 	else if (win == 'popup') {
-		var t = localStorage.pomoFocusP;
+		var t = lsGet('pomoFocusP');
 		if (t == undefined || t == 'undefined') { 
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
-		}else { obj = JSON.parse(localStorage.pomoFocusP); }
+		}else { obj = lsGet('pomoFocusP', 'parse'); }
 	}
 	
 	return obj
@@ -260,24 +261,6 @@ function savePomoFocus(pomoFocus, win){
 	return pomoFocus
 }
 
-function readPomoFocus(x){
-	var PF;
-	var longAgo = deltaTime(-365 * 24 * 60 * 60, new Date()).getTime();
-	if (x == 'pomoFocusO') {
-		if (localStorage.pomoFocusO){ PF = JSON.parse(localStorage.pomoFocusO); } 
-		else { PF = {}; }
-	}
-	else if (x == 'pomoFocusB') {
-		if (localStorage.pomoFocusB){ PF = JSON.parse(localStorage.pomoFocusB); }
-		else { PF = {}; }
-	}
-	if (x == 'pomoFocusP') {
-		if (localStorage.pomoFocusP){ PF = JSON.parse(localStorage.pomoFocusP); }
-		else { PF = {}; }
-	}
-	
-	if (!PF.lastUpdate) { PF.lastUpdate = longAgo; }
-	return PF
 function equalizePomoFocus(latest){
 	lsSet('pomoFocusB', latest, 'object');
 	lsSet('pomoFocusO', latest, 'object');

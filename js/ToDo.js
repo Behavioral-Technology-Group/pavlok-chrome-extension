@@ -28,25 +28,20 @@ if (!localStorage.lastDay) { localStorage.lastDay = new Date().toDateString() }
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
-	// localStorage.pomoFocusO = JSON.stringify(pomoFocusO);
 	lsSet('pomoFocusO', pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
 	var pomoFocusB = {}
 	pomoFocusB.lastUpdate = new Date().getTime();
-	// localStorage.pomoFocusB = JSON.stringify(pomoFocusB);
 	lsSet('pomoFocusB', pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
 	pomoFocusP.endTime = timeDelta(0).getTime();
-	// localStorage.pomoFocusP = JSON.stringify(pomoFocusP);
 	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
-// if (!localStorage.dailyList) {
-	// lsSet('dailyList', [], 'object');
-// }
+
 function checkTaskIDs(){
 	if (!localStorage.ToDoTasks) { localStorage.lastID = 0; return}
 	
@@ -323,9 +318,9 @@ var lastUpdate = 0;
 var PFpromptForce = false;
 
 function shortCount(){
-	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
+	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	pomoFocusB.endTime = deltaTime(5).getTime();
-	savePomoFocus(pomoFocusB, 'background');
+	savePomoFocus(pomoFocusB, 'popup');
 }
 
 function createPomoFocusCountDown(){
@@ -350,6 +345,7 @@ function createPomoFocusCountDown(){
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
+		lsDel('lockZap');
 	});
 }
 
@@ -387,14 +383,15 @@ function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
 		var pomoFocus = getPomoFocus('background');
-		if (pomoFocus.daily == true){ // daily tasks pomofocuses
+		
+		if (pomoFocus.daily == true){ 	// Daily tasks pomofocuses
 			var dailyList = lsGet('dailyList', 'parse');
 			var daily = _.where(dailyList, {id: pomoFocus.taskID});
 			if (daily.length == 1){ daily = daily[0]; }
 			completeDailyPomodoro(daily);
 			restoreDailyList('.dailyContainer');
 		}
-		else { // Regular tasks pomofocuses
+		else { 							// Regular tasks pomofocuses
 			var taskID = pomoFocus.taskID;
 			var itemRow = $("#" + taskID);
 			

@@ -164,9 +164,7 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	}
 	
 	
-	// var _result = localStorage.blackListEval;
-	// _result = ( _result === "true" ); // converts string to boolean
-	// return _result
+	
 }
 
 // Tab counting
@@ -372,13 +370,6 @@ function rescueTimeChecker(){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-function savePomoFocusB(pomoFocusB){
-	pomoFocusB.lastUpdate = new Date();
-	savePomoFocus(pomoFocusB, 'background');
-	localStorage.changedPart = 'To-Do';
-	return pomoFocusB
-}
-
 function playAudio(){
 	if (playing == false){
 		myAudio = new Audio('../Audio/focus1min.mp3');
@@ -400,7 +391,6 @@ function stopAudio(){
 
 function checkForAudio(){
 	var audioAddress = '../audio/focus1min.mp3';
-	var pomoFocusB = JSON.parse(localStorage.pomoFocusB);
 	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	var now = deltaTime(0).getTime();
 	
