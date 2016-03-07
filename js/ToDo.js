@@ -304,6 +304,14 @@ function sampleBinaural(){
 var lastUpdate = 0;
 var PFpromptForce = false;
 
+function msgTabs(tabList, message){
+	for (t = 0; t < tabList.length ; t++){
+		msgExt(message, tabList[t])
+		
+		// 
+	}
+}
+
 function shortCount(){ // Debug function
 	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	pomoFocusB.endTime = deltaTime(5).getTime();
@@ -329,6 +337,7 @@ function createPomoFocusCountDown(){
 		console.log("PomoFocus ended");
 		pomoFocusB = lsGet('pomoFocusB', 'parse');
 		pomoFocusB.audio = false;
+		pomoFocus.active = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
@@ -391,6 +400,7 @@ function pomoFocusButtons(){
 		togglePomodoro('configure');
 		PFpromptForce = false;
 		localStorage.instaZap = 'false';
+		pomoFocus.active = false;
 		pomoFocus.duration = 0;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.endReason = 'done';
@@ -401,6 +411,7 @@ function pomoFocusButtons(){
 		localStorage.endReason = 'stop';
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
+		pomoFocus.active = false;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.duration = 0;
 		pomoFocus.daily = false;
@@ -544,6 +555,7 @@ function pomodoroOnSteroids(){
 					$(".nowTaskRow").removeClass("nowTaskRow");
 					lsDel('pomoFocusTask');
 					lsDel('dailyPomo');
+					pomoFocus.active = false;
 				}
 				updateTasksLog();
 			}

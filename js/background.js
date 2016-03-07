@@ -493,7 +493,18 @@ function CreateTabListeners(token) {
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
 		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		console.log("tab changed");
 	});
+	
+	// When active tab change
+	chrome.tabs.onActivated.addListener(function(info){
+		var tabId = info.tabId;
+		windowId = info.windowId;
+		chrome.tabs.sendMessage(tabId, {
+			action: "hello",
+			pomodoro: lsGet('pomoFocusB', 'parse')
+		});
+	})
 }
 
 function initialize() {	
@@ -537,7 +548,15 @@ function initialize() {
 				myAudio.volume = newAudioVol;
 			}
 			
-			
+			else if (request.action == "newPage" && request.target == 'background') {
+				var pomoFocus = lsGet('pomoFocusB', 'parse');
+				console.log(pomoFocus);
+				sendResponse({
+					pomodoro: pomoFocus
+				});
+				console.log("message received");
+				alert("message received from " + request.tabId);
+			}
 		}
 	);
 }
