@@ -105,7 +105,7 @@ function fireRescueTime(APIKey){
 		}
 		else if (prod < parseInt(localStorage.RTWarnLimit)) { 
 			notifyUser("Come on, you can do better!", "Pulse of " + localStorage.RTPulse + " ain't bad, but you are better than that!", "RTNotify");
-			stimuli("beep", 255, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
+			stimuli("beep", defInt, defAT, "Incoming Beep. Come on, you can do better!!!");
 		}
 		else if (prod > parseInt(localStorage.RTPosLimit)){
 			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");

@@ -134,6 +134,7 @@ localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps
 
 // Stimuli intensity
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
+if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 
@@ -423,7 +424,7 @@ function evaluateTabCount(tabCount){
 	}
 	else if (tabCount == maxTabs ){ 
 		situation.status = "limit";
-		stimuli("beep", 255, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
+		stimuli("beep", defInt, defAT, "Incoming Beep. You're at the limit on tabs");
 	 
 	}
 	else if (tabCount == maxTabs - 1){ 
@@ -741,7 +742,7 @@ function userInfo(accessToken) {
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	stimuliTypes = ['shock', 'vibration', 'beep'];
-	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepTune]; // zap, vibration, beep
+	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
 	
 	if (!value || value == 'defInt' || '') { value = defIntensities[stimuliTypes.indexOf(stimulus)]; }
 	if (!accessToken || accessToken == 'defAT' || '') { accessToken = localStorage.accessToken; }
