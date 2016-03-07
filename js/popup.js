@@ -18,13 +18,13 @@ function presentName(){
 
 function enableTestButtons(){
 	$("#beepTest").click(function(){ 
-		stimuli('beep', '255', defAT, "You'll get a Beep and a notification on your phone", 'false'); 
+		stimuli("beep", defInt, defAT, "You'll get a Beep and a notification on your phone", "false"); 
 	});
 	$("#vibrateTest").click(function(){ 
-		stimuli('vibration', defInt, defAT, "You'll get a Vibration and a notification on your phone", 'false'); 
+		stimuli("vibration", defInt, defAT, "You'll get a Vibration and a notification on your phone", "false"); 
 	});
 	$("#zapTest").click(function(){
-		stimuli('shock', defInt, defAT, "You'll get a Zap and a notification on your phone", 'false'); 
+		stimuli("shock", defInt, defAT, "You'll get a Zap and a notification on your phone", "false"); 
 	});
 }
 

@@ -525,7 +525,7 @@ function enableAutoZapper(){
 					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
-						stimuli("shock", defInt, defAT, "Training Session. Keep going!", "false");
+						stimuli("shock", localStorage.trainingSessionZI, defAT, "Training Session. Keep going!", "false");
 					}, parseInt(localStorage.trainingSessionZF));
 					localStorage.trainingSession = trainingSession;
 					
@@ -629,7 +629,7 @@ function enableButtons(){
 	});
 	
 	$("#testPairing").click(function(){
-		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+		stimuli("vibration", 255, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
 	$("#testZapInt").click(function(){

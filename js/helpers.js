@@ -419,7 +419,7 @@ function evaluateTabCount(tabCount){
 	// How is number of tabs compared to tab limit (maxTabs)?
 	if(tabCount > maxTabs) {
 		situation.status = "over";
-		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
+		stimuli("shock", defInt, defAT, "Incoming Zap. Too many tabs");
 		console.log("total tabs over max tabs");
 	}
 	else if (tabCount == maxTabs ){ 
@@ -429,7 +429,7 @@ function evaluateTabCount(tabCount){
 	}
 	else if (tabCount == maxTabs - 1){ 
 		situation.status = "borderline";
-		stimuli("vibration", localStorage.vibrationIntensity, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
+		stimuli("vibration", defInt, defAT, "Incoming vibration. You're nearing the limit on tabs");
 	}
 	else { situation.status = "wayBellow"};
 	

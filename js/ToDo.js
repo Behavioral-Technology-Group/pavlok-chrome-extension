@@ -181,7 +181,7 @@ function completeDailyPomodoro(daily){
 	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
 	else { msg = "Good job there! Only " + missing + " to go now!"; }
 	notifyUser('Way to go!', msg, 'PFNotify');
-	stimuli('vibration');
+	stimuli("vibration");
 	
 	lsDel('dailyPomo');
 	restoreDailyList('.dailyContainer');
