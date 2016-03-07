@@ -337,7 +337,7 @@ function createPomoFocusCountDown(){
 		console.log("PomoFocus ended");
 		pomoFocusB = lsGet('pomoFocusB', 'parse');
 		pomoFocusB.audio = false;
-		pomoFocus.active = false;
+		pomoFocusB.active = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';

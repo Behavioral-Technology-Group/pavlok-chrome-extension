@@ -1,11 +1,17 @@
 var pavlokBannerHeight = 25;
 
 function togglePomoFocus(pomoFocus){
+	if (!pomoFocus) { console.log("no pomoFocus"); return }
 	if (pomoFocus.active == true){
+		$("#bannerPlaceholder").show();
+		$("#bannerPlaceholder2").show();
+		
 		console.log("Active until " + pomoFocus.endTime);
 	}
 	else if (pomoFocus.active == false){
 		console.log("Inactive. Ended at " + pomoFocus.endTime);
+		$("#bannerPlaceholder").hide();
+		$("#bannerPlaceholder2").hide();
 	}
 	else {
 		console.log("pomoFocus unavaible at response");
@@ -62,7 +68,6 @@ function createBanner(){
 		banner.appendChild(toggler);
 				
 		var body = document.getElementsByTagName('body')[0];
-		console.log(body);
 		body.insertBefore(bannerPlaceholder, body.children[0]);
 		body.insertBefore(bannerPlaceholder2, body.children[0]);
 		
@@ -126,6 +131,10 @@ function updateCountDown(pomoFocus) {
 	var timer = $(clockDiv).countdown(endDate, function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
+	.on('finish.countdown', function(event) {
+		$(this).html('');
+		togglePomoFocus()
+	});
 	
 }
 
@@ -133,13 +142,18 @@ function updateCountDown(pomoFocus) {
 chrome.extension.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if (request.action == "pomodoro") {
+			console.log(request.action);
 			console.log(request);
+			togglePomoFocus(request.pomodoro);
 			updateCountDown(request.pomodoro);
-			console.log("passed the update")
+			console.log("------------------------------------");
 		}
 		else if (request.action == "hello") {
+			console.log(request.action);
 			console.log(request)
+			updateCountDown(request.pomodoro);
 			togglePomoFocus(request.pomodoro);
+			console.log("------------------------------------");
 		}
 	}
 );
