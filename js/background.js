@@ -75,8 +75,6 @@ function validateTimeOut(RTTimeOut){
 function createTimeout(){
 	fireRescueTime(localStorage.RTAPIKey);
 	var x = setTimeout(function(){
-		
-		
 		// Clearing up
 		RTTimeOut = false;
 		localStorage.RTTimeOut = false;
@@ -107,7 +105,7 @@ function fireRescueTime(APIKey){
 		}
 		else if (prod < parseInt(localStorage.RTWarnLimit)) { 
 			notifyUser("Come on, you can do better!", "Pulse of " + localStorage.RTPulse + " ain't bad, but you are better than that!", "RTNotify");
-			stimuli("beep", 4, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
+			stimuli("beep", 255, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
 		}
 		else if (prod > parseInt(localStorage.RTPosLimit)){
 			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");
@@ -555,7 +553,6 @@ function initialize() {
 					pomodoro: pomoFocus
 				});
 				console.log("message received");
-				alert("message received from " + request.tabId);
 			}
 		}
 	);

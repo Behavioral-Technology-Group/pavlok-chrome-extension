@@ -251,13 +251,25 @@ function getPomoFocus(win){
 function savePomoFocus(pomoFocus, win){
 	var now = new Date().getTime();
 	pomoFocus.lastUpdate = now;
-	// if (win == 'options') 			{ lsSet('pomoFocusO', pomoFocus, 'object'); }
-	// else if (win == 'background') 	{ lsSet('pomoFocusB', pomoFocus, 'object'); }
-	// else if (win == 'popup') 		{ lsSet('pomoFocusP', pomoFocus, 'object'); }
-	
+
+	if (pomoFocus.endTime > now) {
+		pomoFocus.active = true;
+	}
+	else {
+		pomoFocus.active = false;
+	}
+
 	equalizePomoFocus(pomoFocus);
 	
 	updateCountdown();
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		chrome.tabs.sendMessage(tabs[0].id, 
+		{
+			action: "pomodoro", 
+			pomodoro: pomoFocus
+		});  
+	});
+	
 	return pomoFocus
 }
 
@@ -411,7 +423,7 @@ function evaluateTabCount(tabCount){
 	}
 	else if (tabCount == maxTabs ){ 
 		situation.status = "limit";
-		stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
+		stimuli("beep", 255, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
 	 
 	}
 	else if (tabCount == maxTabs - 1){ 

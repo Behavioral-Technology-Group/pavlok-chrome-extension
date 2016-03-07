@@ -1,0 +1,27 @@
+#pomoFocusBannerPlaceholder, #pomoFocusBannerPlaceholder2{
+	width: 100%;
+	height: 25px;
+	background: #dcfefe;
+	
+	color: black;
+	font-size: 15px;
+	text-align: center;
+	
+}
+
+#pomoFocusBannerPlaceholder{
+	position: fixed;
+    top: 0;
+    right: 0;
+	z-index:99999;
+}
+
+#pomoFocusBanner > *{
+	display: inline;
+}
+
+#pomoFocusBannerPlaceholder2{
+	position: relative;
+	top:0;
+	left:0;
+}
