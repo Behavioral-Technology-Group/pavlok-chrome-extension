@@ -425,7 +425,11 @@ function pomoFocusButtons(){
 		var pomoFocus = getPomoFocus('background');
 		var endTime = pomoFocus.endTime;
 		var newEndTime = endTime + 5 * 60 * 1000;
+		var newDuration = pomoFocus.duration + 5;
+		
 		pomoFocus.endTime = newEndTime;
+		pomoFocus.duration = newDuration;
+		
 		savePomoFocus(pomoFocus, 'popup');
 	});
 

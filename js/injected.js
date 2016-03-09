@@ -1,17 +1,20 @@
+var x = 0;
+
 var pavlokBannerHeight = 25;
 
 function togglePomoFocus(pomoFocus){
 	if (!pomoFocus) { console.log("no pomoFocus"); return }
 	if (pomoFocus.active == true){
-		$("#bannerPlaceholder").show();
-		$("#bannerPlaceholder2").show();
-		
-		console.log("Active until " + pomoFocus.endTime);
+		findAndAdjustFixedElements("added");
+		$("#pomoFocusBannerPlaceholder2").show();
+		$("#pomoFocusBannerPlaceholder").show();
+		// console.log("Active until " + pomoFocus.endTime);
 	}
 	else if (pomoFocus.active == false){
-		console.log("Inactive. Ended at " + pomoFocus.endTime);
-		$("#bannerPlaceholder").hide();
-		$("#bannerPlaceholder2").hide();
+		// console.log("Inactive. Ended at " + pomoFocus.endTime);
+		$("#pomoFocusBannerPlaceholder").hide();
+		// $("#pomoFocusBannerPlaceholder2").hide();
+		findAndAdjustFixedElements("removed");
 	}
 	else {
 		console.log("pomoFocus unavaible at response");
@@ -30,8 +33,7 @@ function hello(tabId){
 		function(response) {
 			console.log(response);
 			var pomoFocus = response.pomodoro;
-			togglePomoFocus(pomoFocus);
-			updateCountDown(pomoFocus);
+			msgToCount(pomoFocus);
 		}
 	);
 }
@@ -39,6 +41,12 @@ function hello(tabId){
 function initialize(){
 	hello();
 	createBanner();
+	
+	$("#pomoFocusBannerPlaceholder").draggable({
+		containment: "body", 
+		axis: "x",
+		scroll: false
+	});
 }
 
 function createBanner(){
@@ -46,8 +54,8 @@ function createBanner(){
 		var bannerPlaceholder = document.createElement("DIV");
 		bannerPlaceholder.id = "pomoFocusBannerPlaceholder";
 		
-		var bannerPlaceholder2 = document.createElement("DIV");
-		bannerPlaceholder2.id = "pomoFocusBannerPlaceholder2";
+		// var bannerPlaceholder2 = document.createElement("DIV");
+		// bannerPlaceholder2.id = "pomoFocusBannerPlaceholder2";
 		
 		var banner = document.createElement("div");
 		banner.id = "pomoFocusBanner";
@@ -69,9 +77,9 @@ function createBanner(){
 				
 		var body = document.getElementsByTagName('body')[0];
 		body.insertBefore(bannerPlaceholder, body.children[0]);
-		body.insertBefore(bannerPlaceholder2, body.children[0]);
+		// body.insertBefore(bannerPlaceholder2, body.children[0]);
 		
-		findAndAdjustFixedElements();
+		findAndAdjustFixedElements("added");
 	}
 }
 
@@ -88,7 +96,7 @@ function toggleBanner(toState){
 	else { return "error"}
 }
 
-function findAndAdjustFixedElements() {
+function findAndAdjustFixedElements(timer) {
 	var all = document.getElementsByTagName("*");
 	var banner = document.getElementById("pomoFocusBannerPlaceholder")
 	var begin = new Date().getTime();
@@ -102,18 +110,33 @@ function findAndAdjustFixedElements() {
 		var style = window.getComputedStyle(elmt);
 		var position = style.position;
 		var yTop = parseInt(style.top);
+		var newPosition = 0;
 		
-		if ((position === "fixed" || position == "absolute" ) && yTop < pavlokBannerHeight) {
+		if (position === "fixed" && yTop < pavlokBannerHeight) {
 			if (!elmt.getAttribute("data-originalTop")) {
 				elmt.setAttribute("data-originalTop", style.top);
 			}
-			elmt.style.top = parseInt(elmt.getAttribute("data-originalTop")) + pavlokBannerHeight + "px";
+			if (timer == "added"){
+				newPosition = parseInt(elmt.getAttribute("data-originalTop")) + pavlokBannerHeight;
+			} else if (timer == "removed") {
+				elmt.style.top = parseInt(elmt.getAttribute("data-originalTop"));
+				newPosition = parseInt(elmt.getAttribute("data-originalTop")) - pavlokBannerHeight;
+			}
+			elmt.style.top = newPosition + "px";
 		}
+	}
+	var body = document.getElementsByTagName('body')[0];
+	var bodyChildren = body.children;
+	
+	for (i = 0; i < bodyChildren.length; i++){
+		elmt = bodyChildren[i];
+		var style = window.getComputedStyle(elmt);
+		var position = style.position;
+		var yTop = parseInt(style.top);
 	}
 }
 	
 function updateCountDown(pomoFocus) {
-	console.log('begin update countdown');
 	if (!pomoFocus) { 
 		var endDate = new Date(); 
 		var task = "";
@@ -122,40 +145,51 @@ function updateCountDown(pomoFocus) {
 		var endDate = new Date();
 		endDate.setTime(pomoFocus.endTime);
 	}
-	console.log(endDate);
 	
 	var clockDiv = $('#pavlokCountDownDiv');
 	var taskSpan = $('#pavlokTaskSpan');
 	
-	$(taskSpan).html("Task is: " + pomoFocus.task + " - ");
+	$(taskSpan).html(pomoFocus.task + " - ");
 	var timer = $(clockDiv).countdown(endDate, function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
 	.on('finish.countdown', function(event) {
 		$(this).html('');
-		togglePomoFocus()
+		togglePomoFocus(pomoFocus);
 	});
 	
 }
 
 
-chrome.extension.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		if (request.action == "pomodoro") {
+// chrome.extension.onMessage.addListener(
+function msgToCount(pomodoro){
+	updateCountDown(pomodoro);
+	togglePomoFocus(pomodoro);
+	return
+}
+
+if (x == 0){
+	console.log("no listeners");
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
 			console.log(request.action);
 			console.log(request);
-			togglePomoFocus(request.pomodoro);
-			updateCountDown(request.pomodoro);
-			console.log("------------------------------------");
+
+			if (request.action == "pomodoro") {
+				msgToCount(request.pomodoro);
+				console.log("------------------------------------");
+			}
+			else if (request.action == "hello") {
+				if (request.pomodoro) { var pomodoro = request.pomodoro;}
+				else { console.log("no pomodoro on this request");}
+				msgToCount(request.pomodoro);
+				console.log("------------------------------------");
+			}
 		}
-		else if (request.action == "hello") {
-			console.log(request.action);
-			console.log(request)
-			updateCountDown(request.pomodoro);
-			togglePomoFocus(request.pomodoro);
-			console.log("------------------------------------");
-		}
-	}
-);
+	);
+	x = x + 1;
+} else{
+	console.log("already existing listeners");
+}
 
 initialize();

@@ -428,6 +428,7 @@ function createPomoFocusCountDownBack(){
 		}
 		console.log("PomoFocus ended");
 		pomoFocusB.audio = false;
+		pomoFocusB.active = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
@@ -548,7 +549,6 @@ function initialize() {
 			
 			else if (request.action == "newPage" && request.target == 'background') {
 				var pomoFocus = lsGet('pomoFocusB', 'parse');
-				console.log(pomoFocus);
 				sendResponse({
 					pomodoro: pomoFocus
 				});
