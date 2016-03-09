@@ -144,6 +144,8 @@ function updateCountDown(pomoFocus) {
 	else{
 		var endDate = new Date();
 		endDate.setTime(pomoFocus.endTime);
+		var now = new Date().getTime();
+		if (now > endDate.getTime()) { console.log("past"); return }
 	}
 	
 	var clockDiv = $('#pavlokCountDownDiv');

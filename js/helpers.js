@@ -308,6 +308,7 @@ function lsDel(key){
 function nowTime(){
 	return new Date().getTime();
 }
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -346,6 +347,10 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+// Tour
+function openOptions(){
+	window.open('options.html','_blank');
+}
 // Background
 function UpdateBadgeOnOff(badgeText) {
 	// if (inText.length == 0 ) { inText = "On"; }
@@ -662,6 +667,7 @@ function oauth() {
 						userInfo(accessToken);
 					});
 					console.log("OAuth2 test concluded");
+					notifyUser('Hooray! Welcome aboard!', 'Your Pavlok Extension is now logged! Want to make a quick tour?', 'signedIn');
 				});
 		}
 	);	

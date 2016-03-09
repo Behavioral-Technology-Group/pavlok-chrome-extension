@@ -295,6 +295,37 @@ var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
 
+function onUpdateAvailable(){
+	chrome.runtime.onUpdateAvailable.addListener(function(version){
+		notifyUser("We have a new version of the extension for you", "Hey buddy, we just released an update for the extension. It will be installed next time you close and open all chrome windows.", "updateAvaible");
+	});
+}
+
+function onInstall(){
+	chrome.runtime.onInstalled.addListener(function(notes){
+		lsSet('notes', notes, 'string');
+		lsSet('notes', notes, 'object');
+		var reason = notes.reason;
+		if (reason == "install"){
+			notifyUser("Welcome aboard. Let's log in!", "Click here to log into Pavlok!", "installed");
+		}
+		else if (reason == "update"){
+			notifyUser("Extension updated!", "Your Pavlok extension is now up to date!", "updated");
+		}
+	});
+}
+
+function notifyClicked(){
+	chrome.notifications.onClicked.addListener(function(notId){
+		if (notId == "installed"){
+			oauth();
+		}
+		else if (notId == "signedIn"){
+			openOptions();
+		}
+	});
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -507,6 +538,10 @@ function CreateTabListeners(token) {
 }
 
 function initialize() {	
+	onUpdateAvailable();
+	onInstall();
+	notifyClicked();
+	
 	UpdateBadgeOnOff("1/3");
 	var accessToken = localStorage.getItem("accessToken");
 	
