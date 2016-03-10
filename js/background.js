@@ -303,11 +303,15 @@ function onUpdateAvailable(){
 
 function onInstall(){
 	chrome.runtime.onInstalled.addListener(function(notes){
-		lsSet('notes', notes, 'string');
-		lsSet('notes', notes, 'object');
 		var reason = notes.reason;
 		if (reason == "install"){
-			notifyUser("Welcome aboard. Let's log in!", "Click here to log into Pavlok!", "installed");
+			var Not = lsGet('notifications', 'parse');
+			var Not = Not.installed;
+			
+			notifyUser(Not.title, Not.message, Not.id);
+			
+			notifyUser(Not.title, Not.message, Not.id, "persist");
+			addPersistNotification("installed");
 		}
 		else if (reason == "update"){
 			notifyUser("Extension updated!", "Your Pavlok extension is now up to date!", "updated");
@@ -321,9 +325,32 @@ function notifyClicked(){
 			oauth();
 		}
 		else if (notId == "signedIn"){
+			chrome.notifications.clear("installed");
 			openOptions();
 		}
 	});
+}
+
+function addPersistNotification(notId){
+	var persList = lsGet('persistedNotifications');
+	if (persList.length == 0){ persList = []; }
+	var index = persList.indexOf(notId);
+	if (index == -1) {
+		persList.push(notId);
+		lsSet('persistedNotifications', persList);
+		return notId
+	}
+	return false
+}
+
+function persistNotifications(){
+	var persList = lsGet('persistedNotifications');
+	if (persList.length != 0){
+		for (n = 0; n < persList.length; n++) {
+			// chrome.notifications.update(persList[n]);
+		}
+	}
+	setTimeout(function(){persistNotifications();}, 5000);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -472,8 +499,11 @@ function createPomoFocusCountDownBack(){
 	.on('finish.countdown', function(event) {
 		
 		if (localStorage.endReason == 'time') {
-			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+			stimuli("vibration", defInt, defAT, "Congrats! You made it! Now take a 5 min rest before we take on another!");
+			// notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+			var NotList = lsGet('notifications', 'parse');
+			var Not = NotList.pomofocusEnded;
+			notifyUser(Not.title, Not.message, Not.id);
 		}
 		console.log("PomoFocus ended");
 		pomoFocusB.audio = false;
@@ -556,6 +586,7 @@ function CreateTabListeners(token) {
 }
 
 function initialize() {	
+	persistNotifications();
 	onUpdateAvailable();
 	onInstall();
 	notifyClicked();
@@ -644,7 +675,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 		if (counter == true){	// with timer going on
 			if (instaZap == 'true' && firstZap == 'false'){
 				//Zap & Notify
-				stimuli("shock", defInt, defAT);
+				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
 				// Substitute timeWindow
 				timeWindowZap = 8;
@@ -664,7 +695,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 				// if (elapsed >= parseInt(timeWindow)){
 				if (elapsed >= parseInt(timeWindowZap)){
 					notifyUser(msgZaped[0], msgZaped[1], "zapped");
-					stimuli("shock", defInt, defAT);
+					stimuli("shock", defInt, defAT, msgZaped[1], "false");
 					
 					timeBegin = new Date();
 				}			
@@ -676,7 +707,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 			counter = true;
 			if (localStorage.instaZap == 'true'){
 				//Zap & notify
-				stimuli("shock", defInt, defAT);
+				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
 				localStorage.firstZap = 'true';
 			}

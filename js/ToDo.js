@@ -178,10 +178,13 @@ function completeDailyPomodoro(daily){
 	var missing = parseInt(daily.pomodoros) - parseInt(daily.donePomos);
 	var msg;
 	
+	var NotList = lsGet('notifications', 'parse');
+	var Not = NotList.pomofocusDone;
+	
 	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
 	else { msg = "Good job there! Only " + missing + " to go now!"; }
-	notifyUser('Way to go!', msg, 'PFNotify');
-	stimuli("vibration");
+	notifyUser(Not.title, msg, Not.id);
+	stimuli("vibration", defInt, defAT, Not.title + " " + msg, "false");
 	
 	lsDel('dailyPomo');
 	restoreDailyList('.dailyContainer');
@@ -381,6 +384,9 @@ function checkForUpdate(){
 function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
+		var notifications = lsGet('notifications', 'object');
+		var Not = notifications.pomofocusDone;
+		
 		var pomoFocus = getPomoFocus('background');
 		
 		if (pomoFocus.daily == true){ 	// Daily tasks pomofocuses
@@ -397,7 +403,11 @@ function pomoFocusButtons(){
 			if (itemRow.length == 0){ console.log("no Now Task"); return }
 			$(itemRow).removeClass("nowTaskRow");
 			completeTask(itemRow, true);
-			notifyUser("Well done!", focusCompleteMsg, "PFNotify");
+			
+			var Not = lsGet('notifications', 'parse');
+			var Not = Not.pomofocusDone;
+			
+			notifyUser(Not.title, Not.message, Not.id);
 		}
 		
 		togglePomodoro('configure');
@@ -729,8 +739,11 @@ function completeTask(taskRow, override){
 		$(item.Row).addClass("doneTaskRow");			// Add classes
 
 		// Reward stimulus
-		notifyUser("One down!", "Keep going, you rockstar!", "PFNotify");
-		stimuli("vibration", defInt, defAT, focusCompleteMsg);
+		var Not = lsGet('notifications', 'parse');
+		var Not = Not.pomofocusDone;
+		
+		notifyUser(Not.title, Not.message, Not.id);
+		stimuli("vibration", defInt, defAT, Not.message, "false");
 	}
 	
 	updateTasksCounter();

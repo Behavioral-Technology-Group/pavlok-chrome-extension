@@ -158,6 +158,7 @@ if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
 if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
 
 // Notifications
+if (!localStorage.persistedNotifications) { localStorage.persistedNotifications = [];}
 if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
@@ -466,7 +467,7 @@ function evaluateTabCount(tabCount){
 	// How is number of tabs compared to tab limit (maxTabs)?
 	if(tabCount > maxTabs) {
 		situation.status = "over";
-		stimuli("shock", defInt, defAT, "Incoming Zap. Too many tabs");
+		stimuli("shock", defInt, defAT, "Too many tabs");
 		console.log("total tabs over max tabs");
 	}
 	else if (tabCount == maxTabs ){ 
@@ -579,13 +580,30 @@ function enableTooltips(){
 }
 
 // Notifications
-function notifyUser(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
+function notifyUser(title, message, notID, persist){
+	if (typeof(title) == "object"){
+		var NotList = lsGet('notifications', 'parse');
+		var Not = _.where(NotList, {usage: title});
+		
+		var opt = {
+			type: "basic",
+			title: Not.title,
+			message: Not.message,
+			iconUrl: "icon.png"
+			
+		};
+		
+		var notID = Not.id;
+	}
+	else{
+		var opt = {
+			type: "basic",
+			title: title,
+			message: message,
+			iconUrl: "icon.png"
+			
+		};
+	}
 	
 	chrome.notifications.create(notID, opt, function(notID) {
 		if (chrome.runtime.lastError){
@@ -709,7 +727,8 @@ function oauth() {
 						userInfo(accessToken);
 					});
 					console.log("OAuth2 test concluded");
-					notifyUser('Hooray! Welcome aboard!', 'Your Pavlok Extension is now logged! Want to make a quick tour?', 'signedIn');
+					chrome.notifications.clear("installed");
+					notifyUser('Hooray! Welcome aboard!', 'Click hede to start using the Productivity Extension', 'signedIn');
 				});
 		}
 	);	
@@ -805,14 +824,16 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	if ( forceNotify == 'false' ) { notify = false; }
 	else if ( forceNotify == 'true' ) { notify = true; }
 	
-	if (notify) { $.prompt(textAlert); }
+	// if (notify) { $.prompt(textAlert); }
 	
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimulus + '/' + 
 				value + 
 				'?access_token=' + accessToken;
 				
-	if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
+	else { alert("stimuli without reason"); }
 	
 	console.log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
