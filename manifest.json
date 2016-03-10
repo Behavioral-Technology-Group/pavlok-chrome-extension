@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.6.11",
+  "version": "0.6.12",
   "name": "Local PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  

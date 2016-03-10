@@ -404,6 +404,24 @@ function updateCountdownBack(latest){
 	
 	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
 		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		
+		if (localStorage.endReason == 'time') {
+			var NotList = lsGet('notifications', 'parse');
+			var Not = NotList.pomofocusEnded;
+			notifyUser(Not.title, Not.message, Not.id);
+			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+		}
+		
+		console.log("PomoFocus ended");
+		pomoFocusB = lsGet('pomoFocusB', 'parse');
+		pomoFocusB.audio = false;
+		pomoFocusB.active = false;
+		savePomoFocus(pomoFocusB, 'background');
+		PFpromptForce = true;
+		localStorage.instaZap = 'false';
+		lsDel('lockZap');
 	});
 }
 

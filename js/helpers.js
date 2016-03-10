@@ -162,6 +162,48 @@ if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
+
+	var notifications = {};
+	
+	// When extension is first installed
+	notifications.installed = {};
+	notifications.installed.title = "Welcome to Pavlok. Let's get started!";
+	notifications.installed.message = "Click here to log in.";
+	notifications.installed.id = "installed";
+	notifications.installed.persist = true;
+	notifications.installed.usage = "installed";
+	
+	// When logged in
+	notifications.signedIn = {};
+	notifications.signedIn.title = "Hooray! Welcome aboard!";
+	notifications.signedIn.message = "Click hede to start using the Productivity Extension";
+	notifications.signedIn.id = "signedIn";
+	notifications.signedIn.persist = true;
+	notifications.signedIn.usage = "installed";
+	
+	// PomoFocus task completed
+	notifications.pomofocusDone = {};
+	notifications.pomofocusDone.title = "Way to go!";
+	notifications.pomofocusDone.message = "Keep the zone going, you rock star!";
+	notifications.pomofocusDone.id = "PFNotify";
+	notifications.pomofocusDone.persist = false;
+	notifications.signedIn.usage = "pomofocusDone";
+	
+	// pomoFocus time ended
+	notifications.pomofocusEnded = {};
+	notifications.pomofocusEnded.title = "Congrats! You made it!";
+	notifications.pomofocusEnded.message = "Take a 5 min break and lets get started! Get up if you were seated!";
+	notifications.pomofocusEnded.id = "PFNotify";
+	notifications.pomofocusEnded.persist = false;
+	notifications.signedIn.usage = "pomofocusEnded";
+	
+	// 
+	lsSet('notifications', notifications, 'object');
+	
+	
+
+
+
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
 if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };

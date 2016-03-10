@@ -6,7 +6,7 @@ var pomoFocusO;
 var pomoFocusB;
 
 var todayDivTest;
-var focusCompleteMsg = "Keep the zone going, you rock star!";
+var focusCompleteMsg = "IGAO Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
 var defInt = '';			// Use default intensity for stimuli
 var defAT = '';				// Use default Access Token for stimuli

@@ -330,18 +330,21 @@ function createPomoFocusCountDown(){
 	})
 	.on('finish.countdown', function(event) {
 		
-		if (localStorage.endReason == 'time') {
-			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
-		}
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		pomoFocusB.active = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
+		// if (localStorage.endReason == 'time') {
+			// // notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+			// var NotList = lsGet('notifications', 'parse');
+			// var Not = NotList.pomofocusEnded;
+			// notifyUser(Not.title, Not.message, Not.id);
+			// stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+		// }
+		// console.log("PomoFocus ended");
+		// pomoFocusB = lsGet('pomoFocusB', 'parse');
+		// pomoFocusB.audio = false;
+		// pomoFocusB.active = false;
+		// savePomoFocus(pomoFocusB, 'background');
+		// PFpromptForce = true;
+		// localStorage.instaZap = 'false';
+		// lsDel('lockZap');
 	});
 }
 
