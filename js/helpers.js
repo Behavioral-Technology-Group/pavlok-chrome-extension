@@ -145,6 +145,8 @@ if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
 if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
+if (!localStorage.tabNumbersActive ) { localStorage.tabNumbersActive = 'true'; }
+
 
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
@@ -416,7 +418,12 @@ function UpdateBadgeOnOff(badgeText) {
 }
 
 function UpdateTabCount(tabCount) {
-	UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	if (localStorage.tabNumbersActive == "true"){
+		UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	}
+	else {
+		UpdateBadgeOnOff('' + tabCount);
+	}
 }
 
 function countTabs(mode, callback){

@@ -851,6 +851,11 @@ function restoreOptions() {
 	restoreCheckBox('fridayActive', localStorage.fridayActive);
 	restoreCheckBox('saturdayActive', localStorage.saturdayActive);
 	
+	restoreCheckBox('tabNumbersActiveCheckbox', localStorage.tabNumbersActive);
+	$("#tabNumbersActiveCheckbox").change(function(){
+		localStorage.tabNumbersActive = $(this).prop('checked');
+	});
+	
 	$("#allTabsCountSelect").val(localStorage.tabCountAll);
 	$("#allTabsCountSelect").change(function(){
 		localStorage.tabCountAll = $(this).val();
