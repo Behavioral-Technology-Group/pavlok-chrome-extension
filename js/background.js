@@ -499,18 +499,20 @@ function createPomoFocusCountDownBack(){
 	.on('finish.countdown', function(event) {
 		
 		if (localStorage.endReason == 'time') {
-			stimuli("vibration", defInt, defAT, "Congrats! You made it! Now take a 5 min rest before we take on another!");
-			// notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
 			var NotList = lsGet('notifications', 'parse');
 			var Not = NotList.pomofocusEnded;
 			notifyUser(Not.title, Not.message, Not.id);
+			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
 		}
+		
 		console.log("PomoFocus ended");
+		pomoFocusB = lsGet('pomoFocusB', 'parse');
 		pomoFocusB.audio = false;
 		pomoFocusB.active = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
+		lsDel('lockZap');
 	});
 }
 
@@ -535,14 +537,14 @@ $( document ).ready( function() { updateCountdownBack(); });
 function CreateTabListeners(token) {
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 		}
 	});
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			if ( localStorage.zapOnClose == 'true' ){
 				countTabs(localStorage.tabCountAll, evaluateTabCount);
 			}
@@ -554,14 +556,14 @@ function CreateTabListeners(token) {
 
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 		}
 	});
 
 	// When tab is attached
 	chrome.tabs.onAttached.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 		}
 	});
@@ -575,14 +577,14 @@ function CreateTabListeners(token) {
 
 	// When new window is created
 	chrome.windows.onCreated.addListener(function(win) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 		}
 	});
 
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			console.log("tab changed");
 		}
@@ -590,7 +592,7 @@ function CreateTabListeners(token) {
 	
 	// When active tab change
 	chrome.tabs.onActivated.addListener(function(info){
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			var tabId = info.tabId;
 			windowId = info.windowId;
 			chrome.tabs.sendMessage(tabId, {
@@ -607,7 +609,7 @@ function initialize() {
 	onInstall();
 	notifyClicked();
 	
-	UpdateBadgeOnOff("1/3");
+	UpdateBadgeOnOff(" ");
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
