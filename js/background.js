@@ -535,53 +535,69 @@ $( document ).ready( function() { updateCountdownBack(); });
 function CreateTabListeners(token) {
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		if ( localStorage.zapOnClose == 'true' ){
-			countTabs(localStorage.tabCountAll, evaluateTabCount);
-		}
-		else{
-			console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
+		if (checkActiveDayHour() == true) {
+			if ( localStorage.zapOnClose == 'true' ){
+				countTabs(localStorage.tabCountAll, evaluateTabCount);
+			}
+			else{
+				console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
+			}
 		}
 	});
 
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// When tab is attached
 	chrome.tabs.onAttached.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// last windows focused
 	chrome.windows.getLastFocused(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+		}
 	});
 
 	// When new window is created
 	chrome.windows.onCreated.addListener(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+		}
 	});
 
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
-		console.log("tab changed");
+		if (checkActiveDayHour() == true) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			console.log("tab changed");
+		}
 	});
 	
 	// When active tab change
 	chrome.tabs.onActivated.addListener(function(info){
-		var tabId = info.tabId;
-		windowId = info.windowId;
-		chrome.tabs.sendMessage(tabId, {
-			action: "hello",
-			pomodoro: lsGet('pomoFocusB', 'parse')
-		});
+		if (checkActiveDayHour() == true) {
+			var tabId = info.tabId;
+			windowId = info.windowId;
+			chrome.tabs.sendMessage(tabId, {
+				action: "hello",
+				pomodoro: lsGet('pomoFocusB', 'parse')
+			});
+		}
 	})
 }
 
