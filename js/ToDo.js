@@ -525,6 +525,7 @@ function pomodoroOnSteroids(){
 			"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
 			"<p>" + 
 				"<select id='minutesPomodoro'>" + 
+					// "<option value='0.08'>5 seconds</option>" + 
 					"<option value='2'>2 minutes</option>" + 
 					"<option value='5'>5 minutes</option>" + 
 					"<option value='10'>10 minutes</option>" + 
@@ -554,7 +555,7 @@ function pomodoroOnSteroids(){
 				console.log("Enter PomoFocus result was " + v);
 				var result = v;
 				if (result == true){
-					pomoFocus.duration	= parseInt($("#minutesPomodoro").val());
+					pomoFocus.duration	= parseFloat($("#minutesPomodoro").val());
 					pomoFocus.endTime	= deltaTime(pomoFocus.duration * 60).getTime();
 					pomoFocus.hyper		= $("#hyperFocusSelect").val()
 					pomoFocus.daily		= false;
