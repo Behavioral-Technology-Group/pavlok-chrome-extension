@@ -1,0 +1,62 @@
+#pomoFocusBannerPlaceholder, #pomoFocusBannerPlaceholder2{
+	height: 25px;
+	background: black;
+	
+	
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	
+	/* font-size: 15px; */
+	/* display: none;	 */
+}
+
+#pomoFocusBannerPlaceholder{
+	position: fixed;
+    top: 0;
+	left: 0;
+	z-index:99999999;
+}
+
+#pomoFocusBannerPlaceholder > table {
+	height: 25px;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	background: black;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+#pomoFocusBannerPlaceholder > table > tr > td {
+	padding-left: 10px;
+	padding-right: 10px;
+	display: inline-block;
+	
+	font-family: "Times New Roman", Times, serif;
+	font-size: 18px;
+	color: #f8e71c;
+	
+	height: 25px;
+	border: 0px;
+	border-collapse: collapse;
+	
+	line-height: 100%;
+}
+
+#pomoFocusBannerPlaceholder > table > tr > td.pavlokHelper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#pomoFocusBannerPlaceholder > table > tr > td > img{
+    height: 16px;
+    vertical-align: middle;
+}
+
+#pomoFocusBannerPlaceholder2{
+	position: relative;
+	top:0;
+	left:0;
+	display: none;
+}

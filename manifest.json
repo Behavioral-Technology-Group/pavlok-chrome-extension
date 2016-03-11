@@ -2,8 +2,8 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.6.9",
-  "name": "in House PAVLOK Productivity",
+  "version": "0.6.12",
+  "name": "in house PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  
   "description": "Stay Focused. Eliminate Distraction.",
@@ -19,8 +19,26 @@
     "default_popup": "popup.html"
   },
 
+  "content_scripts": [
+	{
+		"matches": ["<all_urls>"],
+		"css": ["css/injected.css"],
+		"js": [
+			"js/external/jquery.min.js", 
+			"js/external/jquery.countdown.min.js", 
+			"js/external/jquery-ui.min.js", 
+			"js/injected.js"
+		],
+		"run_at": "document_end"
+	}
+  ],
+  
   "background": {"page": "background.html"},
   "options_page": "options.html",
+  
+  "web_accessible_resources": [
+    "images/*.png"
+  ],
   
   "permissions": [
 	"background",

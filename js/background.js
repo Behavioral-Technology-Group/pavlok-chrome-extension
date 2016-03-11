@@ -75,8 +75,6 @@ function validateTimeOut(RTTimeOut){
 function createTimeout(){
 	fireRescueTime(localStorage.RTAPIKey);
 	var x = setTimeout(function(){
-		
-		
 		// Clearing up
 		RTTimeOut = false;
 		localStorage.RTTimeOut = false;
@@ -103,15 +101,15 @@ function fireRescueTime(APIKey){
 		if ( prod == 0 || prod == null || prod == 'null') { return }
 		else if (prod < parseInt(localStorage.RTNegLimit)) { 
 			notifyUser("Wake up, folk!", "Pulse of " + localStorage.RTPulse + " is bad! Time to get on track!", "RTNotify");
-			stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Time to get on track!");
+			stimuli("shock", defInt, defAT, "Incoming Zap. Time to get on track!");
 		}
 		else if (prod < parseInt(localStorage.RTWarnLimit)) { 
 			notifyUser("Come on, you can do better!", "Pulse of " + localStorage.RTPulse + " ain't bad, but you are better than that!", "RTNotify");
-			stimuli("beep", 4, localStorage.accessToken, "Incoming Beep. Come on, you can do better!!!");
+			stimuli("beep", defInt, defAT, "Incoming Beep. Come on, you can do better!!!");
 		}
 		else if (prod > parseInt(localStorage.RTPosLimit)){
 			notifyUser("Whoohoo!!! On fire!", "Pulse of " + localStorage.RTPulse + " is damn solid! Rock on!", "RTNotify");
-			stimuli("vibration", 255, localStorage.accessToken, "You rock! Let Pavlok massage your wrist a bit!");
+			stimuli("vibration", defInt, defAT, "You rock! Let Pavlok massage your wrist a bit!");
 		}
 		else if (prod < parseInt(localStorage.RTPosLimit)){
 			notifyUser("Way to go!", "Pulse of " + localStorage.RTPulse + " a good start! Keep improving!", "RTNotify");
@@ -132,19 +130,21 @@ function fireRescueTime(APIKey){
 function CheckBlackList(curTabURL, curTabDomain) {
 	var daily = lsGet('dailyPomo', 'parse');
 	
-	
 	var locked = lsGet('lockZap');
 	var lockedTo = lsGet('lockedTo');
+	var pomoFocus = lsGet('pomoFocusB', 'parse');
 	
 	// Checks if it will use regular or daily black and whitelists
-	if (locked == "true") {
-		if (curPAVDomain != lockedTo ) { return true }
-		else { return false }
-	}
-	
-	if (daily && daily.specialList != false) {
-		var _whiteList = daily.whiteList.split(",");
-		var _blackList = daily.blackList.split(",");
+	if (pomoFocus.active == true ){
+		if (locked == "true") {
+			if (curPAVDomain != lockedTo ) { return true }
+			else { return false }
+		}
+		
+		if (daily && daily.specialList != false){
+			var _whiteList = daily.whiteList.split(",");
+			var _blackList = daily.blackList.split(",");
+		}
 	}
 	else {
 		var _whiteList = localStorage.whiteList.split(",");
@@ -297,6 +297,64 @@ var currentSite = null;
 var currentTabId = null;
 var siteRegexp = /^(\w+:\/\/[^\/]+).*$/;
 
+function onUpdateAvailable(){
+	chrome.runtime.onUpdateAvailable.addListener(function(version){
+		notifyUser("We have a new version of the extension for you", "Hey buddy, we just released an update for the extension. It will be installed next time you close and open all chrome windows.", "updateAvaible");
+	});
+}
+
+function onInstall(){
+	chrome.runtime.onInstalled.addListener(function(notes){
+		var reason = notes.reason;
+		if (reason == "install"){
+			var Not = lsGet('notifications', 'parse');
+			var Not = Not.installed;
+			
+			notifyUser(Not.title, Not.message, Not.id);
+			
+			notifyUser(Not.title, Not.message, Not.id, "persist");
+			addPersistNotification("installed");
+		}
+		else if (reason == "update"){
+			notifyUser("Extension updated!", "Your Pavlok extension is now up to date!", "updated");
+		}
+	});
+}
+
+function notifyClicked(){
+	chrome.notifications.onClicked.addListener(function(notId){
+		if (notId == "installed"){
+			oauth();
+		}
+		else if (notId == "signedIn"){
+			chrome.notifications.clear("installed");
+			openOptions();
+		}
+	});
+}
+
+function addPersistNotification(notId){
+	var persList = lsGet('persistedNotifications');
+	if (persList.length == 0){ persList = []; }
+	var index = persList.indexOf(notId);
+	if (index == -1) {
+		persList.push(notId);
+		lsSet('persistedNotifications', persList);
+		return notId
+	}
+	return false
+}
+
+function persistNotifications(){
+	var persList = lsGet('persistedNotifications');
+	if (persList.length != 0){
+		for (n = 0; n < persList.length; n++) {
+			// chrome.notifications.update(persList[n]);
+		}
+	}
+	setTimeout(function(){persistNotifications();}, 5000);
+}
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -375,6 +433,25 @@ function updateCountdownBack(latest){
 	
 	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
 		$(this).html(event.strftime('%M:%S'));
+	})
+	.on('finish.countdown', function(event) {
+		
+		if (localStorage.endReason == 'time') {
+			var NotList = lsGet('notifications', 'parse');
+			var Not = NotList.pomofocusEnded;
+			notifyUser(Not.title, Not.message, Not.id);
+			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+		}
+		
+		console.log("PomoFocus ended");
+		pomoFocusB = lsGet('pomoFocusB', 'parse');
+		pomoFocusB.audio = false;
+		pomoFocusB.active = false;
+		savePomoFocus(pomoFocusB, 'background');
+		PFpromptForce = true;
+		localStorage.instaZap = 'false';
+		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
 }
 
@@ -425,21 +502,47 @@ function createPomoFocusCountDownBack(){
 	.on('finish.countdown', function(event) {
 		
 		if (localStorage.endReason == 'time') {
-			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+			var NotList = lsGet('notifications', 'parse');
+			var Not = NotList.pomofocusEnded;
+			notifyUser(Not.title, Not.message, Not.id);
+			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
 		}
+		
 		console.log("PomoFocus ended");
+		pomoFocusB = lsGet('pomoFocusB', 'parse');
 		pomoFocusB.audio = false;
+		pomoFocusB.active = false;
 		savePomoFocus(pomoFocusB, 'background');
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
+		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
+}
+
+function calibratePomoFocus(){
+	var pomoFocus = lsGet('pomoFocusB', 'parse');
+	var dailyPomo = lsGet('dailyPomo');
+	
+	if (pomoFocus.endTime < new Date().getTime()){
+		pomoFocus.active = false;
+	}
+	
+	if (pomoFocus.active == false){
+		pomoFocus.audio = false;
+		pomoFocus.daily = false;
+		pomoFocus.specialList = false;
+		lsDel('lockZap');
+		lsDel('dailyPomo');
+		lsDel('instaZap');
+	}
 }
 
 var countDownSafetyCheck = setInterval(function(){ updateCountdownBack();}, 2000);
 var testInt = setInterval(function(){ 
 	checkForUpdateBack();
 	checkForAudio();
+	calibratePomoFocus();
 	}, 100);
 $( document ).ready( function() { updateCountdownBack(); });
 
@@ -457,47 +560,79 @@ $( document ).ready( function() { updateCountdownBack(); });
 function CreateTabListeners(token) {
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		if ( localStorage.zapOnClose == 'true' ){
-			countTabs(localStorage.tabCountAll, evaluateTabCount);
-		}
-		else{
-			console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			if ( localStorage.zapOnClose == 'true' ){
+				countTabs(localStorage.tabCountAll, evaluateTabCount);
+			}
+			else{
+				console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
+			}
 		}
 	});
 
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// When tab is attached
 	chrome.tabs.onAttached.addListener(function(tab) {
-		countTabs(localStorage.tabCountAll, evaluateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, evaluateTabCount);
+		}
 	});
 
 	// last windows focused
 	chrome.windows.getLastFocused(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+		}
 	});
 
 	// When new window is created
 	chrome.windows.onCreated.addListener(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+		}
 	});
 
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			console.log("tab changed");
+		}
 	});
+	
+	// When active tab change
+	chrome.tabs.onActivated.addListener(function(info){
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			var tabId = info.tabId;
+			windowId = info.windowId;
+			chrome.tabs.sendMessage(tabId, {
+				action: "hello",
+				pomodoro: lsGet('pomoFocusB', 'parse')
+			});
+		}
+	})
 }
 
 function initialize() {	
-	UpdateBadgeOnOff("1/3");
+	persistNotifications();
+	onUpdateAvailable();
+	onInstall();
+	notifyClicked();
+	
+	UpdateBadgeOnOff(" ");
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
@@ -537,7 +672,13 @@ function initialize() {
 				myAudio.volume = newAudioVol;
 			}
 			
-			
+			else if (request.action == "newPage" && request.target == 'background') {
+				var pomoFocus = lsGet('pomoFocusB', 'parse');
+				sendResponse({
+					pomodoro: pomoFocus
+				});
+				console.log("message received");
+			}
 		}
 	);
 }
@@ -575,7 +716,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 		if (counter == true){	// with timer going on
 			if (instaZap == 'true' && firstZap == 'false'){
 				//Zap & Notify
-				stimuli("shock", defInt, defAT);
+				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
 				// Substitute timeWindow
 				timeWindowZap = 8;
@@ -595,7 +736,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 				// if (elapsed >= parseInt(timeWindow)){
 				if (elapsed >= parseInt(timeWindowZap)){
 					notifyUser(msgZaped[0], msgZaped[1], "zapped");
-					stimuli("shock", defInt, defAT);
+					stimuli("shock", defInt, defAT, msgZaped[1], "false");
 					
 					timeBegin = new Date();
 				}			
@@ -607,7 +748,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 			counter = true;
 			if (localStorage.instaZap == 'true'){
 				//Zap & notify
-				stimuli("shock", defInt, defAT);
+				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
 				localStorage.firstZap = 'true';
 			}

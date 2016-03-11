@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "test"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -134,6 +134,7 @@ localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps
 
 // Stimuli intensity
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
+if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
 
@@ -144,6 +145,8 @@ if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
 if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
+if (!localStorage.tabNumbersActive ) { localStorage.tabNumbersActive = 'true'; }
+
 
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
@@ -157,9 +160,52 @@ if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
 if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
 
 // Notifications
+if (!localStorage.persistedNotifications) { localStorage.persistedNotifications = [];}
 if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
+
+
+	var notifications = {};
+	
+	// When extension is first installed
+	notifications.installed = {};
+	notifications.installed.title = "Welcome to Pavlok. Let's get started!";
+	notifications.installed.message = "Click here to log in.";
+	notifications.installed.id = "installed";
+	notifications.installed.persist = true;
+	notifications.installed.usage = "installed";
+	
+	// When logged in
+	notifications.signedIn = {};
+	notifications.signedIn.title = "Hooray! Welcome aboard!";
+	notifications.signedIn.message = "Click hede to start using the Productivity Extension";
+	notifications.signedIn.id = "signedIn";
+	notifications.signedIn.persist = true;
+	notifications.signedIn.usage = "installed";
+	
+	// PomoFocus task completed
+	notifications.pomofocusDone = {};
+	notifications.pomofocusDone.title = "Way to go!";
+	notifications.pomofocusDone.message = "Keep the zone going, you rock star!";
+	notifications.pomofocusDone.id = "PFNotify";
+	notifications.pomofocusDone.persist = false;
+	notifications.signedIn.usage = "pomofocusDone";
+	
+	// pomoFocus time ended
+	notifications.pomofocusEnded = {};
+	notifications.pomofocusEnded.title = "Congrats! You made it!";
+	notifications.pomofocusEnded.message = "Take a 5 min break and lets get started! Get up if you were seated!";
+	notifications.pomofocusEnded.id = "PFNotify";
+	notifications.pomofocusEnded.persist = false;
+	notifications.signedIn.usage = "pomofocusEnded";
+	
+	// 
+	lsSet('notifications', notifications, 'object');
+	
+	
+
+
 
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
@@ -251,13 +297,25 @@ function getPomoFocus(win){
 function savePomoFocus(pomoFocus, win){
 	var now = new Date().getTime();
 	pomoFocus.lastUpdate = now;
-	// if (win == 'options') 			{ lsSet('pomoFocusO', pomoFocus, 'object'); }
-	// else if (win == 'background') 	{ lsSet('pomoFocusB', pomoFocus, 'object'); }
-	// else if (win == 'popup') 		{ lsSet('pomoFocusP', pomoFocus, 'object'); }
-	
+
+	if (pomoFocus.endTime > now) {
+		pomoFocus.active = true;
+	}
+	else {
+		pomoFocus.active = false;
+	}
+
 	equalizePomoFocus(pomoFocus);
 	
 	updateCountdown();
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		chrome.tabs.sendMessage(tabs[0].id, 
+		{
+			action: "pomodoro", 
+			pomodoro: pomoFocus
+		});  
+	});
+	
 	return pomoFocus
 }
 
@@ -295,6 +353,7 @@ function lsDel(key){
 function nowTime(){
 	return new Date().getTime();
 }
+
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -333,6 +392,10 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+// Tour
+function openOptions(){
+	window.open('options.html','_blank');
+}
 // Background
 function UpdateBadgeOnOff(badgeText) {
 	// if (inText.length == 0 ) { inText = "On"; }
@@ -355,7 +418,12 @@ function UpdateBadgeOnOff(badgeText) {
 }
 
 function UpdateTabCount(tabCount) {
-	UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	if (localStorage.tabNumbersActive == "true"){
+		UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	}
+	else {
+		UpdateBadgeOnOff('' + tabCount);
+	}
 }
 
 function countTabs(mode, callback){
@@ -406,17 +474,17 @@ function evaluateTabCount(tabCount){
 	// How is number of tabs compared to tab limit (maxTabs)?
 	if(tabCount > maxTabs) {
 		situation.status = "over";
-		stimuli("shock", localStorage.zapIntensity, localStorage.accessToken, "Incoming Zap. Too many tabs");
+		stimuli("shock", defInt, defAT, "Too many tabs");
 		console.log("total tabs over max tabs");
 	}
 	else if (tabCount == maxTabs ){ 
 		situation.status = "limit";
-		stimuli("beep", 3, localStorage.accessToken, "Incoming Beep. You're at the limit on tabs");
+		stimuli("beep", defInt, defAT, "Incoming Beep. You're at the limit on tabs");
 	 
 	}
 	else if (tabCount == maxTabs - 1){ 
 		situation.status = "borderline";
-		stimuli("vibration", localStorage.vibrationIntensity, localStorage.accessToken, "Incoming vibration. You're nearing the limit on tabs");
+		stimuli("vibration", defInt, defAT, "Incoming vibration. You're nearing the limit on tabs");
 	}
 	else { situation.status = "wayBellow"};
 	
@@ -519,13 +587,30 @@ function enableTooltips(){
 }
 
 // Notifications
-function notifyUser(title, message, notID){
-	var opt = {
-		type: "basic",
-		title: title,
-		message: message,
-		iconUrl: "icon.png"
-	};
+function notifyUser(title, message, notID, persist){
+	if (typeof(title) == "object"){
+		var NotList = lsGet('notifications', 'parse');
+		var Not = _.where(NotList, {usage: title});
+		
+		var opt = {
+			type: "basic",
+			title: Not.title,
+			message: Not.message,
+			iconUrl: "icon.png"
+			
+		};
+		
+		var notID = Not.id;
+	}
+	else{
+		var opt = {
+			type: "basic",
+			title: title,
+			message: message,
+			iconUrl: "icon.png"
+			
+		};
+	}
 	
 	chrome.notifications.create(notID, opt, function(notID) {
 		if (chrome.runtime.lastError){
@@ -649,6 +734,8 @@ function oauth() {
 						userInfo(accessToken);
 					});
 					console.log("OAuth2 test concluded");
+					chrome.notifications.clear("installed");
+					notifyUser('Hooray! Welcome aboard!', 'Click hede to start using the Productivity Extension', 'signedIn');
 				});
 		}
 	);	
@@ -729,7 +816,7 @@ function userInfo(accessToken) {
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	stimuliTypes = ['shock', 'vibration', 'beep'];
-	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepTune]; // zap, vibration, beep
+	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
 	
 	if (!value || value == 'defInt' || '') { value = defIntensities[stimuliTypes.indexOf(stimulus)]; }
 	if (!accessToken || accessToken == 'defAT' || '') { accessToken = localStorage.accessToken; }
@@ -744,14 +831,16 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	if ( forceNotify == 'false' ) { notify = false; }
 	else if ( forceNotify == 'true' ) { notify = true; }
 	
-	if (notify) { $.prompt(textAlert); }
+	// if (notify) { $.prompt(textAlert); }
 	
 	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimulus + '/' + 
 				value + 
 				'?access_token=' + accessToken;
 				
-	if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
+	else { alert("stimuli without reason"); }
 	
 	console.log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
