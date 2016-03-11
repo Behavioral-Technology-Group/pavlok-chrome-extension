@@ -346,8 +346,9 @@ function createPomoFocusCountDown(){
 		// pomoFocusB.active = false;
 		// savePomoFocus(pomoFocusB, 'background');
 		// PFpromptForce = true;
-		// localStorage.instaZap = 'false';
-		// lsDel('lockZap');
+		localStorage.instaZap = 'false';
+		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
 }
 
@@ -417,7 +418,9 @@ function pomoFocusButtons(){
 		pomoFocus.duration = 0;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.endReason = 'done';
+		lsDel('lockZap');
 		savePomoFocus(pomoFocus, 'popup');
+		lsDel('dailyPomo');
 	});
 	
 	$("#pomoFocusStop").click(function(){
@@ -430,6 +433,7 @@ function pomoFocusButtons(){
 		pomoFocus.daily = false;
 		localStorage.instaZap = 'false';
 		savePomoFocus(pomoFocus, 'popup');
+		lsDel('lockZap');
 		lsDel('dailyPomo');
 		
 	});

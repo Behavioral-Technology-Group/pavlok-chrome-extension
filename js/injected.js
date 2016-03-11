@@ -163,7 +163,7 @@ function updateCountDown(pomoFocus) {
 	var clockDiv = $('#pavlokTimerSpan');
 	var taskSpan = $('#pavlokTaskSpan');
 	
-	$(taskSpan).html(pomoFocus.task + " - ");
+	$(taskSpan).html(pomoFocus.task);
 	var timer = $(clockDiv).countdown(endDate, function(event) {
 		$(this).html(event.strftime('%M:%S'));
 	})

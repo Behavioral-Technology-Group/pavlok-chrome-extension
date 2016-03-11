@@ -130,19 +130,21 @@ function fireRescueTime(APIKey){
 function CheckBlackList(curTabURL, curTabDomain) {
 	var daily = lsGet('dailyPomo', 'parse');
 	
-	
 	var locked = lsGet('lockZap');
 	var lockedTo = lsGet('lockedTo');
+	var pomoFocus = lsGet('pomoFocusB', 'parse');
 	
 	// Checks if it will use regular or daily black and whitelists
-	if (locked == "true") {
-		if (curPAVDomain != lockedTo ) { return true }
-		else { return false }
-	}
-	
-	if (daily && daily.specialList != false) {
-		var _whiteList = daily.whiteList.split(",");
-		var _blackList = daily.blackList.split(",");
+	if (pomoFocus.active == true ){
+		if (locked == "true") {
+			if (curPAVDomain != lockedTo ) { return true }
+			else { return false }
+		}
+		
+		if (daily && daily.specialList != false){
+			var _whiteList = daily.whiteList.split(",");
+			var _blackList = daily.blackList.split(",");
+		}
 	}
 	else {
 		var _whiteList = localStorage.whiteList.split(",");
@@ -449,6 +451,7 @@ function updateCountdownBack(latest){
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
 		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
 }
 
@@ -513,13 +516,33 @@ function createPomoFocusCountDownBack(){
 		PFpromptForce = true;
 		localStorage.instaZap = 'false';
 		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
+}
+
+function calibratePomoFocus(){
+	var pomoFocus = lsGet('pomoFocusB', 'parse');
+	var dailyPomo = lsGet('dailyPomo');
+	
+	if (pomoFocus.endTime < new Date().getTime()){
+		pomoFocus.active = false;
+	}
+	
+	if (pomoFocus.active == false){
+		pomoFocus.audio = false;
+		pomoFocus.daily = false;
+		pomoFocus.specialList = false;
+		lsDel('lockZap');
+		lsDel('dailyPomo');
+		lsDel('instaZap');
+	}
 }
 
 var countDownSafetyCheck = setInterval(function(){ updateCountdownBack();}, 2000);
 var testInt = setInterval(function(){ 
 	checkForUpdateBack();
 	checkForAudio();
+	calibratePomoFocus();
 	}, 100);
 $( document ).ready( function() { updateCountdownBack(); });
 
@@ -570,7 +593,7 @@ function CreateTabListeners(token) {
 
 	// last windows focused
 	chrome.windows.getLastFocused(function(win) {
-		if (checkActiveDayHour() == true && localstorage.tabNumbersActive == "true" ) {
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 		}
 	});
