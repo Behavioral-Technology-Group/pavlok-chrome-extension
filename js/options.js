@@ -877,8 +877,32 @@ function restoreOptions() {
 	
 }
 
+function enableScrollNavigation(){
+	$("#indexDiv").on('click', '.scrollableLink', function(){
+		moveToLink($(this));
+	});
+}
+
+function moveToLink(clickedLink){
+	var target = $(clickedLink).prop('id').split("@")[1];
+	target = $("#" + target);
+	
+	var topHeight = parseInt($("#fixedHeader").height());
+	// var topMargin = parseInt($("#fixedHeader").margin());
+	var topPadding= parseInt($("#fixedHeader").css('padding').split("p")[0]);
+	var topSize = topHeight + topPadding;
+	
+	var position = $(target).offset().top;
+	var positionUpdated = position - topSize;
+	
+	console.log(positionUpdated);
+	window.scrollTo(0, positionUpdated);
+}
+
+
 // Create the vertical tabs
 function initialize() {
+	enableScrollNavigation();
 	// Black and WhiteLists
 	var blackListContent = localStorage.blackList;
 	
@@ -903,12 +927,6 @@ function initialize() {
 		});
 	}
 	
-	// Create tabs
-	$(function() {
-		$( "#tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-		$( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-		// $( ".tabsLi")
-	});
 	
 	
 	// Add listeners for Auto save when options change
@@ -994,4 +1012,7 @@ $( document ).ready(function() {
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
+	
+	removeInlineStyle("#blackList_tagsinput");
+	removeInlineStyle("#whiteList_tagsinput");
 });

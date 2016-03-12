@@ -198,6 +198,10 @@ if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 var defInt = '';
 var defAT = '';
 
+function removeInlineStyle(element){
+	$(element).attr('style', '');
+}
+
 function msgExt(_action, _target){
 	// Action is used to tell what to act upon
 	// Target is used to tell which page should respond to the stimulus

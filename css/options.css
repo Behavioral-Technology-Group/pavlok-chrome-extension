@@ -1,589 +1,198 @@
 @font-face {
-	font-family: 'Halis Black';
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot');
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot?#iefix') format('embedded-opentype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.woff') format('woff'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.ttf') format('truetype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.svg') format('svg');
+	font-family: 'Lato', sans-serif;
 }
 
-#status {
-  background-color: #E2A92B;
-  display: none;
-  color: #E2A92B;
-  height: 110px;
-  width: 355px;
-  text-align: center;
-  vertical-align: middle;
-}
 
 body {
-  font-family: Helvetica,Arial,sans-serif;
-  font-size:small;
   color:#000;
-  background: linear-gradient(white, #f8e71c);
+  background: black;;
 }
 
-
-#save{
-  background-image: url('../images/save.png');
-  margin-top: 1em;
-}
-
-body p {
-  color: white;
-  font-family: Helvetica;
-}
-
-h2 {
-  color: white;
-  font-family: Helvetica;
-  margin-bottom: 0
-}
-
-#label-text {
-  color: white;
-}
-
-#signIn{
-text-align: left;
-  color: white;
-  background-color: #845221;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-a.ui-tabs-anchor {
-	width: 85%;
-}
-
-#testPairing{
-  text-align: left;
-  color: white;
-  background-color: #ffc106;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-#signOut{
-  text-align: left;
-  color: white;
-  background-color: #845221;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-
-.tagcontainer {
-  height:100px;
-  width: 350px;
-}
-
-ul.nav{
-  list-style-type: none;
-  left:0;
-  padding:0;
-}
-
-div.auth{
-  text-decoration: none;
-}
-
-#optionsDiv{
-  visibility: hidden;
-}
-
-
-.helpIcon {
-  height:20px;
-  width: 20px;
-}
-
-.yellow{
-	color: yellow;
-}
-
-.ui-tabs-vertical {
-	width: 55em;
-}
-
-.ui-tabs-vertical .ui-tabs-nav {n
-	padding: .2em .1em .2em .2em;
-	float: left;
-	width: 12em;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li { clear: left;
-	width: 100%;
-	border-bottom-width: 1px !important;
-	border-right-width: 0 !important;
-	margin: 10px 10px .2em 0;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li a { display:block;
-}
-
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0;
-	padding-right: .1em;
-	border-right-width: 1px;
-}
-
-.ui-tabs-vertical .ui-tabs-panel { padding: 1em;
-	float: right;
-	width: 40em;}
+#fixedHeader{
+	padding-top:34px;
+	width: 1260px;
+	position: fixed;
+	top:0;
+	background: black;
 	
-.onlyLogged{
-	visibility: hidden;
 }
 
-.onlyUnlogged{
-	visibility: visible;
+#fixedHeaderPlaceHolder{
+	width: 1260px;
+	height: 186px;
+}
+
+#contentsContainer{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 1260px;
+	/* border: 2px solid yellow; */
+}
+
+#topHeader{
+	margin-left: 5%;
+	margin-bottom:20px;
+	width: 90%;
+	margin-right: 5%;
+}
+
+.flexContainer{
+	display: -webkit-flex;
+	display: flex;
+}
+
+.space-between { 
+  -webkit-justify-content: space-between; 
+  justify-content: space-between; 
+}  
+
+#indexDiv > span.flexItem:first-child{
+	padding-left:0;
+}
+
+#logoDiv > img {
+	position:relative;
+	top: 0px;
+	width: 230px;
+	height: auto;
+}
+
+#likeDiv{
+	border: 1px solid black;
+	border-color: #e0d01b;
+	border-radius: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	position:relative;
+}
+
+#likeDiv > span {
+	color: e0d01b;
+	right: 0px;
+	font-size: 20px;
+}
+
+#coolSpan{
+	margin-right:10px;
+}
+#likeDiv > #likeSpan {
+	color: #504a04;
+	/* right: 0px; */
+	font-size: 20px;
+}
+
+#likeDiv > #likeSpan:hover {
+	color: yellow;
+	cursor: pointer;
+}
+
+#indexDiv{
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 90%;
+}
+
+.scrollableLink{
+	padding: 8px;
+	font-weight: bold;
+	margin-bottom:2px;
+}
+
+.scrollableLink:hover{
+	color:white;
+	cursor:pointer;
+}
+
+#testPairingX, #signOutX{
+	padding:6px;
+	position:relative;
+	/* top: 30px; */
+	cursor:pointer;
+}
+
+hr.bigger {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0; 
+	width: 106%;
+	position: relative;
+	left: -3%;
+}
+
+hr {
+	display: block;
+    height: 0px;
+	border:0;
+	border-top: 1px solid black;
+	border-color: #e0d01b;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0; 
+}
+.onlyLogged{
+	margin-left: 5%;	
+	margin-right: 5%;	
+}
+
+.sectionTitle{
+	font-size:40px;
+	color: #e0d01b;
+	font-weight: initial;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+.helpSpan{
+	font-size: 10px;
+	vertical-align: super;
+}
+
+.lightFont{
+	font-weight: lighter;
+}
+
+div.tagcontainer{
+	width: 100%;
+	height: 200px;
+	border: 1px solid blue;
+}
+
+#maxTabsSelect{
+	padding: 3px;
+	border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+body p, body span, h2, h3, h4, h1{
+	/* color: white; */
+	color: rgb(159, 159, 159);
+}
+
+body p, body span {
+	font-size: 20px;
 }
 
 .noDisplay{
-	display: none;
-}
-
-th {
-	width: 130px;
-    border: 3px solid white;
-	border-collapse: collapse;
-	color: white;
-}
-
-#dayTimeTable td {
-	width: 130px;
-    border: 1px solid white;
-	border-collapse: collapse;
-	color: white;
-}
-
-#dayTimeTable {
-	border: 1px solid white;
-    border-collapse: collapse;
-    width: 100%;
-}
-
-.hasTimePicker {
-	width: 50px;
-}
-
-.50px {
-	width: 50px;
-}
-
-.100px {
-	width: 100px;
-}
-
-#autoZapperTable th {
-	/* width: 400px; */
-	width: 25%;
-}
-#autoZapperTable input {
-	width: 50px;
-}
-
-#autoZapperStart {
-  text-align: center;
-  color: white;
-  background-color: #f8e71c;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  width: 85%;
-  display: block;
-}
-
-#autoZapperStop {
-  text-align: center;
-  color: white;
-  background-color: red;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  display: block;
-  width: 85%;
-}
-
-.trainingSessionConfigurations{
-	display: none;
-}
-
-#selectable td {
-	color: white;
-}
-
-#selectable .ui-selecting {
-    background: #ffff60;
-}
-#selectable .ui-selected {
-    background: #fec93d;
-}
-
-.roundedBorders{
-	border-top-left-radius: 16px;
-	border-bottom-left-radius: 16px;
-	border-top-right-radius: 16px;
-	border-bottom-right-radius: 16px;
-	border: 2px solid white;
-}
-
-.whiteContour{
-	border: 1px solid white;
-}
-
-.allCaps{
-	text-transform: uppercase;
-	font-size: 130%;
-}
-
-.smallLetters{
-	font-size: 75%;
-}
-
-.toRight {
-	text-align: right;
-}
-
-ul {
-    background: black;
-}
-
-h2 .helpIconSpan{
-	border-radius: 30px;
-    background-color:rgba(248, 231, 28, 1);
-	color:black;
-    padding-left:6px;
-    padding-right: 6px;
-    padding-top:2px;
-    padding-bottom:2px;
-    font-size:15px;
-	font-weight: bold;
-}
-
-.helpIconSpan{
-	border-radius: 30px;
-    background-color:rgba(248, 231, 28, 1);
-	color:black;
-    padding-left:10px;
-    padding-right: 10px;
-    padding-top:2px;
-    padding-bottom:2px;
-    font-size:17px;
-	/* font-weight: bold; */
-}
-
-.logo{
-	width: 190px;
-	height: 50px;
-}
-
-.display{
-	display: "block"
-}
-
-#chartContainer{
-	width: 500px;
-	height: 100px;
-}
-
-.miniChartDiv{
-	height: 50px;
-	display: inline-block;
-}
-
-#miniChart{
-	width: 500px;
-}
-
-#badRT{
-	background-color: red;
-	width: 22%;
-}
-
-#warnRT{
-	background-color: orange;
-	width: 22%;
-}
-
-#notifyRT{
-	background-color: white;
-	width: 22%;
-}
-
-#goodRT{
-	background-color: green;
-	width: 22%;
-}
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           To-Do Section           *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-#toDoAction {
-	width: 100%;
-	background-color: black;
-	/* border: 1px solid white; */
-	color: white;
-}
-
-#toDoAction table {
-	width: 100%;
-	color: white;
-}
-
-#toDoAction table > tfoot > tr{
-	font-weight: bold;
-	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
-}
-
-#toDoAction table > tfoot > tr{
-	font-weight: bold;
-	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
-}
-
-/* Items themselves */
-.toDoItemTR{
-	width: 100%;
-	background: rgb(10, 10, 10);
-	vertical-align: center;
-	border-bottom: 1px solid white;
-}
-
-.toDoItemTR:hover{
-	background: #f8e71c;
-	
-}
-
-.toDoItemTR > td {
-	vertical-align: center;
-	padding-left: 5px;
-}
-.toDoItemTR > td > div {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	height: 26px;
-}
-
-.toDoOKerTD {
-	width: 5%;
-}
-
-.toDoOTaskTD {
-	width: 77%;
-}
-
-.toDoORemoverTD {
-	text-align: right;
-	width: 15%;
-}
-
-.doneTaskRow .toDoOTaskTD {
-	text-decoration: line-through;
-	color: gray;
-}
-
-.todayTaskRow .todayToDoItem  {
-	
-}
-
-/* Footer buttons and fields */
-#toDoNItemsLeft {
-	padding-left: 15px;
-	width: 28%;
-	text-align: left;
-}
-
-#clearCompletedToDo{
-	padding-right: 15px;
-	width: 28%;
-	text-align: right;
-}
-
-#clearCompletedToDo a{
-	text-decoration: none;
-	color: white;
-}
-
-.toDoScopes{
-	width: 14.5%;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	text-align: center;
-}
-
-.toDoScopes a{
-	text-decoration: none;
-	color: white;
-	text-align: center;
-}
-/* Header and to-do adding buttons */
-#completeAllButton{
-	width: 5%;
-}
-
-#toDOAdd{
-	width: 95%;
-}
-
-#toDoAction .imgIcon{
-	width: 28px;
-	height: 28px;
-	vertical-align: middle;
-}
-
-/* debug */
-#toDoAction table, #toDoAction tr, #toDoAction td {
-	/* border: 1px solid blue; */
-	border-collapse: collapse;
-}
-
-#pomoFocusRemainingTime{
-	font-size: 200%;
-}
-
-.noDecoration{
-	text-decoration: none;
-}
-
-.pomoFocusButtons {
-	height: 35px;
-	width: 35px;
-}
-
-.pomoFocusButtons > span{
-	font-size: 35px;
-	text-align: center;
-	height: 35px;
-	width: 35px;
-}
-
-.grayScale {
-	-webkit-filter: grayscale(100%);
-}
-
-.jqimessage > p{
-	color: rgb(68, 68, 68);
-}
-
-#overLay {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-}
-
-.nowToDoItem{
-	/* display: none; */
-}
-
-/********************************************/
-/********************************************/
-
-/*				Daily Tasks					*/
-
-
-/********************************************/
-/********************************************/
-
-#dailyListTable {
-	color: white;
-	width: 100%;
-	border-collapse: collapse;
-}
-
-#dailyListTable td{
-	/* border: 1px solid white; */
-	padding-top: 5px;
-	padding-bottom: 5px;
-	border-collapse: collapse;
-	border-bottom: 1px solid white;
-	text-align: center;
-}
-
-#dailyListTable tbody > tr:hover{
-	background: #f8e71c;
-}
-
-#dailyListDetails {
-	color: white;
-	width: 100%;
-	border-collapse: collapse;
-}
-
-#dailyListDetails td{
-	/* border: 1px solid white; */
-	padding-top: 5px;
-	padding-bottom: 5px;
-	border-collapse: collapse;
-	/* border-bottom: 1px solid white; */
-}
-
-.categoryName {
-	font-weight: bold;
-	width: 30%;
-	text-align: right;
-	padding-right: 10px;
-}
-
-#dailyTaskNameInput {
-	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
-}
-
-#dailyDescriptionInput{
-	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
-}
-
-#dailyTaskIdInput{
-	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
-}
-
-.tagcontainer > div.tagsinput{
-	width: 100%;
-	height: 87%;
-}
-
-#newDailyTaskInput{
-	width: 88%;
-}
-
-div.buttonHolder{
-	width:106px;
-}
-
-#saveDaily {
-	vertical-align: bottom;
-}
-
-#deleteDaily {
-	padding-top: 7px;
-	padding-bottom: 7px;
-	padding-left: 20px;
-	padding-right: 20px;
-	background: orange;
-	color: red;
-	width: 106px;
-	font-weight: bold;
-	border-radius: 25px;
-	text-decoration: none;
-}
-
-*{
-    outline:none;
+	display:none;
 }
