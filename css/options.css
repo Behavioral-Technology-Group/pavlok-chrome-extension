@@ -212,18 +212,67 @@ span.activeSection{
 	color: white;
 }
 
-
-
-
-body p, body span, h2, h3, h4, h1{
-	/* color: white; */
-	color: rgb(159, 159, 159);
+.toDoTable{
+	border-collapse: collapse;
 }
 
-body p, body span {
+.toDoTable th, .toDoTable td{
+	border: 1px solid white;
+	border-collapse: collapse;
+	color: white;
+	font-family: 'Lato', sans-serif;
 	font-size: 20px;
+	text-align: center;
 }
 
-.noDisplay{
-	display:none;
+#dailyListTable{
+	width: 50%;
+}
+
+#dailyListTable th{
+	padding: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+#newDailyTaskTD{
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	height: 55px;
+	padding-bottom: 15px;
+}
+
+#newDailyTaskTD > div {
+	height: 100%;
+}
+
+#newDailyTaskInput{
+	flex-grow: 6;
+	/* padding-bottom:10px; */
+	height: 100%;
+	border: 0px;
+	font-size: 20px;
+	padding: 10px;
+}
+
+::-webkit-input-placeholder {	
+	font-size: 20px;
+	margin-left: 10px;
+}
+
+
+#createNewDailyTaskButton{
+	border-radius: 5px;
+	background: yellow;
+	padding-left: 35px;
+	padding-right: 35px;
+	
+	border: 0px;
+	
+	margin-left: 13px;
+	
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+}
 }

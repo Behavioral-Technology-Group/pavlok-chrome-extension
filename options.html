@@ -168,13 +168,16 @@
 					<h3>Dailies</h3>
 					<div id="dailiesDiv">
 						<p>Dailies are actions that you want to repeat, such as creating habits. They can get you organized with things you need to do on a recurring basis. Also, we add a layer of Pomodoro here, so that you can skyrocket your productivity and habits formation</p>
+						<hr>
 						<div id="dailiesListDiv">
-							<table id="dailyListTable">
+							<table id="dailyListTable" class="toDoTable">
 								<thead>
 									<tr>
 										<td colspan="3" id="newDailyTaskTD">
-											<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task"/>
-											<input type="button" id="createNewDailyTaskButton" value="Create"/>
+											<div class="flexContainer space-between">
+												<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task" class="flexItem"/>
+												<input type="button" id="createNewDailyTaskButton" value="Create" class="flexItem"/>
+											</div>
 										</td>
 									</tr>
 									<tr>
@@ -182,15 +185,14 @@
 										<th>Pomodoros</th>
 										<th>Special Lists</th>
 									</tr>
-				
 								</thead>
 								<tbody>
 								</tbody>
 							</table>
 							<br/>
-							<div id="dailyListDetailsDIV"  class="noDisplay">
-							<hr>
-							<br/>
+							<div id="dailyListDetailsDIV"  class="noDisplay toDoTable">
+								<hr>
+								<br/>
 								<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
 								<table id="dailyListDetails">
 									<tbody>
@@ -253,7 +255,7 @@
 											<td id="hyperFocusTD">
 												<div id="dailyHiperOptions">
 													<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
-													<span class="noDisplay"<input type="checkbox" id="instaZapDaily" />Instant zap on blacklist</span>
+													<span class="noDisplay"<input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>
 												</div>
 											</td>
 										</tr>
@@ -266,6 +268,10 @@
 									
 									</tbody>
 								</table>
+								<div class="saveOrResetContainer">
+									<a href="#" id="resetIntensity">Reset values</a>
+									<a href="#" id="saveIntensity">Save</a>
+								</div>
 								<input type="image" src="images/save.png" id="saveDaily"/>								
 								<a class="deleteDaily" id="deleteDaily">Remove</a>
 							</div>
@@ -313,15 +319,6 @@
 							</span>
 						</a>
 					</p>
-					
-					<!-- <div class="hyperFocusControlDiv noDisplay">
-						<h3>Hyper Focus Controls</p>
-						<h4>Binaural Audio Controls</h4>
-						<audio controls>
-							<source src="audio/focus1.mp3" type="audio/ogg">
-							Your browser does not support the audio element.
-						</audio>
-					</div> -->
 				</div>
 			</div>
 			<div id="appIntegrationsContainerDiv">
