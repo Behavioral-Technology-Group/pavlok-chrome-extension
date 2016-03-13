@@ -285,4 +285,16 @@ body p, body span, body li, body ul, body ol {
 	font-size: 20px;
 	font-family: 'Lato', sans-serif;
 }
+
+/* Integrations */
+/* Autozapper */
+#autoZapperContainerDiv > ol {
+	color: white;
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+	color: rgb(159, 159, 159);
+}
+
+.helpSpan{
+	border: 1px solid red;
 }
