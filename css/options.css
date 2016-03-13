@@ -168,7 +168,22 @@ div.tagcontainer{
 	border-radius: 5px;
 }
 
+.stimuliControlContainer{
+	margin-bottom: 30px;
+}
+.stimuliControlIcon{
+	width: 50px;
+	height: auto;
+	display: inline-block;
+}
 
+.stimuliControlSlider{
+	width: 60%;
+	display: inline-block;
+	/* position: relative; */
+	top: -20px;
+	margin-left: 50px;
+}
 
 span.activeSection{
 	color: white;
@@ -178,7 +193,17 @@ span.activeSection{
 
 
 
+.saveOrResetContainer > a{
+	display: inline-block;
+	color: white;
+	text-decoration: underline;
+	font-size: 20px;
+	/* font-weight: bold; */
+}
 
+.saveOrResetContainer > a:first-child{
+	margin-right: 30px;
+}
 
 
 

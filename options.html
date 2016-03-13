@@ -1,7 +1,7 @@
 <html>
 <head>
 	<title>PAVLOK Productivity</title>
-	<!-- <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" /> -->
@@ -140,24 +140,25 @@
 				<h2 class="sectionTitle">Stimuli</h2>
 				<p>Control the intensity of the stimuli. Select increments of 10%</p>
 				<hr>
-				<h2><label for="zapInt">Zap Intensity (10% increments):</label></h2>
-				<p>
-					<input type="text" id="zapIntensity" readonly style="border:0; color:#f6931f; font-weight:bold;">        <input type="button" id="testZapInt" value="Test Zap">
-				</p>
-				 
-				<div id="sliderZap"></div><br/>
-
-				<hr>
 				
-				<h2><label for="vibInt">Vibration Intensity (10% increments):</label></h2>
-				<p>
-					<input type="text" id="vibrationIntensity" readonly style="border:0; color:#f6931f; font-weight:bold;">        <input type="button" id="testVibrationInt" value="Test Vibration">
-				</p>
-				 
-				<div id="sliderVibration"></div><br/>
-				<br/>
-				<a href="#" id="resetIntensity">Reset values</a><br/>
-				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
+					<div class="stimuliControlContainer">
+						<label for="zapInt"><img class="stimuliControlIcon" src="../images/beepIcon.png"/></label>
+						<div class="stimuliControlSlider" id="sliderBeep"></div>
+					</div>
+					<div class="stimuliControlContainer">
+						<label for="zapInt"><img class="stimuliControlIcon" src="../images/vibrateIcon.png"/></label>
+						<div class="stimuliControlSlider" id="sliderVibration"></div>
+					</div>
+				
+					<div class="stimuliControlContainer">
+						<label for="zapInt"><img class="stimuliControlIcon" src="../images/zapIcon.png"/></label>
+						<div class="stimuliControlSlider" id="sliderZap"></div>
+					</div>
+				
+				<div id="stimuliControlButtonsDiv" class="saveOrResetContainer">
+					<a href="#" id="resetIntensity">Reset values</a>
+					<a href="#" id="saveIntensity">Save</a>
+				</div>
 			</div>
 			<div id="toDoContainerDiv"> <!-- To-Do -->
 				<div id="toDoDiv" class="nooDisplay">
