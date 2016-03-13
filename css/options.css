@@ -130,7 +130,7 @@ hr {
     height: 0px;
 	border:0;
 	border-top: 1px solid black;
-	border-color: #e0d01b;
+	border-color: #504a04;
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 0; 
@@ -205,8 +205,18 @@ span.activeSection{
 	margin-right: 30px;
 }
 
+body p, body span, h1, h2, h3, h4, li, ul, ol{
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
+}
 
+body p, body span, body li, body ul, body ol {
+	font-size: 20px;
+}
 
+.noDisplay{
+	display:none;
+}
 
 #topHeader > div {
 	color: white;
