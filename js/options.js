@@ -607,6 +607,55 @@ function rawToPercent(raw){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+function highlightActiveSection(){
+	var curPos = $(this).scrollTop();
+		
+	var tops = [
+		$("#blackListContainerDiv").offset().top,
+		$("#tabNumbersContainerDiv").offset().top,
+		$("#stimuliContainerDiv").offset().top,
+		$("#toDoContainerDiv").offset().top,
+		$("#appIntegrationsContainerDiv").offset().top,
+		$("#advancedOptionsContainerDiv").offset().top,
+	];
+	
+	var sections = [
+		"blackList",
+		"tabNumbers",
+		"stimuli",
+		"toDo",
+		"appIntegrations",
+		"advancedOptions",
+	]
+	var fixedHeaderHeight = $("#fixedHeader").height();
+	var fixedHeaderPadding = $("#fixedHeader").css("padding").split("p")[0];
+	fixedHeaderPadding = parseInt(fixedHeaderPadding);
+	
+	var fixedHeaderSize = fixedHeaderHeight + fixedHeaderPadding;
+	var visiblePos = curPos + fixedHeaderSize;
+	
+	var difs = [];
+	// Checks which one have already been passed by
+	for (n = 0; n < tops.length; n++){
+		difs.push(tops[n] - visiblePos);
+	}
+	
+	var passed = _.countBy(difs, function(num) {
+		return num <= 0 ? 'reached': 'ahead';
+	});
+	
+	if (passed.ahead == sections.length) { passed.reached = 1;}
+	
+	var active = passed.reached - 1;
+	$("#indexDiv").children().removeClass("activeSection");
+	// $("#activeSession").html(sections[active]);	
+	$($("#indexDiv").children()[active]).addClass("activeSection")
+	
+	// console.log(visiblePos);
+	// console.log(tops);
+	// console.log(passed.passed);
+}
+
 function enableSelects(){
 	$("#blackListTimeWindow").change(function(){
 		localStorage.timeWindow = $(this).val() ;
@@ -668,6 +717,19 @@ function enableTables(){ // TO-do update or remove
 
 function enableSliders(){
 	$(function() {
+		$( "#sliderBeep" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				$( "#beepIntensity" ).val( ui.value );
+				localStorage.beepPosition = ui.value ;
+				saveOptions();
+			}
+		});
+		$( "#beepIntensity" ).val( $( "#sliderBeep" ).slider( "value" ) );
+		
 		$( "#sliderZap" ).slider({
 			value:60,
 			min: 10,
@@ -695,6 +757,7 @@ function enableSliders(){
 		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
 		
 	});
+	
 }
 
 function enableCheckboxes(){
@@ -859,6 +922,12 @@ function restoreOptions() {
 	$("#maxTabsSelect").val(localStorage.maxTabs);
 
 	// Stimuli Intensity
+	if (parseInt(localStorage.beepPosition) > 0){
+		var beepSlider = localStorage.beepPosition;
+	} else { var beepSlider = 60; }
+	$( "#sliderBeep" ).slider( { "value": beepSlider })
+	$( "#beepIntensity" ).val(beepSlider);
+	
 	if (parseInt(localStorage.vibrationPosition) > 0){
 		var vibSlider = localStorage.vibrationPosition;
 	} else { var vibSlider = 60; }
@@ -895,8 +964,12 @@ function moveToLink(clickedLink){
 	var position = $(target).offset().top;
 	var positionUpdated = position - topSize;
 	
-	console.log(positionUpdated);
-	window.scrollTo(0, positionUpdated);
+	// console.log(positionUpdated);
+	// window.scrollTo(0, positionUpdated);
+	$('html, body').animate({
+		scrollTop: positionUpdated
+	}, 1000);
+	
 }
 
 
@@ -1015,4 +1088,6 @@ $( document ).ready(function() {
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");
+	
+	$(window).scroll(function(){ highlightActiveSection(); });
 });

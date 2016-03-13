@@ -170,6 +170,9 @@ div.tagcontainer{
 
 
 
+span.activeSection{
+	color: white;
+}
 
 
 
@@ -180,6 +183,9 @@ div.tagcontainer{
 
 
 
+#topHeader > div {
+	color: white;
+}
 
 
 
