@@ -178,10 +178,13 @@ function completeDailyPomodoro(daily){
 	var missing = parseInt(daily.pomodoros) - parseInt(daily.donePomos);
 	var msg;
 	
+	var NotList = lsGet('notifications', 'parse');
+	var Not = NotList.pomofocusDone;
+	
 	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
 	else { msg = "Good job there! Only " + missing + " to go now!"; }
-	notifyUser('Way to go!', msg, 'PFNotify');
-	stimuli('vibration');
+	notifyUser(Not.title, msg, Not.id);
+	stimuli("vibration", defInt, defAT, Not.title + " " + msg, "false");
 	
 	lsDel('dailyPomo');
 	restoreDailyList('.dailyContainer');
@@ -304,6 +307,14 @@ function sampleBinaural(){
 var lastUpdate = 0;
 var PFpromptForce = false;
 
+function msgTabs(tabList, message){
+	for (t = 0; t < tabList.length ; t++){
+		msgExt(message, tabList[t])
+		
+		// 
+	}
+}
+
 function shortCount(){ // Debug function
 	var pomoFocusB = lsGet('pomoFocusB', 'parse');
 	pomoFocusB.endTime = deltaTime(5).getTime();
@@ -322,17 +333,22 @@ function createPomoFocusCountDown(){
 	})
 	.on('finish.countdown', function(event) {
 		
-		if (localStorage.endReason == 'time') {
-			stimuli("shock", defInt, defAT, "Pomodoro ended, but task didn't");
-			notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
-		}
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
+		// if (localStorage.endReason == 'time') {
+			// // notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
+			// var NotList = lsGet('notifications', 'parse');
+			// var Not = NotList.pomofocusEnded;
+			// notifyUser(Not.title, Not.message, Not.id);
+			// stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+		// }
+		// console.log("PomoFocus ended");
+		// pomoFocusB = lsGet('pomoFocusB', 'parse');
+		// pomoFocusB.audio = false;
+		// pomoFocusB.active = false;
+		// savePomoFocus(pomoFocusB, 'background');
+		// PFpromptForce = true;
 		localStorage.instaZap = 'false';
 		lsDel('lockZap');
+		lsDel('dailyPomo');
 	});
 }
 
@@ -369,6 +385,9 @@ function checkForUpdate(){
 function pomoFocusButtons(){
 	$("#pomoFocusCompleteTask").click(function(){
 		localStorage.endReason = 'done';
+		var notifications = lsGet('notifications', 'object');
+		var Not = notifications.pomofocusDone;
+		
 		var pomoFocus = getPomoFocus('background');
 		
 		if (pomoFocus.daily == true){ 	// Daily tasks pomofocuses
@@ -385,27 +404,36 @@ function pomoFocusButtons(){
 			if (itemRow.length == 0){ console.log("no Now Task"); return }
 			$(itemRow).removeClass("nowTaskRow");
 			completeTask(itemRow, true);
-			notifyUser("Well done!", focusCompleteMsg, "PFNotify");
+			
+			var Not = lsGet('notifications', 'parse');
+			var Not = Not.pomofocusDone;
+			
+			notifyUser(Not.title, Not.message, Not.id);
 		}
 		
 		togglePomodoro('configure');
 		PFpromptForce = false;
 		localStorage.instaZap = 'false';
+		pomoFocus.active = false;
 		pomoFocus.duration = 0;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.endReason = 'done';
+		lsDel('lockZap');
 		savePomoFocus(pomoFocus, 'popup');
+		lsDel('dailyPomo');
 	});
 	
 	$("#pomoFocusStop").click(function(){
 		localStorage.endReason = 'stop';
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
+		pomoFocus.active = false;
 		pomoFocus.endTime = new Date().getTime();
 		pomoFocus.duration = 0;
 		pomoFocus.daily = false;
 		localStorage.instaZap = 'false';
 		savePomoFocus(pomoFocus, 'popup');
+		lsDel('lockZap');
 		lsDel('dailyPomo');
 		
 	});
@@ -414,7 +442,11 @@ function pomoFocusButtons(){
 		var pomoFocus = getPomoFocus('background');
 		var endTime = pomoFocus.endTime;
 		var newEndTime = endTime + 5 * 60 * 1000;
+		var newDuration = pomoFocus.duration + 5;
+		
 		pomoFocus.endTime = newEndTime;
+		pomoFocus.duration = newDuration;
+		
 		savePomoFocus(pomoFocus, 'popup');
 	});
 
@@ -497,6 +529,7 @@ function pomodoroOnSteroids(){
 			"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
 			"<p>" + 
 				"<select id='minutesPomodoro'>" + 
+					// "<option value='0.08'>5 seconds</option>" + 
 					"<option value='2'>2 minutes</option>" + 
 					"<option value='5'>5 minutes</option>" + 
 					"<option value='10'>10 minutes</option>" + 
@@ -526,7 +559,7 @@ function pomodoroOnSteroids(){
 				console.log("Enter PomoFocus result was " + v);
 				var result = v;
 				if (result == true){
-					pomoFocus.duration	= parseInt($("#minutesPomodoro").val());
+					pomoFocus.duration	= parseFloat($("#minutesPomodoro").val());
 					pomoFocus.endTime	= deltaTime(pomoFocus.duration * 60).getTime();
 					pomoFocus.hyper		= $("#hyperFocusSelect").val()
 					pomoFocus.daily		= false;
@@ -544,6 +577,7 @@ function pomodoroOnSteroids(){
 					$(".nowTaskRow").removeClass("nowTaskRow");
 					lsDel('pomoFocusTask');
 					lsDel('dailyPomo');
+					pomoFocus.active = false;
 				}
 				updateTasksLog();
 			}
@@ -710,8 +744,11 @@ function completeTask(taskRow, override){
 		$(item.Row).addClass("doneTaskRow");			// Add classes
 
 		// Reward stimulus
-		notifyUser("One down!", "Keep going, you rockstar!", "PFNotify");
-		stimuli("vibration", defInt, defAT, focusCompleteMsg);
+		var Not = lsGet('notifications', 'parse');
+		var Not = Not.pomofocusDone;
+		
+		notifyUser(Not.title, Not.message, Not.id);
+		stimuli("vibration", defInt, defAT, Not.message, "false");
 	}
 	
 	updateTasksCounter();

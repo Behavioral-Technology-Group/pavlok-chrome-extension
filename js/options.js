@@ -525,7 +525,7 @@ function enableAutoZapper(){
 					
 					var trainingSession = setInterval(function() {
 						console.log("Occured at ");
-						stimuli("shock", defInt, defAT, "Training Session. Keep going!", "false");
+						stimuli("shock", localStorage.trainingSessionZI, defAT, "Training Session. Keep going!", "false");
 					}, parseInt(localStorage.trainingSessionZF));
 					localStorage.trainingSession = trainingSession;
 					
@@ -924,6 +924,11 @@ function restoreOptions() {
 	restoreCheckBox('thursdayActive', localStorage.thursdayActive);
 	restoreCheckBox('fridayActive', localStorage.fridayActive);
 	restoreCheckBox('saturdayActive', localStorage.saturdayActive);
+	
+	restoreCheckBox('tabNumbersActiveCheckbox', localStorage.tabNumbersActive);
+	$("#tabNumbersActiveCheckbox").change(function(){
+		localStorage.tabNumbersActive = $(this).prop('checked');
+	});
 	
 	$("#allTabsCountSelect").val(localStorage.tabCountAll);
 	$("#allTabsCountSelect").change(function(){
