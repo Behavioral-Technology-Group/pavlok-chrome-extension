@@ -655,12 +655,12 @@ button.ui-button::-moz-focus-inner {
 	white-space: nowrap;
 }
 .ui-slider {
-	position: relative;
+	/* position: relative; */
 	text-align: left;
 }
 .ui-slider .ui-slider-handle {
 	position: absolute;
-	z-index: 2;
+	z-index: 900;
 	width: 1.2em;
 	height: 1.2em;
 	cursor: default;
@@ -668,7 +668,7 @@ button.ui-button::-moz-focus-inner {
 	touch-action: none;
 }
 .ui-slider .ui-slider-range {
-	position: absolute;
+	/* position: absolute; */
 	z-index: 1;
 	font-size: .7em;
 	display: block;

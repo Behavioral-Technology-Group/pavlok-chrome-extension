@@ -607,6 +607,17 @@ function rawToPercent(raw){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+function enableSignInOut(){
+	$("#signOutX").click(function(){
+		if (isValid(localStorage.accessToken)){
+			signOut();
+		}
+		else {
+			oauth(localStorage.accessToken);
+		}
+	});
+}
+
 function highlightActiveSection(){
 	var curPos = $(this).scrollTop();
 		
@@ -677,7 +688,7 @@ function enableButtons(){
 		localStorage.vibrationIntensity = percentToRaw(defValue);
 	});
 	
-	$("#testPairing").click(function(){
+	$("#testPairingX").click(function(){
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
@@ -975,6 +986,7 @@ function moveToLink(clickedLink){
 
 // Create the vertical tabs
 function initialize() {
+	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists
 	var blackListContent = localStorage.blackList;

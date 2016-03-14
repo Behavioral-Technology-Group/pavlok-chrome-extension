@@ -59,12 +59,13 @@
 			<div id="blackListContainerDiv">
 				<div id="blackListContainer">
 					<h2 class="sectionTitle">Black List
-						<span class="fa-stack fa-lg helpSpan" title='	<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
-						<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on your blacklist. If you visit the site, you will get zapped.</p>
-						<p>For listing sites, type in the address and hit Enter or click Save.</p>'>
-							<i class="fa fa-circle-o fa-stack-2x lightFont"></i>
-							<i class="fa fa-question fa-stack-1x"></i>
-						</span>
+						<sup>
+							<span class="helpSpan" title='	<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
+							<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on your blacklist. If you visit the site, you will get zapped.</p>
+							<p>For listing sites, type in the address and hit Enter or click Save.</p>'>
+								<b>?</b>
+							</span>
+						</sup>
 					</h2>
 					<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
 					<div class="tagcontainer">
@@ -74,11 +75,12 @@
 					
 				<div id="whiteListContainer">
 					<h2 class="sectionTitle">Exception List
-						<span class="fa-stack fa-lg helpSpan" 
-						title='<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p><p>For instance: <span class="yellow"><i>"amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"><i>"amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>'>
-							<i class="fa fa-circle-o fa-stack-2x lightFont"></i>
-							<i class="fa fa-question fa-stack-1x"></i>
-						</span>
+						<sup>
+							<span class="helpSpan" 
+							title='<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p><p>For instance: <span class="yellow"><i>"amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"><i>"amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just put the address there, and it will ignore that specific address, but leave the rest of domain active as blacklisted.</p>'>
+								?
+							</span>
+						</sup>
 					</h2>
 						
 					<p>Please tell your exceptions for black sites, separated by commas. </p>
@@ -90,20 +92,21 @@
 			<div id="tabNumbersContainerDiv"> <!-- Tab Numbers-->
 				<div id="settingsDIV">
 					<h2 class="sectionTitle">Tab Numbers
-						<span class="fa-stack fa-lg helpSpan" title='	
-						<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
+						<sup>
+							<span class="helpSpan" title='	
+							<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
 
-						<p>For instance: say you have a <b>10 tabs limit</b>.</p>
-						<ul>
-						<li>When you <b>get close to your limit</b> (think 9 tabs, one step away from the red line), Pavlok will <span class="yellow">Vibrate</span>.</li>
-						
-						<li>If you get <b>to the limit</b>, it will <span class="yellow">Beep</span>.</li>
+							<p>For instance: say you have a <b>10 tabs limit</b>.</p>
+							<ul>
+							<li>When you <b>get close to your limit</b> (think 9 tabs, one step away from the red line), Pavlok will <span class="yellow">Vibrate</span>.</li>
+							
+							<li>If you get <b>to the limit</b>, it will <span class="yellow">Beep</span>.</li>
 
-						<li>If you <b>cross that limit</b>, it will <span class="yellow">shock you as long as you keep opening more tabs.</span></li>
-						</ul>'>
-							<i class="fa fa-circle-o fa-stack-2x lightFont"></i>
-							<i class="fa fa-question fa-stack-1x"></i>
-						</span>
+							<li>If you <b>cross that limit</b>, it will <span class="yellow">shock you as long as you keep opening more tabs.</span></li>
+							</ul>'>
+								?
+							</span>
+						</sup>
 					</h2>
 					<p>Set the max amount of tabs allowed open at once</p>
 					<hr>
@@ -141,10 +144,50 @@
 				<p>Control the intensity of the stimuli. Select increments of 10%</p>
 				<hr>
 				
-					<div class="stimuliControlContainer">
-						<label for="zapInt"><img class="stimuliControlIcon" src="../images/beepIcon.png"/></label>
-						<div class="stimuliControlSlider" id="sliderBeep"></div>
+					<div class="stimuliControlContainer flexContainer">
+						<!-- <label for="zapInt"> --><img class="stimuliControlIcon" src="../images/beepIcon.png"/><!-- </label> -->
+						<!-- <div class="stimuliControlSlider flexCenterV" id="sliderBeep"></div> -->
+						<div class="lineGraphContainer">
+							<div class="lineGraph flexContainer">
+								<div class="bigTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="bigTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="smallTick flexCenterV flexItem"></div>
+								<div class="lineH flexCenterV flexItem"></div>
+								
+								<div class="bigTick flexCenterV flexItem"></div>
+							</div>
+						</div>
 					</div>
+					
+					
+					
+					
+					
 					<div class="stimuliControlContainer">
 						<label for="zapInt"><img class="stimuliControlIcon" src="../images/vibrateIcon.png"/></label>
 						<div class="stimuliControlSlider" id="sliderVibration"></div>
@@ -176,7 +219,7 @@
 										<td colspan="3" id="newDailyTaskTD">
 											<div class="flexContainer space-between">
 												<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task" class="flexItem"/>
-												<input type="button" id="createNewDailyTaskButton" value="Create" class="flexItem"/>
+												<input type="button" id="createNewDailyTaskButton" value="Create" class="flexItem clickAction"/>
 											</div>
 										</td>
 									</tr>
@@ -329,13 +372,15 @@
 					<ol>
 						<li>
 							Set the 
-							<span class="yellow">intensity of the zap</span>
-							<span class="fa-stack fa-lg helpSpan" title='
-								<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
-								<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
-								<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'>
-								<i class="fa fa-circle-o fa-stack-2x lightFont"></i>
-								<i class="fa fa-question fa-stack-1x"></i>
+							<span class="yellow">intensity of the zap
+							<sup>
+								<span class="helpSpan" title='
+									<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
+									<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
+									<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'>
+									<b>?</b>
+								</span>
+							</sup>
 							</span>
 						</li>
 						<li>Set the <span class="yellow">duration</span> of your session</li>
