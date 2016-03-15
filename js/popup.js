@@ -136,6 +136,11 @@ $( document ).ready(function() {
 			oauth();
 		}
 	});
+
+	$("#maxTabsSelect").val( lsGet('maxTabs'));
+	$("#maxTabsSelect").change(function(){
+		var maxTabs = $(this).val();
+		lsSet('maxTabs', maxTabs);
 	});
 	
 	$("#instaZap").change(function(){
