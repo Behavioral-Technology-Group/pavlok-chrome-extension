@@ -102,6 +102,39 @@ hr {
 body, p, tab, span{
 	color:white;
 }
+
+.stimuliControlContainer{
+	width: 95%;
+	/* background:blue; */
+}
+
+.stimuliControlContainer > *{
+	display: inline-block;
+}
+
+.stimuliControlIcon{
+	width: 10%;
+	height: 30px;
+	cursor: pointer;
+}
+
+.stimuliControlSlider{
+	width: 60%;
+	margin-left: 6%;
+	transform: translate(0px,-14px);
+}
+
+.stimuliIntensityDisplay{
+	margin-left: 10px;
+	transform: translate(0px,-12px);
+}
+
+
+.saveOrResetContainer > a{
+	text-decoration: underline;
+	color: white;
+	font-size: 12px;
+}
 #status {
 	background-color: #E2A92B;
 	display: none;

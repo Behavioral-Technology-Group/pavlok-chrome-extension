@@ -117,6 +117,84 @@ function enableBlackList(){
 	});
 
 }
+
+function enableStimuliControls() {
+	$(function() {
+		defZap = parseInt(lsGet('zapPosition'));
+		defVib = parseInt(lsGet('vibrationPosition'));
+		defBeep = parseInt(lsGet('beepPosition'));
+		
+		$( "#sliderBeep" ).slider({
+			value:defBeep,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				var beepPos = ui.value;
+				console.log(beepPos);
+				lsSet('beepPosition', beepPos);
+				lsSet('beepIntensity', percentToRaw(beepPos));
+				$("#beepIntensity").html(beepPos + "%");
+			}
+		});
+		$("#beepIntensity").html(defBeep + "%");
+		
+		$( "#sliderZap" ).slider({
+			value:defZap,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				var zapPos = ui.value;
+				lsSet('zapPosition', zapPos);
+				lsSet('zapIntensity', percentToRaw(zapPos));
+				$("#zapIntensity").html(zapPos + "%");
+			}
+		});
+		$("#zapIntensity").html(defZap + "%");
+		
+		$( "#sliderVibration" ).slider({
+			value:defVib,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				var vibPos = ui.value;
+				console.log(vibPos);
+				// localStorage.vibrationPosition = vibPos;
+				lsSet('vibrationPosition', vibPos);
+				lsSet('vibrationIntensity', percentToRaw(vibPos));
+				$("#vibrationIntensity").html(vibPos + "%");
+			}
+			
+		});
+		$("#vibrationIntensity").html(defVib + "%");
+		
+		
+	});
+	
+	$("#resetIntensity").click(function(){
+		var defVib = 60;
+		var defZap = 60;
+		var defBeep = 100;
+		
+		lsSet('vibrationPosition', defVib);
+		lsSet('vibrationIntensity', percentToRaw(defVib));
+		$("#vibrationIntensity").html(defVib + "%");
+		$( "#sliderVibration" ).slider({value:defVib});
+		
+		lsSet('zapPosition', defZap);
+		lsSet('zapIntensity', percentToRaw(defZap));
+		$("#zapIntensity").html(defZap + "%");
+		$( "#sliderZap" ).slider({value:defZap});
+		
+		lsSet('beepPosition', defBeep);
+		lsSet('beepIntensity', percentToRaw(defBeep));
+		$("#beepIntensity").html(defBeep + "%");
+		$( "#sliderBeep" ).slider({value:defBeep});
+	});
+}
+
 $( document ).ready(function() {
 	enableTooltips();
 	presentName();
