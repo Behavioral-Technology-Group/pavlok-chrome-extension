@@ -159,6 +159,7 @@ hr {
 
 	border: 1px solid black;
 	border-color: rgb(159, 159, 159);
+	border-collapse: separate;
 	border-radius: 25px;
 	padding-left: 4px;
 	padding-right: 4px;
@@ -201,9 +202,12 @@ div.tagcontainer{
 .stimuliControlSlider{
 	width: 60%;
 	display: inline-block;
+	/* height: 55px; */
 	/* position: relative; */
-	top: -20px;
+	/* top: -20px; */
+	border: none;
 	margin-left: 50px;
+	/* background-image */: url("../images/testBackground.PNG");
 }
 
 span.activeSection{
@@ -222,12 +226,12 @@ span.activeSection{
 	margin-right: 30px;
 }
 
-body p, body span, h1, h2, h3, h4, li, ul, ol{
+body p, body span, h1, h2, h3, h4, li, ul, ol, th, td{
 	color: rgb(159, 159, 159);
 	font-family: 'Lato', sans-serif;
 }
 
-body p, body span, body li, body ul, body ol {
+body p, body span, body li, body ul, body ol, th, td {
 	font-size: 20px;
 }
 
@@ -244,7 +248,7 @@ body p, body span, body li, body ul, body ol {
 }
 
 .toDoTable th, .toDoTable td{
-	border: 1px solid white;
+	/* border: 1px solid white; */
 	border-collapse: collapse;
 	color: white;
 	font-family: 'Lato', sans-serif;
@@ -303,6 +307,18 @@ body p, body span, body li, body ul, body ol {
 	font-family: 'Lato', sans-serif;
 }
 
+#dailyListDetails{
+	width: 100%;
+}
+
+#dailyListDetails td{
+	padding-bottom: 10px;
+}
+
+#blackListTD{
+	width: 70%;
+}
+
 /* Integrations */
 /* Autozapper */
 #autoZapperContainerDiv > ol {
@@ -324,40 +340,142 @@ body p, body span, body li, body ul, body ol {
 	cursor: help;
 }
 
-
-div.lineGraphContainer{
-	width: 65%;
-	border: 1px solid blue;
+#autoZapperTable{
+	width: 60%;
+	border-collapse: collapse;
 }
 
-div.lineGraphContainer > *{
+#autoZapperTable th{
+	width: 25%;
+	border-collapse: collapse;
+	border: 1px solid white;
+	color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
+	font-size: 20px;
 }
 
-.lineGrapth{
-	width: 100%;
-	flex:
+#autoZapperTable th:last-child{
+	visibility: hidden;
+	border-bottom: 0px;
 }
 
-div.lineH{
-	border: 0px;
-	background: yellow;
-	height: 1px;
-	width: 10%;
-	flex-grow: 100;
+
+#autoZapperTable td{
+	text-align: center;
+	width: 25%;
+	border: none;
+	color: white;
+	padding-top: 20px;
 }
 
-div.bigTick{
-	border: 0px;
+#autoZapperTable td > p > span {
+	width: 65px;
+	border-collapse: collapse;
+	/* border: 1px solid white; */
+	border:none;
+}
+
+#autoZapperTable td > p > span > input{
 	background: white;
-	flex-grow: 1;
-	height: 18px;
-	border: 1px solid white;
+	color: black;
+	width: 100%;
+	padding-left: 10px;
 }
 
-div.smallTick{
+#autoZapperTable td > p > span > a{
+	border: none;
+}
+
+.yellowX{
+	color: yellow;
+}
+
+#autoZapperStart{
+	/* width:  */
+}
+
+#autoZapperStart{
+	border-radius: 5px;
+	background: yellow;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	
+	text-decoration: none;
 	border: 0px;
-	flex-grow: 1;
-	height: 9px;
-	border: 1px solid white;
+	
+	margin-left: 13px;
+	
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+}
+
+
+/* Rescue Time */
+#RTThresholdTable td {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#RTThresholdTable td > p > span {
+	width: 65px;
+	border-collapse: collapse;
+	/* border: 1px solid white; */
+	border:none;
+}
+
+#RTThresholdTable td > p > span > input{
+	background: white;
+	color: black;
+	width: 100%;
+	padding-left: 10px;
+}
+
+#RTThresholdTable td > p > span > a{
+	border: none;
+}
+
+#RTThresholdTable select{
+	width: 100%;
+	height: 100%;
+	font-size: 15px;
+}
+
+#timeDaysDiv, #advancedOptionsContainerDiv{
+	width: 100%;
+}
+
+#daysOfTheWeekDiv{
+	width: 60%;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#generalActiveHours{
+	width: 60%;
+}
+
+#generalActiveHours .ui-spinner{
+	width: 30%;
+}
+
+#generalActiveHours .timeSelectors{
+	width: 100%;
+}
+
+#generalActiveHours span{
+	width: 30%;
+}
+
+#timeFormat{
+	font-size: 15px;
+	padding: 10px;
 }

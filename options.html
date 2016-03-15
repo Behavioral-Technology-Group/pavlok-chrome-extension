@@ -21,7 +21,7 @@
 	<script src="js/external/jquery.countdown.js"></script>
 	<script src="jquery.tagsinput.js"></script>
 	<script src="js/ToDo.js"></script>
-	<script src="js/options.js"></script>	
+	<!-- <script src="js/options.js"></script>	 -->
 	
 	<link rel="stylesheet" href="css/options.css">
 </head>
@@ -143,64 +143,27 @@
 				<h2 class="sectionTitle">Stimuli</h2>
 				<p>Control the intensity of the stimuli. Select increments of 10%</p>
 				<hr>
+					
+				<div class="stimuliControlContainer">
+					<label for="beepInt"><img class="stimuliControlIcon" src="../images/BeepIcon.png"/></label>
+					<div class="stimuliControlSlider" id="sliderBeep"></div>
+				</div>
 				
-					<div class="stimuliControlContainer flexContainer">
-						<!-- <label for="zapInt"> --><img class="stimuliControlIcon" src="../images/beepIcon.png"/><!-- </label> -->
-						<!-- <div class="stimuliControlSlider flexCenterV" id="sliderBeep"></div> -->
-						<div class="lineGraphContainer">
-							<div class="lineGraph flexContainer">
-								<div class="bigTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="bigTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="smallTick flexCenterV flexItem"></div>
-								<div class="lineH flexCenterV flexItem"></div>
-								
-								<div class="bigTick flexCenterV flexItem"></div>
-							</div>
-						</div>
-					</div>
-					
-					
-					
-					
-					
-					<div class="stimuliControlContainer">
-						<label for="zapInt"><img class="stimuliControlIcon" src="../images/vibrateIcon.png"/></label>
-						<div class="stimuliControlSlider" id="sliderVibration"></div>
-					</div>
 				
-					<div class="stimuliControlContainer">
-						<label for="zapInt"><img class="stimuliControlIcon" src="../images/zapIcon.png"/></label>
-						<div class="stimuliControlSlider" id="sliderZap"></div>
-					</div>
+				
+				<div class="stimuliControlContainer">
+					<label for="vibrationInt"><img class="stimuliControlIcon" src="../images/vibrateIcon.png"/></label>
+					<div class="stimuliControlSlider" id="sliderVibration"></div>
+				</div>
+			
+				<div class="stimuliControlContainer">
+					<label for="zapInt"><img class="stimuliControlIcon" src="../images/zapIcon.png"/></label>
+					<div class="stimuliControlSlider" id="sliderZap"></div>
+				</div>
 				
 				<div id="stimuliControlButtonsDiv" class="saveOrResetContainer">
-					<a href="#" id="resetIntensity">Reset values</a>
 					<a href="#" id="saveIntensity">Save</a>
+					<a href="#" id="resetIntensity">Reset values</a>
 				</div>
 			</div>
 			<div id="toDoContainerDiv"> <!-- To-Do -->
@@ -239,7 +202,7 @@
 								<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
 								<table id="dailyListDetails">
 									<tbody>
-										<tr class="nooDisplay">
+										<tr class="noDisplay">
 											<td class="categoryName">Daily ID</td>
 											<td id="dailyTaskIdTD">
 												<input type="text" id="dailyTaskIdInput" disabled/>
@@ -296,17 +259,17 @@
 												</div>
 											</td>
 										</tr>
-										<tr>
-											<td class="categoryName">Hyper Focus</td>
+										<tr class="noDisplay">
+											<td class="categoryName noDisplay">Hyper Focus</td>
 											<td id="hyperFocusTD">
 												<div id="dailyHiperOptions">
 													<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
-													<span class="noDisplay"<input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>
+													<span><input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>
 												</div>
 											</td>
 										</tr>
-										<tr>
-											<td class="categoryName">Description</td>
+										<tr class="noDisplay">
+											<td class="categoryName ">Description</td>
 											<td id="descriptionTD">
 												<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>
 											</td>
@@ -315,11 +278,9 @@
 									</tbody>
 								</table>
 								<div class="saveOrResetContainer">
-									<a href="#" id="resetIntensity">Reset values</a>
-									<a href="#" id="saveIntensity">Save</a>
+									<a href="#" id="saveDaily">Save</a>
+									<a href="#" id="deleteDaily">Delete values</a>
 								</div>
-								<input type="image" src="images/save.png" id="saveDaily"/>								
-								<a class="deleteDaily" id="deleteDaily">Remove</a>
 							</div>
 						</div>
 						
@@ -331,12 +292,18 @@
 					<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
 					<p>
 						<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+						<sup><span class="helpSpan" title='help text'>
+								<b>?</b>
+							</span></sup>
 						<img src="images/help.png" class="helpIcon" title='
 						<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
 						'/>
 					</p>
 					<p>
 						<input type="checkbox" id="audioFocus">Binaural Soundtrack
+						<sup><span class="helpSpan" title='help text'>
+								<b>?</b>
+							</span></sup>
 						<img src="images/help.png" class="helpIcon" title='
 						<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
 						'/>
@@ -401,12 +368,12 @@
 						</thead>
 						<tbody>
 							<tr id="autoZapperStartLine">
-								<td><p><input id="autoZapperIntensity" class="50px"> (%)</p></td>
+								<td><p><input id="autoZapperIntensity" class="50px"> <span class="yellowX"><b>%</b></span></p></td>
 								<td style="text-align: center">
-									<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> (min)</p>
+									<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> <span class="yellowX"><b>Mins.</b></span></p>
 									<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
 								</td>
-								<td><p><input id="autoZapperFrequency" class="50px"> (secs)</p></td>
+								<td><p><input id="autoZapperFrequency" class="50px"> <span class="yellowX"><b>Secs.</b></span></p></td>
 								<td>
 									<p class="autoZapperConf">
 										<a id="autoZapperStart" href="#"><b>GO!</b></a>
@@ -420,16 +387,18 @@
 					</table>
 				</div>
 				<div id="rescuetimeContainerDiv"> <!-- RescueTime -->
-					<h2 class="sectionTitle">Get help from RescueTime <img src="images/help.png" class="helpIcon" title="
-						<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
-						<p>Pavlok will make notifications visceral!</p>
-						<ul>
-							<li>If your productivity falls <b>below 30%</b>, you get a <span class='yellow'>zap</span> to get back to the present</li>
-							<li>If your productivity falls <b>bellow 50%</b>, you get a <span class='yellow'>beep</span> reminder to focus again</li>
-							<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class='yellow'>Pavlok will vibrate</span> for a good massage! Good job, you're going strong!</li>
-						</ul>
-						<p>The limits and stimulus for fired can be changed in the <span class='yellow'>Define your Thresholds</span> section</p>
-					"/></h2>
+					<h2 class="sectionTitle">Get help from RescueTime 
+						<sup><span class="helpSpan" title='<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
+							<p>Pavlok will make notifications visceral!</p>
+							<ul>
+								<li>If your productivity falls <b>below 30%</b>, you get a <span class="yellow">zap</span> to get back to the present</li>
+								<li>If your productivity falls <b>bellow 50%</b>, you get a <span class="yellow">beep</span> reminder to focus again</li>
+								<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class="yellow">Pavlok will vibrate</span> for a good massage! Good job, you are going strong!</li>
+							</ul>
+							<p>The limits and stimulus for fired can be changed in the <span class="yellow">Define your Thresholds</span> section</p>'>
+							<b>?</b>
+						</span></sup>
+					</h2>
 					<div id="NoRTCodeOnly">
 						<p>Let's get your ball rolling!</p>
 						<ol>
@@ -470,13 +439,16 @@
 												<option value="15">15</option>
 												<option value="30">30</option>
 											</select>
-											Minutes <img src="images/help.png" class="helpIcon" title="
-											<p>Pavlok will get your productivity according to the inverval you set.</p>
-											<p><b>There are differences in the frequency you'll get an updated pulse from RescueTime</b>. <span class='yellow'>Paid accounts</span> can get it updated every 3 minutes, while <span class='yellow'>free accounts</span> get it updated every 15 minutes.</p>
-											<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you'll get the same score 3 times (after 5, 10 and 15 minutes).</p>
-											<p><b>We advise <span class='yellow'>Free RescueTime accounts</span> to keep update frequency in <span class='yellow'>15 or 30 minutes option</span> for reliability.</b></p>
-											"
-											/>
+											Minutes 
+											
+											<sup><span class="helpSpan" title='
+												<p>Pavlok will get your productivity according to the inverval you set.</p>
+												<p><b>There are differences in the frequency you will get an updated pulse from RescueTime</b>. <span class="yellow">Paid accounts</span> can get it updated every 3 minutes, while <span class="yellow">free accounts</span> get it updated every 15 minutes.</p>
+												<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you will get the same score 3 times (after 5, 10 and 15 minutes).</p>
+												<p><b>We advise <span class="yellow">Free RescueTime accounts</span> to keep update frequency in <span class="yellow">15 or 30 minutes option</span> for reliability.</b></p>
+											'>
+												<b>?</b>
+											</span></sup>
 										</p>
 									</td>
 								</tr>
@@ -485,13 +457,13 @@
 							<hr>
 							<h3>Define your Thresholds</h3>
 								
-								<table>
+								<table id="RTThresholdTable">
 									<tr>
 										<th>Stimulus</th>
 										<th>Threshold</th>
 										<th>Triggers</th>
 									</tr>
-									<tr>
+									<tr id="RTPosTR">
 										<td><p>Positive</p></td>
 										<td><p>Above <input id="RTPosLimit" class="RTThreshold"/></p></td>
 										<td>
@@ -502,7 +474,7 @@
 											</select>
 										</td>
 									</tr>
-									<tr>
+									<tr id="RTWarnTR">
 										<td><p>Warning</p></td>
 										<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
 										<td>
@@ -513,7 +485,7 @@
 											</select>
 										</td>
 									</tr>
-									<tr>
+									<tr id="RTNegTR">
 										<td><p>Negative</p></td>
 										<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
 										<td>
@@ -542,14 +514,15 @@
 							<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
 							<p>
 								<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
-								
-								<img src="images/help.png" class="helpIcon" title='
+								<sup><span class="helpSpan" title='
 									<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
 
 									<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
 
-									<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>'
-								/>
+									<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>
+								'>
+									<b>?</b>
+								</span></sup>
 							</p>
 						</div>
 					</div>
@@ -558,9 +531,12 @@
 				</div>
 			</div>
 			<div id="advancedOptionsContainerDiv"> <!-- Advanced Options -->
-				<div id="stimuliNotificationsDiv">
+				<h2 class="sectionTitle">Advanced Options</h2>
+				<div id="stimuliNotificationsDiv" class="noDisplay">
 					<h2 class="sectionTitle">Advanced Options</h2>
-					<h2>Stimuli Notifications <img src="images/help.png" class="helpIcon" title='
+					<div id="reallySpecificControls">
+					<h2>Stimuli Notifications 
+					<sup><span class="helpSpan" title='
 						<p>
 							You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
 						</p>
@@ -570,7 +546,10 @@
 						<p>
 							Note that you will only get the popup notifications checked here.
 						</p>
-						'>
+					'>
+						<b>?</b>
+					</span></sup>
+					
 					</h2>
 					<p> Check the ones you wish to keep.</p>
 					<table>
@@ -606,27 +585,33 @@
 				<div id="tabNumbersAdvancedDiv">
 					<h2>Tab Numbers extras</h2>
 					<input type="checkbox" name="zapOnClose" id="zapOnClose" />Zap when closing
-					<img src="images/help.png" class="helpIcon" title="
+					
+					<sup><span class="helpSpan" title='
 						<p>For those really inclined to stop opening to many habits!</p>
-						<p>This will send a zap whenever you are above your tab limit, <b><span class='yellow'>EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You'll sure think about opening more tabs after that!</p>
-						<p>If not checked, you'll only get zaps when opening tabs above the your limit.</p>
-					">
+						<p>This will send a zap whenever you are above your tab limit, <b><span class="yellow">EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You will sure think about opening more tabs after that!</p>
+						<p>If not checked, you will only get zaps when opening tabs above the your limit.</p>
+					'>
+								<b>?</b>
+							</span></sup>
 					<p>Count tabs on 
 					<select id="allTabsCountSelect">
 						<option value="allWindows">ALL windows</option>
 						<option value="activeWindow">CURRENT Window</option>
 					</select>
-					<img src="images/help.png" class="helpIcon" title="
+					<sup><span class="helpSpan" title='
 						<p>This option makes the Extension count either the tabs on the window you are working or on all windows open!</p>
-						<p><b><span class='yellow'>If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class='yellow'>YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You'll sure think about opening more tabs after that!</p>
-						<p>If not checked, you'll Chrome will only work on your current window. In the same example above, <b><span class='yellow'>YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
-					"></p>
+						<p><b><span class="yellow">If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class="yellow">YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You will sure think about opening more tabs after that!</p>
+						<p>If not checked, Chrome will only work on your current window. In the same example above, <b><span class="yellow">YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
+						'>
+						<b>?</b>
+					</span></sup>
+					</p>
 				</div>
 				<hr>
+				</div>
 				<div id="timeDaysDiv" class="Display">
-					<h2>Conform it to you schedule 
-					<img src="images/help.png" class="helpIcon" title='
-						<p>
+					<h2>Conform it to your schedule
+						<sup><span class="helpSpan" title='<p>
 							Pavlok will only work in the days you checked and while you are between the start and end times.
 						</p>
 						<p>
@@ -637,65 +622,60 @@
 						</p>
 						<p>
 							You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
-						</p>
-						'>
+						</p>'>
+							<b>?</b>
+						</span></sup>
 					</h2>
 					<p>Select days and hours for Pavlok to help you focus</p>
-					<table id="activeDaysTable">
-						<tr>
-							<th>
-								<input type="checkbox" id="sundayActive" class="activeDay"><br />
-								<label for="sundayActive">Sunday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="mondayActive" class="activeDay"><br />
-								<label for="mondayActive">Monday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="tuesdayActive" class="activeDay"><br />
-								<label for="tuesdayActive">Tuesday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="wednesdayActive" class="activeDay"><br />
-								<label for="wednesdayActive">Wednesday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="thursdayActive" class="activeDay"><br />
-								<label for="thursdayActive">Thursday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="fridayActive" class="activeDay"><br />
-								<label for="fridayActive">Friday</label>
-							</th>
-							<th>
-								<input type="checkbox" id="saturdayActive" class="activeDay"><br />
-								<label for="saturdayActive">Saturday</label>
-							</th>
-						</tr>
-						<tr class="display" id="generalActiveHours">
-							<td>
-								<select id="timeFormat">
-									<option value="12">AM/PM</option>
-									<option value="24">24H</option>
-								</select>
-							</td>
-							<td colspan="3">
-								<p>Start <input class="100px timeSelectors" id="generalActiveTimeStart"></p>
-							</td>
-							<td colspan="3">
-								<p>End <input class="100px timeSelectors" id="generalActiveTimeEnd"></p>
-							</td>
-							<td class="noDisplay">
-								<input id="eachDay" type="checkbox">Each day
-							</td>
-						</tr>
-					</table>
-
+					<div id="daysOfTheWeekDiv" class="60percent flexContainer space-between">
+						<div>
+							<input type="checkbox" id="sundayActive" class="activeDay"> 
+							<span><label for="sundayActive">Sun</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="mondayActive" class="activeDay"> 
+							<span><label for="mondayActive">Mon</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="tuesdayActive" class="activeDay"> 
+							<span><label for="tuesdayActive">Tues</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="wednesdayActive" class="activeDay"> 
+							<span><label for="wednesdayActive">Wed</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="thursdayActive" class="activeDay"> 
+							<span><label for="thursdayActive">Thu</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="fridayActive" class="activeDay"> 
+							<span><label for="fridayActive">Fri</label></span>
+						</div>
+						<div>
+							<input type="checkbox" id="saturdayActive" class="activeDay"> 
+							<span><label for="saturdayActive">Sat</label></span>
+						</div>
+					</div>
+					
+					<div id="generalActiveHours" class="flexContainer space-between">
+						<div class="flexItem">
+							<select id="timeFormat">
+								<option value="12">AM/PM</option>
+								<option value="24">24H</option>
+							</select>
+						</div>
+						<div class="flexItem" >
+							<span>Start <input class="100px timeSelectors" id="generalActiveTimeStart"/></span>
+						</div>
+						<div class="flexItem" >
+							<span>End <input class="100px timeSelectors" id="generalActiveTimeEnd"/></span>
+						</div>
+					</div>
 				</div>
-				<input type="image" src="images/save.png" name="saveForm" class="submit" id="save"/>
 			</div>
 		</div>
 	</div>
 </body>
 </html>
-<script src="js/options.js"></script>	
+<script src="js/options.js"></script>

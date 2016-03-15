@@ -418,6 +418,7 @@ function enableTimers(){
 	});
  
     $( "#timeFormat" ).change(function() {
+		lsSet('timeFormat', $(this).val());
 		var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
 		var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
 		
@@ -618,8 +619,47 @@ function enableSignInOut(){
 	});
 }
 
-function highlightActiveSection(){
-	var curPos = $(this).scrollTop();
+function adjustSliders(curPos, fixedHeader){
+	var sliders = [$("#sliderBeep"), $("#sliderVibration"), $("#sliderZap"), $("#autoZapperStartLine"), $("#RTPosTR"), $("#RTWarnTR"), $("#RTNegTR")];
+	var slidersH = [];
+	
+	fixedHeader = 186; // header height and margins
+	
+	for (s = 0; s < sliders.length; s++ ){
+		var curSlider = sliders[s];
+		var curH = curSlider.offset().top;
+		
+		if (curPos > curH - fixedHeader){
+			$(curSlider).css("visibility", "hidden");
+		}
+		else {
+			$(curSlider).css("visibility", "visible")
+		}
+	}
+	
+}
+
+function adjustSpinners(curPos, fixedHeader){
+	var spinners = [$("#RTPosTR"), $("#RTWarnTR"), $("#RTNegTR")];
+	var spinnersH = [];
+	
+	fixedHeader = 186; // header height and margins
+	
+	for (s = 0; s < spinnersH.length; s++ ){
+		var curSpinner = spinners[s];
+		var curH = curSlider.offset().top;
+		
+		if (curPos > curH - fixedHeader){
+			$(curSpinner).css("visibility", "hidden");
+		}
+		else {
+			$(curSpinner).css("visibility", "visible")
+		}
+	}
+}
+
+function highlightActiveSection(curPos){
+	
 		
 	var tops = [
 		$("#blackListContainerDiv").offset().top,
@@ -676,14 +716,17 @@ function enableSelects(){
 function enableButtons(){
 	$("#resetIntensity").click(function(){
 		var defValue = 60;
+
+		$( "#sliderBeep" ).slider( { "value": defValue });
+		localStorage.beepPosition = defValue;
+		localStorage.beepIntensity = percentToRaw(defValue);
+
 		
 		$( "#sliderZap" ).slider( { "value": defValue });
-		$( "#zapIntensity" ).val(defValue);
 		localStorage.zapPosition = defValue;
 		localStorage.zapIntensity = percentToRaw(defValue);
 		
 		$( "#sliderVibration" ).slider( { "value": defValue });
-		$( "#vibrationIntensity" ).val(defValue);
 		localStorage.vibrationPosition = defValue;
 		localStorage.vibrationIntensity = percentToRaw(defValue);
 	});
@@ -734,12 +777,13 @@ function enableSliders(){
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
-				$( "#beepIntensity" ).val( ui.value );
-				localStorage.beepPosition = ui.value ;
+				var beepPos = ui.value;
+				console.log(beepPos);
+				lsSet('beepPosition', beepPos);
+				lsSet('beepIntensity', percentToRaw(beepPos));
 				saveOptions();
 			}
 		});
-		$( "#beepIntensity" ).val( $( "#sliderBeep" ).slider( "value" ) );
 		
 		$( "#sliderZap" ).slider({
 			value:60,
@@ -747,12 +791,12 @@ function enableSliders(){
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
-				$( "#zapIntensity" ).val( ui.value );
-				localStorage.zapPosition = ui.value ;
+				var vibPos = ui.value;
+				lsSet('zapPosition', zapPos);
+				lsSet('zapIntensity', percentToRaw(zapPos));
 				saveOptions();
 			}
 		});
-		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
 		
 		$( "#sliderVibration" ).slider({
 			value:60,
@@ -760,10 +804,14 @@ function enableSliders(){
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
-				$( "#vibrationIntensity" ).val( ui.value );
-				localStorage.vibrationPosition = ui.value ;
+				var vibPos = ui.value;
+				console.log(vibPos);
+				// localStorage.vibrationPosition = vibPos;
+				lsSet('vibrationPosition', vibPos);
+				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				saveOptions();
 			}
+			
 		});
 		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
 		
@@ -880,14 +928,16 @@ function saveOptions() {
 	var zapOnClose = $("#zapOnClose").prop('checked');
 	lsSet('zapOnClose', zapOnClose);
 	
-	var zapPosition = $("#zapIntensity").val();
-	var zapIntensity = $("#zapIntensity").val();
-	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
+	var beepPosition = $( "#sliderBeep" ).slider( "option", "value");
+	beepIntensity = percentToRaw(beepPosition); // convert to 1-255 interval
+	lsSet('beepIntensity', beepIntensity);
+	
+	var zapPosition = $( "#sliderZap" ).slider( "option", "value");
+	zapIntensity = percentToRaw(zapPosition); // convert to 1-255 interval
 	lsSet('zapIntensity', zapIntensity);
 	
-	var vibrationPosition = $("#vibrationIntensity").val();
-	var vibrationIntensity = $("#vibrationIntensity").val();
-	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
+	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
+	vibrationIntensity = percentToRaw(vibrationPosition);
 	lsSet('vibrationIntensity', vibrationIntensity);
 }
 
@@ -904,6 +954,9 @@ function restoreOptions() {
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
 
+	var timeFormat = localStorage.timeFormat;
+	$("#timeFormat").val(timeFormat);
+	
 	var startHour = localStorage.generalActiveTimeStart;
 	$("#generalActiveTimeStart").val(startHour);
 	var endHour = localStorage.generalActiveTimeEnd;
@@ -936,25 +989,24 @@ function restoreOptions() {
 	});
 		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
+	
+	$("#timeFormat").val(localStorage.timeFormat);
 
 	// Stimuli Intensity
 	if (parseInt(localStorage.beepPosition) > 0){
 		var beepSlider = localStorage.beepPosition;
 	} else { var beepSlider = 60; }
 	$( "#sliderBeep" ).slider( { "value": beepSlider })
-	$( "#beepIntensity" ).val(beepSlider);
 	
 	if (parseInt(localStorage.vibrationPosition) > 0){
 		var vibSlider = localStorage.vibrationPosition;
 	} else { var vibSlider = 60; }
 	$( "#sliderVibration" ).slider( { "value": vibSlider })
-	$( "#vibrationIntensity" ).val(vibSlider);
 	
 	if (parseInt(localStorage.zapIntensity) > 0){
 		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
 	} else { var zapSlider = 60; }
 	$( "#sliderZap" ).slider( { "value": zapSlider })
-	$( "#zapIntensity" ).val(zapSlider);
 	
 	// Rescue Time
 	$("#RTOnOffSelect").val(localStorage.RTOnOffSelect);
@@ -1041,13 +1093,15 @@ function initialize() {
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
 	});
-	$("#zapIntensity").change(function(){
+	$("#sliderZap").change(function(){
 		localStorage.zapPosition = $(this).val();
 		localStorage.zapIntensity = percentToRaw(parseInt($(this).val()));
 	});
-	$("#vibrationIntensity").change(function(){
-		localStorage.vibrationPosition = $(this).val();
-		localStorage.vibrationIntensity = percentToRaw(parseInt($(this).val()));
+	$("#sliderVibration").change(function(){
+		var pos = $( this ).slider( "option", "value");
+		localStorage.vibrationPosition = pos;
+		localStorage.vibrationIntensity = percentToRaw(parseInt(pos));
+		console.log(pos);
 	});
 	
 	// Both white and Blacklist listeners aren't working.
@@ -1105,6 +1159,19 @@ $( document ).ready(function() {
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");
+	removeInlineStyle("#blackListDaily_tagsinput");
+	removeInlineStyle("#whiteListDaily_tagsinput");
 	
-	$(window).scroll(function(){ highlightActiveSection(); });
+	$(window).scroll(function(){ 
+		var curPos = $(this).scrollTop();
+
+		var fixedHeaderHeight = $("#fixedHeader").height();
+		var fixedHeaderPadding = $("#fixedHeader").css("padding").split("p")[0];
+		fixedHeaderPadding = parseInt(fixedHeaderPadding);
+		var fixedHeaderSize = fixedHeaderHeight + fixedHeaderPadding;
+
+		highlightActiveSection(curPos, fixedHeaderSize); 
+		adjustSliders(curPos, fixedHeaderSize);
+		adjustSpinners(curPos, fixedHeaderSize);
+	});
 });
