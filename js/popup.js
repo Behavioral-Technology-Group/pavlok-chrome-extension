@@ -32,16 +32,6 @@ function enableTestButtons(){
 	});
 }
 
-// function showOptions(accessToken){
-	// if (isValid(localStorage.accessToken)){
-		// $(".onlyLogged").css('visibility', 'visible'); 
-		// $(".onlyUnlogged").css('display', 'none'); 
-	// }
-	// else { 
-		// $(".onlyLogged").css('visibility', 'hidden'); 
-		// $(".onlyUnlogged").css('display', 'block'); 
-	// }
-// }
 function tabsAsAccordion(){
 	// Get tab Elements
 	var tabs = $( "tab" ).get();
@@ -226,6 +216,7 @@ $( document ).ready(function() {
 	$("#instaZap").change(function(){
 		lsSet('instaZap', $(this).prop( "checked" ));
 	});
+	
 	$("#lockZap").change(function(){
 		lsSet('lockZap', $(this).prop( "checked" ));
 		
