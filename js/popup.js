@@ -26,6 +26,10 @@ function enableTestButtons(){
 	$("#zapTest").click(function(){
 		stimuli("shock", defInt, defAT, "You'll get a Zap and a notification on your phone", "false"); 
 	});
+	
+	$("#testPairing").click(function(){ 
+		stimuli("vibration", defInt, defAT, "Your pairing works", "false");
+	});
 }
 
 // function showOptions(accessToken){
@@ -49,7 +53,13 @@ $( document ).ready(function() {
 	restoreDailyList('.dailyContainer');
 		
 	$("#signOut").click(function(){
-		signOut();
+		if (isValid(localStorage.accessToken)){
+			signOut();
+		}
+		else{
+			oauth();
+		}
+	});
 	});
 	
 	$("#instaZap").change(function(){

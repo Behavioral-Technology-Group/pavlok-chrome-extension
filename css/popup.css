@@ -1,12 +1,33 @@
 @font-face {
-	font-family: 'Halis Black';
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot');
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot?#iefix') format('embedded-opentype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.woff') format('woff'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.ttf') format('truetype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.svg') format('svg');
+	font-family: 'Lato', sans-serif;
 }
 
+.flexContainer{
+	display: -webkit-flex;
+	display: flex;
+}
+
+.space-between { 
+  -webkit-justify-content: space-between; 
+  justify-content: space-between; 
+}
+#topSection{
+	width: 100%;
+}
+hr {
+	width: 120%;
+	margin-left: -30px;
+	border: 0px;
+	border-top: 1px solid rgb(200, 200, 200);
+#topSection > div:last-child{
+	width: 20%;
+	margin-right: 5%;
+}
+.headerImageButton{
+	height: 30px;
+	align-self: center;
+	cursor: pointer;
+}
 #status {
 	background-color: #E2A92B;
 	display: none;
