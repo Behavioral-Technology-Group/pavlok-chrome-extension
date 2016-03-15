@@ -42,6 +42,64 @@ function enableTestButtons(){
 		// $(".onlyUnlogged").css('display', 'block'); 
 	// }
 // }
+function tabsAsAccordion(){
+	// Get tab Elements
+	var tabs = $( "tab" ).get();
+	
+	// Apply classes for it
+	for (t = 0; t < tabs.length; t++){
+		var curTab = tabs[t];
+		var header = $(curTab).children()[0];
+		var tabBody = $(curTab).children()[1];
+		
+		$(curTab).attr('id', ('tabs-'+t));
+		$(header).addClass("pv-tab-header");
+		$(tabBody).addClass("pv-tab-body");
+	}
+	
+	toggleTabs();
+}
+
+function toggleTabs(){
+	$(" #actionSection ").on('click', '.pv-tab-header', function(){
+		var header = $(this);
+		var tab = $(this).parent();
+		var body = $(tab).children()[1];
+		
+		// If clicked on active tab, inactivate it and close all tabs
+		if ($(tab).hasClass("pv-active-tab")){
+			$(tab).removeClass("pv-active-tab");
+			$(header).removeClass("pv-active-tab-header");
+			$(body).removeClass("pv-active-tab-body");
+		}
+		else {
+			// If clicked on inactive tab, inactivate others and activate it
+			
+			
+			// Remove active class from all tabs
+			var tabs = $( "tab" ).get();
+			for (t = 0; t < tabs.length; t++){
+				var curTab = tabs[t];
+				var curHeader = $(curTab).children()[0];
+				var curTabBody = $(curTab).children()[1];
+			
+				$(curTab).removeClass("pv-active-tab");
+				$(curHeader).removeClass("pv-active-tab-header");
+				$(curTabBody).removeClass("pv-active-tab-body");
+			}
+			
+			// Add active class to clicked tab
+			$(tab).addClass('pv-active-tab');
+			$(header).addClass('pv-active-tab-header');
+			$(body).addClass('pv-active-tab-body');
+		
+		}
+		
+		// Run blind effect on clicked tab body
+		$('.pv-tab-body:not(.pv-active-tab-body)').hide(250);
+		$('.pv-active-tab-body').toggle('blind', {}, 250);
+	});
+}
 
 $( document ).ready(function() {
 	enableTooltips();
@@ -52,6 +110,7 @@ $( document ).ready(function() {
 	showOptions(localStorage.accessToken);
 	restoreDailyList('.dailyContainer');
 		
+	tabsAsAccordion();
 	$("#signOut").click(function(){
 		if (isValid(localStorage.accessToken)){
 			signOut();
