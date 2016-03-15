@@ -572,35 +572,7 @@ function restoreCheckBox(checkboxID, condition){
 	else { $("#" + checkboxID).attr('checked', false); }
 }
 
-function percentToRaw(percent){
-	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
-	/*
-	100 - 0 			255 - 0
-	percent - 0 		x - 0
-	
-	100x = 255 * percent
-	x = percent * 255 / 100
-	*/
-	var rawN
-	rawN = Math.round(percent * 255 / 100);
-	
-	return rawN
-}
 
-function rawToPercent(raw){
-	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
-	/*
-	100 - 0 			255 - 0
-	x - 0 				raw - 0
-	
-	255x = 100 * raw
-	x = raw * 100 / 255
-	*/
-	
-	var percN = raw * 100 / 255;
-	percN = Math.round(percN / 10) * 10;
-	return percN
-}
 
 /* ***************************************************************** */
 /* ***************                                   *************** */

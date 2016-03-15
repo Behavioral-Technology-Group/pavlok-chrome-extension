@@ -493,3 +493,7 @@ body p, body span, body li, body ul, body ol, th, td {
 	font-size: 15px;
 	padding: 10px;
 }
+
+.yellow{
+	color: yellow;
+}
