@@ -101,6 +101,22 @@ function toggleTabs(){
 	});
 }
 
+function enableBlackList(){
+	$('#blackList')[0].value = localStorage["blackList"];
+	$('#blackList').tagsInput({
+		'onChange' : saveBlackList,
+		'defaultText':'Add site',
+		'removeWithBackspace' : true
+	});
+	
+	$('#whiteList')[0].value = localStorage["whiteList"];
+	$('#whiteList').tagsInput({
+		'onChange' : saveWhiteList,
+		'defaultText':'Add site',
+		'removeWithBackspace' : true
+	});
+
+}
 $( document ).ready(function() {
 	enableTooltips();
 	presentName();
@@ -111,6 +127,7 @@ $( document ).ready(function() {
 	restoreDailyList('.dailyContainer');
 		
 	tabsAsAccordion();
+	enableBlackList();
 	$("#signOut").click(function(){
 		if (isValid(localStorage.accessToken)){
 			signOut();
