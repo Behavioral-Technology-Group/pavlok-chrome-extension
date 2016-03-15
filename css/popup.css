@@ -219,17 +219,7 @@ h3 {
 	color: white;
 }
 
-#signOut{
-	color: yellow;
-	/* background-color: #47639E; */
-	background-color: black;
-	border: 1px solid white;
-	padding: 2px 0px 2px 0px;
-	margin-bottom: 5px;
-	border-radius: 7px;
-	display: block;
-	text-align: center;
-}
+
 
 #optionsLink{
 	color: yellow;
@@ -341,14 +331,8 @@ div.auth{
 #toDoAction table > tfoot > tr{
 	font-weight: bold;
 	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
 }
 
-#toDoAction table > tfoot > tr{
-	font-weight: bold;
-	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
-}
 
 /* Items themselves */
 .toDoItemTR{
