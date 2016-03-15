@@ -135,6 +135,20 @@ body, p, tab, span{
 	color: white;
 	font-size: 12px;
 }
+#toDoTable tfoot > tr > {
+	background: black;
+	border: 0px;
+}
+
+#toDoTable tfoot > tr > td {
+	background: black;
+	border: 0px;
+	border-right: 1px solid gray;
+}
+
+#toDoTable tfoot > tr > td:last-child {
+	border: 0px;
+}
 #status {
 	background-color: #E2A92B;
 	display: none;
@@ -316,7 +330,7 @@ div.auth{
 	width: 100%;
 	background: rgb(10, 10, 10);
 	vertical-align: center;
-	border-bottom: 1px solid white;
+	/* border-bottom: 1px solid white; */
 }
 
 .toDoItemTR:hover{
@@ -393,7 +407,12 @@ div.auth{
 }
 
 #toDoAdd {
-	width: 90%;
+	width: 100%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 3px;
+	margin-left: 3px;
+	border: none;
 }
 
 #toDoAction .imgIcon{
@@ -460,16 +479,19 @@ div.auth{
 	background: rgb(10, 10, 10);
 	vertical-align: center;
 	border-collapse: collapse;
-	border-bottom: 1px solid white;
+	/* border-bottom: 1px solid white; */
 	color: white;
 }
 
 .dailyItemTR{
 	width: 100%;
-	border-collapse: collapse;
-	border-bottom: 1px solid white;
+	border: none;
+	/* border-bottom: 1px solid white; */
 }
 
+.dailyItemTR > td{
+	border: none;
+}
 .dailyItemTR > * {
 	vertical-align: middle;
 }

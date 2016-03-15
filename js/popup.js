@@ -206,6 +206,8 @@ $( document ).ready(function() {
 		
 	tabsAsAccordion();
 	enableBlackList();
+	enableStimuliControls();
+	
 	$("#signOut").click(function(){
 		if (isValid(localStorage.accessToken)){
 			signOut();
