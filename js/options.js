@@ -782,6 +782,7 @@ function enableSliders(){
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				saveOptions();
+				$("#beepIntensity").html(beepPos + "%");
 			}
 		});
 		
@@ -795,6 +796,7 @@ function enableSliders(){
 				lsSet('zapPosition', zapPos);
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				saveOptions();
+				$("#zapIntensity").html(zapPos + "%");
 			}
 		});
 		
@@ -810,6 +812,7 @@ function enableSliders(){
 				lsSet('vibrationPosition', vibPos);
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				saveOptions();
+				$("#vibrationIntensity").html(vibPos + "%");
 			}
 			
 		});
@@ -996,17 +999,20 @@ function restoreOptions() {
 	if (parseInt(localStorage.beepPosition) > 0){
 		var beepSlider = localStorage.beepPosition;
 	} else { var beepSlider = 60; }
-	$( "#sliderBeep" ).slider( { "value": beepSlider })
+	$( "#sliderBeep" ).slider( { "value": beepSlider });
+	$( "#beepIntensity" ).html( beepSlider + "%");
 	
 	if (parseInt(localStorage.vibrationPosition) > 0){
 		var vibSlider = localStorage.vibrationPosition;
 	} else { var vibSlider = 60; }
-	$( "#sliderVibration" ).slider( { "value": vibSlider })
+	$( "#sliderVibration" ).slider( { "value": vibSlider });
+	$( "#vibrationIntensity" ).html( vibSlider + "%");
 	
 	if (parseInt(localStorage.zapIntensity) > 0){
 		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
 	} else { var zapSlider = 60; }
-	$( "#sliderZap" ).slider( { "value": zapSlider })
+	$( "#sliderZap" ).slider( { "value": zapSlider });
+	$( "#zapIntensity" ).html( zapSlider + "%");
 	
 	// Rescue Time
 	$("#RTOnOffSelect").val(localStorage.RTOnOffSelect);

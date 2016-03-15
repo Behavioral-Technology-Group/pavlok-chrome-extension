@@ -135,8 +135,11 @@ localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps
 // Stimuli intensity
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
 if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
+if (!localStorage.beepPosition ) { localStorage.beepPosition = 100; } //Random tune
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
+if (!localStorage.zapPosition ) { localStorage.zapPosition = 60; } //60% default
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
+if (!localStorage.vibrationPosition ) { localStorage.vibrationPosition = 60; } //60% default
 
 // Blacklist and tabs
 if (!localStorage.timeWindow) { localStorage.timeWindow = 15};

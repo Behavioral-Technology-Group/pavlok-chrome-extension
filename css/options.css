@@ -208,12 +208,20 @@ div.tagcontainer{
 .stimuliControlSlider{
 	width: 60%;
 	display: inline-block;
-	/* height: 55px; */
+	height: 2px;
 	/* position: relative; */
 	/* top: -20px; */
 	border: none;
 	margin-left: 50px;
-	/* background-image */: url("../images/testBackground.PNG");
+	transform: translate(0px, -18px);
+/* 	background-image: url("../images/meter(55height) (Custom).png");
+	background-size:100%; */
+	/* background: yellow; */
+}
+
+.stimuliIntensityDisplay{
+	margin-left: 20px;
+	transform: translate(0px, -28px);
 }
 
 span.activeSection{
