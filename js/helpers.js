@@ -931,6 +931,65 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function convertTimeFormat(time, toFormat){
+	var curFormat = 12;
+	var newTime;
+	
+	if ( time.indexOf("AM") == -1 && time.indexOf("PM") == -1 ) { 
+		curFormat = 24 
+	};
+	
+	if (toFormat == 12){
+		if ( curFormat == 12 ) { 
+			return time 
+		}
+		else {
+			newTime = time.replace(":", " ");
+			newTime = newTime.split(" ");
+			hours = parseInt(newTime[0]);
+			minutes = parseInt(newTime[1]);
+			
+			if (hours >= 12) {
+				code = "PM";
+				if (hours > 12){ 
+					hours = hours - 12; 
+				}
+				else { 
+					hours = 12; 
+				}
+			} else{
+				code = "AM";
+				if (hours == 0) { hours = 12;}
+			}
+			
+			// if (hours.length == 1)	{ hours 	= "0" + hours; }
+			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			newTime = hours + ":" + minutes + " " + code;
+			
+		}
+	}
+	else if (toFormat == 24){
+		if ( curFormat == 24 ) { return time }
+		else{
+			newTime = time.replace(":", " ");
+			newTime = newTime.split(" ");
+			hours = parseInt(newTime[0]);
+			minutes = newTime[1];
+			code = newTime[2];
+			
+			if (code == "PM") { hours = hours + 12; }
+			
+			// if (hours.length == 1)	{ hours 	= "0" + hours; }
+			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			newTime = hours + ":" + minutes;
+		}
+	}
+	
+
+	return newTime
+	
+}
+
 function deltaTime(seconds, baseDate){
 	if (!baseDate){ 
 		var baseDate = new Date();
