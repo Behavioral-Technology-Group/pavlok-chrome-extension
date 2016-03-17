@@ -590,9 +590,11 @@ function enableSignInOut(){
 	$("#signOutX").click(function(){
 		if (isValid(localStorage.accessToken)){
 			signOut();
+			$(this).attr('title', 'Sign In');
 		}
 		else {
 			oauth(localStorage.accessToken);
+			$(this).attr('title', 'Sign Out');
 		}
 	});
 }
@@ -1124,6 +1126,9 @@ $( document ).ready(function() {
 	if (localStorage.logged == 'true') { 
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
+		$("#signOutX").attr('title', 'Sign Out');
+	else{
+		$("#signOutX").attr('title', 'Sign In');
 	}
 	
 	// Fill user Data
