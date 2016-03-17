@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "test"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 // Greetings popup		
@@ -135,8 +135,11 @@ localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps
 // Stimuli intensity
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
 if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
+if (!localStorage.beepPosition ) { localStorage.beepPosition = 100; } //Random tune
 if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
+if (!localStorage.zapPosition ) { localStorage.zapPosition = 60; } //60% default
 if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
+if (!localStorage.vibrationPosition ) { localStorage.vibrationPosition = 60; } //60% default
 
 // Blacklist and tabs
 if (!localStorage.timeWindow) { localStorage.timeWindow = 15};
@@ -179,7 +182,7 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 	// When logged in
 	notifications.signedIn = {};
 	notifications.signedIn.title = "Hooray! Welcome aboard!";
-	notifications.signedIn.message = "Click hede to start using the Productivity Extension";
+	notifications.signedIn.message = "Click here to start using the Productivity Extension";
 	notifications.signedIn.id = "signedIn";
 	notifications.signedIn.persist = true;
 	notifications.signedIn.usage = "installed";
@@ -243,6 +246,10 @@ if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';
+
+function removeInlineStyle(element){
+	$(element).attr('style', '');
+}
 
 function msgExt(_action, _target){
 	// Action is used to tell what to act upon
@@ -467,7 +474,7 @@ function countTabs(mode, callback){
 
 function evaluateTabCount(tabCount){
 	var maxTabs = parseInt(localStorage.maxTabs);
-	if(!maxTabs) {
+	if(!maxTabs || maxTabs == "no") {
 		return;
 	}
 	
@@ -735,7 +742,7 @@ function oauth() {
 					});
 					console.log("OAuth2 test concluded");
 					chrome.notifications.clear("installed");
-					notifyUser('Hooray! Welcome aboard!', 'Click hede to start using the Productivity Extension', 'signedIn');
+					notifyUser('Hooray! Welcome aboard!', 'Click here to start using the Productivity Extension', 'signedIn');
 				});
 		}
 	);	
@@ -924,6 +931,65 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function convertTimeFormat(time, toFormat){
+	var curFormat = 12;
+	var newTime;
+	
+	if ( time.indexOf("AM") == -1 && time.indexOf("PM") == -1 ) { 
+		curFormat = 24 
+	};
+	
+	if (toFormat == 12){
+		if ( curFormat == 12 ) { 
+			return time 
+		}
+		else {
+			newTime = time.replace(":", " ");
+			newTime = newTime.split(" ");
+			hours = parseInt(newTime[0]);
+			minutes = parseInt(newTime[1]);
+			
+			if (hours >= 12) {
+				code = "PM";
+				if (hours > 12){ 
+					hours = hours - 12; 
+				}
+				else { 
+					hours = 12; 
+				}
+			} else{
+				code = "AM";
+				if (hours == 0) { hours = 12;}
+			}
+			
+			// if (hours.length == 1)	{ hours 	= "0" + hours; }
+			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			newTime = hours + ":" + minutes + " " + code;
+			
+		}
+	}
+	else if (toFormat == 24){
+		if ( curFormat == 24 ) { return time }
+		else{
+			newTime = time.replace(":", " ");
+			newTime = newTime.split(" ");
+			hours = parseInt(newTime[0]);
+			minutes = newTime[1];
+			code = newTime[2];
+			
+			if (code == "PM") { hours = hours + 12; }
+			
+			// if (hours.length == 1)	{ hours 	= "0" + hours; }
+			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			newTime = hours + ":" + minutes;
+		}
+	}
+	
+
+	return newTime
+	
+}
+
 function deltaTime(seconds, baseDate){
 	if (!baseDate){ 
 		var baseDate = new Date();
@@ -941,4 +1007,32 @@ function dateFromTime(time){
 	return date
 }
 
+function percentToRaw(percent){
+	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
+	/*
+	100 - 0 			255 - 0
+	percent - 0 		x - 0
+	
+	100x = 255 * percent
+	x = percent * 255 / 100
+	*/
+	var rawN
+	rawN = Math.round(percent * 255 / 100);
+	
+	return rawN
+}
 
+function rawToPercent(raw){
+	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
+	/*
+	100 - 0 			255 - 0
+	x - 0 				raw - 0
+	
+	255x = 100 * raw
+	x = raw * 100 / 255
+	*/
+	
+	var percN = raw * 100 / 255;
+	percN = Math.round(percN / 10) * 10;
+	return percN
+}

@@ -660,7 +660,7 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-slider .ui-slider-handle {
 	position: absolute;
-	z-index: 2;
+	z-index: 900;
 	width: 1.2em;
 	height: 1.2em;
 	cursor: default;
@@ -683,10 +683,12 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-slider-horizontal {
-	height: .8em;
+	height: 1px;
+	border: 0;
+	border-top: 1px;
 }
 .ui-slider-horizontal .ui-slider-handle {
-	top: -.3em;
+	top: -.7em;
 	margin-left: -.6em;
 }
 .ui-slider-horizontal .ui-slider-range {
@@ -819,7 +821,7 @@ button.ui-button::-moz-focus-inner {
 	padding: 8px;
 	position: absolute;
 	z-index: 9999;
-	max-width: 300px;
+	max-width: 500px;
 	-webkit-box-shadow: 0 0 5px #aaa;
 	box-shadow: 0 0 5px #aaa;
 }

@@ -50,13 +50,17 @@ function listenDailyListClick(){
 		expandDailyDetails(dailyId);
 	});
 	
-	$("#saveDaily").click(function(){
+	$("#saveDaily").click(function( event ){
+		event.preventDefault();
+		
 		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
 		gatherDailyInfo()
 		fillDailyList();
 	});
 	
-	$("#deleteDaily").click(function(){
+	$("#deleteDaily").click(function( event ){
+		event.preventDefault();
+		
 		var dailyId = parseInt($('#dailyTaskIdInput').val());
 		var daily = dailyFromId(dailyId);
 		var dailyList = lsGet('dailyList', 'parse');
@@ -113,6 +117,9 @@ function expandDailyDetails(dailyId){
 	$('#pomosPerDaySelect')	.val(pomodoros);
 	$('#dailyPomoDuration')	.val(duration);
 	$('#specialListsInput')	.prop('checked', specialList);
+	if (specialList == true){
+		$('.specialListDisplay').show();
+	} else { $('.specialListDisplay').hide(); }
 	$('#blackListDaily')	.importTags(blackList);
 	$('#whiteListDaily')	.importTags(whiteList);
 	$('#binauralDaily')		.prop('checked', binaural);
@@ -139,6 +146,7 @@ function gatherDailyInfo(){
 }
 	
 function enableBlackDaily(){
+	toggleBlackDaily();
 	$('#blackListDaily')[0].value = ' ';
 	$('#blackListDaily').tagsInput({
 		'defaultText':'Add site',
@@ -153,6 +161,18 @@ function enableBlackDaily(){
 		'removeWithBackspace' : true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
+}
+
+function toggleBlackDaily(){
+	$('#specialListsInput').change(function(){
+		var checked = $('#specialListsInput').prop('checked');
+		if (checked == true){
+			$('.specialListDisplay').show(300);
+		}
+		else{
+			$('.specialListDisplay').hide(300);
+		}
+	})
 }
 
 function enableDaily(){
@@ -184,6 +204,7 @@ function changeRTVisibility(){
 }
 
 function regressRTHour(deltaMinutes){
+	
 	var original = localStorage.Comment;
 	var originalDate = [original.split(" ")[8], original.split(" ")[9]];
 	
@@ -207,6 +228,7 @@ function regressRTHour(deltaMinutes){
 function updateProductivity(){
 	RTProdInterval = setInterval(function(){
 		if (localStorage.RTOnOffSelect == "On") {
+			if (!localStorage.Comment) { return }
 			var beginCycle = regressRTHour(-30);
 			var beginHours = beginCycle.getHours() + ":" + beginCycle.getMinutes() + ":" + beginCycle.getSeconds();
 			if (parseInt(localStorage.RTPulse) > 0) {
@@ -274,7 +296,12 @@ function enableRescueTime(){
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
 		localStorage.RTOnOffSelect = RTOnOffSelect;
-		if (RTOnOffSelect == "On") { updateProductivity(); }
+		if (RTOnOffSelect == "On") { 
+			updateProductivity(); 
+			$("#RTResultsHolder").css('visibility', 'visible');
+		} else{
+			$("#RTResultsHolder").css('visibility', 'hidden');
+		}
 	});
 	
 	$( "#RTFrequencySelect" ).change(function(){
@@ -298,6 +325,8 @@ function enableRescueTime(){
 				if (result == true){
 					delete localStorage.RTAPIKey;
 					$("#rescueTimeAPIKey").val('');
+					$("#RTOnOffSelect").val('Off');
+					lsSet('RTOnOffSelect', 'Off');
 					changeRTVisibility();
 				}	
 			}
@@ -409,26 +438,27 @@ function enableTimers(){
     }
   });
  
-  $(function() {
-    $( "#generalActiveTimeStart" ).timespinner({
-		change: function( event, ui ) { localStorage.generalActiveTimeStart = $(this).val();},
-	});
-    $( "#generalActiveTimeEnd" ).timespinner({
-		change: function( event, ui ) { localStorage.generalActiveTimeEnd = $(this).val();}
-	});
- 
-    $( "#timeFormat" ).change(function() {
-		var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
-		var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
-		
-		var selectedOption = $(this).val();
-		if (selectedOption == "24") { culture = "de-DE" }
-		else if (selectedOption == "12") { culture = "en-EN"};
+	$(function() {
+		$( "#generalActiveTimeStart" ).timespinner({
+			change: function( event, ui ) { localStorage.generalActiveTimeStart = $(this).val();},
+		});
+		$( "#generalActiveTimeEnd" ).timespinner({
+			change: function( event, ui ) { localStorage.generalActiveTimeEnd = $(this).val();}
+		});
+	 
+		$( "#timeFormat" ).change(function() {
+			lsSet('timeFormat', $(this).val());
+			var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
+			var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
+			
+			var selectedOption = $(this).val();
+			if (selectedOption == "24") { culture = "de-DE" }
+			else if (selectedOption == "12") { culture = "en-EN"};
 
-		Globalize.culture( culture );
-		$( "#generalActiveTimeStart" ).timespinner( "value", currentStart );
-		$( "#generalActiveTimeEnd" ).timespinner( "value", currentEnd );
-	});
+			Globalize.culture( culture );
+			$( "#generalActiveTimeStart" ).timespinner( "value", currentStart );
+			$( "#generalActiveTimeEnd" ).timespinner( "value", currentEnd );
+		});
 	});
 }
 
@@ -486,7 +516,8 @@ function enableAutoZapper(){
 	});
 	frequency.val(5);
 	
-	$("#autoZapperStart").click(function(){
+	$("#autoZapperStart").click(function( event ){
+		event.preventDefault();
 		$.prompt("Starting <b>zaps on " + intensity.val() + "%</b>...<br />" +
 			"for <b>" + duration.val() + " minutes</b><br />"+
 			"zapping <b>every " + frequency.val() + " seconds</b>.", {
@@ -544,8 +575,9 @@ function enableAutoZapper(){
 		});
 	});
 	
-	$("#autoZapperStop").click(function(){
-		clearInterval(localStorage.trainingSession);
+	$("#autoZapperStop").click(function( event ){
+		event.preventDefault();
+		clearInterval(parseInt(localStorage.trainingSession));
 		$.prompt("Traning session canceled", "Your training session is now over");
 		
 		toggleAutoZapperConf("configure");
@@ -567,45 +599,108 @@ function enableSelecatbles(){
 
 function restoreCheckBox(checkboxID, condition){
 	if (condition == 'true' )
-		{ $("#" + checkboxID).attr('checked', true); }
-	else { $("#" + checkboxID).attr('checked', false); }
+		{ $("#" + checkboxID).prop('checked', true); }
+	else { $("#" + checkboxID).prop('checked', false); }
 }
 
-function percentToRaw(percent){
-	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
-	/*
-	100 - 0 			255 - 0
-	percent - 0 		x - 0
-	
-	100x = 255 * percent
-	x = percent * 255 / 100
-	*/
-	var rawN
-	rawN = Math.round(percent * 255 / 100);
-	
-	return rawN
-}
 
-function rawToPercent(raw){
-	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
-	/*
-	100 - 0 			255 - 0
-	x - 0 				raw - 0
-	
-	255x = 100 * raw
-	x = raw * 100 / 255
-	*/
-	
-	var percN = raw * 100 / 255;
-	percN = Math.round(percN / 10) * 10;
-	return percN
-}
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
 /* ***************        ALL AROUND SECTION         *************** */
 /* ***************                                   *************** */
 /* ***************************************************************** */
+
+
+
+function enableSignInOut(){
+	$("#signOutX").click(function(){
+		if (isValid(localStorage.accessToken)){
+			signOut();
+			$(this).attr('title', 'Sign In');
+		}
+		else {
+			oauth(localStorage.accessToken);
+			$(this).attr('title', 'Sign Out');
+		}
+	});
+}
+
+function adjustSliders(curPos, fixedHeader){
+	var sliders = [$("#sliderBeep"), $("#sliderVibration"), $("#sliderZap")];
+	
+	for (s = 0; s < sliders.length; s++ ){
+		var curSlider = sliders[s];
+		var curContainer = $(curSlider).parent();
+		var curH = curSlider.offset().top;
+		
+		if (curPos > curH - fixedHeader){
+			$(curContainer).css("visibility", "hidden");
+		}
+		else {
+			$(curContainer).css("visibility", "visible")
+		}
+	}
+	
+}
+
+function adjustSpinners(curPos, fixedHeaderSize){
+	var spinners = [$("#autoZapperStartLine"), $("#RTPosTR"), $("#RTWarnTR"), $("#RTNegTR"), $("#generalActiveHours")];
+	
+	var visiblePos = curPos + fixedHeaderSize;
+	
+	for (s = 0; s < spinners.length; s++ ){
+		var curSpinner = spinners[s];
+		var curH = curSpinner.offset().top;
+		// var curH = curH - fixedHeaderSize;
+		
+		if (curPos > curH - fixedHeaderSize){
+		// if (curPos >= curH){
+			$(curSpinner).css("visibility", "hidden");
+		}
+		else {
+			$(curSpinner).css("visibility", "visible")
+		}
+	}
+}
+
+function highlightActiveSection(curPos, fixedHeaderSize){
+	var tops = [
+		$("#blackListContainerDiv").offset().top,
+		$("#tabNumbersContainerDiv").offset().top,
+		$("#stimuliContainerDiv").offset().top,
+		$("#toDoContainerDiv").offset().top,
+		$("#appIntegrationsContainerDiv").offset().top,
+		$("#advancedOptionsContainerDiv").offset().top,
+	];
+	
+	var sections = [
+		"blackList",
+		"tabNumbers",
+		"stimuli",
+		"toDo",
+		"appIntegrations",
+		"advancedOptions",
+	]
+	var visiblePos = curPos + fixedHeaderSize;
+	
+	var difs = [];
+	// Checks which one have already been passed by
+	for (n = 0; n < tops.length; n++){
+		difs.push(tops[n] - visiblePos);
+	}
+	
+	var passed = _.countBy(difs, function(num) {
+		return num <= 0 ? 'reached': 'ahead';
+	});
+	
+	if (passed.ahead == sections.length) { passed.reached = 1;}
+	
+	var active = passed.reached - 1;
+	$("#indexDiv").children().removeClass("activeSection");
+	$($("#indexDiv").children()[active]).addClass("activeSection")
+	
+}
 
 function enableSelects(){
 	$("#blackListTimeWindow").change(function(){
@@ -614,22 +709,27 @@ function enableSelects(){
 }
 
 function enableButtons(){
-	$("#resetIntensity").click(function(){
+	$("#resetIntensity").click(function( event ){
+		event.preventDefault();
+		
 		var defValue = 60;
+
+		$( "#sliderBeep" ).slider( { "value": defValue });
+		localStorage.beepPosition = defValue;
+		localStorage.beepIntensity = percentToRaw(defValue);
+
 		
 		$( "#sliderZap" ).slider( { "value": defValue });
-		$( "#zapIntensity" ).val(defValue);
 		localStorage.zapPosition = defValue;
 		localStorage.zapIntensity = percentToRaw(defValue);
 		
 		$( "#sliderVibration" ).slider( { "value": defValue });
-		$( "#vibrationIntensity" ).val(defValue);
 		localStorage.vibrationPosition = defValue;
 		localStorage.vibrationIntensity = percentToRaw(defValue);
 	});
 	
-	$("#testPairing").click(function(){
-		stimuli("vibration", 255, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
+	$("#testPairingX").click(function(){
+		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
 	$("#testZapInt").click(function(){
@@ -668,18 +768,34 @@ function enableTables(){ // TO-do update or remove
 
 function enableSliders(){
 	$(function() {
+		$( "#sliderBeep" ).slider({
+			value:60,
+			min: 10,
+			max: 100,
+			step: 10,
+			slide: function( event, ui ) {
+				var beepPos = ui.value;
+				console.log(beepPos);
+				lsSet('beepPosition', beepPos);
+				lsSet('beepIntensity', percentToRaw(beepPos));
+				saveOptions();
+				$("#beepIntensity").html(beepPos + "%");
+			}
+		});
+		
 		$( "#sliderZap" ).slider({
 			value:60,
 			min: 10,
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
-				$( "#zapIntensity" ).val( ui.value );
-				localStorage.zapPosition = ui.value ;
+				var zapPos = ui.value;
+				lsSet('zapPosition', zapPos);
+				lsSet('zapIntensity', percentToRaw(zapPos));
 				saveOptions();
+				$("#zapIntensity").html(zapPos + "%");
 			}
 		});
-		$( "#zapIntensity" ).val( $( "#sliderZap" ).slider( "value" ) );
 		
 		$( "#sliderVibration" ).slider({
 			value:60,
@@ -687,14 +803,20 @@ function enableSliders(){
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
-				$( "#vibrationIntensity" ).val( ui.value );
-				localStorage.vibrationPosition = ui.value ;
+				var vibPos = ui.value;
+				console.log(vibPos);
+				// localStorage.vibrationPosition = vibPos;
+				lsSet('vibrationPosition', vibPos);
+				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				saveOptions();
+				$("#vibrationIntensity").html(vibPos + "%");
 			}
+			
 		});
 		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
 		
 	});
+	
 }
 
 function enableCheckboxes(){
@@ -806,14 +928,16 @@ function saveOptions() {
 	var zapOnClose = $("#zapOnClose").prop('checked');
 	lsSet('zapOnClose', zapOnClose);
 	
-	var zapPosition = $("#zapIntensity").val();
-	var zapIntensity = $("#zapIntensity").val();
-	zapIntensity = Math.round(parseFloat(zapIntensity) / 100 * 255 ); // convert to 1-255 interval
+	var beepPosition = $( "#sliderBeep" ).slider( "option", "value");
+	beepIntensity = percentToRaw(beepPosition); // convert to 1-255 interval
+	lsSet('beepIntensity', beepIntensity);
+	
+	var zapPosition = $( "#sliderZap" ).slider( "option", "value");
+	zapIntensity = percentToRaw(zapPosition); // convert to 1-255 interval
 	lsSet('zapIntensity', zapIntensity);
 	
-	var vibrationPosition = $("#vibrationIntensity").val();
-	var vibrationIntensity = $("#vibrationIntensity").val();
-	vibrationIntensity = Math.round(parseFloat(vibrationIntensity) / 100 * 255);
+	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
+	vibrationIntensity = percentToRaw(vibrationPosition);
 	lsSet('vibrationIntensity', vibrationIntensity);
 }
 
@@ -830,6 +954,9 @@ function restoreOptions() {
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
 
+	var timeFormat = localStorage.timeFormat;
+	$("#timeFormat").val(timeFormat);
+	
 	var startHour = localStorage.generalActiveTimeStart;
 	$("#generalActiveTimeStart").val(startHour);
 	var endHour = localStorage.generalActiveTimeEnd;
@@ -862,28 +989,114 @@ function restoreOptions() {
 	});
 		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
+	
+	$("#timeFormat").val(localStorage.timeFormat);
 
 	// Stimuli Intensity
+	if (parseInt(localStorage.beepPosition) > 0){
+		var beepSlider = localStorage.beepPosition;
+	} else { var beepSlider = 60; }
+	$( "#sliderBeep" ).slider( { "value": beepSlider });
+	$( "#beepIntensity" ).html( beepSlider + "%");
+	
 	if (parseInt(localStorage.vibrationPosition) > 0){
 		var vibSlider = localStorage.vibrationPosition;
 	} else { var vibSlider = 60; }
-	$( "#sliderVibration" ).slider( { "value": vibSlider })
-	$( "#vibrationIntensity" ).val(vibSlider);
+	$( "#sliderVibration" ).slider( { "value": vibSlider });
+	$( "#vibrationIntensity" ).html( vibSlider + "%");
 	
 	if (parseInt(localStorage.zapIntensity) > 0){
 		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
 	} else { var zapSlider = 60; }
-	$( "#sliderZap" ).slider( { "value": zapSlider })
-	$( "#zapIntensity" ).val(zapSlider);
+	$( "#sliderZap" ).slider( { "value": zapSlider });
+	$( "#zapIntensity" ).html( zapSlider + "%");
 	
 	// Rescue Time
 	$("#RTOnOffSelect").val(localStorage.RTOnOffSelect);
+	if ($("#RTOnOffSelect").val() == "Off") { $("#RTResultsHolder").css('visibility', 'hidden');}
 	changeRTVisibility();
 	
 }
 
+function enableScrollNavigation(){
+	$("#indexDiv").on('click', '.scrollableLink', function( event ){
+		moveToLink($(this));
+	});
+}
+
+function moveToLink(clickedLink){
+	var target = $(clickedLink).prop('id').split("@")[1];
+	target = $("#" + target);
+	
+	var topHeight = parseInt($(".fixedHeader").height());
+	// var topMargin = parseInt($("#fixedHeader").margin());
+	// var topPadding= parseInt($("#fixedHeader").css('padding').split("p")[0]);
+	// var topSize = topHeight + topPadding;
+	var topSize = topHeight;
+	
+	var position = $(target).offset().top;
+	var positionUpdated = position - topSize;
+	
+	// console.log(positionUpdated);
+	// window.scrollTo(0, positionUpdated);
+	$('html, body').animate({
+		scrollTop: positionUpdated
+	}, 1000);
+	
+}
+
+function toggleOverlay(toState){
+	var curtain = $("#bigOverlay");
+	var stage = $(curtain).css('display');
+	
+	if (toState == "showOptions"){
+		if ( stage == "none" ){ return }
+		
+		$("#bigOverlay").fadeTo(300, 0, function(){ 
+			$("#bigOverlay").hide()
+		});
+		
+	} 
+	else if (toState == "hideOptions") {
+		if ($("#bigOverlay").length == 0){
+			var overlayDiv = [
+			'<div id="bigOverlay">',
+			'<div id="bigOverlay" class="noDisplay">',
+				'<div id="bigOverlayContents">',
+					'<p>',
+						'Ooops! You are not signed in!',
+					'</p>',
+					'<p>',
+						'<a id="overlaySignIn" href="#">Click here to solve it!</a>',
+					'</p>',
+				'</div>',
+			'</div>',
+			];
+			
+			overlayDiv = overlayDiv.join(',')
+			$("body").append(overlayDiv);
+		}
+		
+		var stage = $(curtain).css('display');
+		
+		if ( stage != 'none'){ return }
+		
+		$("#bigOverlay").show(function(){
+			$("#bigOverlay").fadeTo(300, 0.8);
+		});
+	
+	}
+}
+
 // Create the vertical tabs
 function initialize() {
+	var timeFormat = lsGet('timeFormat');
+	if (timeFormat == "24") { culture = "de-DE" }
+	else if (timeFormat == "12") { culture = "en-EN"};
+	Globalize.culture( culture );
+	
+	enableSignInOut()
+	enableScrollNavigation();
 	// Black and WhiteLists
 	var blackListContent = localStorage.blackList;
 	
@@ -908,12 +1121,6 @@ function initialize() {
 		});
 	}
 	
-	// Create tabs
-	$(function() {
-		$( "#tabs" ).tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-		$( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-		// $( ".tabsLi")
-	});
 	
 	
 	// Add listeners for Auto save when options change
@@ -938,13 +1145,15 @@ function initialize() {
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
 	});
-	$("#zapIntensity").change(function(){
+	$("#sliderZap").change(function(){
 		localStorage.zapPosition = $(this).val();
 		localStorage.zapIntensity = percentToRaw(parseInt($(this).val()));
 	});
-	$("#vibrationIntensity").change(function(){
-		localStorage.vibrationPosition = $(this).val();
-		localStorage.vibrationIntensity = percentToRaw(parseInt($(this).val()));
+	$("#sliderVibration").change(function(){
+		var pos = $( this ).slider( "option", "value");
+		localStorage.vibrationPosition = pos;
+		localStorage.vibrationIntensity = percentToRaw(parseInt(pos));
+		console.log(pos);
 	});
 	
 	// Both white and Blacklist listeners aren't working.
@@ -983,8 +1192,15 @@ function initialize() {
 initialize();
 $( document ).ready(function() {
 	if (localStorage.logged == 'true') { 
+		toggleOverlay("options");
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
+		$("#signOutX").attr('title', 'Sign Out');
+	}
+	else{
+		// toggleOverlay("hide");
+		$(".onlyLogged").css('visibility', 'hidden');
+		$("#signOutX").attr('title', 'Sign In');
 	}
 	
 	// Fill user Data
@@ -999,4 +1215,22 @@ $( document ).ready(function() {
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
+	
+	removeInlineStyle("#blackList_tagsinput");
+	removeInlineStyle("#whiteList_tagsinput");
+	removeInlineStyle("#blackListDaily_tagsinput");
+	removeInlineStyle("#whiteListDaily_tagsinput");
+	
+	$(window).scroll(function(){ 
+		var curPos = $(this).scrollTop();
+
+		var fixedHeaderHeight = $(".fixedHeader").height();
+		// var fixedHeaderPadding = $("#fixedHeader").css("padding").split("p")[0];
+		// fixedHeaderPadding = parseInt(fixedHeaderPadding);
+		var fixedHeaderSize = fixedHeaderHeight; //+ fixedHeaderPadding;
+
+		highlightActiveSection(curPos, fixedHeaderSize); 
+		adjustSliders(curPos, fixedHeaderSize);
+		adjustSpinners(curPos, fixedHeaderSize);
+	});
 });

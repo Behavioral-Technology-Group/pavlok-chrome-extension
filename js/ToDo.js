@@ -383,7 +383,9 @@ function checkForUpdate(){
 }
 
 function pomoFocusButtons(){
-	$("#pomoFocusCompleteTask").click(function(){
+	$("#pomoFocusCompleteTask").click(function( event ){
+		event.preventDefault();
+		
 		localStorage.endReason = 'done';
 		var notifications = lsGet('notifications', 'object');
 		var Not = notifications.pomofocusDone;
@@ -423,7 +425,9 @@ function pomoFocusButtons(){
 		lsDel('dailyPomo');
 	});
 	
-	$("#pomoFocusStop").click(function(){
+	$("#pomoFocusStop").click(function( event ){
+		event.preventDefault();
+		
 		localStorage.endReason = 'stop';
 		var pomoFocus = getPomoFocus('background');
 		PFpromptForce = false;
@@ -438,7 +442,9 @@ function pomoFocusButtons(){
 		
 	});
 	
-	$("#pomoFocus5minutes").click(function(){
+	$("#pomoFocus5minutes").click(function( event ){
+		event.preventDefault();
+		
 		var pomoFocus = getPomoFocus('background');
 		var endTime = pomoFocus.endTime;
 		var newEndTime = endTime + 5 * 60 * 1000;

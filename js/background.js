@@ -1,7 +1,16 @@
 ﻿
 
 /* To-do:
+notify every 30 minutes*
+1) Annoy me every half hour until I start my first pomodoro
 
+2) Once I finally start my first pomodor, do it for 30 mins
+
+3) (25 mins by default, or 15 or whatever)
+
+at the end of the pomodoro ==> Congrats! Take a 5 minute break!
+
+4) after 5 mins "Ready to get started? 1) Yes, get started! 2) Start in 5 mins 3) Not now"
 
 */
 // Globals
@@ -62,6 +71,26 @@ var accessToken = localStorage.accessToken;
 /*--------                                                           --------*/
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
+
+// To-do Integration
+function timeSincePomo(){
+	var lastPomo = lsGet('pomoFocusB', 'parse');
+	
+	if (lastPomo.active == true){
+		return 0
+	}
+	else {
+		var now = new Date().getTime();
+		var timeSpent = now - lastPomo.lastUpdate;
+		
+		return timeSpent
+	}
+}
+
+
+
+
+
 // RescueTime Integration
 function validateTimeOut(RTTimeOut){
 	if (RTTimeOut == undefined) { RTTimeOut = false }

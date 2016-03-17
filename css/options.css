@@ -1,589 +1,733 @@
-@font-face {
-	font-family: 'Halis Black';
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot');
-	src: url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.eot?#iefix') format('embedded-opentype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.woff') format('woff'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.ttf') format('truetype'),
-		url('../Halis_Black_Webfont/ahmet_altun_-_halisgr-sblack-webfont.svg') format('svg');
+/* ----------------------------------------------- */
+/*                                                 */
+/*                                                 */
+/*       Big Gestalt and skeleton of the page      */
+/*                                                 */
+/*                                                 */
+/* ----------------------------------------------- */
+body{
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: 8px;
 }
 
-#status {
-  background-color: #E2A92B;
-  display: none;
-  color: #E2A92B;
-  height: 110px;
-  width: 355px;
-  text-align: center;
-  vertical-align: middle;
+.generalContainer{
+	width: 100%;
+	background: #222222;
+}
+
+.fixedHeader{
+	position: fixed;
+	height: 186px;
+	width: 100%;
+}
+
+.fixedHeaderPlaceHolder{
+	width: 100%;
+	height: 182px;
+	background: #222222;
+}
+
+.headerContainer{
+	padding-top: 30px;
+	width:100%;
+	height: 90px;
+	background: #222222;
+	display: flex;
+	justify-content: center;
+}
+
+.header{
+	width: 1200px;
+	height: 100%;
+	/* border-left: 1px solid yellow;
+	border-right: 1px solid yellow; */
+}
+
+.navBarContainer{
+	width: 100%;
+	height: 60px;
+	display: flex;
+	background: #070707;
+	justify-content: center;
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
+}
+
+.navBar{
+	width:1200px;
+	background: black;
+	/* border: 10px solid yellow; */
+}
+
+.bodyContainer{
+	width: 100%;
+	display: flex;
+	background: #222222;
+	/* background: red; */
+	display: flex;
+	justify-content: center;
+}
+
+.contentContainer{
+	width: 1200px;
+}
+
+.footerContainer {
+	width: 100%;
+	height: 170px;
+	background: white;	
+	
+}
+
+.footerThings{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+.footerThings > * {
+	align-self: center;
+}
+/* ----------------------------------------------- */
+/*                                                 */
+/*                                                 */
+/*       Font definitions for overall page         */
+/*                                                 */
+/*                                                 */
+/* ----------------------------------------------- */
+
+@font-face {
+	font-family: 'Lato', sans-serif;
 }
 
 body {
-  font-family: Helvetica,Arial,sans-serif;
-  font-size:small;
-  color:#000;
-  background: linear-gradient(white, #f8e71c);
+	margin-top: 0px;
+	color:#000;
+	background: #222222;
 }
 
-
-#save{
-  background-image: url('../images/save.png');
-  margin-top: 1em;
+/* Text elements font family and color */
+p, span, div, a, h1, h2, h3, h4, li, th, td{
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
 }
 
-body p {
-  color: white;
-  font-family: Helvetica;
-}
-
-h2 {
-  color: white;
-  font-family: Helvetica;
-  margin-bottom: 0
-}
-
-#label-text {
-  color: white;
-}
-
-#signIn{
-text-align: left;
-  color: white;
-  background-color: #845221;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-a.ui-tabs-anchor {
-	width: 85%;
-}
-
-#testPairing{
-  text-align: left;
-  color: white;
-  background-color: #ffc106;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-#signOut{
-  text-align: left;
-  color: white;
-  background-color: #845221;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-}
-
-
-.tagcontainer {
-  height:100px;
-  width: 350px;
-}
-
-ul.nav{
-  list-style-type: none;
-  left:0;
-  padding:0;
-}
-
-div.auth{
-  text-decoration: none;
-}
-
-#optionsDiv{
-  visibility: hidden;
-}
-
-
-.helpIcon {
-  height:20px;
-  width: 20px;
-}
-
-.yellow{
+.yellow, .yellowX{
 	color: yellow;
 }
 
-.ui-tabs-vertical {
-	width: 55em;
+/* Text element sizes */
+body p, body span, body a, body li, body th, body td{
+	font-size: 20px;
 }
 
-.ui-tabs-vertical .ui-tabs-nav {n
-	padding: .2em .1em .2em .2em;
-	float: left;
-	width: 12em;
+body h2 {
+	font-size: 30px;
 }
 
-.ui-tabs-vertical .ui-tabs-nav li { clear: left;
-	width: 100%;
-	border-bottom-width: 1px !important;
-	border-right-width: 0 !important;
-	margin: 10px 10px .2em 0;
+body h3 {
+	font-size: 25px;
 }
 
-.ui-tabs-vertical .ui-tabs-nav li a { display:block;
+/* ----------------------------------------------- */
+/*                                                 */
+/*                                                 */
+/*                 General helpers                 */
+/*                                                 */
+/*                                                 */
+/* ----------------------------------------------- */
+
+span.activeSection{ /* Changes the index of active section */
+	color: white;
 }
 
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0;
-	padding-right: .1em;
-	border-right-width: 1px;
+.flexContainer{
+	display: -webkit-flex;
+	display: flex;
 }
 
-.ui-tabs-vertical .ui-tabs-panel { padding: 1em;
-	float: right;
-	width: 40em;}
-	
+.space-between { 
+  -webkit-justify-content: space-between; 
+  justify-content: space-between; 
+}  
+
+hr.bigger {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    /* margin: 1em 0; */
+	margin: 0px;
+    padding: 0; 
+	width: 106%;
+	position: relative;
+	left: -3%;
+}
+
 .onlyLogged{
-	visibility: hidden;
 }
 
-.onlyUnlogged{
-	visibility: visible;
+.sectionTitle{
+	font-size:40px;
+	color: #e0d01b;
+	font-weight: initial;
+	margin-top: 30px;
+	margin-bottom: 20px;
 }
 
-.noDisplay{
-	display: none;
+.helpSpan{
+	font-size: 10px;
+	font-weight: bold;
+	/* color: rgb(159, 159, 159); */
+	color: rgb(220, 220, 220);
+	
+	text-align: center;
+	vertical-align: super;
+
+	border: 1px solid black;
+	border-color: rgb(159, 159, 159);
+	border-collapse: separate;
+	border-radius: 25px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
-th {
-	width: 130px;
-    border: 3px solid white;
-	border-collapse: collapse;
-	color: white;
+/* Default element presentation */
+select{
+	padding: 3px;
+	border-radius: 5px;
+	font-size: 18px;
+	min-width: 60px;
 }
 
-#dayTimeTable td {
-	width: 130px;
-    border: 1px solid white;
-	border-collapse: collapse;
-	color: white;
+hr {
+	display: block;
+    height: 0px;
+	border:0;
+	border-top: 1px solid black;
+	border-color: #504a04;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 0; 
 }
 
-#dayTimeTable {
-	border: 1px solid white;
-    border-collapse: collapse;
-    width: 100%;
+.ui-spinner-input{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-left: 15px;
+	
+	color: black;
+	background: white;
+	
+	font-size: 18px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+/* ----------------------------------------------- */
+/*                                                 */
+/*                                                 */
+/*          Specific Header definitions            */
+/*                                                 */
+/*                                                 */
+/* ----------------------------------------------- */
+
+/* First line: logo and like span */
+#logoDiv {
+	align-self: center;
 }
 
-.hasTimePicker {
-	width: 50px;
+#logoDiv > img {
+	width: 230px;
 }
 
-.50px {
-	width: 50px;
+#likeDiv{
+	border: 1px solid black;
+	border-color: #e0d01b;
+	border-radius: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	position:relative;
+	height: 25px;
+	align-self: center;
 }
 
-.100px {
-	width: 100px;
+#likeDiv > span {
+	color: e0d01b;
+	right: 0px;
+	font-size: 20px;
 }
 
-#autoZapperTable th {
-	/* width: 400px; */
-	width: 25%;
+#coolSpan{
+	margin-right:10px;
 }
-#autoZapperTable input {
-	width: 50px;
+#likeDiv > #likeSpan {
+	color: #504a04;
+
+	font-size: 20px;
 }
 
-#autoZapperStart {
-  text-align: center;
-  color: white;
-  background-color: #f8e71c;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  width: 85%;
-  display: block;
+#likeDiv > #likeSpan > a{
+	text-decoration: none;
+	color: inherit;
 }
 
-#autoZapperStop {
-  text-align: center;
-  color: white;
-  background-color: red;
-  padding: 7px 11px 7px 11px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  display: block;
-  width: 85%;
+#likeDiv > #likeSpan:hover {
+	color: yellow;
+	cursor: pointer;
 }
 
-.trainingSessionConfigurations{
-	display: none;
+/* Second line: links, sign in/out and test pairing */
+
+#indexDiv {
+	background: black;
+	width: 100%;
+	height: 100%;
+	/* Gotta check if will need borders for consistency. If so, navFillers will be needed and navBar will borders need to leave. */
+	/* border-top: 1px solid white;
+	border-bottom: 1px solid white; */
 }
 
-#selectable td {
-	color: white;
+#indexDiv > span {
+	align-self: center;
 }
 
-#selectable .ui-selecting {
-    background: #ffff60;
-}
-#selectable .ui-selected {
-    background: #fec93d;
+#indexDiv > span.flexItem:first-child{
+	padding-left:0;
 }
 
-.roundedBorders{
-	border-top-left-radius: 16px;
-	border-bottom-left-radius: 16px;
-	border-top-right-radius: 16px;
-	border-bottom-right-radius: 16px;
-	border: 2px solid white;
-}
-
-.whiteContour{
-	border: 1px solid white;
-}
-
-.allCaps{
-	text-transform: uppercase;
-	font-size: 130%;
-}
-
-.smallLetters{
-	font-size: 75%;
-}
-
-.toRight {
-	text-align: right;
-}
-
-ul {
-    background: black;
-}
-
-h2 .helpIconSpan{
-	border-radius: 30px;
-    background-color:rgba(248, 231, 28, 1);
-	color:black;
-    padding-left:6px;
-    padding-right: 6px;
-    padding-top:2px;
-    padding-bottom:2px;
-    font-size:15px;
+.scrollableLink{
+	padding: 8px;
 	font-weight: bold;
 }
 
-.helpIconSpan{
-	border-radius: 30px;
-    background-color:rgba(248, 231, 28, 1);
-	color:black;
-    padding-left:10px;
-    padding-right: 10px;
-    padding-top:2px;
-    padding-bottom:2px;
-    font-size:17px;
+.scrollableLink:hover{
+	cursor:pointer;
+	color: white;
+}
+
+#testPairingX, #signOutX{
+	padding:6px;
+	cursor:pointer;
+}
+
+#signOutX{
+	transform: translate(0px, -2px);
+}
+/* ----------------------------------------------- */
+/*                                                 */
+/*                                                 */
+/*         Specific Contents definitions           */
+/*                                                 */
+/*                                                 */
+/* ----------------------------------------------- */
+
+/* #contentsContainer{
+	display: block;
+	margin-top: 190px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 1366px;
+} */
+
+/* --------------------- */
+/* BLACK AND WHITE LISTS */
+/* --------------------- */
+
+div.tagcontainer{
+	width: 100%;
+	height: 200px;
+}
+
+/* Fix the x positioning on the jquery.tagsinput.css, line 29 */
+
+/* --------------------- */
+/*  TAB NUMBERS CONTROL  */
+/* --------------------- */
+
+#maxTabsSelect{
+	margin-left: 20px;
+} 
+
+/* --------------------- */
+/* STIMULI CONTROL/TEST  */
+/* --------------------- */
+
+.stimuliControlContainer{
+	margin-bottom: 30px;
+}
+
+.stimuliControlIcon{
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.sliderTicksComboContainer{
+	display: inline-block;
+	margin-left: 50px;
+	width: 60%;
+	transform: translate(0px, -10px);
+}
+.stimuliControlSlider{
+	width: 100%;
+	display: inline-block;
+	height: 1px;
+	border: none;
+	transform: translate(0px, -20px);
+	background: white;
+/* 	background-image: url("../images/meter(55height) (Custom).png");
+	background-size:100%; */
+	/* background: yellow; */
+}
+
+.ticks{
+	position: relative;
+	height: 10px;
+	display: flex;
+	justify-content: space-between;
+	/* transform: translate(0px, -14px); */
+	top: -14px;
+}
+
+.ticks > span{
+	width: 1px;
+	height: 15px;
+	background: white;
+	align-self: center;
+}
+
+.ticks > .big{
+	width: 1px;
+	height: 25px;
+	background: yellow;
+	
+}
+
+.bigSub{
+	position: relative;
+	top: 100%;
+	left: -20px;	
+}
+
+.stimuliIntensityDisplay{
+	margin-left: 20px;
+	transform: translate(0px, -28px);
+	display: none;
+}
+
+
+
+.saveOrResetContainer > a{
+	display: inline-block;
+	color: white;
+	text-decoration: underline;
+	font-size: 20px;
 	/* font-weight: bold; */
 }
 
-.logo{
-	width: 190px;
-	height: 50px;
+.saveOrResetContainer > a:first-child{
+	margin-right: 30px;
 }
 
-.display{
-	display: "block"
+
+
+.noDisplay{
+	display:none;
 }
 
-#chartContainer{
-	width: 500px;
-	height: 100px;
-}
-
-.miniChartDiv{
-	height: 50px;
-	display: inline-block;
-}
-
-#miniChart{
-	width: 500px;
-}
-
-#badRT{
-	background-color: red;
-	width: 22%;
-}
-
-#warnRT{
-	background-color: orange;
-	width: 22%;
-}
-
-#notifyRT{
-	background-color: white;
-	width: 22%;
-}
-
-#goodRT{
-	background-color: green;
-	width: 22%;
-}
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           To-Do Section           *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-#toDoAction {
-	width: 100%;
-	background-color: black;
-	/* border: 1px solid white; */
-	color: white;
-}
-
-#toDoAction table {
-	width: 100%;
-	color: white;
-}
-
-#toDoAction table > tfoot > tr{
-	font-weight: bold;
-	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
-}
-
-#toDoAction table > tfoot > tr{
-	font-weight: bold;
-	background-color: rgb(100, 100, 100);
-	border-bottom: 1px solid white;
-}
-
-/* Items themselves */
-.toDoItemTR{
-	width: 100%;
-	background: rgb(10, 10, 10);
-	vertical-align: center;
-	border-bottom: 1px solid white;
-}
-
-.toDoItemTR:hover{
-	background: #f8e71c;
-	
-}
-
-.toDoItemTR > td {
-	vertical-align: center;
-	padding-left: 5px;
-}
-.toDoItemTR > td > div {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	height: 26px;
-}
-
-.toDoOKerTD {
-	width: 5%;
-}
-
-.toDoOTaskTD {
-	width: 77%;
-}
-
-.toDoORemoverTD {
-	text-align: right;
-	width: 15%;
-}
-
-.doneTaskRow .toDoOTaskTD {
-	text-decoration: line-through;
-	color: gray;
-}
-
-.todayTaskRow .todayToDoItem  {
-	
-}
-
-/* Footer buttons and fields */
-#toDoNItemsLeft {
-	padding-left: 15px;
-	width: 28%;
-	text-align: left;
-}
-
-#clearCompletedToDo{
-	padding-right: 15px;
-	width: 28%;
-	text-align: right;
-}
-
-#clearCompletedToDo a{
-	text-decoration: none;
-	color: white;
-}
-
-.toDoScopes{
-	width: 14.5%;
-	border-left: 1px solid black;
-	border-right: 1px solid black;
-	text-align: center;
-}
-
-.toDoScopes a{
-	text-decoration: none;
-	color: white;
-	text-align: center;
-}
-/* Header and to-do adding buttons */
-#completeAllButton{
-	width: 5%;
-}
-
-#toDOAdd{
-	width: 95%;
-}
-
-#toDoAction .imgIcon{
-	width: 28px;
-	height: 28px;
-	vertical-align: middle;
-}
-
-/* debug */
-#toDoAction table, #toDoAction tr, #toDoAction td {
-	/* border: 1px solid blue; */
+.toDoTable{
 	border-collapse: collapse;
 }
 
-#pomoFocusRemainingTime{
-	font-size: 200%;
-}
-
-.noDecoration{
-	text-decoration: none;
-}
-
-.pomoFocusButtons {
-	height: 35px;
-	width: 35px;
-}
-
-.pomoFocusButtons > span{
-	font-size: 35px;
+.toDoTable th, .toDoTable td{
+	/* border: 1px solid white; */
+	border-collapse: collapse;
+	color: white;
+	font-family: 'Lato', sans-serif;
+	font-size: 20px;
 	text-align: center;
-	height: 35px;
-	width: 35px;
 }
 
-.grayScale {
-	-webkit-filter: grayscale(100%);
+#dailyListTable{
+	width: 50%;
 }
 
-.jqimessage > p{
-	color: rgb(68, 68, 68);
+#dailyListTable th{
+	padding: 5px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
-#overLay {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 100%;
+#newDailyTaskTD{
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	height: 55px;
+	padding-bottom: 15px;
+}
+
+#newDailyTaskTD > div {
 	height: 100%;
 }
 
-.nowToDoItem{
-	/* display: none; */
+#newDailyTaskInput{
+	flex-grow: 6;
+	/* padding-bottom:10px; */
+	height: 100%;
+	border: 0px;
+	font-size: 20px;
+	padding: 10px;
 }
 
-/********************************************/
-/********************************************/
+::-webkit-input-placeholder {	
+	font-size: 20px;
+	margin-left: 10px;
+}
 
-/*				Daily Tasks					*/
 
+#createNewDailyTaskButton{
+	border-radius: 5px;
+	background: yellow;
+	padding-left: 35px;
+	padding-right: 35px;
+	
+	border: 0px;
+	
+	margin-left: 13px;
+	
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+}
 
-/********************************************/
-/********************************************/
-
-#dailyListTable {
-	color: white;
+#dailyListDetails{
 	width: 100%;
-	border-collapse: collapse;
-}
-
-#dailyListTable td{
-	/* border: 1px solid white; */
-	padding-top: 5px;
-	padding-bottom: 5px;
-	border-collapse: collapse;
-	border-bottom: 1px solid white;
-	text-align: center;
-}
-
-#dailyListTable tbody > tr:hover{
-	background: #f8e71c;
-}
-
-#dailyListDetails {
-	color: white;
-	width: 100%;
-	border-collapse: collapse;
 }
 
 #dailyListDetails td{
+	padding-bottom: 10px;
+}
+
+#blackListTD{
+	width: 70%;
+}
+
+/* Integrations */
+/* Autozapper */
+#autoZapperContainerDiv > ol {
+	color: white;
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+	color: rgb(159, 159, 159);
+}
+
+.flexCenterV{
+	align-self: center;
+}
+
+.clickAction:hover{
+	cursor: pointer;
+}
+
+.helpSpan:hover{
+	cursor: help;
+}
+
+#autoZapperTable{
+	width: 60%;
+	border-collapse: collapse;
+}
+
+#autoZapperTable th{
+	width: 25%;
+	border-collapse: collapse;
+	border: 1px solid white;
+	color: white;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
+	font-size: 20px;
+}
+
+#autoZapperTable th:last-child{
+	visibility: hidden;
+	border-bottom: 0px;
+}
+
+
+#autoZapperTable td{
+	text-align: center;
+	width: 25%;
+	border: none;
+	color: white;
+	padding-top: 20px;
+}
+
+#autoZapperTable td > p > span {
+	width: 65px;
+	border-collapse: collapse;
 	/* border: 1px solid white; */
+	border:none;
+}
+
+#autoZapperTable td > p > span > input{
+	/* background: white; */
+	/* color: black; */
+	width: 100%;
+	/* padding-left: 10px; */
+}
+
+#autoZapperTable td > p > span > a{
+	border: none;
+}
+
+#autoZapperStop{
+	border-radius: 5px;
+	background: red;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	
+	text-decoration: none;
+	border: 0px;
+	
+	margin-left: 13px;
+	
+	color: white;
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+}
+
+#autoZapperStart{
+	border-radius: 5px;
+	background: yellow;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	
+	text-decoration: none;
+	border: 0px;
+	
+	margin-left: 13px;
+	
+	font-size: 20px;
+	font-family: 'Lato', sans-serif;
+}
+
+
+/* Rescue Time */
+#RTThresholdTable td {
+	padding-left: 10px;
+	padding-right: 10px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+#RTThresholdTable td > p > span {
+	width: 65px;
 	border-collapse: collapse;
-	/* border-bottom: 1px solid white; */
+	/* border: 1px solid white; */
+	border:none;
 }
 
-.categoryName {
-	font-weight: bold;
-	width: 30%;
-	text-align: right;
-	padding-right: 10px;
-}
-
-#dailyTaskNameInput {
+#RTThresholdTable td > p > span > input{
+	background: white;
+	color: black;
 	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
+	padding-left: 10px;
 }
 
-#dailyDescriptionInput{
+#RTThresholdTable td > p > span > a{
+	border: none;
+}
+
+#RTThresholdTable select{
 	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
+	height: 100%;
+	font-size: 15px;
 }
 
-#dailyTaskIdInput{
+#timeDaysDiv, #advancedOptionsContainerDiv{
 	width: 100%;
-	padding-right: 8px;
-	padding-left: 8px;
 }
 
-.tagcontainer > div.tagsinput{
+#advancedOptionsContainerDiv{
+	padding-bottom: 320px;
+}
+
+#daysOfTheWeekDiv{
+	width: 60%;
+	text-align: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#generalActiveHours{
+	width: 60%;
+}
+
+#generalActiveHours .ui-spinner{
+	width: 135px;
+}
+
+#generalActiveHours .timeSelectors{
 	width: 100%;
-	height: 87%;
 }
 
-#newDailyTaskInput{
-	width: 88%;
+.spinnerText{
+	margin-left: 60px;
 }
 
-div.buttonHolder{
-	width:106px;
+#timeFormat{
+	font-size: 15px;
+	padding: 10px;
 }
 
-#saveDaily {
-	vertical-align: bottom;
+/* Overlay */
+#bigOverlay{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	/* height: 4000px; */
+	height: 100%;
+	
+	display: flex;
+	
+	justify-content: center;
+	
+	background: black;
+	opacity: 0.8;
+	/* z-index: 9999999999999; */
 }
 
-#deleteDaily {
-	padding-top: 7px;
-	padding-bottom: 7px;
-	padding-left: 20px;
-	padding-right: 20px;
-	background: orange;
-	color: red;
-	width: 106px;
-	font-weight: bold;
-	border-radius: 25px;
-	text-decoration: none;
+#bigOverlayContents{
+	position: fixed;
+	width: 350px;
+	border: 2px solid yellow;
+	align-self: center;
+	background: red;
+	opacity: 1;
+	z-index: 999;
+	transform: translate(50%, 200px);
+	display: flex;
+	justify-content: center;
+	
 }
 
-*{
-    outline:none;
+#bigOverlayContents > * {
+	color: white;
+}
+#overlaySignIn {
+	
 }
