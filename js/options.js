@@ -677,12 +677,8 @@ function highlightActiveSection(curPos){
 	
 	var active = passed.reached - 1;
 	$("#indexDiv").children().removeClass("activeSection");
-	// $("#activeSession").html(sections[active]);	
 	$($("#indexDiv").children()[active]).addClass("activeSection")
 	
-	// console.log(visiblePos);
-	// console.log(tops);
-	// console.log(passed.passed);
 }
 
 function enableSelects(){
