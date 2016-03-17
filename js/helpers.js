@@ -70,8 +70,11 @@ settings.tabsControl.allWindows = localStorage.allWindows;
 // Stimuli intensity
 settings.stimuli.baseAddress = localStorage.baseAddress;
 settings.stimuli.zapIntensity = localStorage.zapIntensity;
+settings.stimuli.zapPosition = localStorage.zapPosition;
 settings.stimuli.vibrationIntensity = localStorage.vibrationIntensity;
-settings.stimuli.beepVolume = localStorage.beepVolume;
+settings.stimuli.vibrationPosition = localStorage.vibrationIntensity;
+settings.stimuli.beepIntensity = localStorage.beepIntensity;
+settings.stimuli.beepPosition = localStorage.beepPosition;
 
 settings.stimuli.zapNotify = localStorage.notifyZap;
 settings.stimuli.vibrationNotify = localStorage.notifyVibration;
@@ -811,8 +814,8 @@ function userInfo(accessToken) {
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
 				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
-				localStorage.setItem('userEmail', data.email)
-				localStorage.setItem('userName', data.name);
+				lsSet('userEmail', data.email);
+				lsSet('userName', data.name);
 				updateNameAndEmail(localStorage.userName, localStorage.userEmail);
 				return data.name;
 		})
