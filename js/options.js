@@ -50,13 +50,17 @@ function listenDailyListClick(){
 		expandDailyDetails(dailyId);
 	});
 	
-	$("#saveDaily").click(function(){
+	$("#saveDaily").click(function( event ){
+		event.preventDefault();
+		
 		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
 		gatherDailyInfo()
 		fillDailyList();
 	});
 	
-	$("#deleteDaily").click(function(){
+	$("#deleteDaily").click(function( event ){
+		event.preventDefault();
+		
 		var dailyId = parseInt($('#dailyTaskIdInput').val());
 		var daily = dailyFromId(dailyId);
 		var dailyList = lsGet('dailyList', 'parse');
@@ -487,7 +491,8 @@ function enableAutoZapper(){
 	});
 	frequency.val(5);
 	
-	$("#autoZapperStart").click(function(){
+	$("#autoZapperStart").click(function( event ){
+		event.preventDefault();
 		$.prompt("Starting <b>zaps on " + intensity.val() + "%</b>...<br />" +
 			"for <b>" + duration.val() + " minutes</b><br />"+
 			"zapping <b>every " + frequency.val() + " seconds</b>.", {
@@ -545,8 +550,9 @@ function enableAutoZapper(){
 		});
 	});
 	
-	$("#autoZapperStop").click(function(){
 		clearInterval(localStorage.trainingSession);
+	$("#autoZapperStop").click(function( event ){
+		event.preventDefault();
 		$.prompt("Traning session canceled", "Your training session is now over");
 		
 		toggleAutoZapperConf("configure");
@@ -686,7 +692,9 @@ function enableSelects(){
 }
 
 function enableButtons(){
-	$("#resetIntensity").click(function(){
+	$("#resetIntensity").click(function( event ){
+		event.preventDefault();
+		
 		var defValue = 60;
 
 		$( "#sliderBeep" ).slider( { "value": defValue });
