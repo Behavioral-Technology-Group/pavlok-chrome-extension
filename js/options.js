@@ -1048,6 +1048,11 @@ function moveToLink(clickedLink){
 
 // Create the vertical tabs
 function initialize() {
+	var timeFormat = lsGet('timeFormat');
+	if (timeFormat == "24") { culture = "de-DE" }
+	else if (timeFormat == "12") { culture = "en-EN"};
+	Globalize.culture( culture );
+	
 	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists
