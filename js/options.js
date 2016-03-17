@@ -575,9 +575,9 @@ function enableAutoZapper(){
 		});
 	});
 	
-		clearInterval(parseInt(localStorage.trainingSession));
 	$("#autoZapperStop").click(function( event ){
 		event.preventDefault();
+		clearInterval(parseInt(localStorage.trainingSession));
 		$.prompt("Traning session canceled", "Your training session is now over");
 		
 		toggleAutoZapperConf("configure");
