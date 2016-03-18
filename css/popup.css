@@ -63,6 +63,21 @@ hr {
 	width: 20%;
 	margin-right: 5%;
 }
+
+.onlyUnlogged{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+.onlyUnlogged > p {
+	align-self: center;
+	font-size: 20px;
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
+	
+}
+
 .headerImageButton{
 	height: 30px;
 	align-self: center;
