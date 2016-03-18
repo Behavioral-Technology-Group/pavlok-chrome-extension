@@ -291,6 +291,12 @@ div.auth{
 	height: 50px;
 }
 
+input#blackList_tag, input#whiteList_tag{
+	color: rgb(102, 102, 102);
+	width: auto;
+	font-size: 16px;
+	font-family: 'Lato', sans-serif;
+}
 
 .noDisplay {
 	display: none;

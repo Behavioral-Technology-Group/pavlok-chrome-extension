@@ -92,19 +92,23 @@ function toggleTabs(){
 }
 
 function enableBlackList(){
-	$('#blackList')[0].value = localStorage["blackList"];
+	var blackListContents = lsGet('blackList');
 	$('#blackList').tagsInput({
 		'onChange' : saveBlackList,
 		'defaultText':'Add site',
 		'removeWithBackspace' : true
-	});
+	})
+	.importTags(blackListContents);
+	removeInlineStyle("#blackList_tag");
 	
-	$('#whiteList')[0].value = localStorage["whiteList"];
+	var whiteListContents = lsGet('whiteList');
 	$('#whiteList').tagsInput({
 		'onChange' : saveWhiteList,
 		'defaultText':'Add site',
 		'removeWithBackspace' : true
-	});
+	})
+	.importTags(whiteListContents);
+	removeInlineStyle("#whiteList_tag");
 
 }
 
