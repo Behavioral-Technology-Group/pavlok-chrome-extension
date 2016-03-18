@@ -106,6 +106,10 @@ function restoreDailyList(container){
 		var donePomos = parseInt(daily.donePomos) || 0;
 		var remainingPomos = maxPomos - donePomos;
 		
+		for (p = 0; p < donePomos; p++){
+			pomoFocuses = pomoFocuses + '<input disabled type="image" src="images/pomodoro(completed).png" alt="Done!" class="doneDaily imgIcon" title="<p>Well done!</p>"/>'
+		}
+		
 		for (p = 0; p < remainingPomos; p++){
 			pomoFocuses = pomoFocuses + '<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
 		}

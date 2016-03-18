@@ -540,7 +540,9 @@ function showOptions(accessToken){
 	}
 	else { 
 		$(".onlyLogged").css('visibility', 'hidden'); 
+		$("#unloggedMessage").hide();
 		$(".onlyUnlogged").css('display', 'block'); 
+		$("#unloggedMessage").show();
 	}
 }
 

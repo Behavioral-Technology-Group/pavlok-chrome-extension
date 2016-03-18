@@ -693,7 +693,37 @@ div.tagcontainer{
 	padding: 10px;
 }
 
-/* Overlay */
+/* --------------------- */
+/*    FOOTER SECTION     */
+/* --------------------- */
+.logoBlock{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	height: 130px;
+	width: 170px;
+	border: 1 px solid gray;
+	border-radius: 5px;
+}
+
+.logoBlock > div{
+	justify-content: center;
+	display: flex;
+	border: 1px solid red;
+	
+}
+
+
+.footerLogo{
+	height: 90px;
+	width: 90px;
+	
+}
+
+/* --------------------- */
+/*        OVERLAY        */
+/* --------------------- */
 #bigOverlay{
 	position: fixed;
 	top: 0;
@@ -729,5 +759,23 @@ div.tagcontainer{
 	color: white;
 }
 #overlaySignIn {
+	
+}
+
+/* --------------------- */
+/*        OVERLAY        */
+/* --------------------- */
+
+.onlyUnlogged{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+.onlyUnlogged > p {
+	align-self: center;
+	font-size: 20px;
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
 	
 }

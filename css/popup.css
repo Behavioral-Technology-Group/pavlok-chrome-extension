@@ -73,6 +73,7 @@ hr {
 	display: flex;
 	justify-content: flex-start;
 	cursor: pointer;
+	height: 40px;
 }
 
 .pv-tab-header:hover{
@@ -156,7 +157,7 @@ body, p, tab, span{
 	width: 120%;
 	margin-left:-30px;
 	margin-bottom:-30px;
-	margin-top: 20px;
+	margin-top: 8px;
 	background: #f8e71c;
 }
 
@@ -547,6 +548,13 @@ input#blackList_tag, input#whiteList_tag{
 	vertical-align: middle;
 	width: 28px;
 	height: 28px;
+}
+
+.doneDaily{
+	width: 21px;
+	height: 21px;
+	padding: 3px;
+	vertical-align: middle;
 }
 
 .dailyItemTR > td > div {

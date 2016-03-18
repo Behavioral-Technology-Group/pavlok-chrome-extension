@@ -202,6 +202,12 @@ $( document ).ready(function() {
 	enableBlackList();
 	enableStimuliControls();
 	
+	if (isValid(localStorage.accessToken)){
+		$("#signOut").attr('title', 'Sign Out');
+	} else { 
+		$("#signOut").attr('title', 'Sign In');
+	}
+	
 	$("#signOut").click(function(){
 		if (isValid(localStorage.accessToken)){
 			signOut();
