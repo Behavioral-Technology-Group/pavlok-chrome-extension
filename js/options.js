@@ -1091,8 +1091,14 @@ function toggleOverlay(toState){
 // Create the vertical tabs
 function initialize() {
 	var timeFormat = lsGet('timeFormat');
-	if (timeFormat == "24") { culture = "de-DE" }
-	else if (timeFormat == "12") { culture = "en-EN"};
+	if (timeFormat == "24") { culture = "de-DE"; }
+	else if (timeFormat == "12") { culture = "en-EN"}
+	else { 
+		culture = "de-DE";
+		localStorage.timeFormat = "24";
+		$("#timeFormat").val("24");
+		console.log("timeFormat is broken: " + timeFormat);
+	};
 	Globalize.culture( culture );
 	
 	enableSignInOut()

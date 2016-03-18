@@ -251,7 +251,8 @@ function convert12To24(time){
 	hour = parseInt(time.split(":")[0]);
 	minute = time.split(":")[1].split(" ")[0];
 	code = time.split(":")[1].split(" ")[1];
-
+	
+	if (hour == 12 && code == "AM") { hour = 0;}
 	if (code == "PM") { hour = hour + 12;}
 	
 	return hour + ":" + minute
