@@ -1231,9 +1231,7 @@ $( document ).ready(function() {
 		var curPos = $(this).scrollTop();
 
 		var fixedHeaderHeight = $(".fixedHeader").height();
-		// var fixedHeaderPadding = $("#fixedHeader").css("padding").split("p")[0];
-		// fixedHeaderPadding = parseInt(fixedHeaderPadding);
-		var fixedHeaderSize = fixedHeaderHeight; //+ fixedHeaderPadding;
+		var fixedHeaderSize = fixedHeaderHeight;
 
 		highlightActiveSection(curPos, fixedHeaderSize); 
 		adjustSliders(curPos, fixedHeaderSize);
