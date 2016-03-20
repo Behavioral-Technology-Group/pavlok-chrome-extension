@@ -111,7 +111,8 @@ function restoreDailyList(container){
 		}
 		
 		for (p = 0; p < remainingPomos; p++){
-			pomoFocuses = pomoFocuses + '<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
+			// pomoFocuses = pomoFocuses + '<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
+			pomoFocuses = pomoFocuses + '<input type="image" src="images/pomodoro(todo)_(Custom).png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
 		}
 		
 		var newLine = '' +

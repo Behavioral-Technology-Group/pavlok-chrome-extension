@@ -14,33 +14,33 @@ usage = usage + server;
 
 // Greetings popup		
 $( document ).ready(function(){
-	var updateMessage = '' +
-			'<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
-			'<p>If you have any trouble getting the stimulus (zaps, vibrations, beeps) to your Pavlok, check on the AppStore (iOS) or PlayStore (Android) if you already have it up to date!</p>' +
-			"<p>Best,</p>" + 
-			"<p>Pavlok Team</p>" + 
-		'';
-	// if (localStorage.showAgain == 'false') { return }
-	if (lsGet('showAgain') == 'false' || lsGet('showAgain') == false) { return }
-	else {
-		$.prompt(updateMessage, {
-			title: "Update your App to use the extension with your Pavlok",
-			defaultButton: 1,
-			buttons: { "Ok, don't tell me again": true, "Remind me again": false },
+	// var updateMessage = '' +
+			// '<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
+			// '<p>If you have any trouble getting the stimulus (zaps, vibrations, beeps) to your Pavlok, check on the AppStore (iOS) or PlayStore (Android) if you already have it up to date!</p>' +
+			// "<p>Best,</p>" + 
+			// "<p>Pavlok Team</p>" + 
+		// '';
+	// // if (localStorage.showAgain == 'false') { return }
+	// if (lsGet('showAgain') == 'false' || lsGet('showAgain') == false) { return }
+	// else {
+		// $.prompt(updateMessage, {
+			// title: "Update your App to use the extension with your Pavlok",
+			// defaultButton: 1,
+			// buttons: { "Ok, don't tell me again": true, "Remind me again": false },
 
-			submit: function(e,v,m,f){
-				console.log("result was " + v);
-				var result = v;
-				if (result == true){
-					// localStorage.showAgain = 'false';
-					lsSet('showAgain', 'false');
-				}
-				else{
-					// do nothing
-				}
-			}
-		});
-	}
+			// submit: function(e,v,m,f){
+				// console.log("result was " + v);
+				// var result = v;
+				// if (result == true){
+					// // localStorage.showAgain = 'false';
+					// lsSet('showAgain', 'false');
+				// }
+				// else{
+					// // do nothing
+				// }
+			// }
+		// });
+	// }
 });
 
 /* Future universal settings object
