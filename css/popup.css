@@ -302,17 +302,41 @@ div.auth{
 	visibility: visible;
 }
 
-.tagContainer {
-	width: 200px;
-	height: 50px;
+.tagcontainer {
+	background: red;
+	width: 340px;
+	/* width: 100%; */
+	height: 100px;
+	margin-bottom: 30px;
+	margin-top: 5px;
 }
 
-input#blackList_tag, input#whiteList_tag{
+#blackList_addTag{
+	width: 200px;
+}
+
+
+#whiteList_addTag{
+	width: 95%;
+}
+
+
+#blackList_addTag > input, #whiteList_addTag > input{
+	width: 100%;
+	max-width: 100%;
 	color: rgb(102, 102, 102);
-	width: auto;
-	font-size: 16px;
+	font-size: 14px;
 	font-family: 'Lato', sans-serif;
 }
+
+
+
+
+/* input#blackList_tag, input#whiteList_tag{
+	color: rgb(102, 102, 102);
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+} */
 
 .noDisplay {
 	display: none;
@@ -579,4 +603,23 @@ input#blackList_tag, input#whiteList_tag{
 
 #signOut{
 	transform: translate(0px, -2px);
+}
+
+#actionSection > tab > div > h2 > sup > span.helpSpan{
+	font-size: 10px;
+	font-weight: bold;
+	color: rgb(220, 220, 220);
+	
+	text-align: center;
+	vertical-align: super;
+
+	border: 1px solid black;
+	border-color: rgb(159, 159, 159);
+	border-collapse: separate;
+	border-radius: 25px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+.helpSpan:hover{
+	cursor: help;
 }

@@ -181,7 +181,6 @@ hr.bigger {
 .helpSpan{
 	font-size: 10px;
 	font-weight: bold;
-	/* color: rgb(159, 159, 159); */
 	color: rgb(220, 220, 220);
 	
 	text-align: center;
@@ -193,6 +192,9 @@ hr.bigger {
 	border-radius: 25px;
 	padding-left: 4px;
 	padding-right: 4px;
+}
+.helpSpan:hover{
+	cursor: help;
 }
 
 /* Default element presentation */
@@ -342,6 +344,23 @@ hr {
 div.tagcontainer{
 	width: 100%;
 	height: 200px;
+}
+
+
+#blackList_addTag{
+	width: 330px
+}
+
+#blackList_addTag > input{
+	width: 100%;
+}
+
+#whiteList_addTag{
+	width: 700px
+}
+
+#whiteList_addTag > input{
+	width: 100%;
 }
 
 /* Fix the x positioning on the jquery.tagsinput.css, line 29 */
@@ -535,9 +554,7 @@ div.tagcontainer{
 	cursor: pointer;
 }
 
-.helpSpan:hover{
-	cursor: help;
-}
+
 
 #autoZapperTable{
 	width: 60%;

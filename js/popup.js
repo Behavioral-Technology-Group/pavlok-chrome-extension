@@ -95,19 +95,20 @@ function enableBlackList(){
 	var blackListContents = lsGet('blackList');
 	$('#blackList').tagsInput({
 		'onChange' : saveBlackList,
-		'defaultText':'Add site',
+		'defaultText':'Add site... ie: facebook.com',
 		'removeWithBackspace' : true
 	})
 	.importTags(blackListContents);
-	removeInlineStyle("#blackList_tag");
+	removeInlineStyle("#blackList_tagsinput");
 	
 	var whiteListContents = lsGet('whiteList');
 	$('#whiteList').tagsInput({
 		'onChange' : saveWhiteList,
-		'defaultText':'Add site',
+		'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	})
 	.importTags(whiteListContents);
+	removeInlineStyle("#whiteList_tagsinput");
 	removeInlineStyle("#whiteList_tag");
 
 }

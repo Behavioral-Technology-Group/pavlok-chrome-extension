@@ -149,7 +149,7 @@ function enableBlackDaily(){
 	toggleBlackDaily();
 	$('#blackListDaily')[0].value = ' ';
 	$('#blackListDaily').tagsInput({
-		'defaultText':'Add site',
+		'defaultText':'Add site... ie: facebook.com',
 		'removeWithBackspace' : true
 	});
 	$('#blackListDaily_tagsinput').attr('style', '');
@@ -157,7 +157,7 @@ function enableBlackDaily(){
 	
 	$('#whiteListDaily')[0].value = '';
 	$('#whiteListDaily').tagsInput({
-		'defaultText':'Add site',
+		'defaultText':'https://www.facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
@@ -1111,7 +1111,7 @@ function initialize() {
 		$('#blackList')[0].value = localStorage["blackList"];
 		$('#blackList').tagsInput({
 			'onChange' : saveBlackList,
-			'defaultText':'Add site',
+			'defaultText':'Add site... ie: facebook.com',
 			'removeWithBackspace' : true
 		});
 	
@@ -1122,7 +1122,7 @@ function initialize() {
 		$('#whiteList')[0].value = localStorage["whiteList"];
 		$('#whiteList').tagsInput({
 			'onChange' : saveWhiteList,
-			'defaultText':'Add site',
+			'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
 			'removeWithBackspace' : true
 		});
 	}
