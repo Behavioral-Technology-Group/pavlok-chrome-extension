@@ -11,6 +11,7 @@
 	
 	<script src="js/external/underscore.js" type="text/javascript"></script>
 	<script src="js/external/jquery.js"></script>
+	<script src="js/external/notify.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/external/globalize.js"></script>
 	<script src="js/external/globalize.culture.de-DE.js"></script>
@@ -79,7 +80,7 @@
 								</h2>
 								<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
 								<div class="tagcontainer">
-									<input name="blackList" id="blackList" value=""/>
+									<input name="blackList" id="blackList" value="" class="pavSetting"/>
 								</div>
 							</div>
 								
@@ -95,7 +96,7 @@
 									
 								<p>Please tell your exceptions for black sites, separated by commas. </p>
 								<div class="tagcontainer">
-									<input name="whiteList" id="whiteList" value="">
+									<input name="whiteList" id="whiteList" value="" class="pavSetting">
 								</div>
 							</div>
 						</div>
@@ -121,7 +122,7 @@
 								<p>Set the max amount of tabs allowed open at once</p>
 								<hr>
 								<span id="label-text">Set tab limit:</span>
-								<select id="maxTabsSelect">
+								<select id="maxTabsSelect" class="pavSetting">
 									<option value="no">no</option>
 									<option value="1">1</option>
 									<option value="2">2</option>
@@ -175,9 +176,9 @@
 											<span class="bigSub">100%</span>
 										</span>
 									</div>
-									<div class="stimuliControlSlider" id="sliderBeep"></div>
+									<div class="stimuliControlSlider" id="sliderBeep" class="pavSetting"></div>
 								</div>
-								<!-- <span id="beepIntensity"  class="stimuliIntensityDisplay"></span> -->
+								<!-- <span id="beepIntensity"  class="stimuliIntensityDisplay noDisplay pavSetting"></span> -->
 							</div>
 							
 							
@@ -203,7 +204,7 @@
 											<span class="bigSub">100%</span>
 										</span>
 									</div>
-									<div class="stimuliControlSlider" id="sliderVibration"></div>
+									<div class="stimuliControlSlider" id="sliderVibration" class="pavSetting"></div>
 								</div>
 								<span id="vibrationIntensity"  class="stimuliIntensityDisplay"></span>
 							</div>
@@ -229,7 +230,7 @@
 											<span class="bigSub">100%</span>
 										</span>
 									</div>
-									<div class="stimuliControlSlider" id="sliderZap"></div>
+									<div class="stimuliControlSlider" id="sliderZap" class="pavSetting"></div>
 								</div>
 								<span id="zapIntensity"  class="stimuliIntensityDisplay"></span>
 							</div>
@@ -250,7 +251,7 @@
 									<p>Dailies are actions that you want to repeat, such as creating habits. They can get you organized with things you need to do on a recurring basis. Also, we add a layer of Pomodoro here, so that you can skyrocket your productivity and habits formation</p>
 									<hr>
 									<div id="dailiesListDiv">
-										<table id="dailyListTable" class="toDoTable">
+										<table id="dailyListTable" class="toDoTable pavSetting">
 											<thead>
 												<tr>
 													<td colspan="3" id="newDailyTaskTD">
@@ -493,7 +494,7 @@
 													<p>Integration is:</p>
 												</td>
 												<td>
-													<select id="RTOnOffSelect">
+													<select id="RTOnOffSelect" class="pavSetting">
 														<option value="On">On</option>
 														<option value="Off">Off</option>
 													</select>
@@ -505,7 +506,7 @@
 												</td>
 												<td>
 													<p>
-														<select id="RTFrequencySelect">
+														<select id="RTFrequencySelect" class="pavSetting">
 															<option value="3">3</option>
 															<option value="5">5</option>
 															<option value="10">10</option>
@@ -538,9 +539,9 @@
 												</tr>
 												<tr id="RTPosTR">
 													<td><p>Positive</p></td>
-													<td><p>Above <input id="RTPosLimit" class="RTThreshold"/></p></td>
+													<td><p>Above <input id="RTPosLimit" class="RTThreshold pavSetting"/></p></td>
 													<td>
-														<select id="RTPosSti">
+														<select id="RTPosSti" class="pavSetting">
 															<option value="shock">Zap</option>
 															<option value="vibration">Vibrate</option>
 															<option value="beep">Beep</option>
@@ -549,9 +550,9 @@
 												</tr>
 												<tr id="RTWarnTR">
 													<td><p>Warning</p></td>
-													<td><p> Below <input id="RTWarnLimit" class="RTThreshold"/></p></td>
+													<td><p> Below <input id="RTWarnLimit" class="RTThreshold pavSetting"/></p></td>
 													<td>
-														<select id="RTWarnSti">
+														<select id="RTWarnSti" class="pavSetting">
 															<option value="shock">Zap</option>
 															<option value="vibration">Vibrate</option>
 															<option value="beep">Beep</option>
@@ -560,9 +561,9 @@
 												</tr>
 												<tr id="RTNegTR">
 													<td><p>Negative</p></td>
-													<td><p> Below <input id="RTNegLimit" class="RTThreshold"/></p></td>
+													<td><p> Below <input id="RTNegLimit" class="RTThreshold pavSetting"/></p></td>
 													<td>
-														<select id="RTNegSti">
+														<select id="RTNegSti" class="pavSetting">
 															<option value="shock">Zap</option>
 															<option value="vibration">Vibrate</option>
 															<option value="beep">Beep</option>
@@ -606,7 +607,6 @@
 						<div id="advancedOptionsContainerDiv"> <!-- Advanced Options -->
 							<h2 class="sectionTitle">Advanced Options</h2>
 							<div id="stimuliNotificationsDiv" class="noDisplay">
-								<h2 class="sectionTitle">Advanced Options</h2>
 								<div id="reallySpecificControls">
 								<h2>Stimuli Notifications 
 								<sup><span class="helpSpan" title='
@@ -629,14 +629,14 @@
 									<tr>
 										<td>
 											<p>
-												<input type="checkbox" id="notifyZap">Zap
+												<input type="checkbox" id="notifyZap" class="pavSetting">Zap
 											</p>
 										</td>
 										<td>
-											<p><input type="checkbox" id="notifyVibration"><label name="notifyZap">Vibration</label></p>
+											<p><input type="checkbox" id="notifyVibration" class="pavSetting"><label name="notifyZap">Vibration</label></p>
 										</td>
 										<td>
-											<p><input type="checkbox" id="notifyBeep"><label name="notifyZap">Beep</label></p>
+											<p><input type="checkbox" id="notifyBeep" class="pavSetting"><label name="notifyZap">Beep</label></p>
 										</td>
 									</tr>
 								</table>
@@ -646,7 +646,7 @@
 							<div id="zapFrequencyBlackListDiv">
 								<h2>Black List zapping countdown</h2>
 								<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
-								<select id="blackListTimeWindow">
+								<select id="blackListTimeWindow" class="pavSetting">
 									<option value="3">3</option>
 									<option value="5">5</option>
 									<option value="10">10</option>
@@ -657,7 +657,7 @@
 							<hr>
 							<div id="tabNumbersAdvancedDiv">
 								<h2>Tab Numbers extras</h2>
-								<input type="checkbox" name="zapOnClose" id="zapOnClose" />Zap when closing
+								<input type="checkbox" name="zapOnClose" id="zapOnClose"  class="pavSetting"/>Zap when closing
 								
 								<sup><span class="helpSpan" title='
 									<p>For those really inclined to stop opening to many habits!</p>
@@ -667,7 +667,7 @@
 											<b>?</b>
 										</span></sup>
 								<p>Count tabs on 
-								<select id="allTabsCountSelect">
+								<select id="allTabsCountSelect" class="pavSetting">
 									<option value="allWindows">ALL windows</option>
 									<option value="activeWindow">CURRENT Window</option>
 								</select>
@@ -702,48 +702,48 @@
 								<p>Select days and hours for Pavlok to help you focus</p>
 								<div id="daysOfTheWeekDiv" class="60percent flexContainer space-between">
 									<div>
-										<input type="checkbox" id="sundayActive" class="activeDay"> 
+										<input type="checkbox" id="sundayActive" class="activeDay pavSetting"> 
 										<span><label for="sundayActive">Sun</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="mondayActive" class="activeDay"> 
+										<input type="checkbox" id="mondayActive" class="activeDay pavSetting"> 
 										<span><label for="mondayActive">Mon</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="tuesdayActive" class="activeDay"> 
+										<input type="checkbox" id="tuesdayActive" class="activeDay pavSetting"> 
 										<span><label for="tuesdayActive">Tues</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="wednesdayActive" class="activeDay"> 
+										<input type="checkbox" id="wednesdayActive" class="activeDay pavSetting"> 
 										<span><label for="wednesdayActive">Wed</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="thursdayActive" class="activeDay"> 
+										<input type="checkbox" id="thursdayActive" class="activeDay pavSetting"> 
 										<span><label for="thursdayActive">Thu</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="fridayActive" class="activeDay"> 
+										<input type="checkbox" id="fridayActive" class="activeDay pavSetting"> 
 										<span><label for="fridayActive">Fri</label></span>
 									</div>
 									<div>
-										<input type="checkbox" id="saturdayActive" class="activeDay"> 
+										<input type="checkbox" id="saturdayActive" class="activeDay pavSetting"> 
 										<span><label for="saturdayActive">Sat</label></span>
 									</div>
 								</div>
 								
 								<div id="generalActiveHours" class="flexContainer space-between">
 									<div class="flexItem">
-										<select id="timeFormat">
+										<select id="timeFormat" class="pavSetting">
 											<option value="12">AM/PM</option>
 											<option value="24">24H</option>
 										</select>
 									</div>
 									<div class="flexItem" >
 										<span class="spinnerText">Start 
-										<input class="timeSelectors" id="generalActiveTimeStart"/>
+										<input class="timeSelectors pavSetting" id="generalActiveTimeStart"/>
 									</div>
 									<div class="flexItem" >
-										<span>End <input class="timeSelectors" id="generalActiveTimeEnd"/></span>
+										<span>End <input class="timeSelectors pavSetting" id="generalActiveTimeEnd"/></span>
 									</div>
 								</div>
 							</div>

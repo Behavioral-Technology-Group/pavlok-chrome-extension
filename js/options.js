@@ -1,6 +1,7 @@
 ﻿/* To-do 
 */
 
+var notTimeout;
 var focusCompleteMsg = "Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
 var defInt = '';			// Use default intensity for stimuli
@@ -278,7 +279,7 @@ function updateRTLimits(){
 	localStorage.RTPosLimit = PosValue;
 	localStorage.RTWarnLimit = WarnValue;
 	localStorage.RTNegLimit = NegValue;
-	
+	confirmUpdate();
 	return
 }
 
@@ -295,6 +296,7 @@ function enableRescueTime(){
 	
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
+		confirmUpdate();
 		localStorage.RTOnOffSelect = RTOnOffSelect;
 		if (RTOnOffSelect == "On") { 
 			updateProductivity(); 
@@ -305,7 +307,8 @@ function enableRescueTime(){
 	});
 	
 	$( "#RTFrequencySelect" ).change(function(){
-		localStorage.RTFrequency = $(this).val()
+		localStorage.RTFrequency = $(this).val();
+		confirmUpdate();
 	});
 	
 	$("#removeRTAPIKey").click(function() {
@@ -328,6 +331,7 @@ function enableRescueTime(){
 					$("#RTOnOffSelect").val('Off');
 					lsSet('RTOnOffSelect', 'Off');
 					changeRTVisibility();
+					confirmUpdate();
 				}	
 			}
 		});
@@ -381,7 +385,7 @@ function enableRescueTime(){
 		localStorage.RTPosLimit = PosValue;
 		localStorage.RTWarnLimit = WarnValue;
 		localStorage.RTNegLimit = NegValue;
-		
+		confirmUpdate();
 	});
 	
 	// Restore values
@@ -440,10 +444,16 @@ function enableTimers(){
  
 	$(function() {
 		$( "#generalActiveTimeStart" ).timespinner({
-			change: function( event, ui ) { localStorage.generalActiveTimeStart = $(this).val();},
+			change: function( event, ui ) { 
+				localStorage.generalActiveTimeStart = $(this).val();
+				confirmUpdate();
+			},
 		});
 		$( "#generalActiveTimeEnd" ).timespinner({
-			change: function( event, ui ) { localStorage.generalActiveTimeEnd = $(this).val();}
+			change: function( event, ui ) { 
+				localStorage.generalActiveTimeEnd = $(this).val();
+				confirmUpdate();
+			}
 		});
 	 
 		$( "#timeFormat" ).change(function() {
@@ -496,7 +506,8 @@ function enableAutoZapper(){
 		min: 10,
 		max: 100,
 		page: 10,
-		step: 10
+		step: 10,
+		change: confirmUpdate
 	});
 	intensity.val(60);
 
@@ -504,7 +515,8 @@ function enableAutoZapper(){
 		min: 1,
 		max: 60,
 		page: 1,
-		step: 1
+		step: 1,
+		change: confirmUpdate
 	});
 	duration.val(5);
 
@@ -512,7 +524,8 @@ function enableAutoZapper(){
 		min: 2,
 		max: 30,
 		page: 1,
-		step: 1
+		step: 1,
+		change: confirmUpdate
 	});
 	frequency.val(5);
 	
@@ -780,6 +793,7 @@ function enableSliders(){
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				saveOptions();
 				$("#beepIntensity").html(beepPos + "%");
+				confirmUpdate();
 			}
 		});
 		
@@ -794,6 +808,8 @@ function enableSliders(){
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				saveOptions();
 				$("#zapIntensity").html(zapPos + "%");
+				confirmUpdate();
+
 			}
 		});
 		
@@ -810,6 +826,8 @@ function enableSliders(){
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				saveOptions();
 				$("#vibrationIntensity").html(vibPos + "%");
+				confirmUpdate();
+
 			}
 			
 		});
@@ -856,7 +874,7 @@ function enableCheckboxes(){
 
 function enableInputs(){	
 	// Advanced day to day
-		$("#sundayActiveTimeStart").change( function() {	
+	$("#sundayActiveTimeStart").change( function() {
 		lsSet('sundayActiveTimeStart', $(this).val() );
 	});	
 		
@@ -939,6 +957,8 @@ function saveOptions() {
 	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
 	vibrationIntensity = percentToRaw(vibrationPosition);
 	lsSet('vibrationIntensity', vibrationIntensity);
+	
+	confirmUpdate();
 }
 
 function restoreOptions() {
@@ -986,6 +1006,7 @@ function restoreOptions() {
 	$("#allTabsCountSelect").val(localStorage.tabCountAll);
 	$("#allTabsCountSelect").change(function(){
 		localStorage.tabCountAll = $(this).val();
+		confirmUpdate();
 	});
 		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
@@ -1112,7 +1133,7 @@ function initialize() {
 		$('#blackList').tagsInput({
 			'onChange' : saveBlackList,
 			'defaultText':'Add site... ie: facebook.com',
-			'removeWithBackspace' : true
+			'removeWithBackspace' : true,
 		});
 	
 	}
@@ -1193,6 +1214,10 @@ function initialize() {
 	var serverKind = localStorage.baseAddress;
 	serverKind = serverKind.split("-")[1].split(".")[0];
 	$("#server").text(serverKind);
+	
+	$(".notifyjs-corner").bind("DOMSubtreeModified",function(){
+	  alert('changed');
+	});
 }
 
 initialize();
@@ -1236,5 +1261,9 @@ $( document ).ready(function() {
 		highlightActiveSection(curPos, fixedHeaderSize); 
 		adjustSliders(curPos, fixedHeaderSize);
 		adjustSpinners(curPos, fixedHeaderSize);
+	});
+	
+	$("body").on('change', '.pavSetting', function(){ 
+		confirmUpdate();
 	});
 });

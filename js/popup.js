@@ -1,6 +1,9 @@
 /* To-do
 
+
 */
+
+var notTimeout;
 var pomoFocusP = {};
 var pomoFocusO;
 var pomoFocusB;
@@ -130,6 +133,7 @@ function enableStimuliControls() {
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				$("#beepIntensity").html(beepPos + "%");
+				confirmUpdate();
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -144,6 +148,7 @@ function enableStimuliControls() {
 				lsSet('zapPosition', zapPos);
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				$("#zapIntensity").html(zapPos + "%");
+				confirmUpdate();
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -160,6 +165,7 @@ function enableStimuliControls() {
 				lsSet('vibrationPosition', vibPos);
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				$("#vibrationIntensity").html(vibPos + "%");
+				confirmUpdate();
 			}
 			
 		});
@@ -222,14 +228,17 @@ $( document ).ready(function() {
 	$("#maxTabsSelect").change(function(){
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
+		confirmUpdate();
 	});
 	
 	$("#instaZap").change(function(){
 		lsSet('instaZap', $(this).prop( "checked" ));
+		confirmUpdate();
 	});
 	
 	$("#lockZap").change(function(){
 		lsSet('lockZap', $(this).prop( "checked" ));
+		confirmUpdate();
 		
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			curPAVTab = tabs[0];

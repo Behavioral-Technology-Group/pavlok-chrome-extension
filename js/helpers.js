@@ -399,6 +399,12 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
+function confirmUpdate(){
+	notifyUser('Settings updated', '', 'updatedSettings');
+	clearTimeout(notTimeout);
+	notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+}
+
 // Tour
 function openOptions(){
 	window.open('options.html','_blank');
@@ -653,10 +659,12 @@ function updateNotification(title, message, notID){
 
 function saveBlackList(){
 	lsSet('blackList', $("#blackList")[0].value);
+	confirmUpdate();
 }
 
 function saveWhiteList(){
 	lsSet('whiteList', $("#whiteList")[0].value);
+	confirmUpdate();
 }
 
 
