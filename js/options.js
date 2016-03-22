@@ -13,6 +13,131 @@ var toDoChecker;
 
 /* sandbox */
 
+function visibleDaily(targetRow, detailRow){
+	if ($(targetRow).hasClass("activeDailyTR")){
+		$(targetRow).removeClass("activeDailyTR");
+		$(".taskDetailTR").hide(100, 
+			function(){$(".taskDetailTR").remove()}); 
+	}
+	else{
+		// Restore actual active to regular before opening the new one
+		$(".dailyListTR").removeClass("activeDailyTR");
+		
+		$(targetRow).addClass("activeDailyTR");
+		
+		// Manage presentation of new task details
+		$(detailRow).css('background', 'rgb(80, 80, 80)');
+		$(detailRow).show(400);
+		$(detailRow).effect("highlight", {color: 'white'}, 400);
+	}
+	
+}
+
+function createDetailTR(targetRow){
+	$(".taskDetailTR").hide(200).remove();
+	
+	// Insert a new TR for details of clicked task
+	$(targetRow).after('<tr class="taskDetailTR noDisplay"><td colspan="3">Test</td></tr')[0];
+	var detailRow = $(".taskDetailTR");
+	var clickedId = targetRow.attr("id");
+	clickedId = clickedId.split('y')[1];
+	
+	visibleDaily(targetRow, detailRow);
+	
+	
+	// Fill with boiler plate
+	fillDetailTR(detailRow, targetRow);
+	// Fill with actual info
+	expandDailyDetails(clickedId);
+	
+}
+
+function fillDetailTR(detailRow, targetRow) {
+	$(".taskDetailTR > td").html(
+		'<table id="dailyListDetails">' + 
+		'<tbody>' + 
+			'<tr class="noDisplay">' + 
+				'<td class="categoryName">Daily ID</td>' + 
+				'<td id="dailyTaskIdTD">' + 
+					'<input type="text" id="dailyTaskIdInput" disabled/>' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr>' + 
+				'<td class="categoryName">Task Name</td>' + 
+				'<td id="dailyTaskTD">' + 
+					'<input type="text" id="dailyTaskNameInput" />' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr>' + 
+				'<td class="categoryName">Pomodoros per day</td>' + 
+				'<td id="pomodorosPerDayTD">' + 
+					'<select id="pomosPerDaySelect">' + 
+						'<option value="1">1</option>' + 
+						'<option value="2">2</option>' + 
+						'<option value="3">3</option>' + 
+						'<option value="4">4</option>' + 
+						'<option value="5">5</option>' + 
+						'<option value="6">6</option>' + 
+					'</select>' + 
+					'lasting for ' + 
+					'<select id="dailyPomoDuration">' + 
+						'<option value="2">2</option>' + 
+						'<option value="5">5</option>' + 
+						'<option value="10">10</option>' + 
+						'<option value="15">15</option>' + 
+						'<option selected value="25">25</option>' + 
+						'<option value="35">35</option>' + 
+					'</select>' + 
+					'minutes' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr>' + 
+				'<td class="categoryName">Page controls</td>' + 
+				'<td id="specialListsTD">' + 
+					'<input id="specialListsInput" type="checkbox" />Use special black and whitelists' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr class="specialListDisplay">' + 
+				'<td class="categoryName">BlackList</td>' + 
+				'<td class="" id="blackListTD">' + 
+					'<div class="tagcontainer">' + 
+						'<input id="blackListDaily" value="">' + 
+					'</div>' + 
+				'</td>' +  
+		'</tr>' + 
+			'<tr class="specialListDisplay">' + 
+				'<td class="categoryName">WhiteList</td>' + 
+				'<td id="whiteListTD">' + 
+					'<div class="tagcontainer">' + 
+						'<input id="whiteListDaily" value="">' + 
+					'</div>' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr class="noDisplay">' + 
+				'<td class="categoryName noDisplay">Hyper Focus</td>' + 
+				'<td id="hyperFocusTD">' + 
+				'<div id="dailyHiperOptions">' + 
+					'<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>' + 
+					'<span><input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>' + 
+				'</div>' + 
+				'</td>' +  
+			'</tr>' + 
+			'<tr class="noDisplay">' + 
+				'<td class="categoryName ">Description</td>' + 
+				'<td id="descriptionTD">' + 
+					'<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>' + 
+				'</td>' +  
+			'</tr>' + 
+		'' + 
+		'</tbody>' + 
+	'</table>' + 
+	'<div class="saveOrResetContainer">' + 
+		'<a href="" id="saveDaily"  class="buttonLink">Save</a>' + 
+		'<a href="" id="deleteDaily" class="buttonLink">Delete</a>' + 
+	'</div>'
+	);
+	
+}
 
 /* end of sandbox */
 
@@ -26,6 +151,8 @@ var toDoChecker;
 function fillDailyList(){
 	$('.dailyListTR').remove()
 	var dailyList = lsGet('dailyList', 'parse');
+	var dailyList = dailyList.reverse();
+	
 	for (d = 0; d < dailyList.length; d++ ) {
 		var daily = dailyList[d];
 		var speciaList;
@@ -37,7 +164,11 @@ function fillDailyList(){
 				'<td>' + daily.task 		+ '</td>' + 
 				'<td>' + daily.pomodoros 	+ '</td>' +
 				'<td>' + specialList 		+ '</td>' +
-			'</tr>';
+			'</tr>' +
+			'<tr id="daily' + daily.id + 'details" class="dailyDetailTR">' +
+			
+			'</tr>'
+			;
 			
 		$('#dailyListTable > tbody').append(newLine);
 	}
@@ -45,33 +176,51 @@ function fillDailyList(){
 
 function listenDailyListClick(){
 	$("#dailyListTable tbody ").on('click', '.dailyListTR', function(){
+		var clickedTR = $(this);
 		var clickedId = $(this).attr('id');
 		var dailyId = clickedId.split('y')[1];
 		
-		expandDailyDetails(dailyId);
+		createDetailTR(clickedTR);
+		// expandDailyDetails(dailyId);
 	});
 	
-	$("#saveDaily").click(function( event ){
-		event.preventDefault();
+	// $("#dailyListTable tbody ").on('click', '#saveDaily', function(){
+		// event.preventDefault();
 		
-		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-		gatherDailyInfo()
-		fillDailyList();
-	});
+		// gatherDailyInfo();
+		// $(".taskDetailTR").hide(300, 
+			// function(){$(".taskDetailTR").remove( function(){
+				// $(".dailyListTR").css("background", "initial", function(){
+					// fillDailyList();
+				// });
+			// });
+		// });
+		
+	// });
 	
-	$("#deleteDaily").click(function( event ){
-		event.preventDefault();
+	// // $("#deleteDaily").click(function( event ){
+	// $("#dailyListTable tbody ").on('click', '#deleteDaily', function(){
+		// event.preventDefault();
 		
-		var dailyId = parseInt($('#dailyTaskIdInput').val());
-		var daily = dailyFromId(dailyId);
-		var dailyList = lsGet('dailyList', 'parse');
-		var index = dailyTaskIndex(daily);
-		dailyList.splice(index, 1);
+		// var dailyId = parseInt($('#dailyTaskIdInput').val());
+		// var daily = dailyFromId(dailyId);
+		// var dailyList = lsGet('dailyList', 'parse');
+		// var index = dailyTaskIndex(daily);
+		// dailyList.splice(index, 1);
 		
-		lsSet('dailyList', dailyList, 'object');
-		fillDailyList();
-		$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-	});
+		// lsSet('dailyList', dailyList, 'object');
+		// $(".taskDetailTR").hide(300, 
+			// function(){$(".taskDetailTR").remove( function(){
+				// $(".dailyListTR").css("background", "initial", function(){
+					// fillDailyList();
+				// });
+			// });
+		// });
+		
+		// // $(".taskDetailTR").hide(200).remove();
+		// // fillDailyList();
+		// // $(".dailyListTR").css("background", "initial");
+	// });
 		
 	$("#createNewDailyTaskButton").click(function(){
 		var newTaskName = $("#newDailyTaskInput").val()
@@ -79,7 +228,8 @@ function listenDailyListClick(){
 			$('#newDailyTaskInput').val('');
 			var newDaily = addDailyTask(newTaskName);
 			fillDailyList();
-			expandDailyDetails(newDaily.id)
+			createDetailTR($("#daily"+newDaily.id));
+			// expandDailyDetails(newDaily.id)
 		} else{
 			
 		}
@@ -145,10 +295,52 @@ function gatherDailyInfo(){
 	
 	updateDailyTask(newDaily);
 }
+
+function toggleBlackDaily(dailyId){
+	$("#dailyListTable").on('click', '#specialListsInput', function( event ){
+		var checked = $('#specialListsInput').prop('checked');
+		if (checked == true){
+			$("#blackListDaily").tagsInput();
+			$("#whiteListDaily").tagsInput();
+			$('.specialListDisplay').show(300);
+		}
+		else{
+			$('.specialListDisplay').hide(300);
+		}
+	});
+	
+	$("#dailyListTable").on('click', '#saveDaily', function( event ){
+		event.preventDefault();
+		
+		gatherDailyInfo()
+		$(".taskDetailTR").hide(300, function(){$(".taskDetailTR").remove()});
+		
+		fillDailyList();
+		visibleDaily($(".activeDailyTR"));
+	});
+	
+	$("#dailyListTable").on('click', '#deleteDaily', function( event ){
+		event.preventDefault();
+		
+		var dailyId = parseInt($('#dailyTaskIdInput').val());
+		var daily = dailyFromId(dailyId);
+		var dailyList = lsGet('dailyList', 'parse');
+		var index = dailyTaskIndex(daily);
+		dailyList.splice(index, 1);
+		
+		lsSet('dailyList', dailyList, 'object');
+		$(".taskDetailTR").hide(100, 
+			function(){$(".taskDetailTR").remove()}
+		); 
+		// $(".dailyListTR").css("background", "initial");
+		visibleDaily($(".activeDailyTR"));
+		fillDailyList();
+	});
+}
 	
 function enableBlackDaily(){
 	toggleBlackDaily();
-	$('#blackListDaily')[0].value = ' ';
+	// $('#blackListDaily')[0].value = ' ';
 	$('#blackListDaily').tagsInput({
 		'defaultText':'Add site... ie: facebook.com',
 		'removeWithBackspace' : true
@@ -156,24 +348,12 @@ function enableBlackDaily(){
 	$('#blackListDaily_tagsinput').attr('style', '');
 	
 	
-	$('#whiteListDaily')[0].value = '';
+	// $('#whiteListDaily')[0].value = '';
 	$('#whiteListDaily').tagsInput({
 		'defaultText':'https://www.facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
-}
-
-function toggleBlackDaily(){
-	$('#specialListsInput').change(function(){
-		var checked = $('#specialListsInput').prop('checked');
-		if (checked == true){
-			$('.specialListDisplay').show(300);
-		}
-		else{
-			$('.specialListDisplay').hide(300);
-		}
-	})
 }
 
 function enableDaily(){

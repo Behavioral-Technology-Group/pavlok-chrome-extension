@@ -525,12 +525,28 @@ div.tagcontainer{
 	font-family: 'Lato', sans-serif;
 }
 
+.taskDetailTR div.saveOrResetContainer{
+	padding-bottom: 10px;
+}
+
 #dailyListDetails{
 	width: 100%;
+	margin-top: 10px;
+	padding-bottom: 10px;
 }
 
 #dailyListDetails td{
 	padding-bottom: 10px;
+}
+
+.dailyListTR:hover{
+	background: rgb(70, 70, 70);
+	cursor: pointer;
+}
+
+.activeDailyTR{
+	background: rgb(70, 70, 70);
+	
 }
 
 #blackListTD{
