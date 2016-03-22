@@ -685,29 +685,31 @@ function initialize() {
 	
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			if (request.action == "volumeUp" && request.target == 'background'){
-				var myAudioVol = parseFloat(myAudio.volume);
-				if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
-				else { myAudioVol = myAudioVol + 0.1; }
+			if (request.target == "background"){
+				if (request.action == "volumeUp"){
+					var myAudioVol = parseFloat(myAudio.volume);
+					if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
+					else { myAudioVol = myAudioVol + 0.1; }
+					
+					myAudio.volume = myAudioVol;
+				}
 				
-				myAudio.volume = myAudioVol;
-			}
-			
-			else if (request.action == "volumeDown" && request.target == 'background'){
-				var prevAudioVol = parseFloat(myAudio.volume);
-				var newAudioVol;
-				if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
-				else { newAudioVol = prevAudioVol - 0.1; }
+				else if (request.action == "volumeDown"){
+					var prevAudioVol = parseFloat(myAudio.volume);
+					var newAudioVol;
+					if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
+					else { newAudioVol = prevAudioVol - 0.1; }
+					
+					myAudio.volume = newAudioVol;
+				}
 				
-				myAudio.volume = newAudioVol;
-			}
-			
-			else if (request.action == "newPage" && request.target == 'background') {
-				var pomoFocus = lsGet('pomoFocusB', 'parse');
-				sendResponse({
-					pomodoro: pomoFocus
-				});
-				console.log("message received");
+				else if (request.action == "newPage") {
+					var pomoFocus = lsGet('pomoFocusB', 'parse');
+					sendResponse({
+						pomodoro: pomoFocus
+					});
+					console.log("message received");
+				}
 			}
 		}
 	);

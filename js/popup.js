@@ -134,6 +134,7 @@ function enableStimuliControls() {
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate();
+				msgExt("updateStimuli", "options");
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -149,6 +150,7 @@ function enableStimuliControls() {
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate();
+				msgExt("updateStimuli", "options");
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -160,12 +162,11 @@ function enableStimuliControls() {
 			step: 10,
 			slide: function( event, ui ) {
 				var vibPos = ui.value;
-				console.log(vibPos);
-				// localStorage.vibrationPosition = vibPos;
 				lsSet('vibrationPosition', vibPos);
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate();
+				msgExt("updateStimuli", "options");
 			}
 			
 		});
@@ -255,4 +256,28 @@ $( document ).ready(function() {
 		});
 		
 	});
+	
+	// Message listeners
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.target == "popup"){
+				if (request.action == "updateBlackList"){
+					var curBlackList = $("#blackList").val();
+					var curWhiteList = $("#whiteList").val();
+					
+					var newBlackList = lsGet("blackList");
+					var newWhiteList = lsGet("whiteList");
+					
+					if (curBlackList == newBlackList && 
+						curWhiteList == newWhiteList){
+							return
+					}
+					else{
+					}
+						$("#blackList").importTags(newBlackList);
+						$("#whiteList").importTags(newWhiteList);
+				}
+			}
+		}
+	);
 });

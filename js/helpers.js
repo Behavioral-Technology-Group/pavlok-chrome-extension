@@ -361,6 +361,18 @@ function nowTime(){
 	return new Date().getTime();
 }
 
+function compareSetting(LSsetting, elementName, override){
+	if (override == "override"){
+		var curVal = elementName;
+	} else{
+		var curVal = $(elementName).val();
+	}
+	
+	var newVal = lsGet(LSsetting);
+	
+	if (curVal == newVal) { return true }
+	else { return false }
+}
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -660,11 +672,15 @@ function updateNotification(title, message, notID){
 function saveBlackList(){
 	lsSet('blackList', $("#blackList")[0].value);
 	confirmUpdate();
+	msgExt("updateBlackList", "popup");
+	msgExt("updateBlackList", "options");
 }
 
 function saveWhiteList(){
 	lsSet('whiteList', $("#whiteList")[0].value);
 	confirmUpdate();
+	msgExt("updateBlackList", "popup");
+	msgExt("updateBlackList", "options");
 }
 
 

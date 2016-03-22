@@ -229,9 +229,10 @@ function listenDailyListClick(){
 			var newDaily = addDailyTask(newTaskName);
 			fillDailyList();
 			createDetailTR($("#daily"+newDaily.id));
-			// expandDailyDetails(newDaily.id)
-		} else{
+			msgExt('updateDaily', 'popup');
 			
+		} else{
+			return
 		}
 	});
 
@@ -1147,13 +1148,16 @@ function restoreOptions() {
 	
 	// Black and white lists
 	var blackList = localStorage.blackList;
+	// console.log(blackList);
 	if (blackList == undefined) { blackList = ' '; }
-	$("#blackList").val(blackList);
+	// $("#blackList").val(blackList);
+	$("#blackList").importTags(blackList);
 
 	var whiteList = localStorage.whiteList;
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
 
+	// Scheduler
 	var timeFormat = localStorage.timeFormat;
 	$("#timeFormat").val(timeFormat);
 	
@@ -1351,27 +1355,10 @@ function initialize() {
 	// Max Tabs
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
-	});
-	$("#sliderZap").change(function(){
-		localStorage.zapPosition = $(this).val();
-		localStorage.zapIntensity = percentToRaw(parseInt($(this).val()));
-	});
-	$("#sliderVibration").change(function(){
-		var pos = $( this ).slider( "option", "value");
-		localStorage.vibrationPosition = pos;
-		localStorage.vibrationIntensity = percentToRaw(parseInt(pos));
-		console.log(pos);
+		msgExt("updateMaxTabs", "popup");
+		msgExt("updateMaxTabs", "options");
 	});
 	
-	// Both white and Blacklist listeners aren't working.
-	$("#whiteList").change(function(){
-		localStorage.whiteList = $(this).val();
-		alert("changed white list");
-	});
-	$("#blackList").children().change(function(){
-		localStorage.blackList = $(this).val();
-		alert("changed black list");
-	});
 	
 	// Enablers
 	enableSelects();
@@ -1446,4 +1433,40 @@ $( document ).ready(function() {
 	$("body").on('change', '.pavSetting', function(){ 
 		confirmUpdate();
 	});
+	
+	// Message listeners
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.target == "options"){
+				if (request.action == "updateBlackList"){
+					var bl = compareSetting("blackList", "#blackList");
+					var wl = compareSetting("whiteList", "#whiteList");
+					
+					if (bl == false || wl == false){
+						$("#blackList").importTags(lsGet('blackList'));
+						$("#whiteList").importTags(lsGet('whiteList'));
+					}
+				}
+				
+				else if (request.action == "updateMaxTabs"){
+					var mt = compareSetting("maxTabs", "#maxTabsSelect");
+					if (mt == false){
+						$("#maxTabsSelect").val(lsGet('maxTabs'));
+					}
+				}
+				
+				else if (request.action == "updateStimuli"){
+					var bi = compareSetting("beepPosition", $("#sliderBeep").slider("value").toString(), "override");
+					var zi = compareSetting("zapPosition", $("#sliderZap").slider("value").toString(), "override");
+					var vi = compareSetting("vibrationPosition", $("#sliderVibration").slider("value").toString(), "override");
+					
+					if ((bi && zi && vi) == false ){
+						$("#sliderBeep")		.slider("value", parseInt(lsGet('beepPosition'		)));
+						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
+						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
+					}
+				}
+			}
+		}
+	);
 });
