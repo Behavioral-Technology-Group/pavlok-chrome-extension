@@ -312,7 +312,33 @@ function checkActiveHour(start, end){	// start and End are for debugging
 	end.setMilliseconds(0);
 	
 	// Evaluation
-	if (begin < now && now < end) { return true }
+	var startAsNumber = 
+		parseInt(testHourStart.split(":")[0]) * 100 +
+		parseInt(testHourStart.split(":")[1]);
+	var endAsNumber = 
+		parseInt(testHourEnd.split(":")[0]) * 100 +
+		parseInt(testHourEnd.split(":")[1]);
+	
+	var acrossDay = startAsNumber > endAsNumber;
+	
+	// Logical 
+	// Now is between begin and end.
+	
+	//	If begin comes BEFORE end, action happens in between
+	//		         B             E     
+	//		--------------------------------
+	//		- false -|> ACT TRUE <|- false -
+	//		--------------------------------
+		
+	
+	//	If begin comes AFTER end, action happens while NOT between them
+	//             E             B     
+	//		------------------------------
+	//		 act T<|-   false   -|> act T  
+	//		------------------------------
+	
+	if ((begin < now && now < end) && acrossDay == false) { return true } 
+	else if ((begin < now || now < end) && acrossDay == true) { return true } 	
 	else { return false }
 }
 
