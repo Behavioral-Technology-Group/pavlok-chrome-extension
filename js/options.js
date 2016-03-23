@@ -26,7 +26,6 @@ function visibleDaily(targetRow, detailRow){
 		$(targetRow).addClass("activeDailyTR");
 		
 		// Manage presentation of new task details
-		$(detailRow).css('background', 'rgb(80, 80, 80)');
 		$(detailRow).show(400);
 		$(detailRow).effect("highlight", {color: 'white'}, 400);
 	}
@@ -79,7 +78,7 @@ function fillDetailTR(detailRow, targetRow) {
 						'<option value="5">5</option>' + 
 						'<option value="6">6</option>' + 
 					'</select>' + 
-					'lasting for ' + 
+					'<span>    lasting for </span>' + 
 					'<select id="dailyPomoDuration">' + 
 						'<option value="2">2</option>' + 
 						'<option value="5">5</option>' + 
@@ -88,7 +87,7 @@ function fillDetailTR(detailRow, targetRow) {
 						'<option selected value="25">25</option>' + 
 						'<option value="35">35</option>' + 
 					'</select>' + 
-					'minutes' + 
+					'<span> minutes</span>' + 
 				'</td>' +  
 			'</tr>' + 
 			'<tr>' + 
@@ -128,13 +127,18 @@ function fillDetailTR(detailRow, targetRow) {
 					'<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>' + 
 				'</td>' +  
 			'</tr>' + 
-		'' + 
+			'<tr>' +
+				'<td></td>' +
+				'<td colspan="2" class="saveOrResetTD">' +
+					'<div class="saveOrResetContainer">' + 
+						'<a href="" id="saveDaily"  class="buttonLink">Save</a>' + 
+						'<a href="" id="deleteDaily" class="buttonLink">Delete</a>' + 
+					'</div>' +
+				'</td>' + 
+			'</tr>' + 
 		'</tbody>' + 
-	'</table>' + 
-	'<div class="saveOrResetContainer">' + 
-		'<a href="" id="saveDaily"  class="buttonLink">Save</a>' + 
-		'<a href="" id="deleteDaily" class="buttonLink">Delete</a>' + 
-	'</div>'
+	'</table>'
+	
 	);
 	
 }
@@ -162,7 +166,7 @@ function fillDailyList(){
 		var newLine = '' +
 			'<tr id="daily' + daily.id + '" class="dailyListTR">' +
 				'<td>' + daily.task 		+ '</td>' + 
-				'<td>' + daily.pomodoros 	+ '</td>' +
+				'<td>' + daily.pomodoros + " x " + daily.duration	+ " min" + '</td>' +
 				'<td>' + specialList 		+ '</td>' +
 			'</tr>' +
 			'<tr id="daily' + daily.id + 'details" class="dailyDetailTR">' +

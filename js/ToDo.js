@@ -230,6 +230,7 @@ function addDailyTask(task){
 	newDaily.task = task;
 	newDaily.pomodoros = 1;
 	newDaily.donePomos = 0;
+	newDaily.duration = "15";
 	newDaily.specialList = false;
 	newDaily.blackList = ' ';
 	newDaily.whiteList = ' ';
