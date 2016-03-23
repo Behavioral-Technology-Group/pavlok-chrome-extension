@@ -461,6 +461,9 @@ div.tagcontainer{
 	display:none;
 }
 
+
+/* To-do section */
+
 .toDoTable{
 	border-collapse: collapse;
 }
@@ -525,6 +528,10 @@ div.tagcontainer{
 	font-family: 'Lato', sans-serif;
 }
 
+.taskDetailTR{
+	background: #555555;
+}
+
 .taskDetailTR div.saveOrResetContainer{
 	padding-bottom: 10px;
 }
@@ -532,11 +539,34 @@ div.tagcontainer{
 #dailyListDetails{
 	width: 100%;
 	margin-top: 10px;
-	padding-bottom: 10px;
 }
 
 #dailyListDetails td{
 	padding-bottom: 10px;
+	text-align: left;
+	padding-left: 10px;
+}
+
+#dailyListDetails td:last-child{
+	padding-bottom: 0px;
+}
+
+#pomodorosPerDayTD, #specialListsTD{
+	text-align: justify;
+}
+
+#pomodorosPerDayTD > span{
+	color: white;
+}
+
+#dailyTaskNameInput{
+	width: 100%;
+	font-size: 20px;
+	padding-left: 10px;
+}
+
+td.saveOrResetTD{
+	padding-bottom: 0px;
 }
 
 .dailyListTR:hover{
@@ -545,7 +575,11 @@ div.tagcontainer{
 }
 
 .activeDailyTR{
-	background: rgb(70, 70, 70);
+	background: #898989;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	height: 35px;
 	
 }
 
@@ -725,6 +759,7 @@ div.tagcontainer{
 	font-size: 15px;
 	padding: 10px;
 }
+
 
 /* --------------------- */
 /*    FOOTER SECTION     */
