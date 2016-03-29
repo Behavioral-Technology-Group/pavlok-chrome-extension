@@ -618,6 +618,8 @@ function CreateTabListeners(token) {
 	chrome.tabs.onCreated.addListener(function(tab) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -630,6 +632,8 @@ function CreateTabListeners(token) {
 			else{
 				console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
 			}
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -637,6 +641,8 @@ function CreateTabListeners(token) {
 	chrome.tabs.onDetached.addListener(function(tab) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -644,6 +650,8 @@ function CreateTabListeners(token) {
 	chrome.tabs.onAttached.addListener(function(tab) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -651,6 +659,7 @@ function CreateTabListeners(token) {
 	chrome.windows.getLastFocused(function(win) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -658,6 +667,7 @@ function CreateTabListeners(token) {
 	chrome.windows.onCreated.addListener(function(win) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			getTabInfo(evaluateTabURL);
 		}
 	});
 
@@ -666,6 +676,7 @@ function CreateTabListeners(token) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			console.log("tab changed");
+			getTabInfo(evaluateTabURL);
 		}
 	});
 	
@@ -678,6 +689,7 @@ function CreateTabListeners(token) {
 				action: "hello",
 				pomodoro: lsGet('pomoFocusB', 'parse')
 			});
+			getTabInfo(evaluateTabURL);
 		}
 	})
 }
@@ -697,10 +709,10 @@ function initialize() {
 			if (checkActiveDayHour() == true) {
 				if (isValid(localStorage.accessToken)){
 					timeWindow = localStorage.timeWindow;
-					getTabInfo(evaluateTabURL);
+					// getTabInfo(evaluateTabURL);
 					rescueTimeChecker();
 					RTTimeOut = localStorage.RTTimeOut;
-					countTabs(localStorage.tabCountAll, UpdateTabCount);
+					// countTabs(localStorage.tabCountAll, UpdateTabCount);
 				}
 			} else {
 				UpdateBadgeOnOff("Zzz");
