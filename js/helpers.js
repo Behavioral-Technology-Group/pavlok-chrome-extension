@@ -205,9 +205,6 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 	// 
 	lsSet('notifications', notifications, 'object');
 	
-	
-// Interface
-
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
 if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
@@ -224,18 +221,18 @@ if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusO',  pomoFocusO, 'object');
+	lsSet('pomoFocusO', pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
 	var pomoFocusB = {}
 	pomoFocusB.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusB',  pomoFocusB, 'object');
+	lsSet('pomoFocusB', pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
 	pomoFocusP.endTime = deltaTime(0).getTime();
-	lsSet('pomoFocusP',  pomoFocusP, 'object');
+	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
 if (!localStorage.dailyList) {
 	lsSet('dailyList', [], 'object');
@@ -609,7 +606,7 @@ function updateNameAndEmail(name, email){
 function enableTooltips(){
 	$(function() {
 		// Makes possible to use HTML inside the tittle
-		 $(document).tooltip({
+		$(document).tooltip({
             content: function() {
                 var element = $( this );
                 if ( element.is( "[title]" ) ) {
@@ -618,7 +615,7 @@ function enableTooltips(){
 
             },
             position: { my: "left bottom-3", at: "center top" } 
-			});
+		});
 	});	
 }
 
@@ -838,7 +835,7 @@ function rescueTimeOAuth() {
 
 
 function destroyToken(){
-  localStorage.setItem('accessToken', 'null');
+	localStorage.setItem('accessToken', 'null');
 }
 
 function userInfo(accessToken) { 
@@ -901,13 +898,13 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 }
 
 function randomString(characters){
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < characters; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	for( var i=0; i < characters; i++ )
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    return text;
+	return text;
 }
 
 function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){

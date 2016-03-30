@@ -464,7 +464,7 @@ function updateRTLimits(){
 	localStorage.RTPosLimit = PosValue;
 	localStorage.RTWarnLimit = WarnValue;
 	localStorage.RTNegLimit = NegValue;
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 	return
 }
 
@@ -481,7 +481,7 @@ function enableRescueTime(){
 	
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 		localStorage.RTOnOffSelect = RTOnOffSelect;
 		if (RTOnOffSelect == "On") { 
 			updateProductivity(); 
@@ -493,7 +493,7 @@ function enableRescueTime(){
 	
 	$( "#RTFrequencySelect" ).change(function(){
 		localStorage.RTFrequency = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#removeRTAPIKey").click(function() {
@@ -516,7 +516,7 @@ function enableRescueTime(){
 					$("#RTOnOffSelect").val('Off');
 					lsSet('RTOnOffSelect', 'Off');
 					changeRTVisibility();
-					confirmUpdate();
+					confirmUpdate(notifyUpdate);
 				}	
 			}
 		});
@@ -570,7 +570,7 @@ function enableRescueTime(){
 		localStorage.RTPosLimit = PosValue;
 		localStorage.RTWarnLimit = WarnValue;
 		localStorage.RTNegLimit = NegValue;
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	// Restore values
@@ -631,13 +631,13 @@ function enableTimers(){
 		$( "#generalActiveTimeStart" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeStart = $(this).val();
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 			},
 		});
 		$( "#generalActiveTimeEnd" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeEnd = $(this).val();
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 			}
 		});
 	 
@@ -1143,7 +1143,7 @@ function saveOptions() {
 	vibrationIntensity = percentToRaw(vibrationPosition);
 	lsSet('vibrationIntensity', vibrationIntensity);
 	
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 }
 
 function restoreOptions() {
@@ -1194,7 +1194,7 @@ function restoreOptions() {
 	$("#allTabsCountSelect").val(localStorage.tabCountAll);
 	$("#allTabsCountSelect").change(function(){
 		localStorage.tabCountAll = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
@@ -1435,7 +1435,7 @@ $( document ).ready(function() {
 	});
 	
 	$("body").on('change', '.pavSetting', function(){ 
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	// Message listeners

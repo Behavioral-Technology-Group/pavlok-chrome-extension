@@ -1,5 +1,4 @@
-﻿
-/* To-do:
+﻿/* To-do:
 notify every 30 minutes*
 1) Annoy me every half hour until I start my first pomodoro
 
@@ -635,6 +634,13 @@ function CreateTabListeners(token) {
 		}
 	});
 
+	// When tab is updated
+	chrome.tabs.onUpdated.addListener(function(tab){
+		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+			getTabInfo(evaluateTabURL);
+		}
+	});
+	
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
