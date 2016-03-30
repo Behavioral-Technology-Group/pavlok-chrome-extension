@@ -409,10 +409,17 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-function confirmUpdate(){
-	notifyUser('Settings updated', '', 'updatedSettings');
-	clearTimeout(notTimeout);
-	notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+var notifyUpdate = false;
+var noSUN = setTimeout(function(){
+	notifyUpdate = true;
+}, 1000);
+
+function confirmUpdate(notify){
+	if (notify){
+		notifyUser('Settings updated', '', 'updatedSettings');
+		clearTimeout(notTimeout);
+		notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+	}
 }
 
 // Tour
@@ -673,14 +680,14 @@ function updateNotification(title, message, notID){
 
 function saveBlackList(){
 	lsSet('blackList', $("#blackList")[0].value);
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
 }
 
 function saveWhiteList(){
 	lsSet('whiteList', $("#whiteList")[0].value);
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
 }

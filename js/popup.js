@@ -133,7 +133,7 @@ function enableStimuliControls() {
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				$("#beepIntensity").html(beepPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 		});
@@ -149,7 +149,7 @@ function enableStimuliControls() {
 				lsSet('zapPosition', zapPos);
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				$("#zapIntensity").html(zapPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 		});
@@ -165,7 +165,7 @@ function enableStimuliControls() {
 				lsSet('vibrationPosition', vibPos);
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				$("#vibrationIntensity").html(vibPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 			
@@ -229,17 +229,17 @@ $( document ).ready(function() {
 	$("#maxTabsSelect").change(function(){
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#instaZap").change(function(){
 		lsSet('instaZap', $(this).prop( "checked" ));
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#lockZap").change(function(){
 		lsSet('lockZap', $(this).prop( "checked" ));
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 		
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			curPAVTab = tabs[0];

@@ -978,7 +978,7 @@ function enableSliders(){
 				lsSet('beepIntensity', percentToRaw(beepPos));
 				saveOptions();
 				$("#beepIntensity").html(beepPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 			}
 		});
 		
@@ -993,7 +993,7 @@ function enableSliders(){
 				lsSet('zapIntensity', percentToRaw(zapPos));
 				saveOptions();
 				$("#zapIntensity").html(zapPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 
 			}
 		});
@@ -1011,7 +1011,7 @@ function enableSliders(){
 				lsSet('vibrationIntensity', percentToRaw(vibPos));
 				saveOptions();
 				$("#vibrationIntensity").html(vibPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 
 			}
 			
