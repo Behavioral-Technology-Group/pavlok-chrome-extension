@@ -15,6 +15,7 @@ at the end of the pomodoro ==> Congrats! Take a 5 minute break!
 */
 // Globals
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
+var curBlackListTimer = false;
 var elapsedTime = 0;
 var counter = false;
 var situation = {};
@@ -159,18 +160,16 @@ function fireRescueTime(APIKey){
 function CheckBlackList(curTabURL, curTabDomain) {
 	var daily = lsGet('dailyPomo', 'parse');
 	
-	var locked = lsGet('lockZap');
+	var locked = lsGet('lockZap') == "true"; // Changes string to boolen
 	var lockedTo = lsGet('lockedTo');
 	var pomoFocus = lsGet('pomoFocusB', 'parse');
 	
 	// Checks if it will use regular or daily black and whitelists
-	if (pomoFocus.active == true ){
-		if (locked == "true") {
-			if (curPAVDomain != lockedTo ) { return true }
-			else { return false }
-		}
-		
-		if (daily && daily.specialList != false){
+	if (pomoFocus.active && locked){
+		if (curPAVDomain != lockedTo ) { return true }
+		else { return false }
+	}
+	else if (pomoFocus.active && daily && (daily.specialList != false)){
 			var _whiteList = daily.whiteList.split(",");
 			var _blackList = daily.blackList.split(",");
 		}
@@ -674,8 +673,7 @@ function CreateTabListeners(token) {
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
 		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
-			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			console.log("tab changed");
+			// countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
 		}
 	});
@@ -709,10 +707,8 @@ function initialize() {
 			if (checkActiveDayHour() == true) {
 				if (isValid(localStorage.accessToken)){
 					timeWindow = localStorage.timeWindow;
-					// getTabInfo(evaluateTabURL);
 					rescueTimeChecker();
 					RTTimeOut = localStorage.RTTimeOut;
-					// countTabs(localStorage.tabCountAll, UpdateTabCount);
 				}
 			} else {
 				UpdateBadgeOnOff("Zzz");
@@ -755,6 +751,11 @@ function initialize() {
 
 function getTabInfo(callback){
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		if (tabs.length == 0 ) { // no active tabs
+            console.log("background debugger activated");
+			return;
+        }
+		
 		curPAVTab = tabs[0];
 		curPAVUrl = tabs[0].url;
 		curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
@@ -777,56 +778,43 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	
 	if(_result == true){		//blacklisted site
 		// Variables
-		var instaZap = localStorage.instaZap;
-		var firstZap = localStorage.firstZap;
-		var timeWindowZap = localStorage.timeWindow;
-		if (instaZap == 'true'){ var timeWindowZap = 8; }
-		
-		// Logic
-		if (counter == true){	// with timer going on
-			if (instaZap == 'true' && firstZap == 'false'){
-				//Zap & Notify
-				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
-				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				// Substitute timeWindow
-				timeWindowZap = 8;
-				localStorage.firstZap = 'true';
+		var instaZap = localStorage.instaZap == "true";
+		var firstZap = localStorage.firstZap == "true";
+		var timeWindowZap = parseInt(localStorage.timeWindow);
+		if (instaZap){
+			timeWindowZap = 8;
+			if (firstZap == false){ 
+			stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
+			notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
+
+			// Substitute timeWindow
+			lsSet('firstZap', true);
 			}
-			else {				// no timer going on
-				notifyUser(msgBlacklisted[0], "Watch out! You have " + timeWindowZap + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-				
-				now = new Date();
-				
-				// Calculate time delta from timer begin and now. It"s then converted from miliseconds to deciseconds (for rouding) and finally to seconds.
-				elapsed = (now - timeBegin) / 100;
-				elapsed = Math.round(elapsed) / 10;
-				
-				document.title = elapsed + "s on blackList"; // Debug. Shows on background.html
-				
-				// if (elapsed >= parseInt(timeWindow)){
-				if (elapsed >= parseInt(timeWindowZap)){
-					notifyUser(msgZaped[0], msgZaped[1], "zapped");
-					stimuli("shock", defInt, defAT, msgZaped[1], "false");
-					
-					timeBegin = new Date();
-				}			
-			}
-			
-			
 		}
-		else {
-			counter = true;
-			if (localStorage.instaZap == 'true'){
-				//Zap & notify
+	}
+	
+	blackListTimer(_result, timeWindowZap);
+}
+
+function blackListTimer(blackListed, timespan){
+	if (blackListed == false){
+		if (curBlackListTimer) {
+			clearTimeout(curBlackListTimer);
+			curBlackListTimer = false;
+			lsSet('firstZap', false);
+			clearNotifications();
+		}
+	}
+	else if (blackListed == true){
+		notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + "  seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
+		if (curBlackListTimer == false){
+			// notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
+			curBlackListTimer = setTimeout(function(){
 				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				localStorage.firstZap = 'true';
-			}
-			else {
-				notifyUser(msgBlacklisted[0], "Watch out! You have " + timeWindowZap + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-			}
-			
-			timeBegin = new Date();
+				curBlackListTimer = false;
+				getTabInfo(evaluateTabURL);
+			}, timespan * 1000);
 		}
 	}
 	else{
