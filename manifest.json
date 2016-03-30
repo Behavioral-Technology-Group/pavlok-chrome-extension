@@ -22,6 +22,7 @@
   "content_scripts": [
 	{
 		"matches": ["<all_urls>"],
+		"exclude_globs": ["*.pdf"],
 		"css": ["css/injected.css"],
 		"js": [
 			"js/external/jquery.min.js", 
