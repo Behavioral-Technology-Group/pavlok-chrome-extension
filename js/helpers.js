@@ -236,7 +236,7 @@ if (!localStorage.pomoFocusB) {
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
-	pomoFocusP.endTime = timeDelta(0).getTime();
+	pomoFocusP.endTime = deltaTime(0).getTime();
 	lsSet('pomoFocusP',  pomoFocusP, 'object');
 }
 if (!localStorage.dailyList) {
