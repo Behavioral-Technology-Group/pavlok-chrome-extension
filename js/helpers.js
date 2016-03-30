@@ -126,7 +126,6 @@ settings.prompts.showAgain = '';
 
 */
 
-
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
 lsSet('baseAddress', baseAddress);
 
@@ -207,8 +206,7 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 	lsSet('notifications', notifications, 'object');
 	
 	
-
-
+// Interface
 
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
@@ -423,23 +421,26 @@ function openOptions(){
 }
 // Background
 function UpdateBadgeOnOff(badgeText) {
-	// if (inText.length == 0 ) { inText = "On"; }
-	// if (offText.length == 0 ) { offText = "Off"; }
-	
 	var logged = isValid(localStorage.accessToken);
-	
+	var badgeStatus = lsGet('badgeStatus');
 	
 	if (logged == true){
-		chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+		if (badgeStatus == "off"){
+			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+			badgeStatus = "on";
+		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
 		chrome.browserAction.setBadgeText({ text: badgeText });
-		
 	}
 	else{
-		chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+		if (badgeStatus == "on" || badgeStatus == false){
+			chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+			badgeStatus = "off";
+		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [100, 100, 100, 130] });
 		chrome.browserAction.setBadgeText({ text: "Off" });
 	}
+	lsSet('badgeStatus', badgeStatus);
 }
 
 function UpdateTabCount(tabCount) {
@@ -543,6 +544,7 @@ function signOut(){
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
 	destroyToken();
+	lsDel('accessToken');
 	
 	// Updates interface
 	showOptions(localStorage.accessToken);

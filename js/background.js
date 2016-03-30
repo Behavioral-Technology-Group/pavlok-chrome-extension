@@ -1,5 +1,4 @@
 ﻿
-
 /* To-do:
 notify every 30 minutes*
 1) Annoy me every half hour until I start my first pomodoro
@@ -22,6 +21,7 @@ var situation = {};
 var timeWindow;
 var myAudio = new Audio('../Audio/focus1min.mp3');
 var playing = false;
+if (!localStorage.badgeStatus) { localStorage.badgeStatus = "off" };
 
 // var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
@@ -172,7 +172,6 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	else if (pomoFocus.active && daily && (daily.specialList != false)){
 			var _whiteList = daily.whiteList.split(",");
 			var _blackList = daily.blackList.split(",");
-		}
 	}
 	else {
 		var _whiteList = localStorage.whiteList.split(",");
@@ -781,6 +780,7 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 		var instaZap = localStorage.instaZap == "true";
 		var firstZap = localStorage.firstZap == "true";
 		var timeWindowZap = parseInt(localStorage.timeWindow);
+		// var timeWindowZap = 3;
 		if (instaZap){
 			timeWindowZap = 8;
 			if (firstZap == false){ 
@@ -816,13 +816,6 @@ function blackListTimer(blackListed, timespan){
 				getTabInfo(evaluateTabURL);
 			}, timespan * 1000);
 		}
-	}
-	else{
-		elapsedTime = 0;
-		timeBegin = null;
-		clearNotifications();
-		counter = false;
-		localStorage.firstZap = 'false';
 	}
 }
 
