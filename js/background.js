@@ -591,12 +591,15 @@ function calibratePomoFocus(){
 	}
 }
 
-var countDownSafetyCheck = setInterval(function(){ updateCountdownBack();}, 2000);
-var testInt = setInterval(function(){ 
+var countDownSafetyCheck = setInterval(function(){ 
+	updateCountdownBack();
+	
+	}, 2000);
+var restorePomoCheck = setInterval(function(){ 
 	checkForUpdateBack();
 	checkForAudio();
 	calibratePomoFocus();
-	}, 100);
+	}, 500);
 $( document ).ready( function() { updateCountdownBack(); });
 
 
@@ -707,7 +710,7 @@ function initialize() {
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
-		testInterval = setInterval(
+	testInterval = setInterval(
 		function(){
 			if (checkActiveDayHour() == true) {
 				if (isValid(localStorage.accessToken)){
@@ -719,7 +722,7 @@ function initialize() {
 				UpdateBadgeOnOff("Zzz");
 			}
 		}
-	,100);
+	, 800);
 	createPomoFocusCountDownBack();
 	
 	chrome.extension.onMessage.addListener(

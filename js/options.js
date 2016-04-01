@@ -631,18 +631,22 @@ function enableTimers(){
 		$( "#generalActiveTimeStart" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeStart = $(this).val();
+				countTabs(localStorage.tabCountAll, UpdateTabCount);
 				confirmUpdate(notifyUpdate);
 			},
 		});
 		$( "#generalActiveTimeEnd" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeEnd = $(this).val();
+				countTabs(localStorage.tabCountAll, UpdateTabCount);
 				confirmUpdate(notifyUpdate);
 			}
 		});
 	 
 		$( "#timeFormat" ).change(function() {
 			lsSet('timeFormat', $(this).val());
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			
 			var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
 			var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
 			
@@ -1024,6 +1028,10 @@ function enableSliders(){
 
 function enableCheckboxes(){
 	// Active days
+	$(".activeDay").change(function(){
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
+	});
+	
 	$("#sundayActive").change(function(){
 		lsSet('sundayActive', $(this).prop( "checked" ));
 	});
@@ -1386,9 +1394,6 @@ function initialize() {
 	serverKind = serverKind.split("-")[1].split(".")[0];
 	$("#server").text(serverKind);
 	
-	$(".notifyjs-corner").bind("DOMSubtreeModified",function(){
-	  alert('changed');
-	});
 }
 
 initialize();
@@ -1410,10 +1415,10 @@ $( document ).ready(function() {
 		userInfo(localStorage.accessToken)
 	}
 	if (localStorage.userName == undefined) {localStorage.userName = ' '; }
-	// else {
+	else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);
-	
+	}
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
