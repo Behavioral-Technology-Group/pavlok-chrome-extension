@@ -934,6 +934,10 @@ function enableButtons(){
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
+	$("#testBeepInt").click(function(){
+		stimuli("beep", defInt, defAT, "Incoming Beep. You should receive a notification on your phone, followed by a beep");
+	});
+	
 	$("#testZapInt").click(function(){
 		stimuli("shock", defInt, defAT, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
