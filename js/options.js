@@ -355,7 +355,7 @@ function enableBlackDaily(){
 	
 	// $('#whiteListDaily')[0].value = '';
 	$('#whiteListDaily').tagsInput({
-		'defaultText':'https://www.facebook.com/groups/772212156222588/',
+		'defaultText':'facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
@@ -1339,7 +1339,7 @@ function initialize() {
 		$('#whiteList')[0].value = localStorage["whiteList"];
 		$('#whiteList').tagsInput({
 			'onChange' : saveWhiteList,
-			'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
+			'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
 			'removeWithBackspace' : true
 		});
 	}

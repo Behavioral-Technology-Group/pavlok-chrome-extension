@@ -107,7 +107,7 @@ function enableBlackList(){
 	var whiteListContents = lsGet('whiteList');
 	$('#whiteList').tagsInput({
 		'onChange' : saveWhiteList,
-		'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
+		'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	})
 	.importTags(whiteListContents);

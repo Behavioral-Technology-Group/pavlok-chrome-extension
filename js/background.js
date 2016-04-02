@@ -176,20 +176,49 @@ function CheckBlackList(curTabURL, curTabDomain) {
 		var _whiteList = localStorage.whiteList.split(",");
 		var _blackList = localStorage.blackList.split(",");
 	}
-		
+	
+	var curTabSubURL = curTabURL.split("www.", 2);
+	if (curTabURL.split("www.").length > 1){
+		var curTabSubURL = curTabSubURL[1];
+	}
+	
+	// Presumption of innocence
+	var blacked = false;
+	var whited = false;
+	
+	// Validate lists
+	if (_blackList[0].length < 2){ _blackList = false }
+	if (_whiteList[0].length < 2){ _whiteList = false }
+	
 	// Checks domain against BlackList and URL agains WhiteList
-	if (_blackList.indexOf(curTabDomain) != -1 && 
-		_whiteList.indexOf(curTabURL) == -1){
-			console.log(curTabURL + " is blacklisted");
-			return true
+	if (_blackList != false ){ 
+		for (b = 0; b < _blackList.length; b++){
+			if (curTabSubURL.indexOf(_blackList[b]) == 0) { 
+				blacked = true; 
+				break
+			}
+		}
 	}
-	else{
-		// console.log(curTabURL + " is not blacklisted");
-		return false
+	
+	if (_whiteList != false) {
+		for (w = 0; w < _blackList.length; w++){
+			if (curTabSubURL.indexOf(_whiteList[w]) == 0) { 
+				whited = true; 
+				break
+			}
+		}		
+	};
+	
+	if (blacked == true && whited == false) { 
+		console.log(curTabSubURL + " is blacklisted and NOT whitelisted");
+		return true
 	}
-	
-	
-	
+	else { 
+		if (blacked == true && whited == true){
+			console.log(curTabSubURL + " is blacklisted, BUT whitelisted too");
+		}
+		return false 
+	}
 }
 
 // Notifications
