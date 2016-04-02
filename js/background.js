@@ -616,7 +616,7 @@ $( document ).ready( function() { updateCountdownBack(); });
 function CreateTabListeners(token) {
 	// When new tab is created
 	chrome.tabs.onCreated.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
@@ -625,7 +625,7 @@ function CreateTabListeners(token) {
 
 	// When tab is removed
 	chrome.tabs.onRemoved.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			if ( localStorage.zapOnClose == 'true' ){
 				countTabs(localStorage.tabCountAll, evaluateTabCount);
 			}
@@ -639,14 +639,14 @@ function CreateTabListeners(token) {
 
 	// When tab is updated
 	chrome.tabs.onUpdated.addListener(function(tab){
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			getTabInfo(evaluateTabURL);
 		}
 	});
 	
 	// When tab is detached
 	chrome.tabs.onDetached.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
@@ -655,7 +655,7 @@ function CreateTabListeners(token) {
 
 	// When tab is attached
 	chrome.tabs.onAttached.addListener(function(tab) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
@@ -664,7 +664,7 @@ function CreateTabListeners(token) {
 
 	// last windows focused
 	chrome.windows.getLastFocused(function(win) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
 		}
@@ -672,7 +672,7 @@ function CreateTabListeners(token) {
 
 	// When new window is created
 	chrome.windows.onCreated.addListener(function(win) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
 		}
@@ -680,7 +680,7 @@ function CreateTabListeners(token) {
 
 	// When focus on WHAT has changed?
 	chrome.windows.onFocusChanged.addListener(function(win) {
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			// countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
 		}
@@ -688,7 +688,7 @@ function CreateTabListeners(token) {
 	
 	// When active tab change
 	chrome.tabs.onActivated.addListener(function(info){
-		if (checkActiveDayHour() == true && localStorage.tabNumbersActive == "true" ) {
+		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			var tabId = info.tabId;
 			windowId = info.windowId;
 			chrome.tabs.sendMessage(tabId, {
