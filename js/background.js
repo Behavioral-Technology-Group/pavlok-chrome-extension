@@ -658,9 +658,6 @@ function CreateTabListeners(token) {
 			if ( localStorage.zapOnClose == 'true' ){
 				countTabs(localStorage.tabCountAll, evaluateTabCount);
 			}
-			else{
-				console.log("zapOnClose is " + localStorage.zapOnClose + " so no zap.");
-			}
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
 			getTabInfo(evaluateTabURL);
 		}
@@ -779,7 +776,6 @@ function initialize() {
 					sendResponse({
 						pomodoro: pomoFocus
 					});
-					console.log("message received");
 				}
 			}
 		}
