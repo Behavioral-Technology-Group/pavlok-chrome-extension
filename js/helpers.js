@@ -1068,3 +1068,11 @@ function rawToPercent(raw){
 	percN = Math.round(percN / 10) * 10;
 	return percN
 }
+
+
+function isActive(){
+	var dayHour = checkActiveDayHour();
+	var token = isValid(localStorage.accessToken);
+	
+	return dayHour && token
+}
