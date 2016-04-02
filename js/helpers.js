@@ -532,6 +532,35 @@ function evaluateTabCount(tabCount){
 	// .click(signOut);
 // }
 
+function clearCookies(){
+	/* Currently unsupported */
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_user_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_group_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_anonymous_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "_session_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "remember_user_token"
+	// });
+}
+
 function signOut(){ 
 	// Logging out of providers
 	signOutURL = " https://pavlok-mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
@@ -547,7 +576,7 @@ function signOut(){
 		});
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
-	destroyToken();
+	clearCookies();
 	lsDel('accessToken');
 	
 	// Updates interface
