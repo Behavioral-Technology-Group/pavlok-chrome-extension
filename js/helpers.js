@@ -315,7 +315,7 @@ function savePomoFocus(pomoFocus, win){
 		{
 			action: "pomodoro", 
 			pomodoro: pomoFocus
-		});  
+		});
 	});
 	
 	return pomoFocus
@@ -576,8 +576,8 @@ function signOut(){
 		});
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
-	clearCookies();
 	lsDel('accessToken');
+	clearCookies();
 	
 	// Updates interface
 	showOptions(localStorage.accessToken);
@@ -836,7 +836,7 @@ function rescueTimeOAuth() {
 			
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = 'https://github.com/login/oauth/access_token?' + 
-			'client_id=' + clientID +  
+			'client_id=' + clientID + 
 			'&client_secret=' + clientSecret + 
 			'&code=' + authorizationCode + 
 			'&redirect_uri=' + redirectURL;
@@ -1097,7 +1097,6 @@ function rawToPercent(raw){
 	percN = Math.round(percN / 10) * 10;
 	return percN
 }
-
 
 function isActive(){
 	var dayHour = checkActiveDayHour();

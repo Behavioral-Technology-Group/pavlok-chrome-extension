@@ -622,13 +622,14 @@ function calibratePomoFocus(){
 
 var countDownSafetyCheck = setInterval(function(){ 
 	updateCountdownBack();
-	
 	}, 2000);
+	
 var restorePomoCheck = setInterval(function(){ 
 	checkForUpdateBack();
 	checkForAudio();
 	calibratePomoFocus();
 	}, 500);
+
 $( document ).ready( function() { updateCountdownBack(); });
 
 
