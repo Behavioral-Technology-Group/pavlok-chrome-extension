@@ -43,6 +43,7 @@
   
   "permissions": [
 	"background",
+	"cookies",
     "https://pavlok.herokuapp.com/*",
     "https://pavlok-stage.herokuapp.com/*",
     "https://pavlok-mvp.herokuapp.com/*",
