@@ -729,7 +729,7 @@ function enableAutoZapper(){
 				console.log("result was " + v);
 				var result = v;
 				if (result == true){
-					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ));
+					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ), 'zap');
 					var zapFreq = parseInt( $("#autoZapperFrequency").val() ) * 1000;
 					var zapDur = parseInt( $("#autoZapperDuration").val() ) * 60 * 1000;
 
@@ -911,25 +911,6 @@ function enableSelects(){
 }
 
 function enableButtons(){
-	$("#resetIntensity").click(function( event ){
-		event.preventDefault();
-		
-		var defValue = 60;
-
-		$( "#sliderBeep" ).slider( { "value": defValue });
-		localStorage.beepPosition = defValue;
-		localStorage.beepIntensity = percentToRaw(defValue);
-
-		
-		$( "#sliderZap" ).slider( { "value": defValue });
-		localStorage.zapPosition = defValue;
-		localStorage.zapIntensity = percentToRaw(defValue);
-		
-		$( "#sliderVibration" ).slider( { "value": defValue });
-		localStorage.vibrationPosition = defValue;
-		localStorage.vibrationIntensity = percentToRaw(defValue);
-	});
-	
 	$("#testPairingX").click(function(){
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
@@ -974,8 +955,12 @@ function enableTables(){ // TO-do update or remove
 
 function enableSliders(){
 	$(function() {
+		defZap = parseInt(lsGet('zapPosition'));
+		defVib = parseInt(lsGet('vibrationPosition'));
+		defBeep = parseInt(lsGet('beepPosition'));
+		
 		$( "#sliderBeep" ).slider({
-			value:60,
+			value:defBeep,
 			min: 10,
 			max: 100,
 			step: 10,
@@ -983,49 +968,71 @@ function enableSliders(){
 				var beepPos = ui.value;
 				console.log(beepPos);
 				lsSet('beepPosition', beepPos);
-				lsSet('beepIntensity', percentToRaw(beepPos));
-				saveOptions();
+				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
+				msgExt("updateStimuli", "options");
 			}
 		});
+		$("#beepIntensity").html(defBeep + "%");
 		
 		$( "#sliderZap" ).slider({
-			value:60,
+			value:defZap,
 			min: 10,
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
 				var zapPos = ui.value;
 				lsSet('zapPosition', zapPos);
-				lsSet('zapIntensity', percentToRaw(zapPos));
-				saveOptions();
+				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-
+				msgExt("updateStimuli", "options");
 			}
 		});
+		$("#zapIntensity").html(defZap + "%");
 		
 		$( "#sliderVibration" ).slider({
-			value:60,
+			value:defVib,
 			min: 10,
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
 				var vibPos = ui.value;
-				console.log(vibPos);
-				// localStorage.vibrationPosition = vibPos;
 				lsSet('vibrationPosition', vibPos);
-				lsSet('vibrationIntensity', percentToRaw(vibPos));
-				saveOptions();
+				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-
+				msgExt("updateStimuli", "options");
 			}
 			
 		});
-		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
+		$("#vibrationIntensity").html(defVib + "%");
 		
+		
+	});
+	
+	$("#resetIntensity").click(function(){
+		event.preventDefault();
+		
+		var defVib = 60;
+		var defZap = 60;
+		var defBeep = 100;
+		
+		lsSet('vibrationPosition', defVib);
+		lsSet('vibrationIntensity', percentToRaw(defVib, 'vibrate'));
+		$("#vibrationIntensity").html(defVib + "%");
+		$( "#sliderVibration" ).slider({value:defVib});
+		
+		lsSet('zapPosition', defZap);
+		lsSet('zapIntensity', percentToRaw(defZap, 'zap'));
+		$("#zapIntensity").html(defZap + "%");
+		$( "#sliderZap" ).slider({value:defZap});
+		
+		lsSet('beepPosition', defBeep);
+		lsSet('beepIntensity', percentToRaw(defBeep, 'beep'));
+		$("#beepIntensity").html(defBeep + "%");
+		$( "#sliderBeep" ).slider({value:defBeep});
 	});
 	
 }
@@ -1144,15 +1151,15 @@ function saveOptions() {
 	lsSet('zapOnClose', zapOnClose);
 	
 	var beepPosition = $( "#sliderBeep" ).slider( "option", "value");
-	beepIntensity = percentToRaw(beepPosition); // convert to 1-255 interval
+	beepIntensity = percentToRaw(beepPosition, 'beep'); // convert to 1-255 interval
 	lsSet('beepIntensity', beepIntensity);
 	
 	var zapPosition = $( "#sliderZap" ).slider( "option", "value");
-	zapIntensity = percentToRaw(zapPosition); // convert to 1-255 interval
+	zapIntensity = percentToRaw(zapPosition, 'zap'); // convert to 1-255 interval
 	lsSet('zapIntensity', zapIntensity);
 	
 	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
-	vibrationIntensity = percentToRaw(vibrationPosition);
+	vibrationIntensity = percentToRaw(vibrationPosition, 'vibrate');
 	lsSet('vibrationIntensity', vibrationIntensity);
 	
 	confirmUpdate(notifyUpdate);

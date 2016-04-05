@@ -131,7 +131,7 @@ function enableStimuliControls() {
 				var beepPos = ui.value;
 				console.log(beepPos);
 				lsSet('beepPosition', beepPos);
-				lsSet('beepIntensity', percentToRaw(beepPos));
+				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
@@ -147,7 +147,7 @@ function enableStimuliControls() {
 			slide: function( event, ui ) {
 				var zapPos = ui.value;
 				lsSet('zapPosition', zapPos);
-				lsSet('zapIntensity', percentToRaw(zapPos));
+				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
@@ -163,7 +163,7 @@ function enableStimuliControls() {
 			slide: function( event, ui ) {
 				var vibPos = ui.value;
 				lsSet('vibrationPosition', vibPos);
-				lsSet('vibrationIntensity', percentToRaw(vibPos));
+				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
@@ -181,17 +181,17 @@ function enableStimuliControls() {
 		var defBeep = 100;
 		
 		lsSet('vibrationPosition', defVib);
-		lsSet('vibrationIntensity', percentToRaw(defVib));
+		lsSet('vibrationIntensity', percentToRaw(defVib, 'vibrate'));
 		$("#vibrationIntensity").html(defVib + "%");
 		$( "#sliderVibration" ).slider({value:defVib});
 		
 		lsSet('zapPosition', defZap);
-		lsSet('zapIntensity', percentToRaw(defZap));
+		lsSet('zapIntensity', percentToRaw(defZap, 'zap'));
 		$("#zapIntensity").html(defZap + "%");
 		$( "#sliderZap" ).slider({value:defZap});
 		
 		lsSet('beepPosition', defBeep);
-		lsSet('beepIntensity', percentToRaw(defBeep));
+		lsSet('beepIntensity', percentToRaw(defBeep, 'beep'));
 		$("#beepIntensity").html(defBeep + "%");
 		$( "#sliderBeep" ).slider({value:defBeep});
 	});

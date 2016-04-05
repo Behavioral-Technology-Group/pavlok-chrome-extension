@@ -750,8 +750,8 @@ function oauth() {
 		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
 	else if (usage == "testSTAGE") {
-		clientID = "4178326597e9a470f86a12379ef3d450b15aa3ccf8701461b3e9c2f6792eef7e";
-		clientSecret = "44818bfff68ca701f46ffff5e3b9f026748847f8770a1bf4f9118c461a23c0c4";
+		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
 	else if ( usage == "productionSTAGE" ){
 		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
@@ -1068,33 +1068,34 @@ function dateFromTime(time){
 	return date
 }
 
-function percentToRaw(percent){
-	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
-	/*
-	100 - 0 			255 - 0
-	percent - 0 		x - 0
+
+function percentToRaw(percent, stimulus){
+	var rawRange;
+	if (stimulus == 'zap'){
+		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
+	}
+	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
+	}
 	
-	100x = 255 * percent
-	x = percent * 255 / 100
-	*/
-	var rawN
-	rawN = Math.round(percent * 255 / 100);
+	var index = ((parseInt(percent))/10) - 1;
+	var rawN = rawRange[index];
 	
 	return rawN
 }
 
-function rawToPercent(raw){
-	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
-	/*
-	100 - 0 			255 - 0
-	x - 0 				raw - 0
+function rawToPercent(raw, stimulus){
+	var rawRange;
+	if (stimulus == 'zap'){
+		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
+	}
+	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
+	}
 	
-	255x = 100 * raw
-	x = raw * 100 / 255
-	*/
+	var index = rawRange.indexOf(raw);
 	
-	var percN = raw * 100 / 255;
-	percN = Math.round(percN / 10) * 10;
+	var percN = (index + 1) * 10;
 	return percN
 }
 

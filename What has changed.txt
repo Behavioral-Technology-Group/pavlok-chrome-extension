@@ -1,0 +1,30 @@
+New additions
+(0.7.6)
+- Stimuli intensity defined in the options page now returns proper values, not the last one
+- Separate way to convert beep + vibration and stimuli ranges from % to raw
+
+(0.7.5)
+- Fixed the server setting
+
+(0.7.4)
+- Fixed test beep button
+- Clear cookies skeleton (function exists, but support is limited to Chrome's dev version)
+- New Black and White List mechanism
+	You can now block parts of sites
+	You can also whitelist other parts of sites
+	No more www. on the whitelists
+
+- Lightening implementation
+	Unnecessary console calls removed
+	Checks for acitivity reduced 8 fold
+	Checks for pomoFocus reduced 5 fold
+	
+- Stop checking tab numbers when signed out
+
+(0.7.3)
+- PDF don't get injected scripts, so PDF files won't have trouble opening anymore
+- Update notifications only when settings are actually updated, not when Popup or options page are opened
+- MUCH lighter implementation.
+--- Blacklist is checked when tab changes and after a zap (so it can be made continuous while people are still over blacklisted pages)
+--- Badge updates only when tab numbers or login changes
+----- Badge image only changes when user signs in or out. Only text updates otherwise
