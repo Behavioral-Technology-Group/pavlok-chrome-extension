@@ -149,7 +149,6 @@ if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
 if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
 if (!localStorage.tabNumbersActive ) { localStorage.tabNumbersActive = 'true'; }
 
-
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
 if (!localStorage.generalActiveTimeEnd) { localStorage.generalActiveTimeEnd = "23:59"; }
@@ -167,6 +166,7 @@ if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
+var notifyInterval;
 
 	var notifications = {};
 	
@@ -704,6 +704,7 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+
 function saveBlackList(){
 	lsSet('blackList', $("#blackList")[0].value);
 	confirmUpdate(notifyUpdate);
@@ -712,12 +713,63 @@ function saveBlackList(){
 }
 
 function saveWhiteList(){
-	lsSet('whiteList', $("#whiteList")[0].value);
+	curWhiteList = $("#whiteList")[0].value;
+	validateTags(curWhiteList);
+	
+	lsSet('whiteList', curWhiteList);
 	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
 }
 
+function validateTags(list){
+	var tags;
+	
+	if (list == "") { tags = []; }
+	else {tags = list.split(',');}
+	 
+	var problems = [];
+	
+	if (tags.length > 0){
+		for (t = 0; t < tags.length; t++){
+			curTag = tags[t];
+			var www = curTag.indexOf("www.") != -1;
+			var http = curTag.indexOf("http:") != -1;
+			var https = curTag.indexOf("https:") != -1;
+			
+			var notOk = (www || http || https);
+			
+			if (notOk == true) {problems.push(curTag);}
+		}
+	}
+	
+	if (problems.length > 0){
+		notifyBadTags(problems)
+	}
+	
+}
+
+function notifyBadTags(problems){
+	if (notifyInterval == false){
+		return
+	}
+	
+	notifyInterval = false;
+	setTimeout(function(){notifyInterval = true}, 10000);
+	
+	var fixMessage = 	'' +
+						'<p>You have a few whitelisted sites that will not fire properly.</p><p><b>Please, remove any http or www it might have</b>. For instance:</p>' + 
+						'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
+						'<p>The addresses who need your attention are:</p><ul>';
+	for (p = 0; p < problems.length; p++){
+		fixMessage = fixMessage + '<li>' + problems[p] + '</li>';
+	}
+	fixMessage = fixMessage + "</ul>"
+	
+	$.prompt(fixMessage, {
+		title: "Some whitelist items need correction"
+	});
+}
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -861,7 +913,6 @@ function rescueTimeOAuth() {
 		}
 	);	
 }
-
 
 function destroyToken(){
 	localStorage.setItem('accessToken', 'null');
@@ -1104,4 +1155,3 @@ function isActive(){
 	var token = isValid(localStorage.accessToken);
 	
 	return dayHour && token
-}
