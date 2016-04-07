@@ -36,6 +36,11 @@ function getTasks(number){
 	var ToDoTasks = lsGet('ToDoTasks', 'parse');
 	if (ToDoTasks == null) { return false }
 	
+	// Filter tasks which are done
+	ToDoTasks = _.where(ToDoTasks, {done: false});
+	
+	
+	
 	var nTasks = ToDoTasks.length
 	if (number >= nTasks){
 		console.log("There are only " + nTasks + " tasks. Returning all of them")
