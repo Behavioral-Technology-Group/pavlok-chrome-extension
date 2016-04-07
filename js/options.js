@@ -584,12 +584,12 @@ function enableRescueTime(){
 	
 	// Save Values:
 	$("#RTPosLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTWarnLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTNegLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTWarnLimit").change(function(){localStorage.RTWarnLimit = $(this).val();});
+	$("#RTNegLimit").change(function(){localStorage.RTNegLimit = $(this).val();});
 	
-	$("#RTPosSti").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTWarnSti").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTNegSti").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTPosSti").change(function(){localStorage.RTPosSti = $(this).val();});
+	$("#RTWarnSti").change(function(){localStorage.RTWarnSti = $(this).val();});
+	$("#RTNegSti").change(function(){localStorage.RTNegSti = $(this).val();});
 
 	changeRTVisibility();
 }
