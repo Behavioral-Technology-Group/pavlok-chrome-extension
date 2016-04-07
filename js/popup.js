@@ -230,6 +230,7 @@ $( document ).ready(function() {
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
 		confirmUpdate(notifyUpdate);
+		msgExt("updateMaxTabs", "options");
 	});
 	
 	$("#instaZap").change(function(){
