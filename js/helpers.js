@@ -566,19 +566,6 @@ function clearCookies(){
 }
 
 function signOut(){ 
-	// Logging out of providers
-	signOutURL = " https://pavlok-mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
-	console.log("url for Sign Out is " + signOutURL)
-	
-	// Proper way of handling it in our server
-	$.post(signOutURL)
-		.done(function(data){
-			console.log("Signed out. Data is: " + JSON.stringify(data) + " !");
-		})
-		.fail(function(){
-			console.log("Failed to sign out")
-		});
-	// Destroy login data
 	localStorage.setItem('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
@@ -587,6 +574,11 @@ function signOut(){
 	showOptions(localStorage.accessToken);
 	UpdateBadgeOnOff();
 	
+	// Logging out of providers
+	chrome.identity.launchWebAuthFlow({
+		'url': 'https://pavlok-mvp.herokuapp.com/users/sign_out', 'interactive': false}, function(response){
+			console.log(response);
+	});
 	
 }
 
