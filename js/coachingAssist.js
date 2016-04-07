@@ -139,7 +139,10 @@ function startPomoFocus(item){
 
 function isItTime(){
 	var now = new Date().getTime();
-	if (now < coach.nextCall) { return }
+	if (now < coach.nextCall) { 
+		console.log("Next call at " + dateFromTime(coach.nextCall));
+		return
+	}
 	
 	coach.lastCall = now;
 	var pomo = lsGet('pomoFocusB', 'parse');
