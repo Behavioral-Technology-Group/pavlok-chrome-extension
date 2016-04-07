@@ -1155,3 +1155,4 @@ function isActive(){
 	var token = isValid(localStorage.accessToken);
 	
 	return dayHour && token
+}
