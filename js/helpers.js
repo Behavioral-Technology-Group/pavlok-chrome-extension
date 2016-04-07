@@ -311,6 +311,10 @@ function savePomoFocus(pomoFocus, win){
 	
 	updateCountdown();
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		if (tabs.length == 0) {
+			console.log("background debugger selected");
+			return
+		}
 		chrome.tabs.sendMessage(tabs[0].id, 
 		{
 			action: "pomodoro", 
