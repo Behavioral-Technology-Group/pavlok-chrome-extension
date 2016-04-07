@@ -151,5 +151,8 @@ function isItTime(){
 
 var coachTimeout;
 
-listenCoachingClicks();
-isItTime();
+if (usage == "localMVP" ) {
+	console.log("Coach is active");
+	listenCoachingClicks();
+	isItTime();
+}
