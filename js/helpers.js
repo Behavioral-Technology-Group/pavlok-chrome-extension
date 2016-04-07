@@ -710,7 +710,18 @@ function updateNotification(title, message, notID){
 
 
 function saveBlackList(){
-	lsSet('blackList', $("#blackList")[0].value);
+	var curBlackList = $("#blackList")[0].value;
+	
+	var ok = validateTags(curBlackList);
+	if (ok == true){
+		lsSet('blackList', curBlackList);
+	}
+	else {
+		var faulty = curBlackList.split(',');
+		var newList = fixTags(faulty);
+		lsSet('blackList', newList);
+	}
+	
 	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
@@ -718,9 +729,16 @@ function saveBlackList(){
 
 function saveWhiteList(){
 	curWhiteList = $("#whiteList")[0].value;
-	validateTags(curWhiteList);
+	var ok = validateTags(curWhiteList);
+	if (ok == true){
+		lsSet('whiteList', curWhiteList);
+	}
+	else {
+		var faulty = curWhiteList.split(',');
+		var newList = fixTags(faulty);
+		lsSet('whiteList', newList);
+	}
 	
-	lsSet('whiteList', curWhiteList);
 	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
@@ -748,9 +766,31 @@ function validateTags(list){
 	}
 	
 	if (problems.length > 0){
-		notifyBadTags(problems)
+		return false
 	}
+	return true
 	
+}
+
+function fixTags(problems){
+	var list = [];
+	for (p = 0; p < problems.length; p++){
+		var original = problems[p];
+		var work = original;
+		
+		var targets = ["https://", "http://", "www."];
+		
+		for (t = 0; t < targets.length; t++){
+			curTarget = targets[t];
+			if (work.indexOf(curTarget) == 0){
+				work = work.split(curTarget)[1];
+			};
+		}
+		
+		list.push(work);
+		console.log(original + "\n" + work);
+	}
+	return list;
 }
 
 function notifyBadTags(problems){
@@ -758,15 +798,17 @@ function notifyBadTags(problems){
 		return
 	}
 	
+	var corrections = fixTags(problems);
+	
 	notifyInterval = false;
 	setTimeout(function(){notifyInterval = true}, 10000);
 	
 	var fixMessage = 	'' +
-						'<p>You have a few whitelisted sites that will not fire properly.</p><p><b>Please, remove any http or www it might have</b>. For instance:</p>' + 
+						'<p>You had a few whitelisted sites that will not fire properly.</p><p><b>We adjusted them for you, but check if you still recognize them</b>. For instance:</p>' + 
 						'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
 						'<p>The addresses who need your attention are:</p><ul>';
 	for (p = 0; p < problems.length; p++){
-		fixMessage = fixMessage + '<li>' + problems[p] + '</li>';
+		fixMessage = fixMessage + '<li>' + corrections[p] + " which was " + problems[p] + '</li>';
 	}
 	fixMessage = fixMessage + "</ul>"
 	
