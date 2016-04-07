@@ -355,7 +355,7 @@ function enableBlackDaily(){
 	
 	// $('#whiteListDaily')[0].value = '';
 	$('#whiteListDaily').tagsInput({
-		'defaultText':'https://www.facebook.com/groups/772212156222588/',
+		'defaultText':'facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
@@ -464,7 +464,7 @@ function updateRTLimits(){
 	localStorage.RTPosLimit = PosValue;
 	localStorage.RTWarnLimit = WarnValue;
 	localStorage.RTNegLimit = NegValue;
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 	return
 }
 
@@ -481,7 +481,7 @@ function enableRescueTime(){
 	
 	$("#RTOnOffSelect").change(function(){
 		var RTOnOffSelect = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 		localStorage.RTOnOffSelect = RTOnOffSelect;
 		if (RTOnOffSelect == "On") { 
 			updateProductivity(); 
@@ -493,7 +493,7 @@ function enableRescueTime(){
 	
 	$( "#RTFrequencySelect" ).change(function(){
 		localStorage.RTFrequency = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#removeRTAPIKey").click(function() {
@@ -516,7 +516,7 @@ function enableRescueTime(){
 					$("#RTOnOffSelect").val('Off');
 					lsSet('RTOnOffSelect', 'Off');
 					changeRTVisibility();
-					confirmUpdate();
+					confirmUpdate(notifyUpdate);
 				}	
 			}
 		});
@@ -570,7 +570,7 @@ function enableRescueTime(){
 		localStorage.RTPosLimit = PosValue;
 		localStorage.RTWarnLimit = WarnValue;
 		localStorage.RTNegLimit = NegValue;
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	// Restore values
@@ -631,18 +631,22 @@ function enableTimers(){
 		$( "#generalActiveTimeStart" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeStart = $(this).val();
-				confirmUpdate();
+				countTabs(localStorage.tabCountAll, UpdateTabCount);
+				confirmUpdate(notifyUpdate);
 			},
 		});
 		$( "#generalActiveTimeEnd" ).timespinner({
 			change: function( event, ui ) { 
 				localStorage.generalActiveTimeEnd = $(this).val();
-				confirmUpdate();
+				countTabs(localStorage.tabCountAll, UpdateTabCount);
+				confirmUpdate(notifyUpdate);
 			}
 		});
 	 
 		$( "#timeFormat" ).change(function() {
 			lsSet('timeFormat', $(this).val());
+			countTabs(localStorage.tabCountAll, UpdateTabCount);
+			
 			var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
 			var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
 			
@@ -725,7 +729,7 @@ function enableAutoZapper(){
 				console.log("result was " + v);
 				var result = v;
 				if (result == true){
-					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ));
+					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ), 'zap');
 					var zapFreq = parseInt( $("#autoZapperFrequency").val() ) * 1000;
 					var zapDur = parseInt( $("#autoZapperDuration").val() ) * 60 * 1000;
 
@@ -907,29 +911,14 @@ function enableSelects(){
 }
 
 function enableButtons(){
-	$("#resetIntensity").click(function( event ){
-		event.preventDefault();
-		
-		var defValue = 60;
-
-		$( "#sliderBeep" ).slider( { "value": defValue });
-		localStorage.beepPosition = defValue;
-		localStorage.beepIntensity = percentToRaw(defValue);
-
-		
-		$( "#sliderZap" ).slider( { "value": defValue });
-		localStorage.zapPosition = defValue;
-		localStorage.zapIntensity = percentToRaw(defValue);
-		
-		$( "#sliderVibration" ).slider( { "value": defValue });
-		localStorage.vibrationPosition = defValue;
-		localStorage.vibrationIntensity = percentToRaw(defValue);
-	});
-	
 	$("#testPairingX").click(function(){
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
+	$("#testBeepInt").click(function(){
+		stimuli("beep", defInt, defAT, "Incoming Beep. You should receive a notification on your phone, followed by a beep");
+	});
+	
 	$("#testZapInt").click(function(){
 		stimuli("shock", defInt, defAT, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
@@ -966,8 +955,12 @@ function enableTables(){ // TO-do update or remove
 
 function enableSliders(){
 	$(function() {
+		defZap = parseInt(lsGet('zapPosition'));
+		defVib = parseInt(lsGet('vibrationPosition'));
+		defBeep = parseInt(lsGet('beepPosition'));
+		
 		$( "#sliderBeep" ).slider({
-			value:60,
+			value:defBeep,
 			min: 10,
 			max: 100,
 			step: 10,
@@ -975,55 +968,81 @@ function enableSliders(){
 				var beepPos = ui.value;
 				console.log(beepPos);
 				lsSet('beepPosition', beepPos);
-				lsSet('beepIntensity', percentToRaw(beepPos));
-				saveOptions();
+				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
+				msgExt("updateStimuli", "options");
 			}
 		});
+		$("#beepIntensity").html(defBeep + "%");
 		
 		$( "#sliderZap" ).slider({
-			value:60,
+			value:defZap,
 			min: 10,
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
 				var zapPos = ui.value;
 				lsSet('zapPosition', zapPos);
-				lsSet('zapIntensity', percentToRaw(zapPos));
-				saveOptions();
+				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
-				confirmUpdate();
-
+				confirmUpdate(notifyUpdate);
+				msgExt("updateStimuli", "options");
 			}
 		});
+		$("#zapIntensity").html(defZap + "%");
 		
 		$( "#sliderVibration" ).slider({
-			value:60,
+			value:defVib,
 			min: 10,
 			max: 100,
 			step: 10,
 			slide: function( event, ui ) {
 				var vibPos = ui.value;
-				console.log(vibPos);
-				// localStorage.vibrationPosition = vibPos;
 				lsSet('vibrationPosition', vibPos);
-				lsSet('vibrationIntensity', percentToRaw(vibPos));
-				saveOptions();
+				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
-				confirmUpdate();
-
+				confirmUpdate(notifyUpdate);
+				msgExt("updateStimuli", "options");
 			}
 			
 		});
-		$( "#vibrationIntensity" ).val( $( "#sliderVibration" ).slider( "value" ) );
+		$("#vibrationIntensity").html(defVib + "%");
 		
+		
+	});
+	
+	$("#resetIntensity").click(function(){
+		event.preventDefault();
+		
+		var defVib = 60;
+		var defZap = 60;
+		var defBeep = 100;
+		
+		lsSet('vibrationPosition', defVib);
+		lsSet('vibrationIntensity', percentToRaw(defVib, 'vibrate'));
+		$("#vibrationIntensity").html(defVib + "%");
+		$( "#sliderVibration" ).slider({value:defVib});
+		
+		lsSet('zapPosition', defZap);
+		lsSet('zapIntensity', percentToRaw(defZap, 'zap'));
+		$("#zapIntensity").html(defZap + "%");
+		$( "#sliderZap" ).slider({value:defZap});
+		
+		lsSet('beepPosition', defBeep);
+		lsSet('beepIntensity', percentToRaw(defBeep, 'beep'));
+		$("#beepIntensity").html(defBeep + "%");
+		$( "#sliderBeep" ).slider({value:defBeep});
 	});
 	
 }
 
 function enableCheckboxes(){
 	// Active days
+	$(".activeDay").change(function(){
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
+	});
+	
 	$("#sundayActive").change(function(){
 		lsSet('sundayActive', $(this).prop( "checked" ));
 	});
@@ -1132,18 +1151,18 @@ function saveOptions() {
 	lsSet('zapOnClose', zapOnClose);
 	
 	var beepPosition = $( "#sliderBeep" ).slider( "option", "value");
-	beepIntensity = percentToRaw(beepPosition); // convert to 1-255 interval
+	beepIntensity = percentToRaw(beepPosition, 'beep'); // convert to 1-255 interval
 	lsSet('beepIntensity', beepIntensity);
 	
 	var zapPosition = $( "#sliderZap" ).slider( "option", "value");
-	zapIntensity = percentToRaw(zapPosition); // convert to 1-255 interval
+	zapIntensity = percentToRaw(zapPosition, 'zap'); // convert to 1-255 interval
 	lsSet('zapIntensity', zapIntensity);
 	
 	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
-	vibrationIntensity = percentToRaw(vibrationPosition);
+	vibrationIntensity = percentToRaw(vibrationPosition, 'vibrate');
 	lsSet('vibrationIntensity', vibrationIntensity);
 	
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 }
 
 function restoreOptions() {
@@ -1194,7 +1213,7 @@ function restoreOptions() {
 	$("#allTabsCountSelect").val(localStorage.tabCountAll);
 	$("#allTabsCountSelect").change(function(){
 		localStorage.tabCountAll = $(this).val();
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 		
 	$("#maxTabsSelect").val(localStorage.maxTabs);
@@ -1331,7 +1350,7 @@ function initialize() {
 		$('#whiteList')[0].value = localStorage["whiteList"];
 		$('#whiteList').tagsInput({
 			'onChange' : saveWhiteList,
-			'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
+			'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
 			'removeWithBackspace' : true
 		});
 	}
@@ -1386,9 +1405,6 @@ function initialize() {
 	serverKind = serverKind.split("-")[1].split(".")[0];
 	$("#server").text(serverKind);
 	
-	$(".notifyjs-corner").bind("DOMSubtreeModified",function(){
-	  alert('changed');
-	});
 }
 
 initialize();
@@ -1410,10 +1426,10 @@ $( document ).ready(function() {
 		userInfo(localStorage.accessToken)
 	}
 	if (localStorage.userName == undefined) {localStorage.userName = ' '; }
-	// else {
+	else {
 		$('#userEmailSettings').html(localStorage.userEmail);
 		$('#userName').html(" " + localStorage.userName);
-	
+	}
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
@@ -1435,7 +1451,7 @@ $( document ).ready(function() {
 	});
 	
 	$("body").on('change', '.pavSetting', function(){ 
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	// Message listeners

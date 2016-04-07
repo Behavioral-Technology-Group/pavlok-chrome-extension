@@ -107,7 +107,7 @@ function enableBlackList(){
 	var whiteListContents = lsGet('whiteList');
 	$('#whiteList').tagsInput({
 		'onChange' : saveWhiteList,
-		'defaultText':'Add site... ie: https://www.facebook.com/groups/772212156222588/',
+		'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	})
 	.importTags(whiteListContents);
@@ -131,9 +131,9 @@ function enableStimuliControls() {
 				var beepPos = ui.value;
 				console.log(beepPos);
 				lsSet('beepPosition', beepPos);
-				lsSet('beepIntensity', percentToRaw(beepPos));
+				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 		});
@@ -147,9 +147,9 @@ function enableStimuliControls() {
 			slide: function( event, ui ) {
 				var zapPos = ui.value;
 				lsSet('zapPosition', zapPos);
-				lsSet('zapIntensity', percentToRaw(zapPos));
+				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 		});
@@ -163,9 +163,9 @@ function enableStimuliControls() {
 			slide: function( event, ui ) {
 				var vibPos = ui.value;
 				lsSet('vibrationPosition', vibPos);
-				lsSet('vibrationIntensity', percentToRaw(vibPos));
+				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
-				confirmUpdate();
+				confirmUpdate(notifyUpdate);
 				msgExt("updateStimuli", "options");
 			}
 			
@@ -181,17 +181,17 @@ function enableStimuliControls() {
 		var defBeep = 100;
 		
 		lsSet('vibrationPosition', defVib);
-		lsSet('vibrationIntensity', percentToRaw(defVib));
+		lsSet('vibrationIntensity', percentToRaw(defVib, 'vibrate'));
 		$("#vibrationIntensity").html(defVib + "%");
 		$( "#sliderVibration" ).slider({value:defVib});
 		
 		lsSet('zapPosition', defZap);
-		lsSet('zapIntensity', percentToRaw(defZap));
+		lsSet('zapIntensity', percentToRaw(defZap, 'zap'));
 		$("#zapIntensity").html(defZap + "%");
 		$( "#sliderZap" ).slider({value:defZap});
 		
 		lsSet('beepPosition', defBeep);
-		lsSet('beepIntensity', percentToRaw(defBeep));
+		lsSet('beepIntensity', percentToRaw(defBeep, 'beep'));
 		$("#beepIntensity").html(defBeep + "%");
 		$( "#sliderBeep" ).slider({value:defBeep});
 	});
@@ -229,17 +229,17 @@ $( document ).ready(function() {
 	$("#maxTabsSelect").change(function(){
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#instaZap").change(function(){
 		lsSet('instaZap', $(this).prop( "checked" ));
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#lockZap").change(function(){
 		lsSet('lockZap', $(this).prop( "checked" ));
-		confirmUpdate();
+		confirmUpdate(notifyUpdate);
 		
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			curPAVTab = tabs[0];
@@ -281,3 +281,29 @@ $( document ).ready(function() {
 		}
 	);
 });
+
+function newsUpdate(){
+	var message = {};
+	message.html = 	"" +
+					"<p>Hey there, buddy!</p>" +
+					"<p>You can now block parts of a site. For instance, putting <b>facebook.com/groups</b> on your blacklist will warn on every facebook group, but will leave the rest of the site just fine.</p> " +
+					"<p>You can also whitelist bigger chunks of a site. For instance, putting <b>facebook.com/groups/772212156222588/</b> on your whitelist will make you safe on the Official Pavlok's Group.</p> " +
+					"<p>Also note that <b>black and whitelists now use the same way of typing addresses! If you need to make any adjustments, we will tell you</b>!</p>" +
+					"<p>Best, </p>" +
+					"<p>Pavlok Team</p>";
+
+	message.title = "Black and White lists got a level-up!"
+	message.buttons = { "Ok, don't tell me again": true, "Remind me again": false };
+	message.submit = function(e,v,m,f){
+		var result = v;
+		if (result == true) {
+			lsSet('dontRepeatUpdate', 'true');
+			validateList(lsGet('whiteList'));
+		}
+		else {
+			validateList(lsGet('whiteList'));
+		}
+	}
+	
+	$.prompt(message);
+}

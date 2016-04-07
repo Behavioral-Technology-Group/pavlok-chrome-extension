@@ -126,7 +126,6 @@ settings.prompts.showAgain = '';
 
 */
 
-
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
 lsSet('baseAddress', baseAddress);
 
@@ -150,7 +149,6 @@ if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
 if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
 if (!localStorage.tabNumbersActive ) { localStorage.tabNumbersActive = 'true'; }
 
-
 // Active Days and Hours
 if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
 if (!localStorage.generalActiveTimeEnd) { localStorage.generalActiveTimeEnd = "23:59"; }
@@ -168,6 +166,7 @@ if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
 if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
 if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 
+var notifyInterval;
 
 	var notifications = {};
 	
@@ -206,10 +205,6 @@ if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
 	// 
 	lsSet('notifications', notifications, 'object');
 	
-	
-
-
-
 // RescueTime
 if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
 if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
@@ -226,18 +221,18 @@ if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 if (!localStorage.pomoFocusO) { 
 	var pomoFocusO = {}
 	pomoFocusO.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusO',  pomoFocusO, 'object');
+	lsSet('pomoFocusO', pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
 	var pomoFocusB = {}
 	pomoFocusB.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusB',  pomoFocusB, 'object');
+	lsSet('pomoFocusB', pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
 	var pomoFocusP = {}
 	pomoFocusP.lastUpdate = new Date().getTime();
-	pomoFocusP.endTime = timeDelta(0).getTime();
-	lsSet('pomoFocusP',  pomoFocusP, 'object');
+	pomoFocusP.endTime = deltaTime(0).getTime();
+	lsSet('pomoFocusP', pomoFocusP, 'object');
 }
 if (!localStorage.dailyList) {
 	lsSet('dailyList', [], 'object');
@@ -320,7 +315,7 @@ function savePomoFocus(pomoFocus, win){
 		{
 			action: "pomodoro", 
 			pomodoro: pomoFocus
-		});  
+		});
 	});
 	
 	return pomoFocus
@@ -411,10 +406,17 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-function confirmUpdate(){
-	notifyUser('Settings updated', '', 'updatedSettings');
-	clearTimeout(notTimeout);
-	notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+var notifyUpdate = false;
+var noSUN = setTimeout(function(){
+	notifyUpdate = true;
+}, 1000);
+
+function confirmUpdate(notify){
+	if (notify){
+		notifyUser('Settings updated', '', 'updatedSettings');
+		clearTimeout(notTimeout);
+		notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+	}
 }
 
 // Tour
@@ -423,23 +425,26 @@ function openOptions(){
 }
 // Background
 function UpdateBadgeOnOff(badgeText) {
-	// if (inText.length == 0 ) { inText = "On"; }
-	// if (offText.length == 0 ) { offText = "Off"; }
-	
 	var logged = isValid(localStorage.accessToken);
-	
+	var badgeStatus = lsGet('badgeStatus');
 	
 	if (logged == true){
-		chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+		if (badgeStatus == "off"){
+			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+			badgeStatus = "on";
+		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
 		chrome.browserAction.setBadgeText({ text: badgeText });
-		
 	}
 	else{
-		chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+		if (badgeStatus == "on" || badgeStatus == false){
+			chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+			badgeStatus = "off";
+		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [100, 100, 100, 130] });
 		chrome.browserAction.setBadgeText({ text: "Off" });
 	}
+	lsSet('badgeStatus', badgeStatus);
 }
 
 function UpdateTabCount(tabCount) {
@@ -527,6 +532,35 @@ function evaluateTabCount(tabCount){
 	// .click(signOut);
 // }
 
+function clearCookies(){
+	/* Currently unsupported */
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_user_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_group_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "ajs_anonymous_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "_session_id"
+	// });
+	
+	// chrome.cookies.remove({
+		// url: "pavlok-mvp.herokuapp.com",
+		// name: "remember_user_token"
+	// });
+}
+
 function signOut(){ 
 	// Logging out of providers
 	signOutURL = " https://pavlok-mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
@@ -542,7 +576,8 @@ function signOut(){
 		});
 	// Destroy login data
 	localStorage.setItem('logged', 'false');
-	destroyToken();
+	lsDel('accessToken');
+	clearCookies();
 	
 	// Updates interface
 	showOptions(localStorage.accessToken);
@@ -600,7 +635,7 @@ function updateNameAndEmail(name, email){
 function enableTooltips(){
 	$(function() {
 		// Makes possible to use HTML inside the tittle
-		 $(document).tooltip({
+		$(document).tooltip({
             content: function() {
                 var element = $( this );
                 if ( element.is( "[title]" ) ) {
@@ -609,7 +644,7 @@ function enableTooltips(){
 
             },
             position: { my: "left bottom-3", at: "center top" } 
-			});
+		});
 	});	
 }
 
@@ -669,20 +704,72 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+
 function saveBlackList(){
 	lsSet('blackList', $("#blackList")[0].value);
-	confirmUpdate();
+	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
 }
 
 function saveWhiteList(){
-	lsSet('whiteList', $("#whiteList")[0].value);
-	confirmUpdate();
+	curWhiteList = $("#whiteList")[0].value;
+	validateTags(curWhiteList);
+	
+	lsSet('whiteList', curWhiteList);
+	confirmUpdate(notifyUpdate);
 	msgExt("updateBlackList", "popup");
 	msgExt("updateBlackList", "options");
 }
 
+function validateTags(list){
+	var tags;
+	
+	if (list == "") { tags = []; }
+	else {tags = list.split(',');}
+	 
+	var problems = [];
+	
+	if (tags.length > 0){
+		for (t = 0; t < tags.length; t++){
+			curTag = tags[t];
+			var www = curTag.indexOf("www.") != -1;
+			var http = curTag.indexOf("http:") != -1;
+			var https = curTag.indexOf("https:") != -1;
+			
+			var notOk = (www || http || https);
+			
+			if (notOk == true) {problems.push(curTag);}
+		}
+	}
+	
+	if (problems.length > 0){
+		notifyBadTags(problems)
+	}
+	
+}
+
+function notifyBadTags(problems){
+	if (notifyInterval == false){
+		return
+	}
+	
+	notifyInterval = false;
+	setTimeout(function(){notifyInterval = true}, 10000);
+	
+	var fixMessage = 	'' +
+						'<p>You have a few whitelisted sites that will not fire properly.</p><p><b>Please, remove any http or www it might have</b>. For instance:</p>' + 
+						'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
+						'<p>The addresses who need your attention are:</p><ul>';
+	for (p = 0; p < problems.length; p++){
+		fixMessage = fixMessage + '<li>' + problems[p] + '</li>';
+	}
+	fixMessage = fixMessage + "</ul>"
+	
+	$.prompt(fixMessage, {
+		title: "Some whitelist items need correction"
+	});
+}
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -715,8 +802,8 @@ function oauth() {
 		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
 	else if (usage == "testSTAGE") {
-		clientID = "4178326597e9a470f86a12379ef3d450b15aa3ccf8701461b3e9c2f6792eef7e";
-		clientSecret = "44818bfff68ca701f46ffff5e3b9f026748847f8770a1bf4f9118c461a23c0c4";
+		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
 	else if ( usage == "productionSTAGE" ){
 		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
@@ -801,7 +888,7 @@ function rescueTimeOAuth() {
 			
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = 'https://github.com/login/oauth/access_token?' + 
-			'client_id=' + clientID +  
+			'client_id=' + clientID + 
 			'&client_secret=' + clientSecret + 
 			'&code=' + authorizationCode + 
 			'&redirect_uri=' + redirectURL;
@@ -827,9 +914,8 @@ function rescueTimeOAuth() {
 	);	
 }
 
-
 function destroyToken(){
-  localStorage.setItem('accessToken', 'null');
+	localStorage.setItem('accessToken', 'null');
 }
 
 function userInfo(accessToken) { 
@@ -892,13 +978,13 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 }
 
 function randomString(characters){
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < characters; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	for( var i=0; i < characters; i++ )
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    return text;
+	return text;
 }
 
 function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
@@ -1033,32 +1119,40 @@ function dateFromTime(time){
 	return date
 }
 
-function percentToRaw(percent){
-	// Converts numbers in the 0-100 range to a 0-255 range, rounding it
-	/*
-	100 - 0 			255 - 0
-	percent - 0 		x - 0
+
+function percentToRaw(percent, stimulus){
+	var rawRange;
+	if (stimulus == 'zap'){
+		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
+	}
+	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
+	}
 	
-	100x = 255 * percent
-	x = percent * 255 / 100
-	*/
-	var rawN
-	rawN = Math.round(percent * 255 / 100);
+	var index = ((parseInt(percent))/10) - 1;
+	var rawN = rawRange[index];
 	
 	return rawN
 }
 
-function rawToPercent(raw){
-	// Converts numbers in the 0-255 range to a 0-100 range, rounding it to the nearest dezen
-	/*
-	100 - 0 			255 - 0
-	x - 0 				raw - 0
+function rawToPercent(raw, stimulus){
+	var rawRange;
+	if (stimulus == 'zap'){
+		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
+	}
+	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
+	}
 	
-	255x = 100 * raw
-	x = raw * 100 / 255
-	*/
+	var index = rawRange.indexOf(raw);
 	
-	var percN = raw * 100 / 255;
-	percN = Math.round(percN / 10) * 10;
+	var percN = (index + 1) * 10;
 	return percN
+}
+
+function isActive(){
+	var dayHour = checkActiveDayHour();
+	var token = isValid(localStorage.accessToken);
+	
+	return dayHour && token
 }

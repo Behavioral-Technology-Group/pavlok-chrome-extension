@@ -177,7 +177,6 @@ function updateCountDown(pomoFocus) {
 
 
 
-// chrome.extension.onMessage.addListener(
 function msgToCount(pomodoro){
 	updateCountDown(pomodoro);
 	togglePomoFocus(pomodoro);
