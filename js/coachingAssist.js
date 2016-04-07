@@ -123,6 +123,8 @@ function startPomoFocus(item){
 	togglePomodoro('focus');
 	myAudio = new Audio('../Audio/ticktock.mp3');
 	myAudio.play();
+	myAudio = new Audio('../Audio/ticktock.mp3');
+	myAudio.play();
 }
 
 
