@@ -229,6 +229,7 @@ $( document ).ready(function() {
 	$("#maxTabsSelect").change(function(){
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 		confirmUpdate(notifyUpdate);
 		msgExt("updateMaxTabs", "options");
 	});

@@ -1378,6 +1378,7 @@ function initialize() {
 	// Max Tabs
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 		msgExt("updateMaxTabs", "popup");
 		msgExt("updateMaxTabs", "options");
 	});
