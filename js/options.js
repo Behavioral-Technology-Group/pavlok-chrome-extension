@@ -1012,7 +1012,7 @@ function enableSliders(){
 		
 	});
 	
-	$("#resetIntensity").click(function(){
+	$("#resetIntensity").click(function( event ){
 		event.preventDefault();
 		
 		var defVib = 60;
