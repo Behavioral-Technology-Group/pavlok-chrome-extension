@@ -1192,3 +1192,15 @@ function isActive(){
 	
 	return dayHour && token
 }
+
+function msgInterfaces(msg){
+	msg.target = "popup";
+	chrome.runtime.sendMessage(msg);
+	msg.target = "options";
+	chrome.runtime.sendMessage(msg);
+}
+
+function msgBackground(msg){
+	msg.target = "background";
+	chrome.runtime.sendMessage(msg);
+}
