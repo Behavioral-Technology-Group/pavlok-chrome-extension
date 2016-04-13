@@ -626,3 +626,7 @@ div.auth{
 .red{
 	color:red;
 }
+
+.clickable:hover{
+	cursor: pointer;
+}
