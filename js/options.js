@@ -1455,6 +1455,8 @@ $( document ).ready(function() {
 		confirmUpdate(notifyUpdate);
 	});
 	
+	pomoTest.initialSync();
+	
 	// Message listeners
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -1486,6 +1488,10 @@ $( document ).ready(function() {
 						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
 						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
 					}
+				}
+				
+				else if (request.action == "updatePomoFocus"){
+					pomoTest.updateCountdown(request.pomo);
 				}
 			}
 		}

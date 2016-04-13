@@ -307,9 +307,6 @@ function savePomoFocus(pomoFocus, win){
 		pomoFocus.active = false;
 	}
 
-	equalizePomoFocus(pomoFocus);
-	
-	updateCountdown();
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 		if (tabs.length == 0) {
 			console.log("background debugger selected");
@@ -322,6 +319,7 @@ function savePomoFocus(pomoFocus, win){
 		});
 	});
 	
+	lsSet('pomoFocusB', pomoFocus, 'object');
 	return pomoFocus
 }
 

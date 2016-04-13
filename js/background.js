@@ -504,133 +504,7 @@ function checkForAudio(){
 	}
 }
 
-
-
-function updateCountdownBack(latest){
-	fixNoEndTime();
-	if (!latest){ var pomoFocusB = getPomoFocus('background'); }
-	else { var pomoFocusB = latest; }
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
-	
-	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	})
-	.on('finish.countdown', function(event) {
-		
-		if (localStorage.endReason == 'time') {
-			var NotList = lsGet('notifications', 'parse');
-			var Not = NotList.pomofocusEnded;
-			notifyUser(Not.title, Not.message, Not.id);
-			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
-		}
-		
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		pomoFocusB.active = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-	});
-}
-
-function checkForUpdateBack(){
-	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
-	var oCounter = getPomoFocus('options');
-	var pCounter = getPomoFocus('popup');
-	var bCounter = getPomoFocus('background');
-	
-	if (oCounter.lastUpdate == pCounter.lastUpdate && pCounter.lastUpdate == bCounter.lastUpdate) { return }
-	else {
-		// Gather data from the windows and compare to get the latest one. Others follow it.
-		var countersArray = [ oCounter, pCounter, bCounter ];
-		var indexesArray = [0, 1, 2];
-		
-		var lastUpdateArray = [ oCounter.lastUpdate, pCounter.lastUpdate, bCounter.lastUpdate ];
-		var maxIndex = lastUpdateArray.indexOf(Math.max.apply(null, lastUpdateArray));
-		
-		// Capture the latest and the others as separate. Others become equal to latest
-		latest = countersArray[maxIndex];
-		indexesArray.splice(maxIndex, 1);
-		
-		for (c = 0; c < indexesArray.length; c++){
-			countersArray[indexesArray[c]] = latest;
-		}
-		
-		console.log(maxIndex);
-		equalizePomoFocus(latest);
-		updateCountdownBack(latest);
-	}
-}
-
-function createPomoFocusCountDownBack(){
-	pomoFocusB = getPomoFocus('background');
-	pomoFocusB.endReason = 'time';
-	if (localStorage.endReason == 'time' || !localStorage.endReason ){
-		localStorage.endReason = 'time';
-	}
-	
-	var endDate = dateFromTime(pomoFocusB.endTime);
-	
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
-	
-	var timer = $(clockDiv).countdown(endDate, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	})
-	.on('finish.countdown', function(event) {
-		
-		if (localStorage.endReason == 'time') {
-			var NotList = lsGet('notifications', 'parse');
-			var Not = NotList.pomofocusEnded;
-			notifyUser(Not.title, Not.message, Not.id);
-			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
-		}
-		
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		pomoFocusB.active = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-	});
-}
-
-function calibratePomoFocus(){
-	var pomoFocus = lsGet('pomoFocusB', 'parse');
-	var dailyPomo = lsGet('dailyPomo');
-	
-	if (pomoFocus.endTime < new Date().getTime()){
-		pomoFocus.active = false;
-	}
-	
-	if (pomoFocus.active == false){
-		pomoFocus.audio = false;
-		pomoFocus.daily = false;
-		pomoFocus.specialList = false;
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-		lsDel('instaZap');
-	}
-}
-
-var countDownSafetyCheck = setInterval(function(){ 
-	updateCountdownBack();
-	}, 2000);
-	
-var restorePomoCheck = setInterval(function(){ 
-	checkForUpdateBack();
-	checkForAudio();
-	calibratePomoFocus();
-	}, 500);
-
-$( document ).ready( function() { updateCountdownBack(); });
+// $( document ).ready( function() { updateCountdownBack(); });
 
 
 
@@ -727,62 +601,6 @@ function CreateTabListeners(token) {
 	})
 }
 
-function initialize() {	
-	persistNotifications();
-	onUpdateAvailable();
-	onInstall();
-	notifyClicked();
-	
-	UpdateBadgeOnOff(" ");
-	var accessToken = localStorage.getItem("accessToken");
-	
-	CreateTabListeners(accessToken);
-	testInterval = setInterval(
-		function(){
-			if (checkActiveDayHour() == true) {
-				if (isValid(localStorage.accessToken)){
-					timeWindow = localStorage.timeWindow;
-					rescueTimeChecker();
-					RTTimeOut = localStorage.RTTimeOut;
-				}
-			} else {
-				UpdateBadgeOnOff("Zzz");
-			}
-		}
-	, 800);
-	createPomoFocusCountDownBack();
-	
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.target == "background"){
-				if (request.action == "volumeUp"){
-					var myAudioVol = parseFloat(myAudio.volume);
-					if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
-					else { myAudioVol = myAudioVol + 0.1; }
-					
-					myAudio.volume = myAudioVol;
-				}
-				
-				else if (request.action == "volumeDown"){
-					var prevAudioVol = parseFloat(myAudio.volume);
-					var newAudioVol;
-					if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
-					else { newAudioVol = prevAudioVol - 0.1; }
-					
-					myAudio.volume = newAudioVol;
-				}
-				
-				else if (request.action == "newPage") {
-					var pomoFocus = lsGet('pomoFocusB', 'parse');
-					sendResponse({
-						pomodoro: pomoFocus
-					});
-				}
-			}
-		}
-	);
-}
-
 function getTabInfo(callback){
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 		if (tabs.length == 0 ) { // no active tabs
@@ -852,6 +670,104 @@ function blackListTimer(blackListed, timespan){
 			}, timespan * 1000);
 		}
 	}
+}
+
+function initialize() {	
+	persistNotifications();
+	onUpdateAvailable();
+	onInstall();
+	notifyClicked();
+	
+	UpdateBadgeOnOff(" ");
+	var accessToken = localStorage.getItem("accessToken");
+	
+	CreateTabListeners(accessToken);
+	testInterval = setInterval(
+		function(){
+			if (checkActiveDayHour() == true) {
+				if (isValid(localStorage.accessToken)){
+					timeWindow = localStorage.timeWindow;
+					rescueTimeChecker();
+					RTTimeOut = localStorage.RTTimeOut;
+				}
+			} else {
+				UpdateBadgeOnOff("Zzz");
+			}
+		}
+	, 1000);
+	
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.target == "background"){
+				console.log(request);
+				var action = request.action;
+				
+				if (action == "volumeUp"){
+					var myAudioVol = parseFloat(myAudio.volume);
+					if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
+					else { myAudioVol = myAudioVol + 0.1; }
+					
+					myAudio.volume = myAudioVol;
+					console.log("received");
+				}
+				
+				else if (action == "volumeDown"){
+					var prevAudioVol = parseFloat(myAudio.volume);
+					var newAudioVol;
+					if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
+					else { newAudioVol = prevAudioVol - 0.1; }
+					
+					myAudio.volume = newAudioVol;
+				}
+				
+				else if (action == "newPage") {
+					var pomoFocus = lsGet('pomoFocusB', 'parse');
+					sendResponse({
+						pomodoro: pomoFocus
+					});
+				}
+				
+				else if (action == "startPomo"){
+					pomoTest.updatePomo(request.item);
+				}
+				
+				else if (action == "updatePomo"){
+					var pomo = lsGet('pomoFocusB', 'parse');
+					if (request.detail == "5 mins"){
+						pomo.endTime = pomo.endTime + 5 * 60 * 1000;
+						lsSet('pomoFocusB', pomo, 'object');
+						pomoTest.communicatePomo(pomo);
+						pomoTest.completeTask(pomo);
+					}
+					
+					else if (request.detail == "done"){
+						console.log(pomo);
+						pomoTest.completeTask(pomo);
+						// pomoTest.endPomo(pomo, 'done');
+						pomoTest.communicatePomo(pomo);
+						
+						msgInterfaces({
+							action: "updateActions",
+							pomo: pomo
+						});
+					}
+					
+					else if (request.detail == "stop"){
+						pomoTest.endPomo(pomo, 'stop');
+						pomoTest.communicatePomo(pomo);
+					}
+					
+					else { console.log("bad request for update Pomo"); }
+				}
+				
+				else if (action == "syncPomo"){
+					var pomo = lsGet('pomoFocusB', 'parse');
+					pomoTest.communicatePomo(pomo);
+				}
+				
+			}
+		}
+	);
 }
 
 initialize();

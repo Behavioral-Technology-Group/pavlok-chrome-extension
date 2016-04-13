@@ -9,7 +9,7 @@ var pomoFocusO;
 var pomoFocusB;
 
 var todayDivTest;
-var focusCompleteMsg = "IGAO Keep the zone going, you rock star!";
+var focusCompleteMsg = "Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
 var defInt = '';			// Use default intensity for stimuli
 var defAT = '';				// Use default Access Token for stimuli
@@ -259,6 +259,7 @@ $( document ).ready(function() {
 		
 	});
 	
+	pomoTest.initialSync();
 	// Message listeners
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -275,9 +276,29 @@ $( document ).ready(function() {
 							return
 					}
 					else{
+						// leave as is
 					}
-						$("#blackList").importTags(newBlackList);
-						$("#whiteList").importTags(newWhiteList);
+					$("#blackList").importTags(newBlackList);
+					$("#whiteList").importTags(newWhiteList);
+				}
+				
+				if (request.action == "updatePomoFocus"){
+					pomoTest.updateCountdown(request.pomo);
+					console.log("received pomo");
+					console.log(request.pomo);
+					
+				}
+				
+				if (request.action == "updateActions"){
+					var pomo = request.pomo;
+					restoreTaskList();
+					restoreDailyList(".dailyContainer");
+					if (request.pomo.daily == false){
+						pomoTest.checkRegularTask(pomo);
+					}
+					else if (pomo.daily == true){
+						pomoTest.checkDailyTask(pomo);
+					}
 				}
 			}
 		}
