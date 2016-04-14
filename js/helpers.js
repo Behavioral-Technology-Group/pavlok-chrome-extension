@@ -351,6 +351,8 @@ function lsSet(key, data, dataType){
 }
 
 function lsGet(key, parse){
+	if (localStorage.getItem(key) == null) { return undefined };
+	
 	if (!parse) { parse = 'string' };
 	var returnData;
 	
