@@ -224,8 +224,18 @@ if (!localStorage.pomoFocusO) {
 	lsSet('pomoFocusO', pomoFocusO, 'object');
 }
 if (!localStorage.pomoFocusB) { 
-	var pomoFocusB = {}
-	pomoFocusB.lastUpdate = new Date().getTime();
+	var pomoFocusB = {
+		active: false,
+		audio: false,
+		daily: false,
+		duration: 0,
+		endReason: "time",
+		endTime: new Date().getTime(),
+		lastUpdate: new Date().getTime(),
+		silent: "prompOnEnd",
+		task: "pomofocus",
+		taskID: 0		
+	}
 	lsSet('pomoFocusB', pomoFocusB, 'object');
 }
 if (!localStorage.pomoFocusP) { 
