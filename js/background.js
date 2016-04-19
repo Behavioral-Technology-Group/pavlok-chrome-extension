@@ -753,6 +753,10 @@ function initialize() {
 					pomoTest.communicatePomo(pomo);
 				}
 				
+				// Oauth
+				else if (action == "oauth"){
+					oauth();
+				}
 			}
 		}
 	);
