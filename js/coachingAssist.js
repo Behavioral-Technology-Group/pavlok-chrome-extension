@@ -1,6 +1,5 @@
 /* To-do
 
-	- Get only UNDONE tasks
 	- Prioritize Dailies?
 	- Prioritize tagged as today?
 	- Create different rest intervals according to sequence of pomodoros
@@ -19,13 +18,25 @@
 var coach = {
 	// Variables
 	timeout: 0,
+	todayPomos: function(pomo){
+		var x = lsGet('todayPomos', 'parse');
+		if (x == undefined) { x = []; };
+
+		if (!pomo){
+			return x
+		}
+		
+		x.push(pomo);
+		lsSet('todayPomos', x, 'object');
+	},
 	
 	// Methods
 	timeSincePomo: function(pomo){
+		if (!pomo) { pomo = { active: false, endTime: new Date().getTime() } }
 		var time;
 		if (pomo.active == true){ time = 0; }
 		else{ 
-			var now = (new Date).getTime();
+			var now = new Date().getTime();
 			var lastPomoEnd = pomo.endTime;
 			time = now - lastPomoEnd;
 			if (time < 0) { time = 0 }
@@ -41,8 +52,6 @@ var coach = {
 		
 		// Filter tasks which are done
 		ToDoTasks = _.where(ToDoTasks, {done: false});
-		
-		
 		
 		var nTasks = ToDoTasks.length
 		if (number >= nTasks){
@@ -67,6 +76,7 @@ var coach = {
 			console.log("only two buttons avaible. Using the first 2 tasks");
 			tasks = [tasks[0], tasks[1]];
 		}
+		else if (tasks.length == 0){ return; }
 		
 		buttons = [];
 		for (t = 0; t < tasks.length; t++){
@@ -115,11 +125,6 @@ var coach = {
 		console.log(item);
 	},
 
-
-	// What will be the logic for when the call comes in?
-		// After pomofocus, 5 to 15 minutes away
-		// If user don't engage, repeat another 5 minutes later
-
 	isItTime: function(){
 		var now = new Date().getTime();
 		if (now < coach.nextCall) { 
@@ -140,6 +145,14 @@ var coach = {
 		coach.nextCall = deltaTime(timeLimit / 1000).getTime();
 		coach.timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
 	},
+
+	registerPomos: function(pomosArray){
+		var totalPomos = lsGet('totalPomos', 'parse') || [];
+		totalPomos.push(pomosArray);
+		localStorage.totalPomos = JSON.stringify(totalPomos);
+	},
+	
+	resetPomos: function(){}
 };
 
 if (usage == "localMVP" ) {
