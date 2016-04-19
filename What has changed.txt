@@ -1,4 +1,39 @@
 New additions
+(0.7.13)
+- pomo escapes
+- Correct server configuration
+
+(0.7.10.2)
+- New audio for binaural
+- Binaural buttons working normally
+- Binaural sounds ended when pomo ends
+- oauth done via background
+
+(0.7.10.1)
+- Fixed broken clock on windows for first install
+- Todoist integration moved to background
+- Todoist has no more default token
+- Todoist getToken and removeToken functions act properly
+- Todoist removed automatic oauth on options page
+
+(0.7.10)
+- Mouse changes to clickable when hovering over binaural controllers
+- Assistant for tasks
+- Todoist integrations
+- Lots of backend enhancements
+
+(0.7.9)
+- Fixed Rescue stimuli can be selected and are saved
+- Check and fix for users URLs on black and whitelists without other warnings
+- Fixed sign out. It will require login again after doing it
+
+
+(0.7.8)
+- Fix to-do list overlay problem
+
+(0.7.7)
+- Check for bad items on whitelist
+
 (0.7.6)
 - Stimuli intensity defined in the options page now returns proper values, not the last one
 - Separate way to convert beep + vibration and stimuli ranges from % to raw
