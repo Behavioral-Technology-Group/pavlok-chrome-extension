@@ -822,7 +822,8 @@ function enableSignInOut(){
 			$(this).attr('title', 'Sign In');
 		}
 		else {
-			oauth(localStorage.accessToken);
+			msgBackground({action: "oauth"});
+			// oauth(localStorage.accessToken);
 			$(this).attr('title', 'Sign Out');
 		}
 	});
@@ -1492,6 +1493,10 @@ $( document ).ready(function() {
 				
 				else if (request.action == "updatePomoFocus"){
 					pomoTest.updateCountdown(request.pomo);
+				}
+				
+				else if (request.action == "logged"){
+					showOptions(request.token);
 				}
 			}
 		}

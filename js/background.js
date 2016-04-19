@@ -72,25 +72,6 @@ var accessToken = localStorage.accessToken;
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-// To-do Integration
-function timeSincePomo(){
-	var lastPomo = lsGet('pomoFocusB', 'parse');
-	
-	if (lastPomo.active == true){
-		return 0
-	}
-	else {
-		var now = new Date().getTime();
-		var timeSpent = now - lastPomo.lastUpdate;
-		
-		return timeSpent
-	}
-}
-
-
-
-
-
 // RescueTime Integration
 function validateTimeOut(RTTimeOut){
 	if (RTTimeOut == undefined) { RTTimeOut = false }
@@ -162,6 +143,9 @@ function CheckBlackList(curTabURL, curTabDomain) {
 	var locked = lsGet('lockZap') == "true"; // Changes string to boolen
 	var lockedTo = lsGet('lockedTo');
 	var pomoFocus = lsGet('pomoFocusB', 'parse');
+	
+	if (!pomoFocus){ var pomoFocus = {active: false }; };
+	if (!daily){ daily = false; };
 	
 	// Checks if it will use regular or daily black and whitelists
 	if (pomoFocus.active && locked){
@@ -504,10 +488,6 @@ function checkForAudio(){
 	}
 }
 
-// $( document ).ready( function() { updateCountdownBack(); });
-
-
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -699,8 +679,17 @@ function initialize() {
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.target == "background"){
-				console.log(request);
+				// console.log(request);
 				var action = request.action;
+				
+				// Pomo section
+				if (action == "play"){
+					playAudio();
+				}
+				
+				if (action == "stopAudio"){
+					stopAudio();
+				}
 				
 				if (action == "volumeUp"){
 					var myAudioVol = parseFloat(myAudio.volume);
@@ -708,7 +697,6 @@ function initialize() {
 					else { myAudioVol = myAudioVol + 0.1; }
 					
 					myAudio.volume = myAudioVol;
-					console.log("received");
 				}
 				
 				else if (action == "volumeDown"){
@@ -729,6 +717,7 @@ function initialize() {
 				
 				else if (action == "startPomo"){
 					pomoTest.updatePomo(request.item);
+					coach.todayPomos(request.item);
 				}
 				
 				else if (action == "updatePomo"){
@@ -743,7 +732,6 @@ function initialize() {
 					else if (request.detail == "done"){
 						console.log(pomo);
 						pomoTest.completeTask(pomo);
-						// pomoTest.endPomo(pomo, 'done');
 						pomoTest.communicatePomo(pomo);
 						
 						msgInterfaces({

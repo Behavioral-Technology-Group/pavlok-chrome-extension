@@ -221,7 +221,8 @@ $( document ).ready(function() {
 			signOut();
 		}
 		else{
-			oauth();
+			msgBackground({action: "oauth"});
+			// oauth();
 		}
 	});
 
@@ -282,14 +283,14 @@ $( document ).ready(function() {
 					$("#whiteList").importTags(newWhiteList);
 				}
 				
-				if (request.action == "updatePomoFocus"){
+				else if (request.action == "updatePomoFocus"){
 					pomoTest.updateCountdown(request.pomo);
 					console.log("received pomo");
 					console.log(request.pomo);
 					
 				}
 				
-				if (request.action == "updateActions"){
+				else if (request.action == "updateActions"){
 					var pomo = request.pomo;
 					restoreTaskList();
 					restoreDailyList(".dailyContainer");
@@ -299,6 +300,10 @@ $( document ).ready(function() {
 					else if (pomo.daily == true){
 						pomoTest.checkDailyTask(pomo);
 					}
+				}
+				
+				else if (request.action == "logged"){
+					showOptions(request.token);
 				}
 			}
 		}

@@ -218,32 +218,6 @@ if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
 if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 
 // To-Do
-if (!localStorage.pomoFocusO) { 
-	var pomoFocusO = {}
-	pomoFocusO.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusO', pomoFocusO, 'object');
-}
-if (!localStorage.pomoFocusB) { 
-	var pomoFocusB = {
-		active: false,
-		audio: false,
-		daily: false,
-		duration: 0,
-		endReason: "time",
-		endTime: new Date().getTime(),
-		lastUpdate: new Date().getTime(),
-		silent: "prompOnEnd",
-		task: "pomofocus",
-		taskID: 0		
-	}
-	lsSet('pomoFocusB', pomoFocusB, 'object');
-}
-if (!localStorage.pomoFocusP) { 
-	var pomoFocusP = {}
-	pomoFocusP.lastUpdate = new Date().getTime();
-	pomoFocusP.endTime = deltaTime(0).getTime();
-	lsSet('pomoFocusP', pomoFocusP, 'object');
-}
 if (!localStorage.dailyList) {
 	lsSet('dailyList', [], 'object');
 }
@@ -437,6 +411,7 @@ function confirmUpdate(notify){
 function openOptions(){
 	window.open('options.html','_blank');
 }
+
 // Background
 function UpdateBadgeOnOff(badgeText) {
 	var logged = isValid(localStorage.accessToken);
@@ -536,16 +511,6 @@ function evaluateTabCount(tabCount){
 	notifyTabCount(tabCount, situation);
 }
 
-
-// function hideSignIn(){ 
-	// $('#signIn').hide();
-// }
-
-// function showSignOut(){ 
-	// $('#signOut').html("<a href='#' id='signOut' class='sign_out'>Sign Out!</a>")
-	// .click(signOut);
-// }
-
 function clearCookies(){
 	/* Currently unsupported */
 	
@@ -584,7 +549,7 @@ function signOut(){
 	showOptions(localStorage.accessToken);
 	UpdateBadgeOnOff();
 	
-	// Logging out of providers
+	// Logging out of providers CHROME WAY
 	chrome.identity.launchWebAuthFlow({
 		'url': 'https://pavlok-mvp.herokuapp.com/users/sign_out', 'interactive': false}, function(response){
 			console.log(response);
@@ -605,12 +570,6 @@ function showOptions(accessToken){
 	}
 }
 
-// function hideOptions(){ 
-	// var options = document.getElementById("optionsDiv");
-	// options.style.visibility = "hidden";
-	// return
-// }
-
 function showName(name){ // mark for review
 	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
 		console.log("SHOW NAME has username as undefined. Name is " + name)
@@ -625,13 +584,6 @@ function showName(name){ // mark for review
 	}
 	return
 }
-
-// function hideName(){
-	// var userName = document.getElementById("userName");
-	// userName.style.visibility = "hidden";
-	// userName.innerHTML = "";
-	// return
-// }
 
 function updateNameAndEmail(name, email){
 	if ( $("#userName")  ) 	{ $("#userName").html(name); }
@@ -709,7 +661,6 @@ function updateNotification(title, message, notID){
 /*--------															--------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
-
 
 function saveBlackList(){
 	var curBlackList = $("#blackList")[0].value;
@@ -892,10 +843,9 @@ function oauth() {
 					console.log(data);
 					var accessToken = data.access_token;
 
+					msgInterfaces({action: 'logged', token: accessToken});
 					localStorage.setItem('logged', 'true');
 					localStorage.setItem('accessToken', accessToken);
-					var logged = document.getElementById("logged");
-					$( "#logged" ).append("<span>in</span>");
 					chrome.windows.getLastFocused(function(win) {
 						countTabs(localStorage.tabCountAll, UpdateTabCount);
 						showOptions(accessToken);
@@ -1167,7 +1117,6 @@ function dateFromTime(time){
 	return date
 }
 
-
 function percentToRaw(percent, stimulus){
 	var rawRange;
 	if (stimulus == 'zap'){
@@ -1215,4 +1164,11 @@ function msgInterfaces(msg){
 function msgBackground(msg){
 	msg.target = "background";
 	chrome.runtime.sendMessage(msg);
+}
+
+function arrayObjectIndexOf(myArray, searchTerm, property) {
+    for (var i = 0, len = myArray.length; i < len; i++) {
+        if (myArray[i][property] === searchTerm) return i;
+    }
+    return -1;
 }

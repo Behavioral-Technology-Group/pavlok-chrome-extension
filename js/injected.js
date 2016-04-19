@@ -20,6 +20,7 @@ function togglePomoFocus(pomoFocus){
 	}
 	else {
 		console.log("pomoFocus unavaible at response");
+		$("#pomoFocusBannerPlaceholder").hide();
 		console.log(response);
 	}
 }
@@ -178,8 +179,13 @@ function updateCountDown(pomoFocus) {
 
 
 function msgToCount(pomodoro){
-	updateCountDown(pomodoro);
+	if (!pomodoro) { 
+		var pomo = {active: false};
+			togglePomoFocus(pomo);
+		return
+	};
 	togglePomoFocus(pomodoro);
+	updateCountDown(pomodoro);
 	return
 }
 
