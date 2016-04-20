@@ -409,6 +409,7 @@ div.auth{
 	vertical-align: center;
 	padding-left: 5px;
 }
+
 .toDoItemTR > td > div {
 	display: inline-block;
 	margin: 0;
@@ -420,16 +421,16 @@ div.auth{
 	width: 5%;
 }
 
-.toDoOTaskTD {
+.toDoTaskTD {
 	width: 60%;
 }
 
-.toDoORemoverTD {
+.toDoRemoverTD {
 	text-align: right;
-	width: 35%;
+	width: 33%;
 }
 
-.doneTaskRow .toDoOTaskTD {
+.doneTaskRow .toDoTaskTD {
 	text-decoration: line-through;
 	color: gray;
 }

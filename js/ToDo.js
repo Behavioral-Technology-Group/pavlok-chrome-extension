@@ -537,6 +537,7 @@ function activateTaskFilterButtons(){
 	});
 }
 
+/* Marked for removal
 function addToDoItem(task, taskID){
 	if (!taskID){
 		var lastID = parseInt(localStorage.lastID);
@@ -566,13 +567,15 @@ function addToDoItem(task, taskID){
 	
 	return newTR
 }
+*/
 
 function addToDoOnEnter(){
 	$("#toDoAdd").keydown(function(e){
 		if (e.keyCode == 13) {
 			var task = $(this).val();
 			if (task.length > 0){
-				todo.createNewLine(todo.addTask(task));
+				var line = todo.createNewLine(todo.addTask(task));
+				$('#toDoTable > tbody').append(line);
 				$(this).val("");
 			}
 		}
@@ -598,6 +601,7 @@ function restoreTaskList(){
 	for (t = 0; t < totalTasks ; t++){
 		curTask = TaskList[t];
 		var line = todo.createNewLine(curTask);
+		$('#toDoTable > tbody').append(line);
 		if (curTask.done == true) { $(line).addClass('doneTaskRow'); }
 	}
 	
@@ -622,6 +626,7 @@ function syncToDo(page){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+/* Marked for removal
 function completeRegularTask(taskRow, override){
 	if (!override) { override = false }
 	var item = PFGetClickedRow(taskRow);
@@ -645,25 +650,25 @@ function completeRegularTask(taskRow, override){
 		stimuli("vibration", defInt, defAT, Not.message, "false");
 	}
 	
-	updateTasksCounter();
-	updateTasksLog();
+	// updateTasksCounter();
+	// updateTasksLog();
 }
 
-// // // function deleteTask(){
-	// // // $("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
-		// // // var taskId = $(this).attr('id');
-		// // // taskId = taskId.split('emove')[1];
+function deleteTask(){
+	$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
+		var taskId = $(this).attr('id');
+		taskId = taskId.split('emove')[1];
 		
-		// // // todo.removeTask(todo.clickedTask(taskId, false));
-		// // // $("#" + taskId).remove();
+		todo.removeTask(todo.clickedTask(taskId, false));
+		$("#" + taskId).remove();
 		
-		// // // // var item = PFGetClickedRow($(this));
-		// // // // var itemRow = item.Row;
-		// // // // itemRow.remove();
-		// // // // updateTasksCounter();
-		// // // // updateTasksLog();
-	// // // });
-// // // }
+		// var item = PFGetClickedRow($(this));
+		// var itemRow = item.Row;
+		// itemRow.remove();
+		// updateTasksCounter();
+		// updateTasksLog();
+	});
+}
 
 function markTaskToday(){
 	$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
@@ -681,6 +686,7 @@ function markTaskToday(){
 		updateTasksLog();
 	});
 }
+*/
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
@@ -796,22 +802,22 @@ function updateTasksLog(){
 /* ***************************************************************** */
 function enableToDo(){
 	
-	// Enablers
-	addToDoOnEnter();			// Add item on Enter
-	activateTaskFilterButtons();	// Filters like All, Today and Done
-	clearCompletedTasks();		// Clear Completed
-	// createPomoFocusCountDown();	// Initialize the timer and the on finish events
-	pomoTest.createCountdownElements();	// Initialize the timer and the on finish events
-	// // // deleteTask();				// delete on X
-	todo.listener();
-	enableDailyPomoFocus()		// tomatoes from dailies trigger focus
-	markTaskToday();			// Tags task for being done/not done today
-	pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
-	pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
-	restoreTaskList();			// Restore from To Do
-	restoreDailyList();			// Restore from Dailies
-	updateCompletedTasks();		// Complete if checked
-	updateTasksCounter();		// Items counter:
+	// // // // // Enablers
+	// // // // addToDoOnEnter();			// Add item on Enter
+	// // // // activateTaskFilterButtons();	// Filters like All, Today and Done
+	// // // // clearCompletedTasks();		// Clear Completed
+	// // // // // createPomoFocusCountDown();	// Initialize the timer and the on finish events
+	// // // // pomoTest.createCountdownElements();	// Initialize the timer and the on finish events
+	// // // // // // // deleteTask();				// delete on X
+	// // // // todo.listener();
+	// // // // enableDailyPomoFocus()		// tomatoes from dailies trigger focus
+	// // // // // markTaskToday();			// Tags task for being done/not done today
+	// // // // pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
+	// // // // pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
+	// // // // restoreTaskList();			// Restore from To Do
+	// // // // restoreDailyList();			// Restore from Dailies
+	// // // // updateCompletedTasks();		// Complete if checked
+	// // // // updateTasksCounter();		// Items counter:
 	
 }
 
@@ -963,18 +969,11 @@ var pomoTest = {
 		restoreDailyList('.dailyContainer');	
 	},
 	
-	checkRegularTask: function(pomo){
-		var taskID = pomo.taskID;
-		var itemRow = $("#" + taskID);
-		
+	checkRegularTask: function(taskId){
+		var itemRow = $("#" + taskId);
 		if (itemRow.length == 0){ console.log("no Now Task"); return }
 		$(itemRow).removeClass("nowTaskRow");
-		completeRegularTask(itemRow, true);
-		
-		var Not = lsGet('notifications', 'parse');
-		var Not = Not.pomofocusDone;
-		
-		notifyUser(Not.title, Not.message, Not.id);
+		$("#" + taskId + "Done").attr("checked", true);
 	},
 	
 }
@@ -1034,10 +1033,25 @@ var todo = {
 		return _.where(tasks, {id: id});
 	},
 	
-	editTask: function(){
-		if (task.daily == true){
-			
+	editTask: function(task, updates){
+		if (task.daily == true)	{ var tasks = lsGet('dailyList', 'parse') || []; }
+		else					{ var tasks = lsGet('ToDoTasks', 'parse') || []; }
+		
+		var index = arrayObjectIndexOf(tasks, task.id, 'id');
+		if (index == -1) { console.log("Task not found"); return }
+		
+		var fieldChanges = Object.getOwnPropertyNames(taskUpdates);
+		for (f = 0; f < fieldChanges.length; f++){
+			update = fieldChanges[f];
+			task[update] = updates[update];
 		}
+		
+		tasks[index] = task;
+		
+		if (task.daily == true)	{ lsSet('dailyList', tasks, 'object'); }
+		else					{ lsSet('ToDoTasks', tasks, 'object'); }
+
+		return task
 	},
 	
 	validateTask: function(){
@@ -1057,36 +1071,29 @@ var todo = {
 			
 		}
 		else {
+			var itemRow = $("#" + task.id);
+			if (itemRow.length == 0){ console.log("no Now Task"); return }
 			
+			$("#" + taskId + "Done").attr("checked", task.done);
+			if (task.done == true){	$(itemRow).addClass("doneTaskRow");	}
+			else {					$(itemRow).removeClass("doneTaskRow"); }
 		}
 	},
 	
 	updateInterface: function(){
 		var regulars = lsGet('ToDoTasks', 'parse');
 		for (t = 0; t < regulars.length; t++){
-			todo.createNewLine(regulars[t]);
+			var line = todo.createNewLine(regulars[t]);
+			$('#toDoTable > tbody').append(line);
+			
 		}
 	},
 	
-	createNewLine: function(task){
-		var newLine = '<tr id="' + task.id + '" class="toDoItemTR">' +
-						'<td colspan="5">' +
-							'<div class="toDoOKerTD">' +
-								'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
-							'</div>' + 
-							'<div class="toDoOTaskTD">' + 
-								task.task + 
-							'</div>' +
-							'<div class="toDoORemoverTD" >' + 
-								'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 							
-								'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon grayscale" title="<p>You will do it <b>today</b></p>"/>' + 
-								'<input type="image" src="images/redXIcon.png" alt="Cancel" id="' + task.id + 'remove" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
-							'</div>' + 
-						'</td>'
-		;
-		$('#toDoTable > tbody').append(newLine);
+	
+	editLine: function(task){
+		var line;
 		
-		return $('#toDoTable > tbody tr:last-child')[0];
+		
 	},
 	
 	listener: function(){
@@ -1100,16 +1107,25 @@ var todo = {
 			});
 			
 			// Clicking on today
-			$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
-				var taskId = $(this).attr('id');
+			$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
+				var img = $(this);
+				var today;
+				
+				var taskId = img.attr('id');
 				taskId = taskId.split('today')[0];
 				
-				todo.removeTask(todo.clickedTask(taskId, false));
-				$("#" + taskId).remove();
+				if ($(img).hasClass("grayscale")) 	{ today = true; }
+				else 								{ today = false }
+				
+				var task = todo.clickedTask(taskId, today);
+				todo.editTask(task, {today: today});
+				todo.editLine(task);
+				
+				
 			});
 			
 			// Clicking on tomato for pomo
-			$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
+			$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
 				var taskId = $(this).attr('id');
 				taskId = taskId.split('pomo')[0];
 				
@@ -1121,4 +1137,208 @@ var todo = {
 			
 			
 	}
+};
+
+var testTodo = {
+	backend: {
+		// Helpers
+		newId: function(){
+			var id = lsGet('lastID');
+			if (id == undefined) { id = 1; }
+			id = parseInt(id) + 1;
+			return id
+		},
+		
+		scaffold: function(task){
+			newTask = {
+				task:			task.task,
+				daily:			task.daily			|| false,
+				done:			task.done			|| false,
+				pomos:			task.pomos 			|| undefined,
+				donePomos:		task.donePomos		|| undefined,
+				duration:		task.duration		|| 20,
+				specialList:	task.specialList 	|| false,
+				blackList:		task.blackList		|| undefined,
+				whiteList:		task.whiteList		|| undefined,
+				instaZap:		task.instaZap		|| false,
+				binaural:		task.binaural		|| false
+			}
+			return newTask
+		},
+		
+		validate: function(task){
+			
+		},
+		
+		// CRUD
+		create: function(task){
+			var allTasks = lsGet('allTasks', 'parse') || [];
+			
+			var task = testTodo.backend.scaffold(task);
+			task.id = testTodo.backend.newId();
+			allTasks.push(task);
+			lsSet('allTasks', allTasks, 'object');
+			
+			lsSet('lastID', task.id);
+			console.log("New task added:")
+			return task
+		},
+		
+		read: function(id){
+			var allTasks = lsGet('allTasks', 'parse') || [];
+			
+			var task = _.where(allTasks, {id: id});
+			if (task.length == 0) { return undefined }
+			return task[0];
+		},
+		
+		update: function(task, updates){
+			
+		},
+		
+		delete: function(id){
+		
+		},
+	},
+	
+	frontEnd: {
+		addTaskListener: function(){
+			$("#toDoAdd").keydown(function(e){
+				if (e.keyCode == 13) {
+					var task = $(this).val();
+					if (task.length > 0){
+						var line = todo.createNewLine(todo.addTask(task));
+						$('#toDoTable > tbody').append(line);
+						$(this).val("");
+					}
+				}
+			});
+		},
+		
+		removeTaskListener: function(){
+			$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
+				var taskId = $(this).attr('id');
+				taskId = taskId.split('remove')[0];
+				
+				todo.removeTask(todo.clickedTask(taskId, false));
+				$("#" + taskId).remove();
+			});	
+		},
+		
+		tagTodayListener: function(){
+			$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
+				var img = $(this);
+				var today;
+				
+				var taskId = img.attr('id');
+				taskId = taskId.split('today')[0];
+				
+				if ($(img).hasClass("grayscale")) 	{ today = true; }
+				else 								{ today = false }
+				
+				var task = todo.clickedTask(taskId, today);
+				todo.editTask(task, {today: today});
+				todo.editLine(task);
+			});
+		},
+		
+		editDailyListener: function(){},
+		
+		createNewLine: function(task){
+			var tr = document.createElement("tr");
+			tr.className = "toDoItemTR";
+			tr.id = task.id;
+			
+			var td = document.createElement("td");
+			tr.appendChild(td);
+			td.colSpan = 5;
+			
+			var doneDiv = document.createElement("div");
+			td.appendChild(doneDiv);
+			doneDiv.className = "toDoOKerTD";
+			
+			var doneCheckbox = document.createElement("input");
+			doneDiv.appendChild(doneCheckbox);
+			doneCheckbox.className = "doneCheckbox"
+			doneCheckbox.type = "checkbox";
+			doneCheckbox.checked = task.done;
+			doneCheckbox.title = "Done?"
+			doneCheckbox.id = task.id + "Done"
+			
+			var taskDiv = document.createElement("div");
+			td.appendChild(taskDiv);
+			taskDiv.className = "toDoTaskTD";
+			taskDiv.innerHTML = task.task;
+			
+			var buttonsDiv = document.createElement("div");
+			td.appendChild(buttonsDiv);
+			buttonsDiv.className = "toDoRemoverTD";
+
+			var pomoButton = document.createElement("input");
+			buttonsDiv.appendChild(pomoButton);
+			pomoButton.type = "image";
+			pomoButton.src = "images/pomoFocusIconSmall.png";
+			pomoButton.alt = "Now";
+			pomoButton.id = task.id + "Pomo";
+			pomoButton.className = "nowToDoItem imgIcon";
+			pomoButton.title = "<p>Enter <b>Pomodoro</b> mode</p>";
+			
+			var todayButton = document.createElement("input");
+			buttonsDiv.appendChild(todayButton);
+			todayButton.type = "image";
+			todayButton.src = "images/todayIcon.png";
+			todayButton.alt = "Today";
+			todayButton.id = task.id + "today"
+			if (task.today == true){
+						todayButton.className = "todayToDoItem imgIcon"; 
+			} else { 	todayButton.className = "todayToDoItem imgIcon grayscale"; }
+			
+			todayButton.title = "<p>You will do it <b>today</b></p>";
+			
+			var removeButton = document.createElement("input");
+			buttonsDiv.appendChild(removeButton);
+			removeButton.type = "image";
+			removeButton.src = "images/redXIcon.png";
+			removeButton.alt = "Today";
+			removeButton.id = task.id + "Remove";
+			removeButton.className = "removeToDoItem imgIcon"; 
+			removeButton.title = "<p>I will not do it anymore. <b>Remove it</b></p>";
+			
+			$('#toDoTable > tbody').append(tr);
+
+			/* Marked for removal
+			var newLine = '<tr id="' + task.id + '" class="toDoItemTR">' +
+							'<td colspan="5">' +
+								'<div class="toDoOKerTD">' +
+									'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
+								'</div>' + 
+								'<div class="toDoTaskTD">' + 
+									task.task + 
+								'</div>' +
+								'<div class="toDoORemoverTD" >' + 
+									'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 							
+									'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon grayscale" title="<p>You will do it <b>today</b></p>"/>' + 
+									'<input type="image" src="images/redXIcon.png" alt="Cancel" id="' + task.id + 'remove" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
+								'</div>' + 
+							'</td>'
+			;
+			$('#toDoTable > tbody').append(newLine);
+			*/
+			
+			return tr;
+		},
+		
+		findLineById: function(id){
+			var line = $("#"+id);
+			if (line.length == 0){ return undefined }
+			return line[0];
+		},
+		restoreTasks: function(){},
+		updateLine: function(){},
+	},
+
+	helpers: {
+		
+	}
+
 };
