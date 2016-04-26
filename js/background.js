@@ -653,6 +653,8 @@ function blackListTimer(blackListed, timespan){
 }
 
 function initialize() {	
+	coach.listenCoachingClicks();
+	pavPomo.backend.backListener();
 	persistNotifications();
 	onUpdateAvailable();
 	onInstall();
@@ -683,18 +685,21 @@ function initialize() {
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.target == "background"){
-				// console.log(request);
 				var action = request.action;
 				// Oauth
 				if (action == "oauth"){
 					oauth();
 				}
+				else if (action == "coachChange"){
+					coach.status = request.change
+					if (coach.status == true){
+						coach.isItTime();
 					}
+					else{
+						clearTimeout(coach.timeout);
 					}
+					console.log("Coach running is " + coach.status);
 				}
-				// Oauth
-				else if (action == "oauth"){
-					oauth();
 				}
 			}
 		}
