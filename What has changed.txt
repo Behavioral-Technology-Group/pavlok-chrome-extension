@@ -3,9 +3,7 @@ New additions
 - Checks for blacklisted sites now use the pomodoro and tasks directly
 - Checks for blacklisted sites use a simpler and more accurate method for getting the url
 
-
-
-ToDo
+TODO
 ENGINES
 - ToDo is encapsulated in variables (testTodo, pavPomo)
 - Edits are done via update function
@@ -18,6 +16,8 @@ ENGINES
 PRESENTATION
 - Line creation for tasks is done completely via javascript
 
+......................
+
 POMODOROS
 ENGINES
 - All pomodoro timers are executed in the background page
@@ -26,10 +26,31 @@ ENGINES
 - Pomodoros are related, but separed from tasks
 - toInterfaces helper function also sends messages to content scripts
 - endPomo fixes audio
-- 
+- Default duration changed to 25 minutes
 
 PRESENTATION
-- 
+- Button listeners moved to background
+- Button effectors moved to background
+
+......................
+
+TODOIST INTEGRATION
+- Core functions defined
+- Basic implementation on Options page
+- No export function yet
+
+......................
+
+COACH TOOL
+- Check for on/off on options page
+- Basic implementation
+- Works on the background (even if no Chrome windows are open!)
+- Uses both daily and regular tasks
+
+
+
+
+
 
 (0.7.13)
 - pomo escapes
