@@ -138,23 +138,19 @@ function fireRescueTime(APIKey){
 
 // Black List
 function CheckBlackList(curTabURL, curTabDomain) {
-	var daily = lsGet('dailyPomo', 'parse');
-	
-	var locked = lsGet('lockZap') == "true"; // Changes string to boolen
-	var lockedTo = lsGet('lockedTo');
-	var pomoFocus = lsGet('pomoFocusB', 'parse');
+	var pomoFocus = pavPomo.helpers.lastPomo();
+	var task = testTodo.backend.read(pomoFocus.taskId);
 	
 	if (!pomoFocus){ var pomoFocus = {active: false }; };
-	if (!daily){ daily = false; };
 	
 	// Checks if it will use regular or daily black and whitelists
-	if (pomoFocus.active && locked){
-		if (curPAVDomain != lockedTo ) { return true }
+	if (pomoFocus.active && pomoFocus.lockZap){
+		if (curPAVDomain != pomoFocus.lockedTo ) { return true }
 		else { return false }
 	}
-	else if (pomoFocus.active && daily && (daily.specialList != false)){
-			var _whiteList = daily.whiteList.split(",");
-			var _blackList = daily.blackList.split(",");
+	else if (pomoFocus.active && task.daily && task.specialList){
+			var _whiteList = task.whiteList.split(",");
+			var _blackList = task.blackList.split(",");
 	}
 	else {
 		var _whiteList = localStorage.whiteList.split(",");
@@ -570,11 +566,12 @@ function CreateTabListeners(token) {
 	// When active tab change
 	chrome.tabs.onActivated.addListener(function(info){
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
+			var pomoF = pavPomo.helpers.lastPomo();
 			var tabId = info.tabId;
 			windowId = info.windowId;
 			chrome.tabs.sendMessage(tabId, {
 				action: "hello",
-				pomodoro: lsGet('pomoFocusB', 'parse')
+				pomodoro: pomoF
 			});
 			getTabInfo(evaluateTabURL);
 		}
@@ -610,7 +607,9 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	
 	if(_result == true){		//blacklisted site
 		// Variables
-		var instaZap = localStorage.instaZap == "true";
+		var pomo = pavPomo.helpers.lastPomo();
+		
+		var instaZap = (pomo.active && pomo.instaZap);
 		var firstZap = localStorage.firstZap == "true";
 		var timeWindowZap = parseInt(localStorage.timeWindow);
 		// var timeWindowZap = 3;
@@ -673,6 +672,10 @@ function initialize() {
 			} else {
 				UpdateBadgeOnOff("Zzz");
 			}
+			
+			if (dayChange()){
+				testTodo.helpers.resetDailyTasks;
+			}
 		}
 	, 1000);
 	
@@ -681,78 +684,13 @@ function initialize() {
 			if (request.target == "background"){
 				// console.log(request);
 				var action = request.action;
-				
-				// Pomo section
-				if (action == "play"){
-					playAudio();
+				// Oauth
+				if (action == "oauth"){
+					oauth();
 				}
-				
-				if (action == "stopAudio"){
-					stopAudio();
-				}
-				
-				if (action == "volumeUp"){
-					var myAudioVol = parseFloat(myAudio.volume);
-					if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
-					else { myAudioVol = myAudioVol + 0.1; }
-					
-					myAudio.volume = myAudioVol;
-				}
-				
-				else if (action == "volumeDown"){
-					var prevAudioVol = parseFloat(myAudio.volume);
-					var newAudioVol;
-					if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
-					else { newAudioVol = prevAudioVol - 0.1; }
-					
-					myAudio.volume = newAudioVol;
-				}
-				
-				else if (action == "newPage") {
-					var pomoFocus = lsGet('pomoFocusB', 'parse');
-					sendResponse({
-						pomodoro: pomoFocus
-					});
-				}
-				
-				else if (action == "startPomo"){
-					pomoTest.updatePomo(request.item);
-					coach.todayPomos(request.item);
-				}
-				
-				else if (action == "updatePomo"){
-					var pomo = lsGet('pomoFocusB', 'parse');
-					if (request.detail == "5 mins"){
-						pomo.endTime = pomo.endTime + 5 * 60 * 1000;
-						lsSet('pomoFocusB', pomo, 'object');
-						pomoTest.communicatePomo(pomo);
-						pomoTest.completeTask(pomo);
 					}
-					
-					else if (request.detail == "done"){
-						console.log(pomo);
-						pomoTest.completeTask(pomo);
-						pomoTest.communicatePomo(pomo);
-						
-						msgInterfaces({
-							action: "updateActions",
-							pomo: pomo
-						});
 					}
-					
-					else if (request.detail == "stop"){
-						pomoTest.endPomo(pomo, 'stop');
-						pomoTest.communicatePomo(pomo);
-					}
-					
-					else { console.log("bad request for update Pomo"); }
 				}
-				
-				else if (action == "syncPomo"){
-					var pomo = lsGet('pomoFocusB', 'parse');
-					pomoTest.communicatePomo(pomo);
-				}
-				
 				// Oauth
 				else if (action == "oauth"){
 					oauth();

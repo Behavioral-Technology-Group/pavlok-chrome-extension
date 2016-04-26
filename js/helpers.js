@@ -132,6 +132,7 @@ lsSet('baseAddress', baseAddress);
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
+{ // Defaults
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
 if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
 if (!localStorage.beepPosition ) { localStorage.beepPosition = 100; } //Random tune
@@ -225,6 +226,7 @@ if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';
+}
 
 function removeInlineStyle(element){
 	$(element).attr('style', '');
@@ -1040,6 +1042,26 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------															--------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
+
+function dayChange(){
+	var now = new Date();
+	var today = now.getDate();
+	var month = now.getMonth();
+	var curDate = today + "-" + month;
+	
+	var lastTime = lsGet('lastTimeCheck') || 0;
+	
+	var lastDate = new Date(lastTime);
+	var lastDay  = lastDate.getDate();
+	var lastMonth = lastDate.getMonth();
+	var prevDate = lastDay + "-" + lastMonth;
+	
+	lsSet('lastTimeCheck', now);
+	if (curDate != prevDate){
+		return true
+	}
+	else {return false}
+}
 
 function convertTimeFormat(time, toFormat){
 	var curFormat = 12;

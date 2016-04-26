@@ -1,967 +1,482 @@
 /* Next Steps
-
-		- Page Controls should determine if BlackList and WhiteList are editable or not
-		- Put a counter on every tab when in pomoFocus
-		
+	Make it work with the options page
+	Test the daily interactions
+	
+	Test an import of old model (daily and regular tasks separated)
+	
+	
+	Test the import with todoist
+	Debate on how to implement sync decisions
+	Implement overriding rules
+	
+	Design coaching intervals
+	Design to avoid coaching catch 22 (like showing the 0 tasks notification call)
+			
 */
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           To-Do Section           *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
 
 if (!localStorage.lastDay) { localStorage.lastDay = new Date().toDateString() }
-if (!localStorage.pomoFocusO) { 
-	var pomoFocusO = {}
-	pomoFocusO.lastUpdate = new Date().getTime();
-	localStorage.pomofocusO = JSON.stringify(pomoFocusO);
-}
-if (!localStorage.pomoFocusB) { 
-	var pomoFocusB = {
-		active: false,
-		audio: false,
-		daily: false,
-		duration: 0,
-		endReason: "time",
-		endTime: new Date().getTime(),
-		lastUpdate: new Date().getTime(),
-		silent: "prompOnEnd",
-		task: "pomofocus",
-		taskID: 0		
-	}
-	localStorage.pomofocusB = JSON.stringify(pomoFocusB);
-}
-if (!localStorage.pomoFocusP) { 
-	var pomoFocusP = {}
-	pomoFocusP.lastUpdate = new Date().getTime();
-	pomoFocusP.endTime = new Date().getTime();
-	localStorage.pomofocusP = JSON.stringify(pomoFocusP);
-}
 
-function checkTaskIDs(){
-	if (!localStorage.ToDoTasks) { localStorage.lastID = 0; return}
-	
-	// Check if there's an ID for every task. If not, create from 1. If so, feeds the others according to the greatest one.
-	var taskList = JSON.parse(localStorage.ToDoTasks);
-	var indexesList = [];
-	
-	// Get current IDs
-	for (t = 0; t < taskList.length; t++) {
-		var curID = taskList[t].id;
-		indexesList.push(curID);
-	}
-	
-	// Search for undefined IDs
-	if ( indexesList.indexOf(undefined) != -1 ){
-		var maxID = _.max(indexesList);
-		if (maxID > 0){ // There are undefineds, but also numbers. So next IDs are increments of numbers.
-			for (t = 0; t < taskList.length; t++) {
-				if (taskList[t].id == undefined){
-					var lastID = maxID + 1 + t;
-					taskList[t].id = lastID;
-				}
-			}
-		}
-		else { // There are no numbers, only undefineds. So count comes from 0.
-			for (t = 0; t < taskList.length; t++) {
-				var lastID = 1 + t;
-				taskList[t].id = lastID;
-			}
-		}
-	}
-	
-	var newIDList = [];
-	for (t = 0; t < taskList.length; t++) {
-		var curID = taskList[t].id;
-		newIDList.push(curID);
-	}
-	var maxID = _.max(newIDList);
-	
-	if ( localStorage.lastID > maxID ) { return }
-	
-	localStorage.lastID = maxID;
-	localStorage.ToDoTasks = JSON.stringify(taskList);
-}
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           Daily Tasks             *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-/*
-	Daily Tasks are tasks that should be repeated every day. Therefore, they are stored apart from regular tasks and are "unCompleted" every day.
-	
-	They also can have a number of PomoFocuses attached to it (think writte for 2 pomodoros everyday)
-	
-	They can have custom and separated black and whitelists
-	
-	They can be set on the options page ONLY, but can be seen from both Options and Popup
-	
-*/
-
-// Graphical Interface
-function restoreDailyList(container){
-	renewDailyTask();
-	
-	// remove the TRs, 
-	$('.dailyItemTR').remove();
-	var dailyList = lsGet('dailyList', 'parse');
-	for (d = 0; d < dailyList.length; d++){
-		var daily = dailyList[d];
-		
-		var pomoFocuses = '';
-		var maxPomos = parseInt(daily.pomodoros);
-		var donePomos = parseInt(daily.donePomos) || 0;
-		var remainingPomos = maxPomos - donePomos;
-		
-		for (p = 0; p < donePomos; p++){
-			pomoFocuses = pomoFocuses + '<input disabled type="image" src="images/pomodoro(completed).png" alt="Done!" class="doneDaily imgIcon" title="<p>Well done!</p>"/>'
-		}
-		
-		for (p = 0; p < remainingPomos; p++){
-			// pomoFocuses = pomoFocuses + '<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
-			pomoFocuses = pomoFocuses + '<input type="image" src="images/pomodoro(todo)_(Custom).png" alt="Now" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
-		}
-		
-		var newLine = '' +
-			'<tr id="daily' + daily.id + '" class="dailyItemTR">' +
-				'<td>' +
-					'<div class="dailyTaskName">' +
-						'<span>' + daily.task + '</span>' + 
-					'</div>' + 
-					'<div class="pomoFocusHolders" >' + 
-						'<span>' + pomoFocuses + '</span>' +
-					'</div>' + 
-				'</td>' +
-			'</tr>'
-		;
-		$(container).append(newLine);	
-	}
-	
-	
-}
-
-function enableDailyPomoFocus(){
-	$(".dailyContainer tbody ").on('click', '.dailyPomoNow', function(){
-		// Get ID via TR
-		var line = $(this).parent().parent().parent().parent()[0];
-		// Removes the 'daily' from the ID, returning the id#
-		var dailyId = $(line).attr('id').split('y')[1];
-		var dailyId = parseInt(dailyId);
-
-		// Get daily via ID
-		var dailyList = lsGet('dailyList', 'parse');
-		var daily = _.where(dailyList, {id: dailyId})[0];
-		startDailyPomodoro(daily);
-	});
-}
-
-// Interface engines
-function startDailyPomodoro(daily){
-	lsSet('dailyPomo', daily, 'object');
-	
-	var pomoFocus = {}
-	pomoFocus.active = true;
-	pomoFocus.audio = daily.binaural;
-	pomoFocus.duration = daily.duration;
-	pomoFocus.endTime = deltaTime(parseInt(pomoFocus.duration) * 60).getTime();
-	pomoFocus.hyper = daily.hyper || false;
-	pomoFocus.lastUpdate = deltaTime(0).getTime();
-	pomoFocus.silent = 'promptOnEnd';
-	pomoFocus.task = daily.task
-	pomoFocus.taskID = daily.id
-	pomoFocus.daily = true;
-	
-	savePomoFocus(pomoFocus, 'background');
-	msgBackground({
-		action: 'startPomo',
-		item:	pomoFocus,
-	});
-	console.log("Pomo focus begins")
-	
-	return
-}
-
-function completeDailyPomodoro(daily){
-	var now = deltaTime(0).getTime();
-	if (!daily.donePomos) { daily.donePomos = 0}
-	console.log("Entered with " + daily.donePomos + " done pomos");
-	daily.donePomos = daily.donePomos + 1; // What it should be if not being called twice
-	// daily.donePomos = daily.donePomos + 0.5;
-	daily.lastUpdate = now;
-	if (!daily.completed){ daily.completed = [];}
-	daily.completed.push(now);
-	updateDailyTask(daily);
-	
-	var missing = parseInt(daily.pomodoros) - parseInt(daily.donePomos);
-	var msg;
-	
-	var NotList = lsGet('notifications', 'parse');
-	var Not = NotList.pomofocusDone;
-	
-	if (missing == 0) { msg = "Kudos! You completed all the pomodoros for " + daily.task + " today! Take a breath, pat yourself on the back! Great job!"; }
-	else { msg = "Good job there! Only " + missing + " to go now!"; }
-	notifyUser(Not.title, msg, Not.id);
-	stimuli("vibration", defInt, defAT, Not.title + " " + msg, "false");
-	
-	lsDel('dailyPomo');
-	console.log("Left with " + daily.donePomos + " done pomos");
-}
-
-function cancelDailyPomodoro(daily){ // Mark for deletion
-	lsDel('dailyPomo');
-	return // // gotta be a tad different from pomoFocus, as it won't use the same deal for completeness
-}
-
-// Backend
-function dailyFromId(dailyId){
-	var dailyId = parseInt(dailyId);
-	var dailyList = lsGet('dailyList', 'parse');
-	var daily = _.where(dailyList, {id: dailyId});
-	if (daily.length == 1) { daily = daily[0]; }
-	else { daily = false; }
-	return daily
-}
-
-function dailyTaskIndex(daily){
-	var dailyList = lsGet('dailyList', 'parse');
-	var oldDaily;
-	
-	for (d = 0; d < dailyList.length; d++){
-		oldDaily = dailyList[d]
-		if (oldDaily.id == daily.id) { 
-			return d
-		}
-	}
-	console.log('something went wrong. Could not find daily task');
-	return false
-}
-
-function addDailyTask(task){
-	var newDaily = {};
-	newDaily.id = parseInt(lsGet('lastDailyID')) + 1;
-	newDaily.task = task;
-	newDaily.pomodoros = 1;
-	newDaily.donePomos = 0;
-	newDaily.duration = "15";
-	newDaily.specialList = false;
-	newDaily.blackList = ' ';
-	newDaily.whiteList = ' ';
-	newDaily.hyper = true;
-	newDaily.binaural = false;
-	newDaily.instaZap = false;
-	newDaily.description = '';
-	newDaily.lastUpdate = deltaTime(0).getTime();
-	newDaily.completed = [];
-	
-	var dailyList = lsGet('dailyList', 'parse') || [];
-	dailyList.push(newDaily);
-	lsSet('lastDailyID', newDaily.id);
-	lsSet('dailyList', dailyList, 'object');
-	
-	return newDaily;
-}
-
-function updateDailyTask(daily){
-	var dailyList = lsGet('dailyList', 'parse');
-	var index = dailyTaskIndex(daily);
-	
-	daily.lastUpdate = deltaTime(0).getTime();
-	dailyList[index] = daily;
-		
-	lsSet('dailyList', dailyList, 'object');
-}
-
-function removeDailyTask(daily){ // mark for deletion
-	var dailyList = lsGet('dailyList', 'parse');
-	var index = dailyTaskIndex(daily);
-	
-	dailyList.splice(index, 1);
-		
-	lsSet('dailyList', dailyList, 'object');
-}
-
-function renewDailyTask(){
-	var today = new Date().toDateString();
-	if ( today == localStorage.lastDay ) { return }
-	else {
-		var dailyList = lsGet('dailyList', 'parse');
-		for (d = 0; d < dailyList.length; d++){
-			dailyList[d].donePomos = 0;
-			dailyList[d].lastUpdate = deltaTime(0).getTime();
-		}
-		lsSet('dailyList', dailyList, 'object');
-		lsSet('lastDay', today);
-	}
-}
-
-function syncDailies(page){ // mark for deletion
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.action == "DailyTasks" && request.target == page){
-				restoreTaskList();
-			}
-		}
-	);
-}
-
-function sampleBinaural(){
-	// Play for 5 seconds
-	var testAudio = new Audio('../Audio/focus1min.mp3');
-	testAudio.play();
-	var endTestAudio = setTimeout(function(){
-		testAudio.pause();
-		testAudio.currentTime = 0;
-	}, 5 * 1000);
-}
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************             PomoFocus             *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-
-
-var lastUpdate = 0;
-var PFpromptForce = false;
-
-function msgTabs(tabList, message){
-	for (t = 0; t < tabList.length ; t++){
-		msgExt(message, tabList[t])
-		
-		// 
-	}
-}
-
-function createPomoFocusCountDown(){
-	pomoFocusB = getPomoFocus('background');
-	var endDate = dateFromTime(pomoFocusB.endTime);
-	
-	var clockDiv = $('#pomoFocusRemainingTime');
-	// var taskSpan = $('#pomoFocusTask');
-	
-	var timer = $(clockDiv).countdown(endDate, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	});
-}
-
-function pomoFocusButtons(){
-	$("#pomoFocusCompleteTask").click(function( event ){
-		event.preventDefault();
-		chrome.runtime.sendMessage({
-			action: 'updatePomo',
-			detail: 'done',
-			target: 'background'
-		})
-		
-		localStorage.endReason = 'done';
-		
-	});
-	
-	$("#pomoFocusStop").click(function( event ){
-		event.preventDefault();
-		chrome.runtime.sendMessage({
-			action: 'updatePomo',
-			detail: 'stop',
-			target: 'background'
-		});
-	});
-	
-	$("#pomoFocus5minutes").click(function( event ){
-		event.preventDefault();
-		chrome.runtime.sendMessage({
-			action: 'updatePomo',
-			detail: '5 mins',
-			target: 'background'
-		});
-	});
-
-	$("#playBinauralButton").click(function(){
-		var pomoFocus = getPomoFocus('background');
-		$("#stopBinauralButton").removeClass('noDisplay');
-		$("#playBinauralButton").addClass('noDisplay');
-		
-		msgBackground({action: "play"});
-		pomoFocus.audio = true;
-		savePomoFocus(pomoFocus, 'popup');
-	});
-	$("#stopBinauralButton").click(function(){
-		$("#playBinauralButton").removeClass('noDisplay');
-		$(this).addClass('noDisplay');
-		
-		msgBackground({action: "stopAudio"});
-		var pomoFocus = getPomoFocus('background');
-		pomoFocus.audio = false;
-		savePomoFocus(pomoFocus, 'popup');
-		
-	});
-	$("#vDownBinaural").click(function(){
-		// alert("v down");
-		msgExt('volumeDown', 'background');
-	});
-	$("#vUpBinaural").click(function(){
-		// alert("v up");
-		msgExt('volumeUp', 'background');
-	});
-}
-
-function togglePomodoro(toState){
-	var pomoFocus = getPomoFocus('background');
-	
-	var instaZap = lsGet('instaZap');
-	instaZap = instaZap == 'true';
-	$("#instaZap").prop( "checked", instaZap);
-
-	var lockZap = lsGet('lockZap');
-	lockZap = lockZap == 'true';
-	$("#lockZap").prop( "checked", lockZap);
-	
-	var confDiv = $("#toDoDiv");
-	var focusDiv = $("#pomodoroFocusDiv");
-	var hyperControl = $(".hyperFocusControlDiv");
-	
-	if (toState == 'focus' || toState == true){
-		$(confDiv).addClass('noDisplay');
-		$(focusDiv).removeClass('noDisplay');
-		
-		if ( pomoFocus.hyper == 'true' || pomoFocus.hyper == true) { 
-			$(hyperControl).removeClass('noDisplay'); 
-		}
-		else { $(hyperControl).addClass('noDisplay'); }
-	}
-	else {
-		lsSet('instaZap', 'false');
-		$(confDiv).removeClass('noDisplay');
-		$(focusDiv).addClass('noDisplay');
-	}
-}
-
-function pomodoroOnSteroids(){
-	$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
-
-		var item = PFGetClickedRow($(this));
-		$(item.Row).addClass("nowTaskRow");
-		updateTasksLog();
-		
-		// Prepare the prompt
-		var msg = "" + 
-			"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
-			"<p>" + 
-				"<select id='minutesPomodoro'>" + 
-					// "<option value='0.08'>5 seconds</option>" + 
-					"<option value='2'>2 minutes</option>" + 
-					"<option value='5'>5 minutes</option>" + 
-					"<option value='10'>10 minutes</option>" + 
-					"<option value='15'>15 minutes</option>" + 
-					"<option value='20'>20 minutes</option>" + 
-					"<option selected value='25'>25 minutes</option>" + 
-					"<option value='30'>30 minutes</option>" + 
-					"<option value='45'>45 minutes</option>" + 
-					"<option value='60'>1 hour</option>" + 
-					"<option value='90'>1hour and 30 minutes</option>" + 
-					"<option value='120'>2 hours</option>" + 
-				"</select>" + 
-			"</p>" +
-			"<div>" + 
-				"<p>Want to get hyper focused?</p>" +
-				"<p><select id='hyperFocusSelect'>" + 
-					"<option id='audioTrue' value='true'>Yes, get me there!</option>" + 
-					"<option id='audioFalse' value='false'>No, I'm fine.</option>" + 
-				"</select></p>" + 
-			"</div>"
-			
-			;
-		$.prompt(msg, {
-			title: "Great! Let's tackle this!",
-			buttons: { "Ready! Let me start": true, "No, I don't want help": false },
-			submit: function(e,v,m,f){
-				console.log("Enter PomoFocus result was " + v);
-				var result = v;
-				if (result == true){
-					console.log(item);
-					
-					var newPomo = {
-						daily: false,
-						duration: parseFloat($("#minutesPomodoro").val()),
-						hyper: $("#hyperFocusSelect").val(),
-						task: item.Task,
-						taskID: item.id
-					}
-					
-					chrome.runtime.sendMessage({
-						action: 'startPomo',
-						item:	newPomo,
-						target: 'background'
-					});
-					console.log("Pomo focus begins");
-				}
-				else{
-					$(".nowTaskRow").removeClass("nowTaskRow");
-
-				}
-				updateTasksLog();
-			}
-		});
-		
-	});
-}
-
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           List Display            *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-
-
-function activateTaskFilterButtons(){
-	// Filter tasks: ALL
-	$("#allToDoLink").click(function(){
-		$( "#toDoTable tbody > tr").removeClass('noDisplay');
-	});
-	
-	// Filter tasks: TODAY
-	$("#todayToDoLink").click(function(){
-		$( "#toDoTable tbody > tr:not(.todayTaskRow)" ).addClass('noDisplay');
-		$( "#toDoTable tbody > tr.todayTaskRow" ).removeClass('noDisplay');
-	});
-	
-	// Filter tasks: DONE
-	$("#doneToDoLink").click(function(){
-		$( "#toDoTable tbody > tr:not(.doneTaskRow)" ).addClass('noDisplay');
-		$( "#toDoTable tbody > tr.doneTaskRow" ).removeClass('noDisplay');
-	});
-}
-
-/* Marked for removal
-function addToDoItem(task, taskID){
-	if (!taskID){
-		var lastID = parseInt(localStorage.lastID);
-		lastID = lastID + 1;		
-		localStorage.lastID = lastID;
-		
-	}
-	else { var lastID = taskID };
-	
-	var newLine = '<tr id="' + lastID + '" class="toDoItemTR">' +
-					'<td colspan="5">' +
-						'<div class="toDoOKerTD">' +
-							'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
-						'</div>' + 
-						'<div class="toDoOTaskTD">' + 
-							task + 
-						'</div>' +
-						'<div class="toDoORemoverTD" >' + 
-							'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 							
-							'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon grayscale" title="<p>You will do it <b>today</b></p>"/>' + 
-							'<input type="image" src="images/redXIcon.png" alt="Cancel" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
-						'</div>' + 
-					'</td>'
-	;
-	$('#toDoTable > tbody').append(newLine);
-	var newTR = $('#toDoTable > tbody > tr').last();
-	
-	return newTR
-}
-*/
-
-function addToDoOnEnter(){
-	$("#toDoAdd").keydown(function(e){
-		if (e.keyCode == 13) {
-			var task = $(this).val();
-			if (task.length > 0){
-				var line = todo.createNewLine(todo.addTask(task));
-				$('#toDoTable > tbody').append(line);
-				$(this).val("");
-			}
-		}
-	});
-}
-
-function clearCompletedTasks(){
-	$("#clearToDoLink").click(function(){
-		$( "#toDoTable tbody > tr.doneTaskRow" ).remove();
-		updateTasksLog();
-	});
-}
-
-function restoreTaskList(){
-	$(".toDoItemTR").remove()
-	
-	if (localStorage.ToDoTasks == undefined || localStorage.ToDoTasks == 'null' || localStorage.ToDoTasks == ''){ return }
-	
-	var TaskList = JSON.parse(localStorage.ToDoTasks);
-	var totalTasks = TaskList.length;
-	
-	// Restore the tasks
-	for (t = 0; t < totalTasks ; t++){
-		curTask = TaskList[t];
-		var line = todo.createNewLine(curTask);
-		$('#toDoTable > tbody').append(line);
-		if (curTask.done == true) { $(line).addClass('doneTaskRow'); }
-	}
-	
-	// updateTasksCounter();
-}
-
-function syncToDo(page){
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.action == "TaskList" && request.target == page){
-				restoreTaskList();
-			}
-		}
-	);
-}
-
-
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           Task Status             *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-/* Marked for removal
-function completeRegularTask(taskRow, override){
-	if (!override) { override = false }
-	var item = PFGetClickedRow(taskRow);
-	
-	if (override == true) { item.Checker = item.Checker == false; } // Inverts true and false
-	
-	// Adjust to match
-	if (item.Checker == false){ // it was already done and now is undone
-		$(item.CheckerDOM).prop("checked", false);		// Uncheck
-		$(item.Row).removeClass("doneTaskRow");			// Remove classes
-	}
-	else if(item.Checker == true){ // it was NOT done and nos IS done
-		$(item.CheckerDOM).prop("checked", true);		// Check
-		$(item.Row).addClass("doneTaskRow");			// Add classes
-
-		// Reward stimulus
-		var Not = lsGet('notifications', 'parse');
-		var Not = Not.pomofocusDone;
-		
-		notifyUser(Not.title, Not.message, Not.id);
-		stimuli("vibration", defInt, defAT, Not.message, "false");
-	}
-	
-	// updateTasksCounter();
-	// updateTasksLog();
-}
-
-function deleteTask(){
-	$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
-		var taskId = $(this).attr('id');
-		taskId = taskId.split('emove')[1];
-		
-		todo.removeTask(todo.clickedTask(taskId, false));
-		$("#" + taskId).remove();
-		
-		// var item = PFGetClickedRow($(this));
-		// var itemRow = item.Row;
-		// itemRow.remove();
-		// updateTasksCounter();
-		// updateTasksLog();
-	});
-}
-
-function markTaskToday(){
-	$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
-		var item = PFGetClickedRow($(this));
-		var todayImage = $($(item.Row).children().children()[2]).children()[1];
-		if (item.Today == 'today') { 
-			$(item.Row).removeClass("todayTaskRow"); 
-			$(todayImage).addClass("grayscale");
-		}
-		else { 
-			$(item.Row).addClass("todayTaskRow"); 
-			$(todayImage).removeClass("grayscale");
-			
-		}
-		updateTasksLog();
-	});
-}
-*/
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************              BackEnd              *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-function PFGetClickedRow(object){
-	var itemRow = false;
-	var investigated = object;
-	
-	var cycles = 0;
-	while (itemRow == false){
-		if ($(investigated).is( "tr" )) {
-			itemRow = $(investigated);
-		}
-		else {
-			investigated = $(investigated).parent();
-			cycles = cycles + 1;
-			if (cycles > 20) { console.log("Unable to find parent TR element"); return}
-		}
-	}
-	
-	var itemID = $(itemRow).attr('id');
-	var itemChecker = $($(itemRow).children().children()[0]).children().prop("checked");
-	var itemCheckerDOM = $($(itemRow).children().children()[0]).children();
-	
-	var itemTask = $(itemRow.children().children()[1]).text();
-	var itemTaskDOM = $(itemRow.children().children()[1]);
-	
-	var itemToday = $(itemRow).attr("class");
-	itemToday = itemToday.split(" ");
-	if (itemToday.indexOf("todayTaskRow") != -1) { itemToday = "today"; }
-	else { itemToday = ""; }
-	var itemTodayDOM = $($(itemRow).children().children()[2]).children()[1];
-	
-	var itemNow = '';
-	var itemNowDOM = $($(itemRow).children().children()[2]).children()[0];
-	
-	var item = {};
-	
-	item.id = itemID;
-	item.Row = itemRow;
-	item.Checker = itemChecker;
-	item.CheckerDOM = itemCheckerDOM;
-	item.Task = itemTask;
-	item.TaskDOM = itemTaskDOM;
-	item.Today = itemToday;
-	item.TodayDOM = itemTodayDOM;
-	item.Now = itemNow;
-	item.NowDOM = itemNowDOM;
-	
-	return item
-}
-
-function updateCompletedTasks(){
-	$("#toDoTable tbody ").on('change', '.doneCheckbox', function(){
-		item = PFGetClickedRow($(this));
-		completeRegularTask(item.Row);
-	});
-}
-
-function updateTasksCounter(){
-	var count = $( "#toDoTable tbody > tr:not(.doneTaskRow)" ).length;
-	if (count == 0) { text = "No items left!" }
-	else if (count == 1) { text = "1 item left" }
-	else if (count > 1) { text = count + " items left" }
-	else { text = "problems counting" }
-	
-	$("#toDoNItemsLeft").html(text);
-}
-
-function updateTasksLog(){
-	tasks = []
-	allTasks = $( "#toDoTable tbody > tr" );
-	totalTasks = allTasks.length;
-	for (t = 0; t < totalTasks; t++){
-		newTask = {}
-		var itemRow = allTasks[t];
-		itemID = $(itemRow).attr('id');
-		var itemTd = $(itemRow).children();
-		var itemDivs = $(itemTd).children();
-		var itemTask = itemDivs[1].innerHTML;
-		var itemDone = $(itemDivs[0]).children().prop("checked");
-		var itemToday = $(itemRow).attr("class").split(" ").indexOf("todayTaskRow");
-		if (itemToday != -1) { itemToday = true; }
-		else { itemToday = false; }
-		
-		var itemNow = $(itemRow).attr("class").split(" ").indexOf("nowTaskRow");
-		if (itemNow != -1) { itemNow = true; }
-		else { itemNow = false; }
-		
-		newTask.id = itemID;
-		newTask.task = itemTask;
-		newTask.done = itemDone;
-		newTask.today = itemToday;
-		newTask.now = itemNow;
-		
-		tasks.push(newTask);
-	}
-	localStorage.ToDoTasks = JSON.stringify(tasks);
-	
-	// Propagate changes to every window
-	msgExt('TaskList', 'popup');
-	msgExt('TaskList', 'options');
-}
-
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************              Enabler              *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
 function enableToDo(){
+	testTodo.frontend.addTaskListener();
+	testTodo.frontend.doneCheckListener();
+	testTodo.frontend.removeTaskListener();
+	testTodo.frontend.tagTodayListener();
+	testTodo.frontend.restoreTasks();
 	
-	// // // // // Enablers
-	// // // // addToDoOnEnter();			// Add item on Enter
-	// // // // activateTaskFilterButtons();	// Filters like All, Today and Done
-	// // // // clearCompletedTasks();		// Clear Completed
-	// // // // // createPomoFocusCountDown();	// Initialize the timer and the on finish events
-	// // // // pomoTest.createCountdownElements();	// Initialize the timer and the on finish events
-	// // // // // // // deleteTask();				// delete on X
-	// // // // todo.listener();
-	// // // // enableDailyPomoFocus()		// tomatoes from dailies trigger focus
-	// // // // // markTaskToday();			// Tags task for being done/not done today
-	// // // // pomodoroOnSteroids();		// Now Pomodoro on Steroid mode
-	// // // // pomoFocusButtons();			// Enables the Done, Stop +5 minutes buttons on Focus Mode
-	// // // // restoreTaskList();			// Restore from To Do
-	// // // // restoreDailyList();			// Restore from Dailies
-	// // // // updateCompletedTasks();		// Complete if checked
-	// // // // updateTasksCounter();		// Items counter:
+	pavPomo.frontend.startPomoListener();
+	pavPomo.frontend.enablePomoButtons();
 	
 }
 
-/* Experimental */
-var pomoTest = {
-	// Starts the timer related to the countdown on pomodoros
-	createCountdownElements: function(back){
-		var clockDiv = $('#pomoFocusRemainingTime');
+var pavPomo = {
+	helpers: {
+		unbindCounter: function(){
+			var counterContainer = document.getElementById("pomoFocusRemainingTimeContainer");
+			var oldCounter  = document.getElementById("pomoFocusRemainingTime");
+			counterContainer.removeChild(oldCounter);
+			
+			var newCounter = document.createElement("span");
+			newCounter.className = "yellow";
+			newCounter.id = "pomoFocusRemainingTime";
+			counterContainer.appendChild(newCounter);
+		},
 		
-		var timer = $(clockDiv).countdown(new Date().getTime(), function(event) {
-			$(this).html(event.strftime('%M:%S'));
-		});
-	},
-	
-	// Updates graphic interface of pomodoro
-	updateCountdown: function(pomo, page){
-		// Changes the displayed div (focus OR settings)
-		togglePomodoro(pomo.active);
+		initialSync: function(){
+			msgBackground({ action: "syncPomo"});
+		},
 		
-		// Changes the numerical values shown on countdown and task's name
-		var endDate = dateFromTime(pomo.endTime);
-		var clockDiv = $('#pomoFocusRemainingTime');
-		$(clockDiv).countdown(endDate, function(event) {
-			$(this).html(event.strftime('%M:%S'));
-		})
-		.on('finish.countdown', function(event) {
-			if (page == "background"){
-				if (localStorage.endReason == 'time') {
-					// notifyUser("PomoFocus is over...", "Too bad task isn't, buddy. We'll help you get back on track", 'PFNotify')
-					var NotList = lsGet('notifications', 'parse');
-					var Not = NotList.pomofocusEnded;
-					notifyUser(Not.title, Not.message, Not.id);
-					stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+		newId: function(){
+			var id = lsGet('lastPomoId');
+			if (id == undefined) { id = 1; }
+			id = parseInt(id) + 1;
+			return id
+		},
+		
+		toBackground: function(msg){
+			msg.target = "background";
+			chrome.runtime.sendMessage(msg);
+		},
+		
+		toInterfaces: function(msg){
+			msg.target = "popup";
+			chrome.runtime.sendMessage(msg);
+			
+			msg.target = "options";
+			chrome.runtime.sendMessage(msg);
+			
+			msg.target = "external page"
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+				if (tabs.length == 0){
+					console.log("Chrome Internal page selected");
+					return
 				}
-				console.log("PomoFocus ended");
-				pomoFocusB = lsGet('pomoFocusB', 'parse');
-				pomoFocusB.audio = false;
-				pomoFocusB.active = false;
-				savePomoFocus(pomoFocusB, 'background');
-				PFpromptForce = true;
-				localStorage.instaZap = 'false';
-				lsDel('lockZap');
-				lsDel('dailyPomo');
+				chrome.tabs.sendMessage(tabs[0].id, msg);
+			});
+		},
+		
+		endPomo: function(id, reason){
+			var now = new Date().getTime();
+			
+			var update = {
+				active: false,
+				endTime: now,
+				lastUpdate: now,
+				endReason: reason || "time"
+			};
+			
+			pavPomo.backend.update(id, update);
+			pavPomo.helpers.toInterfaces({
+				action: "updatePomo",
+				pomo: pavPomo.helpers.lastPomo()
+			});
+			
+			stopAudio();
+		},
+		
+		lastPomo: function(){
+			var allPomos = pavPomo.backend.read();
+			
+			if (allPomos.length == 0){
+				console.log("No pomos yet");
+				return false
 			}
-		});	
-		
-		var taskSpan = $('#pomoFocusTask');
-		$(taskSpan).html("Focusing on <span class='yellow'>" + pomo.task + "</span>");
-	},
-
-	// Sends interface's changes to variables of pomodoro
-	updatePomo: function(item){			
-		// Collect data
-		
-		// error catching
-		if (item.daily == undefined) { item.daily = false; }
-		if (item.duration == undefined) { item.duration = 20; }
-		if (item.hyper == undefined) { item.hyper = true; }
-		// Changes data on pomoFocus
-		
-		// Sends to background
-		var pomoFocus = {
-			active:		true,
-			daily:		item.daily || false,
-			duration:	item.duration || 20,
-			endReason:  'time',
-			endTime:	deltaTime(item.duration * 60).getTime(),
-			hyper:		item.hyper || true,
-			lastUpdate:	new Date().getTime(),
-			silent:		'promptOnEnd',
-			task:		item.task,
-			taskID:		item.taskID || item.id,
+			
+			var pomo = allPomos.splice(-1).pop();
+			return pomo;
 		}
-		savePomoFocus(pomoFocus, 'background');
-		
-		pomoTest.updateCountdown(pomoFocus, 'background');
-		pomoTest.communicatePomo(pomoFocus);
-	},
-
-	// Spreads changes in pomodoro variables to options and popup pages
-	communicatePomo: function(pomo){		
-		// Message with background pomo to other interfaces
-		chrome.runtime.sendMessage({
-			action: 'updatePomoFocus',
-			pomo: pomo,
-			target: 'popup'
-		})
-		
-		chrome.runtime.sendMessage({
-			action: 'updatePomoFocus',
-			pomo: pomo,
-			target: 'options'
-		})
 	},
 	
-	// Checks if pomofocus is the way it should
-	validatePomo: function(pomo){
-		var active;
-		var audio;
-		var daily;
-		var duration;
-		var endReason;
-		var endTime;
-		var lastUpdate;
-		var silent;
-		var task;
-		var taskID;
+	backend: {
+		create: function(options){
+			var allPomos = lsGet('allPomos', 'parse') || [];
+			if (allPomos.length > 0){
+				var nPomos = allPomos.length;
+				var lastPomo = allPomos[nPomos - 1];
+				if (lastPomo.active == true){
+					lastPomo.active = false;
+					lastPomo.endTime = new Date().getTime();
+					lastPomo.lastUpdate = new Date().getTime();
+				}
+				allPomos[nPomos - 1] = lastPomo;
+			}
+			
+			var taskId = options.id;
+			var task = testTodo.backend.read(taskId);
+			if (!task){ console.log("no task with " + taskId + " id"); return }
+			
+			var duration = options.duration || 25;
+			
+			var now 	= new Date().getTime();
+			var endTime = now + (duration * 60 * 1000);
+			
+			var newPomo = {
+				id: pavPomo.helpers.newId(),
+				active:			true,
+				audio: 			options.audio 		|| false,
+				hyper: 			options.hyper 		|| false,
+				instaZap: 		options.instaZap 	|| false,
+				
+				specialList:	task.specialList 	|| false,
+				blackList:		task.blackList		|| undefined,
+				whiteList:		task.whiteList		|| undefined,
+				
+				task:			task.task,
+				taskId:			task.id,
+				duration:		duration,
+				
+				lastUpdate:		now,
+				endTime:		endTime,
+				endReason:		options.endReason	|| "time"
+			}
+			
+			if (!newPomo.task){
+				console.log("No task assigned");
+				console.log(newPomo);
+				return
+			}
+			
+			allPomos.push(newPomo);
+			lsSet('allPomos', allPomos, 'object');
+			lsSet('lastPomoId', newPomo.id);
+			
+			pavPomo.helpers.toBackground({ 
+				action: 'updatePomo', 
+				pomo: newPomo
+			});
+			
+			return newPomo
+		},
+		read: function(id){
+			var allPomos = lsGet('allPomos', 'parse') || [];
+			if (!id) { return allPomos; }
+			
+			var pomo = _.where(allPomos, {id: id});
+			
+			if (pomo.length == 0) { 
+				console.log("pomodoro not found"); 
+				return false
+			}
+			
+			return pomo[0];
+		},
+		update: function(id, updates){
+			var pomo = pavPomo.backend.read(id)
+			if (!pomo) {
+				console.log("No pomodoro found with " + id+ " id");
+				return false
+			}
+			
+			if (updates){
+				var fieldChanges = Object.getOwnPropertyNames(updates);
+				for (f = 0; f < fieldChanges.length; f++){
+					update = fieldChanges[f];
+					pomo[update] = updates[update];
+				}
+			}
+			
+			var now = new Date().getTime();
+			
+			if (now > pomo.endTime){
+				// pomo.active = false;
+			}
+			pomo.lastUpdate = now;
+			
+			var allPomos = lsGet('allPomos', 'parse');
+			var index = arrayObjectIndexOf(allPomos, id, 'id');
+			allPomos[index] = pomo;
+			
+			lsSet('allPomos', allPomos, 'object');
+			return pomo
+		},
+		delete: function(id){
+			var allPomos = lsGet('allPomos', 'parse');
+			var index = arrayObjectIndexOf(allPomos, id, 'id');
+			allPomos.splice(index, 1);
+			
+			lsSet('allPomos', allPomos, 'object');
+		},
+		backListener: function(){
+			chrome.runtime.onMessage.addListener(
+				function(request, sender, sendResponse) {
+					if (request.target == "background"){
+						var action = request.action;
+						var allPomos = pavPomo.backend.read();
+						var pomo = allPomos.splice(-1).pop();
+						
+						// Binaural controls
+						if (action == "play"){
+							update = {audio: true};
+							pavPomo.backend.update(pomo.id, update);
+							playAudio();
+						}
+						
+						if (action == "stopAudio"){
+							update = {audio: false};
+							pavPomo.backend.update(pomo.id, update);
+							stopAudio();
+						}
+						
+						if (action == "volumeUp"){
+							var myAudioVol = parseFloat(myAudio.volume);
+							if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
+							else { myAudioVol = myAudioVol + 0.1; }
+							
+							myAudio.volume = myAudioVol;
+						}
+						
+						else if (action == "volumeDown"){
+							var prevAudioVol = parseFloat(myAudio.volume);
+							var newAudioVol;
+							if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
+							else { newAudioVol = prevAudioVol - 0.1; }
+							
+							myAudio.volume = newAudioVol;
+						}
+						
+						// Pomo Buttons replies
+						else if (action == "donePomo"){
+							pavPomo.helpers.endPomo(pomo.id, 'done');
+							pavPomo.frontend.updateCountdown(
+								pavPomo.helpers.lastPomo(),
+								'background'
+							);
+						}
+						
+						else if (action == "stopPomo"){
+							
+							var p = pavPomo.helpers.lastPomo();
+							
+							pavPomo.helpers.endPomo(pomo.id, 'stop');
+							pavPomo.frontend.updateCountdown(
+								pavPomo.helpers.lastPomo(),
+								'background'
+							);
+						}
+						
+						else if (action == "5 minutes"){
+							var newEnd = pomo.endTime + 5 * 60 * 1000;
+							var update = {endTime: newEnd};
+							
+							pavPomo.backend.update(pomo.id, update);
+							
+							// Reseting counter element for avoiding repetitive endings
+							pavPomo.helpers.unbindCounter();
+							
+							
+							// Regular update
+							var pomoF = pavPomo.helpers.lastPomo();
+							pavPomo.frontend.updateCountdown(
+								pomoF,
+								'background'
+							);
+							
+							pavPomo.helpers.toInterfaces({
+								action: "updatePomo",
+								pomo: pomoF
+							});
+						}
+						
+						else if (action == "updatePomo"){
+							
+						}
+						
+						else if (action == "startPomo"){
+							var pomo = pavPomo.backend.create({id: request.forTask});
+							
+							pavPomo.frontend.updateCountdown(pavPomo.helpers.lastPomo(), "background");
+							pavPomo.helpers.toInterfaces({
+								action: "updatePomo", 
+								pomo: pomo
+							});
+							
+							// Integrate with coach again
+							
+						}
+						
+						// Page replies
+						else if (action == "newPage") {
+							var pomo = pavPomo.helpers.lastPomo();
+							sendResponse({
+								pomodoro: pomo
+							});
+						}
+						
+						else if (action == "syncPomo"){
+							var allPomos = lsGet('allPomos', 'parse');
+							if (!allPomos){
+								console.log("no pomos");
+								return
+							}
+							var pomo = allPomos.slice(-1).pop();
+							pavPomo.helpers.toInterfaces({
+								action: "updatePomo",
+								pomo: pomo
+							});
+						}
+						
+					}
+				});
+		},
 	},
 	
-	// Finishes a pomodoro, but don't update looks (that's done via communicate function)
-	endPomo: function(pomo, reason){
-		pomo.active = false;
-		pomo.audio = false;
-		pomo.endReason = reason;
-		pomo.endTime = new Date().getTime();
-		pomo.lastUpdate = new Date().getTime();
+	frontend: {
+		// Starts the timer related to the countdown on pomodoros
+		createCountdownElements: function(back){
+			var clockDiv = $('#pomoFocusRemainingTime');
+			
+			var timer = $(clockDiv).countdown(new Date().getTime(), function(event) {
+				$(this).html(event.strftime('%M:%S'));
+			});
+		},
 		
-		msgBackground({action: "stopAudio"});
-		lsDel('instaZap');
-		lsDel('dailyPomo');
-		lsSet('pomoFocusB', pomo, 'object');
-		savePomoFocus(pomo, 'background');
-	},
+		// Updates graphic interface of pomodoro
+		updateCountdown: function(pomo, page){
+			// Changes the displayed div (focus OR settings)
+			pavPomo.frontend.togglePomodoro(pomo);
+			
+			// Changes the numerical values shown on countdown and task's name
+			var endDate = new Date(pomo.endTime);
+			var clockDiv = $('#pomoFocusRemainingTime');
+			$(clockDiv).countdown(endDate, function(event) {
+				$(this).html(event.strftime('%M:%S'));
+			})
+			.on('finish.countdown', function(event) {
+				if (page == "background"){
+					var p = pavPomo.helpers.lastPomo();
+					if (p.endReason == 'time' || p.endReason == "done") {
+						// Notify
+						var NotList = lsGet('notifications', 'parse');
+						var Not = NotList.pomofocusEnded;
+						notifyUser(Not.title, Not.message, Not.id);
+						stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
+						testTodo.helpers.completeTask(p.taskId);
+						pavPomo.helpers.endPomo(p.id, p.endReason);
+					}
+					else {
+						pavPomo.helpers.endPomo(p.id, 'stop');
+					}
+					// Message interfaces
+					pavPomo.helpers.toInterfaces({
+						action: "updatePomo",
+						pomo: pavPomo.helpers.lastPomo()
+					});
+					console.log("PomoFocus ended");
+					
+					pavPomo.helpers.unbindCounter();
+				}
+			});	
+			
+			var taskSpan = $('#pomoFocusTask');
+			$(taskSpan).html("Focusing on <span class='yellow'>" + pomo.task + "</span>");
+		},
+		
+		startPomoListener: function(){
+			$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
+				var taskId = $(this).attr('id');
+				taskId = parseInt(taskId.split('Pomo')[0]);
+				
+				pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId});
+			});
+			$(".dailyContainer tbody ").on('click', '.dailyPomoNow', function(){
+				var taskId = $(this).attr('id');
+				taskId = parseInt(taskId.split('Pomo')[0]);
+				
+				pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId});
+			});
+		},
+		
+		togglePomodoro: function(pomo){
+			if (!pomo) { return }
+			$("#instaZap").prop( "checked", pomo.instaZap || false);
+			$("#lockZap").prop( "checked", pomo.lockZap || false);
+			
+			var confDiv = $("#toDoDiv");
+			var focusDiv = $("#pomodoroFocusDiv");
+			var hyperControl = $(".hyperFocusControlDiv");
+			
+			if (pomo.active == true){
+				$(confDiv).addClass('noDisplay');
+				$(focusDiv).removeClass('noDisplay');
+				$(hyperControl).removeClass('noDisplay'); 
+			}
+			else {
+				$(confDiv).removeClass('noDisplay');
+				$(focusDiv).addClass('noDisplay');
+			}
+		},
+		
+		enablePomoButtons: function(){
+			$("#pomoFocusCompleteTask").click(function( event ){
+				event.preventDefault();
+				pavPomo.helpers.toBackground({action: 'donePomo'});
+			});
+			
+			$("#pomoFocusStop").click(function( event ){
+				event.preventDefault();
+				pavPomo.helpers.toBackground({action: 'stopPomo'});
+			});
+			
+			$("#pomoFocus5minutes").click(function( event ){
+				event.preventDefault();
+				pavPomo.helpers.toBackground({action: '5 minutes'});
+			});
 
-	initialSync: function(){
-		msgBackground({ action: "syncPomo"});
-	},
-
-	completeTask(pomo){
-		// Graphical update
-		if (pomo.daily == true) { pomoTest.checkDailyTask(pomo); }
-		else { pomoTest.checkRegularTask(pomo); }
-		togglePomodoro(pomo.active);
-		
-		// Backend
-		pomoTest.endPomo(pomo, 'done');
-		
-		PFpromptForce = false;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
-		lsDel('dailyPomo');	
+			$("#playBinauralButton").click(function(){
+				var pomoFocus = getPomoFocus('background');
+				$("#stopBinauralButton").removeClass('noDisplay');
+				$("#playBinauralButton").addClass('noDisplay');
+				
+				pavPomo.helpers.toBackground({action: 'play'});
+				// need some work
+				pomoFocus.audio = true;
+				savePomoFocus(pomoFocus, 'popup');
+			});
+			
+			$("#stopBinauralButton").click(function(){
+				$("#playBinauralButton").removeClass('noDisplay');
+				$(this).addClass('noDisplay');
+				
+				pavPomo.helpers.toBackground({action: "stopAudio"});
+				
+				// Need work
+				var pomoFocus = getPomoFocus('background');
+				pomoFocus.audio = false;
+				savePomoFocus(pomoFocus, 'popup');
+				
+			});
+			
+			$("#vDownBinaural").click(function(){
+				pavPomo.helpers.toBackground({action: 'volumeDown'});
+			
+			});
+			
+			$("#vUpBinaural").click(function(){
+				pavPomo.helpers.toBackground({action: 'volumeUp'});
+			});
+		}
 	},
 	
-	checkDailyTask: function(pomo){
+		checkDailyTask: function(pomo){
 		var dailyList = lsGet('dailyList', 'parse');
 		var daily = _.where(dailyList, {id: pomo.taskID});
 		if (daily.length == 1){ daily = daily[0]; }
@@ -977,167 +492,6 @@ var pomoTest = {
 	},
 	
 }
-
-var todo = {
-	addTask: function(task){
-		if (task.daily == true){
-			// validate task
-			
-			// Get an ID for task
-			
-			// 
-		}
-		else{
-			var tasks = lsGet('ToDoTasks', 'parse') || [];
-			var newTask = {
-				task: task.task || task.content || task,
-				done: task.done || false,
-				today: task.today || false,
-				now: false,
-				external_id: task.external_id
-			}
-			
-			// Get an ID
-			var lastID = parseInt(lsGet('lastID') || 1);
-			newTask.id = lastID + 1;
-			
-			// Saves
-			tasks.push(newTask)
-			lsSet('ToDoTasks', tasks, 'object');
-			lsSet('lastID', newTask.id);
-		}
-		
-		return newTask
-	},
-	removeTask: function(task){
-		if (task.daily == true){
-			// Find task
-			
-			// Remove task from array
-			
-			// Save array
-		}
-		else{
-			var tasks = lsGet('ToDoTasks', 'parse') || [];
-			// Find task
-			var index = arrayObjectIndexOf(tasks, task.id, 'id')
-			tasks.splice(index, 1);
-			lsSet('ToDoTasks', tasks, 'object');
-		}
-	},
-	clickedTask: function(id, daily){
-		var tasks
-		if (daily == true)	{ tasks = lsGet('dailyList', 'parse'); }
-		else				{ tasks = lsGet('ToDoTasks', 'parse'); }
-		
-		return _.where(tasks, {id: id});
-	},
-	
-	editTask: function(task, updates){
-		if (task.daily == true)	{ var tasks = lsGet('dailyList', 'parse') || []; }
-		else					{ var tasks = lsGet('ToDoTasks', 'parse') || []; }
-		
-		var index = arrayObjectIndexOf(tasks, task.id, 'id');
-		if (index == -1) { console.log("Task not found"); return }
-		
-		var fieldChanges = Object.getOwnPropertyNames(taskUpdates);
-		for (f = 0; f < fieldChanges.length; f++){
-			update = fieldChanges[f];
-			task[update] = updates[update];
-		}
-		
-		tasks[index] = task;
-		
-		if (task.daily == true)	{ lsSet('dailyList', tasks, 'object'); }
-		else					{ lsSet('ToDoTasks', tasks, 'object'); }
-
-		return task
-	},
-	
-	validateTask: function(){
-		if (task.daily == true){
-			
-		}
-	},
-	completeTask: function(){
-		if (task.daily == true){
-			
-		}
-	},
-	
-	// Interface update
-	checkTask: function(task){
-		if (task.daily == true){
-			
-		}
-		else {
-			var itemRow = $("#" + task.id);
-			if (itemRow.length == 0){ console.log("no Now Task"); return }
-			
-			$("#" + taskId + "Done").attr("checked", task.done);
-			if (task.done == true){	$(itemRow).addClass("doneTaskRow");	}
-			else {					$(itemRow).removeClass("doneTaskRow"); }
-		}
-	},
-	
-	updateInterface: function(){
-		var regulars = lsGet('ToDoTasks', 'parse');
-		for (t = 0; t < regulars.length; t++){
-			var line = todo.createNewLine(regulars[t]);
-			$('#toDoTable > tbody').append(line);
-			
-		}
-	},
-	
-	
-	editLine: function(task){
-		var line;
-		
-		
-	},
-	
-	listener: function(){
-			// Clicking on X for remove
-			$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
-				var taskId = $(this).attr('id');
-				taskId = taskId.split('remove')[0];
-				
-				todo.removeTask(todo.clickedTask(taskId, false));
-				$("#" + taskId).remove();
-			});
-			
-			// Clicking on today
-			$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
-				var img = $(this);
-				var today;
-				
-				var taskId = img.attr('id');
-				taskId = taskId.split('today')[0];
-				
-				if ($(img).hasClass("grayscale")) 	{ today = true; }
-				else 								{ today = false }
-				
-				var task = todo.clickedTask(taskId, today);
-				todo.editTask(task, {today: today});
-				todo.editLine(task);
-				
-				
-			});
-			
-			// Clicking on tomato for pomo
-			$("#toDoTable tbody ").on('click', '.nowToDoItem', function(){
-				var taskId = $(this).attr('id');
-				taskId = taskId.split('pomo')[0];
-				
-				todo.removeTask(todo.clickedTask(taskId, false));
-				$("#" + taskId).remove();   
-			});
-			
-			// Clicking on the done checkbox
-			
-			
-	}
-};
 
 var testTodo = {
 	backend: {
@@ -1156,12 +510,13 @@ var testTodo = {
 				done:			task.done			|| false,
 				pomos:			task.pomos 			|| undefined,
 				donePomos:		task.donePomos		|| undefined,
-				duration:		task.duration		|| 20,
+				duration:		task.duration		|| 25,
 				specialList:	task.specialList 	|| false,
 				blackList:		task.blackList		|| undefined,
 				whiteList:		task.whiteList		|| undefined,
 				instaZap:		task.instaZap		|| false,
-				binaural:		task.binaural		|| false
+				binaural:		task.binaural		|| false,
+				today:			task.today			|| false
 			}
 			return newTask
 		},
@@ -1173,7 +528,6 @@ var testTodo = {
 		// CRUD
 		create: function(task){
 			var allTasks = lsGet('allTasks', 'parse') || [];
-			
 			var task = testTodo.backend.scaffold(task);
 			task.id = testTodo.backend.newId();
 			allTasks.push(task);
@@ -1181,35 +535,101 @@ var testTodo = {
 			
 			lsSet('lastID', task.id);
 			console.log("New task added:")
+			console.log(task)
 			return task
 		},
 		
 		read: function(id){
 			var allTasks = lsGet('allTasks', 'parse') || [];
+			if (!id) { return allTasks }
 			
 			var task = _.where(allTasks, {id: id});
 			if (task.length == 0) { return undefined }
 			return task[0];
 		},
 		
-		update: function(task, updates){
+		update: function(taskId, updates){
+			var allTasks = lsGet('allTasks', 'parse');
+			var task = testTodo.backend.read(taskId);
 			
+			if (!task) { 
+				console.log("Couldn't find task of ID " + taskId); 
+				return false;
+			}
+			
+			var fieldChanges = Object.getOwnPropertyNames(updates);
+			for (f = 0; f < fieldChanges.length; f++){
+				update = fieldChanges[f];
+				task[update] = updates[update];
+			}
+			
+			var index = arrayObjectIndexOf(allTasks, task.id, 'id');
+			allTasks[index] = task;
+			
+			lsSet('allTasks', allTasks, 'object');
+
+			return task
+				
 		},
-		
+			
 		delete: function(id){
-		
+			id = parseInt(id);
+			var allTasks = lsGet('allTasks', 'parse');
+			var index = arrayObjectIndexOf(allTasks, id, 'id');
+			
+			if (index == -1 ){ 
+				console.log("Task ID " + id + " not found"); 
+				return false;
+			}
+			
+			allTasks.splice(index, 1);
+			lsSet('allTasks', allTasks, 'object');
+			return true
 		},
 	},
 	
-	frontEnd: {
+	frontend: {
 		addTaskListener: function(){
 			$("#toDoAdd").keydown(function(e){
 				if (e.keyCode == 13) {
-					var task = $(this).val();
-					if (task.length > 0){
-						var line = todo.createNewLine(todo.addTask(task));
+					var text = $(this).val();
+					if (text.length > 0){
+						// Create a task on the database
+						var task = testTodo.backend.create({task: text});
+						
+						// Create a line for the interface
+						var line = testTodo.frontend.createNewLine(task);
 						$('#toDoTable > tbody').append(line);
+						
+						// Reset input field value
 						$(this).val("");
+					}
+				}
+			});
+			
+			$("#newDailyTaskInput").keydown(function(e){
+				if (e.keyCode == 13) {
+					var newTaskName = $("#newDailyTaskInput").val()
+					if (newTaskName.length > 0 && newTaskName != " "){
+						// Clears the line
+						$('#newDailyTaskInput').val('');
+
+						// Creates a new task
+						var newDaily = {
+							task: newTaskName,
+							daily: true,
+							pomos: 1,
+						};
+						newDaily = testTodo.backend.create(newDaily);
+						
+						testTodo.frontend.restoreTasks("options");
+						
+						fillDailyList();
+						createDetailTR($("#" + newDaily.id));
+						msgExt('updateDaily', 'popup');
+						
+					} else{
+						return
 					}
 				}
 			});
@@ -1218,112 +638,164 @@ var testTodo = {
 		removeTaskListener: function(){
 			$("#toDoTable tbody ").on('click', '.removeToDoItem', function(){
 				var taskId = $(this).attr('id');
-				taskId = taskId.split('remove')[0];
+				taskId = taskId.split('Remove')[0];
 				
-				todo.removeTask(todo.clickedTask(taskId, false));
-				$("#" + taskId).remove();
+				var deleted = testTodo.backend.delete(taskId);
+				if (deleted) {$("#" + taskId).remove();}
 			});	
 		},
 		
 		tagTodayListener: function(){
 			$("#toDoTable tbody ").on('click', '.todayToDoItem', function(){
 				var img = $(this);
-				var today;
+				var isToday;
 				
 				var taskId = img.attr('id');
-				taskId = taskId.split('today')[0];
+				taskId = parseInt(taskId.split('today')[0]);
 				
-				if ($(img).hasClass("grayscale")) 	{ today = true; }
-				else 								{ today = false }
+				if ($(img).hasClass("grayscale")) 	{ isToday = true; }
+				else 								{ isToday = false }
 				
-				var task = todo.clickedTask(taskId, today);
-				todo.editTask(task, {today: today});
-				todo.editLine(task);
+				testTodo.backend.update(taskId, {today: isToday});
+				testTodo.frontend.restoreTasks();
+				// todo.editLine(task);
 			});
 		},
 		
 		editDailyListener: function(){},
 		
-		createNewLine: function(task){
-			var tr = document.createElement("tr");
-			tr.className = "toDoItemTR";
-			tr.id = task.id;
-			
-			var td = document.createElement("td");
-			tr.appendChild(td);
-			td.colSpan = 5;
-			
-			var doneDiv = document.createElement("div");
-			td.appendChild(doneDiv);
-			doneDiv.className = "toDoOKerTD";
-			
-			var doneCheckbox = document.createElement("input");
-			doneDiv.appendChild(doneCheckbox);
-			doneCheckbox.className = "doneCheckbox"
-			doneCheckbox.type = "checkbox";
-			doneCheckbox.checked = task.done;
-			doneCheckbox.title = "Done?"
-			doneCheckbox.id = task.id + "Done"
-			
-			var taskDiv = document.createElement("div");
-			td.appendChild(taskDiv);
-			taskDiv.className = "toDoTaskTD";
-			taskDiv.innerHTML = task.task;
-			
-			var buttonsDiv = document.createElement("div");
-			td.appendChild(buttonsDiv);
-			buttonsDiv.className = "toDoRemoverTD";
-
-			var pomoButton = document.createElement("input");
-			buttonsDiv.appendChild(pomoButton);
-			pomoButton.type = "image";
-			pomoButton.src = "images/pomoFocusIconSmall.png";
-			pomoButton.alt = "Now";
-			pomoButton.id = task.id + "Pomo";
-			pomoButton.className = "nowToDoItem imgIcon";
-			pomoButton.title = "<p>Enter <b>Pomodoro</b> mode</p>";
-			
-			var todayButton = document.createElement("input");
-			buttonsDiv.appendChild(todayButton);
-			todayButton.type = "image";
-			todayButton.src = "images/todayIcon.png";
-			todayButton.alt = "Today";
-			todayButton.id = task.id + "today"
-			if (task.today == true){
-						todayButton.className = "todayToDoItem imgIcon"; 
-			} else { 	todayButton.className = "todayToDoItem imgIcon grayscale"; }
-			
-			todayButton.title = "<p>You will do it <b>today</b></p>";
-			
-			var removeButton = document.createElement("input");
-			buttonsDiv.appendChild(removeButton);
-			removeButton.type = "image";
-			removeButton.src = "images/redXIcon.png";
-			removeButton.alt = "Today";
-			removeButton.id = task.id + "Remove";
-			removeButton.className = "removeToDoItem imgIcon"; 
-			removeButton.title = "<p>I will not do it anymore. <b>Remove it</b></p>";
-			
-			$('#toDoTable > tbody').append(tr);
-
-			/* Marked for removal
-			var newLine = '<tr id="' + task.id + '" class="toDoItemTR">' +
-							'<td colspan="5">' +
-								'<div class="toDoOKerTD">' +
-									'<input type="checkbox" class="doneCheckbox" title="Done?"/>' + 
-								'</div>' + 
-								'<div class="toDoTaskTD">' + 
-									task.task + 
-								'</div>' +
-								'<div class="toDoORemoverTD" >' + 
-									'<input type="image" src="images/pomoFocusIconSmall.png" alt="Now" class="nowToDoItem imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>' + 							
-									'<input type="image" src="images/todayIcon.png" alt="Today" class="todayToDoItem imgIcon grayscale" title="<p>You will do it <b>today</b></p>"/>' + 
-									'<input type="image" src="images/redXIcon.png" alt="Cancel" id="' + task.id + 'remove" class="removeToDoItem imgIcon" title="<p>I will not do it anymore. <b>Remove it</b></p>"/>' + 
-								'</div>' + 
-							'</td>'
-			;
-			$('#toDoTable > tbody').append(newLine);
-			*/
+		doneCheckListener: function(){
+			$("#toDoTable").on('click', '.doneCheckbox', function(){
+				var box = $(this)
+				var taskId = box.attr('id');
+				taskId = parseInt(taskId.split('Done')[0]);
+				
+				var check = box.prop('checked');
+				if (check == true){ 
+					stimuli("vibration", defInt, defAT, "You rock! Let Pavlok massage your wrist a bit!");
+					notifyUser("Yeah! One down!", "You rock! Let Pavlok massage your wrist a bit!", "doneTask");
+				}
+				var update = {done: check};
+				
+				var task = testTodo.backend.update(taskId, update);
+				
+				testTodo.frontend.restoreTasks();
+			});
+		},
+		
+		createNewLine: function(task, target){
+			if (task.daily == false){
+				{var tr = document.createElement("tr");
+					tr.className = "toDoItemTR";
+					if (task.done) { tr.className = tr.className + " doneTaskRow"}
+					tr.id = task.id;
+				}
+				
+				{var td = document.createElement("td");
+					tr.appendChild(td);
+					td.colSpan = 5;
+				}
+				
+				{var doneDiv = document.createElement("div");
+					td.appendChild(doneDiv);
+					doneDiv.className = "toDoOKerTD";
+				}
+				
+				{var doneCheckbox = document.createElement("input");
+					doneDiv.appendChild(doneCheckbox);
+					doneCheckbox.className = "doneCheckbox"
+					doneCheckbox.type = "checkbox";
+					doneCheckbox.checked = task.done;
+					doneCheckbox.title = "Done?"
+					doneCheckbox.id = task.id + "Done"
+				}
+				
+				{var taskDiv = document.createElement("div");
+					td.appendChild(taskDiv);
+					taskDiv.className = "toDoTaskTD";
+					taskDiv.innerHTML = task.task;
+				}
+				
+				{var buttonsDiv = document.createElement("div");
+					td.appendChild(buttonsDiv);
+					buttonsDiv.className = "toDoRemoverTD";
+				}
+				
+				{var pomoButton = document.createElement("input");
+					buttonsDiv.appendChild(pomoButton);
+					pomoButton.type = "image";
+					pomoButton.src = "images/pomoFocusIconSmall.png";
+					pomoButton.alt = "Now";
+					pomoButton.id = task.id + "Pomo";
+					pomoButton.className = "nowToDoItem imgIcon";
+					pomoButton.title = "<p>Enter <b>Pomodoro</b> mode</p>";
+				}
+				
+				{var todayButton = document.createElement("input");
+					buttonsDiv.appendChild(todayButton);
+					todayButton.type = "image";
+					todayButton.src = "images/todayIcon.png";
+					todayButton.alt = "Today";
+					todayButton.id = task.id + "today"
+					todayButton.className = "todayToDoItem imgIcon"; 
+					if (task.today == false){
+						todayButton.className = todayButton.className + " grayscale"; 
+					}
+					todayButton.title = "<p>You will do it <b>today</b></p>";
+				}
+				
+				{var removeButton = document.createElement("input");
+					buttonsDiv.appendChild(removeButton);
+					removeButton.type = "image";
+					removeButton.src = "images/redXIcon.png";
+					removeButton.alt = "Today";
+					removeButton.id = task.id + "Remove";
+					removeButton.className = "removeToDoItem imgIcon"; 
+					removeButton.title = "<p>I will not do it anymore. <b>Remove it</b></p>";
+				}
+				
+				// $('#toDoTable > tbody').append(tr);
+			}
+			else if(task.daily == true && target == "popup"){
+				{var tr = document.createElement("tr");
+				tr.id = task.id;
+				tr.className = "dailyItemTR";}
+				
+				{var td = document.createElement("td");
+				tr.appendChild(td);}
+				
+				{var taskDiv = document.createElement("div");
+				td.appendChild(taskDiv);
+				taskDiv.className = "dailyTaskName";}
+				
+				{var taskSpan = document.createElement("span");
+				taskDiv.appendChild(taskSpan);
+				taskSpan.innerHTML = task.task;}
+				
+				{var pomoHoldersDiv = document.createElement("div");
+				td.appendChild(pomoHoldersDiv);
+				pomoHoldersDiv.className = "pomoFocusHolders";}
+				
+				{var pomoHolderSpan = document.createElement("span");
+				pomoHoldersDiv.appendChild(pomoHolderSpan);
+				
+					// Create the number of green and red apples according to the number of done and remaining pomos
+					var pomoFocuses = '';
+					var maxPomos = parseInt(task.pomos);
+					var donePomos = parseInt(task.donePomos) || 0;
+					var remainingPomos = maxPomos - donePomos;
+					
+					for (p = 0; p < donePomos; p++){
+						pomoFocuses = pomoFocuses + '<input disabled type="image" src="images/pomodoro(completed).png" alt="Done!" class="doneDaily imgIcon" title="<p>Well done!</p>"/>'
+					}
+					
+					for (p = 0; p < remainingPomos; p++){
+						pomoFocuses = pomoFocuses + '<input type="image" src="images/pomodoro(todo)_(Custom).png" alt="Now" id="' + task.id + 'Pomo" class="dailyPomoNow imgIcon" title="<p>Enter <b>Pomodoro</b> mode</p>"/>';
+					}
+					
+				pomoHolderSpan.innerHTML = pomoFocuses;
+				}
+			}
 			
 			return tr;
 		},
@@ -1333,12 +805,365 @@ var testTodo = {
 			if (line.length == 0){ return undefined }
 			return line[0];
 		},
-		restoreTasks: function(){},
+		
+		restoreTasks: function(target){
+			if(!target) { target = "popup"; }
+			
+			var allTasks 		= lsGet('allTasks', 'parse');
+			var regularTasks 	= _.where(allTasks, {daily: false});
+			var dailyTasks 		= _.where(allTasks, {daily: true});
+			
+			var task;
+			var line;
+			
+			// Clearing regular tasks
+			$(".toDoItemTR").remove();
+			
+			// Recreating regular tasks
+			for (r = 0; r < regularTasks.length; r++){
+				task = regularTasks[r];
+				line = testTodo.frontend.createNewLine(task);
+				$('#toDoTable > tbody').append(line);
+			}
+			
+			// Clearing daily tasks
+			$('.dailyItemTR').remove();
+			
+			// Recreating daily tasks
+			for (d = 0; d < dailyTasks.length; d++){
+				task = dailyTasks[d];
+				line = testTodo.frontend.createNewLine(task, target);
+				$('.dailyContainer tbody').append(line);	
+			}
+		},
+		
 		updateLine: function(){},
+		
+		dailyDetail(id){
+			var task = testTodo.backend.read(id);
+			
+			if (task.length == 0){
+				console.log("Task of id " + id + " not found or not daily");
+				return false
+			}
+			
+			var detailTable = document.createElement("table");
+			detailTable.id = "dailyListDetails";
+			
+			var tbody = document.createElement("tbody");
+			detailTable.appendChild(tbody);
+			
+			{var idRow = document.createElement("tr");
+			idRow.className = "noDisplay";
+			tbody.appendChild(idRow);
+			
+				var idRowCategory = document.createElement("td"); {
+				idRowCategory.className = "categoryName";
+				idRowCategory.innerHTML = "Daily ID"
+				idRow.appendChild(idRowCategory);}
+				
+				var idRowValue = document.createElement("td"); {
+				idRowValue.id = "dailyTaskIdTD";
+				idRow.appendChild(idRowValue);}
+				
+				var idRowInput = document.createElement("input"); {
+				idRowInput.type = "text";
+				idRowInput.id = "dailyTaskIdInput"
+				idRowInput.disabled = true;
+				idRowInput.value = task.id;
+				idRowValue.appendChild(idRowInput);}}
+			
+			{var pomosRow = document.createElement("tr"); 
+			tbody.appendChild(pomosRow);
+
+				var pomosCat = document.createElement("td"); {
+				pomosRow.appendChild(pomosCat);
+				pomosCat.className = "categoryName";
+				pomosCat.innerHTML = "Pomodoros per day ";}
+				
+				var pomosNumber = document.createElement("td"); {
+				pomosRow.appendChild(pomosNumber);
+				pomosNumber.id = "pomodorosPerDayTD";}
+				
+					var pomoPerDaySelect = document.createElement("select"); {
+					pomosNumber.appendChild(pomoPerDaySelect);
+					pomoPerDaySelect.id = "pomoPerDaySelect";}
+					
+						{var pomoN1 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN1);
+						pomoN1.value = "1";
+						pomoN1.innerHTML = "1"
+									
+						var pomoN2 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN2);
+						pomoN2.value = "2";
+						pomoN2.innerHTML = "2"
+
+						var pomoN3 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN3);
+						pomoN3.value = "3";
+						pomoN3.innerHTML = "3"
+								
+						var pomoN4 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN4);
+						pomoN4.value = "4";
+						pomoN4.innerHTML = "4"
+
+						var pomoN5 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN5);
+						pomoN5.value = "5";
+						pomoN5.innerHTML = "5"
+
+						var pomoN6 = document.createElement("option");
+						pomoPerDaySelect.appendChild(pomoN6);
+						pomoN6.value = "6";
+						pomoN6.innerHTML = "6"
+						
+						pomoPerDaySelect.selectedIndex = task.pomos - 1;
+						}
+				
+					var lasting = document.createElement("span");{
+					pomosNumber.appendChild(lasting);
+					lasting.innerHTML = " lasting for ";}
+					
+					var pomoDurationSelect = document.createElement("select");{
+					pomosNumber.appendChild(pomoDurationSelect);
+					pomoDurationSelect.id = "dailyPomoDuration";}
+					
+						{var pomoD2 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD2);
+						pomoD2.value = "2";
+						pomoD2.innerHTML = "2";
+
+						var pomoD5 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD5);
+						pomoD5.value = "5";
+						pomoD5.innerHTML = "5";
+
+						var pomoD10 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD10);
+						pomoD10.value = "10";
+						pomoD10.innerHTML = "10";
+
+						var pomoD15 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD15);
+						pomoD15.value = "15";
+						pomoD15.innerHTML = "15";
+
+						var pomoD25 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD25);
+						pomoD25.value = "25";
+						pomoD25.innerHTML = "25";
+
+						var pomoD35 = document.createElement("option");
+						pomoDurationSelect.appendChild(pomoD35);
+						pomoD35.value = "35";
+						pomoD35.innerHTML = "35";
+						
+						var durRange = [2, 5, 10, 15, 25, 35];
+						var ind = durRange.indexOf(task.duration);
+						
+						pomoDurationSelect.selectedIndex = ind;
+						}
+
+					var lastingMinutes = document.createElement("span");
+					pomosNumber.appendChild(lastingMinutes);
+					lastingMinutes.innerHTML = " minutes";
+					
+					
+			}	
+
+			{var controlsRow = document.createElement("tr");
+			tbody.appendChild(controlsRow);
+
+				var controlsCat = document.createElement("td");
+				controlsRow.appendChild(controlsCat);
+				controlsCat.className = "categoryName";
+				controlsCat.innerHTML = "Page controls";
+				
+				var controlsInput = document.createElement("td");
+				controlsRow.appendChild(controlsInput);
+				controlsCat.id = "specialListsTD";
+				
+				var listsInput = document.createElement("input");
+				controlsInput.appendChild(listsInput);
+				listsInput.id = "specialListsInput";
+				listsInput.type = "checkbox";
+				listsInput.checked = task.specialList;
+				
+				var genSpan = document.createElement("span");
+				controlsInput.appendChild(genSpan);
+				genSpan.innerHTML = " Use special black and white lists";}
+				
+			{var blackTR = document.createElement("tr");
+			tbody.appendChild(blackTR);
+			blackTR.className = "specialListDisplay";
+			if (task.specialList == false) { blackTR.className = "specialListDisplay noDisplay"}
+			
+				var blackCat = document.createElement("td");
+				blackTR.appendChild(blackCat);
+				blackCat.className = "categoryName";
+				blackCat.innerHTML = "Black List";
+
+				var blackVal = document.createElement("td");
+				blackTR.appendChild(blackVal);
+				blackVal.id = "blackListTD";
+
+					var blackList = document.createElement("div");
+					blackVal.appendChild(blackList);
+					blackList.id = "blackListDaily";
+					
+			}
+								
+			{var whiteTR = document.createElement("tr"); 
+			tbody.appendChild(whiteTR);
+			whiteTR.className = "specialListDisplay";
+			if (task.specialList == false) { whiteTR.className = "specialListDisplay noDisplay"}
+
+				var whiteCat = document.createElement("td");
+				whiteTR.appendChild(whiteCat);
+				whiteCat.className = "categoryName";
+				whiteCat.innerHTML = "White List";
+
+				var whiteVal = document.createElement("td");
+				whiteTR.appendChild(whiteVal);
+				whiteVal.id = "whiteListTD";
+
+					var whiteList = document.createElement("div");
+					whiteVal.appendChild(whiteList);
+					whiteList.id = "whiteListDaily";
+					
+			}
+			{var saveOrResetTR = document.createElement("tr");
+			tbody.appendChild(saveOrResetTR);
+
+				var emptyTD = document.createElement("td");
+				saveOrResetTR.appendChild(emptyTD);
+				
+				var saveContainer = document.createElement("td");
+				saveOrResetTR.appendChild(saveContainer);
+				saveContainer.className = "saveOrResetTD";
+				saveContainer.colspan = 2;
+				
+				var saveDiv = document.createElement("div");
+				saveContainer.appendChild(saveDiv);
+				saveDiv.className = "saveOrResetContainer";
+				
+				var saveButton = document.createElement("a");
+				saveDiv.appendChild(saveButton);
+				saveButton.id = "saveDaily"
+				saveButton.className = "buttonLink";
+				saveButton.href = "#";
+				saveButton.innerHTML = "Save";
+				
+				var delButton = document.createElement("a");
+				saveDiv.appendChild(delButton);
+				delButton.id = "deleteDaily"
+				delButton.className = "buttonLink";
+				delButton.href = "#";
+				delButton.innerHTML = "Delete";
+			}	
+		
+			return detailTable
+		},
+	
 	},
 
 	helpers: {
+		resetDailyTasks: function(){
+			var allTasks = testTodo.backend.read();
+			var dailies = _.where(allTasks, {daily: true});
+			var update = { donePomos: 0 };
+			
+			for (d = 0; d < dailies.length; d++){
+				daily = dailies[d];
+				testTodo.backend.update(daily.id, update);
+			}
+			
+			pavPomo.helpers.toInterfaces({	action: "updateActions"	});
+		},
 		
+		migrateFromSeparateLists: function(){
+			var oldRegulars = lsGet('ToDoTasks', 'parse');
+			var oldDailies  = lsGet('dailyList', 'parse');
+			
+			var combinedTasks = [];
+			var t;
+			
+			for (r = 0; r < oldRegulars.length; r++){
+				t = oldRegulars[r];
+				delete t.id;
+				
+				combinedTasks.push(t);
+			}
+			
+			for (d = 0; d < oldDailies.length; d++){
+				t = oldDailies[d];
+				delete t.id;
+				delete t.completed;
+				delete t.description;
+				delete t.hyper;
+				
+				t.duration  = parseInt(t.duration)  || 25;
+				t.pomos 	= parseInt(t.pomodoros) || 3;
+				t.donePomos = parseInt(t.donePomos) || 0;
+				
+				combinedTasks.push(t);
+			}
+			return combinedTasks;
+		},
+		
+		gatherDaily(){
+			var blackListDiv = $("#blackListTD").children()[0];
+			var whiteListDiv = $("#whiteListTD").children()[0];
+			
+			var details = {
+				id: 			parseInt($("#dailyTaskIdInput").val()),
+				// task: 			$("#where is the name").val(),
+				daily: 			true,
+				pomos: 			parseInt($("#pomoPerDaySelect").val()),
+				duration: 		parseInt($("#dailyPomoDuration").val()),
+				specialList: 	$("#specialListsInput").prop("checked"),
+				blackList: 		$(blackListDiv).val(),
+				whiteList: 		$(whiteListDiv).val(),
+			}
+			return details
+		},
+		
+		completeTask(taskId){
+			var task = testTodo.backend.read(taskId);
+			if (task.daily == true){ 
+				task.donePomos = task.donePomos + 1; 
+				var update = {donePomos: task.donePomos};
+			}
+			else { 
+				update = {done: true }
+			}
+			
+			testTodo.backend.update(taskId, update);
+			testTodo.frontend.restoreTasks();
+			
+			pavPomo.helpers.toInterfaces({	action: "updateActions"	});
+		},
 	}
 
 };
+
+// function setTest(){
+	
+	// var pomo = pavPomo.backend.create({id:2, duration:30});
+	// pavPomo.frontend.updateCountdown(pomo, "background");
+	// console.log("=======================================");
+	// console.log("Created a new pomodoro");
+	// console.log(pomo);
+	
+	// setTimeout(function(){
+		// var pomoAgain = pavPomo.helpers.lastPomo();
+		// var newEnd = pomo.endTime + 5 * 60 * 1000;
+		// pavPomo.backend.update(pomoAgain.id, {endTime: newEnd, active: true});
+		// console.log("=======================================");
+		// console.log("Updated the last pomodoro");
+		// console.log(pavPomo.helpers.lastPomo());
+	// }, 2000);
+// }
+

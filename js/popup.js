@@ -202,9 +202,7 @@ $( document ).ready(function() {
 	presentName();
 	enableTestButtons();
 	enableToDo();
-	syncToDo('options');
 	showOptions(localStorage.accessToken);
-	restoreDailyList('.dailyContainer');
 		
 	tabsAsAccordion();
 	enableBlackList();
@@ -222,7 +220,6 @@ $( document ).ready(function() {
 		}
 		else{
 			msgBackground({action: "oauth"});
-			// oauth();
 		}
 	});
 
@@ -236,31 +233,40 @@ $( document ).ready(function() {
 	});
 	
 	$("#instaZap").change(function(){
-		lsSet('instaZap', $(this).prop( "checked" ));
+		updates = {instaZap: $(this).prop( "checked" )};
+		
+		var pomo = pavPomo.helpers.lastPomo();
+		pavPomo.backend.update(pomo.id, updates);
 		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#lockZap").change(function(){
-		lsSet('lockZap', $(this).prop( "checked" ));
-		confirmUpdate(notifyUpdate);
-		
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			curPAVTab = tabs[0];
-			curPAVUrl = tabs[0].url;
-			curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
-			
-			if(curPAVDomain.length == 0){
-				console.log("unable to resolve domain for " + curPAVUrl);
-				curPAVDomain = curPAVUrl;
+			var active = $("#lockZap").prop("checked");
+			var updates = { lockZap: active };
+			if (active){
+				curPAVTab = tabs[0];
+				curPAVUrl = tabs[0].url;
+				curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+				
+				if(curPAVDomain.length == 0){
+					console.log("unable to resolve domain for " + curPAVUrl);
+					curPAVDomain = curPAVUrl;
+				}
+				
+				updates.lockedTo = curPAVDomain;
 			}
+			else { updates.lockedTo = undefined; }
 			
-			lsSet('lockedTo', curPAVDomain);
-			
+			var pomo = pavPomo.helpers.lastPomo();
+			pavPomo.backend.update(pomo.id, updates);
+			confirmUpdate(notifyUpdate);
 		});
 		
 	});
 	
-	pomoTest.initialSync();
+	pavPomo.helpers.initialSync();
+
 	// Message listeners
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -283,23 +289,22 @@ $( document ).ready(function() {
 					$("#whiteList").importTags(newWhiteList);
 				}
 				
-				else if (request.action == "updatePomoFocus"){
-					pomoTest.updateCountdown(request.pomo);
+				else if (request.action == "updatePomo"){
+					console.log(request);
+					var pomo = request.pomo;
+					if(!pomo){
+						console.log("No pomo");
+						return
+					}
+					pavPomo.frontend.updateCountdown(pomo);
 					console.log("received pomo");
-					console.log(request.pomo);
+					console.log(pomo);
 					
 				}
 				
 				else if (request.action == "updateActions"){
 					var pomo = request.pomo;
-					restoreTaskList();
-					restoreDailyList(".dailyContainer");
-					if (request.pomo.daily == false){
-						pomoTest.checkRegularTask(pomo);
-					}
-					else if (pomo.daily == true){
-						pomoTest.checkDailyTask(pomo);
-					}
+					testTodo.frontend.restoreTasks();
 				}
 				
 				else if (request.action == "logged"){
