@@ -19,6 +19,7 @@ var coach = {
 	// Variables
 	status: false,
 	timeout: 0,
+	timeouts: [],
 	todayPomos: function(pomo){
 		var x = lsGet('todayPomos', 'parse');
 		if (x == undefined) { x = []; };
@@ -30,6 +31,30 @@ var coach = {
 		x.push(pomo);
 		lsSet('todayPomos', x, 'object');
 	},
+	
+	helpers: {
+		lastTimeout: function(){
+			var timeouts = coach.timeouts || [];
+			var last;
+			
+			if (timeouts.length > 0){
+				last = timeouts[timeout.length - 1];
+			}
+			else { last = undefined };
+			return last;
+		},
+		
+		pushTimeout: function(timeout){
+			var timeouts = coach.timeouts || [];
+			timeouts.push(timeout)
+			coach.timeouts = timeouts;
+			return coach.timeouts
+		}
+	},
+	
+	frontend: {},
+	
+	backend: {},
 	
 	// Methods
 	timeSincePomo: function(pomo){
@@ -139,16 +164,19 @@ var coach = {
 	isItTime: function(){
 		var active = coach.status;
 		if (active == false){
-			for (t = 0; t < coach.timeout + 5; t++){
-				clearTimeout(t);
+			if (coach.timeouts)
+			for (t = 0; t < coach.timeouts.length; t++){
+				clearTimeout(coach.timeouts[t]);
 			}
+			coach.timeouts = [];
 		}
 		
 		var now = new Date().getTime();
 		if (now < coach.nextCall) { 
 			console.log("Next call at " + dateFromTime(coach.nextCall));
-			coach.timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000)
-			return
+			var timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
+			coach.timeouts.push(timeout);
+			return coach.timeouts
 		}
 		
 		coach.lastCall = now;
@@ -162,6 +190,8 @@ var coach = {
 		
 		coach.nextCall = deltaTime(timeLimit / 1000).getTime();
 		coach.timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
+		coach.timeouts.push(coach.timeout);
+		return coach.timeouts;
 	},
 
 	registerPomos: function(pomosArray){
