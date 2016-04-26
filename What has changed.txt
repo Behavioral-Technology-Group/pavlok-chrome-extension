@@ -1,4 +1,36 @@
 New additions
+(0.7.14)
+- Checks for blacklisted sites now use the pomodoro and tasks directly
+- Checks for blacklisted sites use a simpler and more accurate method for getting the url
+
+
+
+ToDo
+ENGINES
+- ToDo is encapsulated in variables (testTodo, pavPomo)
+- Edits are done via update function
+- ToDo functions were divided in backend (database), frontend (calls and interfaces) and helper (budlers and utilities) for each variable
+-- Calls for pomodoro now use the pavPomo.helpers.lastPomo() function
+- All tasks are now standardized, so there's a single database for regular and daily tasks
+-- scaffold function is the core standardizer
+- Migration functions (from old two-database models to new single-database model)
+
+PRESENTATION
+- Line creation for tasks is done completely via javascript
+
+POMODOROS
+ENGINES
+- All pomodoro timers are executed in the background page
+- unbindCounter function avoid the recurrence of stimuli after pomodoro end.
+- All pomodoros are stored in a allPomos variable
+- Pomodoros are related, but separed from tasks
+- toInterfaces helper function also sends messages to content scripts
+- endPomo fixes audio
+- 
+
+PRESENTATION
+- 
+
 (0.7.13)
 - pomo escapes
 - Correct server configuration

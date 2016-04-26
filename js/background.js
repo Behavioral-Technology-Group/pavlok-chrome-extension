@@ -157,10 +157,11 @@ function CheckBlackList(curTabURL, curTabDomain) {
 		var _blackList = localStorage.blackList.split(",");
 	}
 	
-	var curTabSubURL = curTabURL.split("www.", 2);
-	if (curTabURL.split("www.").length > 1){
-		var curTabSubURL = curTabSubURL[1];
-	}
+	
+	// remove Http, Https and www
+	curTabSubURL = curTabURL.split(curTabDomain, 2);
+	curTabSubURL = curTabSubURL[curTabSubURL.length - 1];
+	curTabSubURL = curTabDomain + curTabSubURL;
 	
 	// Presumption of innocence
 	var blacked = false;
