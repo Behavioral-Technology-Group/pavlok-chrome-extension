@@ -7,16 +7,10 @@ var pavlokBannerHeight = 25;
 function togglePomoFocus(pomoFocus){
 	if (!pomoFocus) { console.log("no pomoFocus"); return }
 	if (pomoFocus.active == true){
-		// findAndAdjustFixedElements("added");
-		// $("#pomoFocusBannerPlaceholder2").show();
 		$("#pomoFocusBannerPlaceholder").show();
-		// console.log("Active until " + pomoFocus.endTime);
 	}
 	else if (pomoFocus.active == false){
-		// console.log("Inactive. Ended at " + pomoFocus.endTime);
 		$("#pomoFocusBannerPlaceholder").hide();
-		// $("#pomoFocusBannerPlaceholder2").hide();
-		// findAndAdjustFixedElements("removed");
 	}
 	else {
 		console.log("pomoFocus unavaible at response");
@@ -193,11 +187,10 @@ if (x == 0){
 	console.log("no listeners");
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			console.log(request.action);
 			console.log(request);
 
-			if (request.action == "pomodoro") {
-				msgToCount(request.pomodoro);
+			if (request.action == "updatePomo") {
+				msgToCount(request.pomo);
 				console.log("------------------------------------");
 			}
 			else if (request.action == "hello") {
