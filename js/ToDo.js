@@ -297,7 +297,7 @@ var pavPomo = {
 						}
 						
 						else if (action == "updatePomo"){
-							
+							pavPomo.frontend.updateCountdown(request.pomo, 'background');
 						}
 						
 						else if (action == "startPomo"){
@@ -305,6 +305,11 @@ var pavPomo = {
 							
 							pavPomo.frontend.updateCountdown(pavPomo.helpers.lastPomo(), "background");
 							pavPomo.helpers.toInterfaces({
+								action: "updatePomo", 
+								pomo: pomo
+							});
+							
+							pavPomo.helpers.toBackground({
 								action: "updatePomo", 
 								pomo: pomo
 							});

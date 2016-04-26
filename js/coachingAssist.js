@@ -154,11 +154,20 @@ var coach = {
 		coach.startPomoFocus(curTask);
 	},
 
-	startPomoFocus: function(item){
-		pavPomo.updatePomo(item);
+	startPomoFocus: function(task){
+		var pomo = pavPomo.backend.create({id: task.id});
 		
-		console.log("Item sent");
-		console.log(item);
+		pavPomo.frontend.updateCountdown(
+			pavPomo.helpers.lastPomo(), 
+			"background"
+		);
+		
+		pavPomo.helpers.toInterfaces({
+			action: "updatePomo", 
+			pomo: pavPomo.helpers.lastPomo()
+		});
+		
+		console.log("Starting pomo for " + task.task);
 	},
 
 	isItTime: function(){

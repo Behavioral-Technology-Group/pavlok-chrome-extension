@@ -1,5 +1,8 @@
 New additions
-(0.7.14)
+(0.7.10.4)
+
+GENERAL
+- Time until zap option returned under advaced options
 - Checks for blacklisted sites now use the pomodoro and tasks directly
 - Checks for blacklisted sites use a simpler and more accurate method for getting the url
 
@@ -35,8 +38,11 @@ PRESENTATION
 ......................
 
 TODOIST INTEGRATION
-- Core functions defined
-- Basic implementation on Options page
+- Encapsulated under todoist variable
+- Core functions (getToken, removeToken, getTasks, toPavlok, fromPavlok) defined
+- Helper functions (toggle between logged and unlogged states)
+- Basic implementation on Options page (sign in, sign out, import tasks button)
+- Listners on options and background to make it happen
 - No export function yet
 
 ......................
@@ -46,13 +52,15 @@ COACH TOOL
 - Basic implementation
 - Works on the background (even if no Chrome windows are open!)
 - Uses both daily and regular tasks
+- Coach stores it's own timeouts and clear only them
+- Activating pomodoro via the coach creates a new pomo and messages both the background and the interfaces with the new Pomo and updatePomo action
 
 
 
 
 
 
-(0.7.13)
+(0.7.10.3)
 - pomo escapes
 - Correct server configuration
 
