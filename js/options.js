@@ -659,6 +659,15 @@ function enableCoach(){
 	});
 }
 
+function enableTodoist(){
+	$("#todoistLogin").click(function(){
+		console.log("clicked on todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "oauth"
+		});
+	});
+}
 
 function enableSignInOut(){
 	$("#signOutX").click(function(){
@@ -1284,6 +1293,7 @@ $( document ).ready(function() {
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
 	enableCoach();
+	enableTodoist();
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");

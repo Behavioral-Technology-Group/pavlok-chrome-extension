@@ -2,8 +2,24 @@ var todoist = {
 	// Variables
 	apiURL: "https://todoist.com/API/v6/sync",
 	authURL: "https://todoist.com/oauth/authorize",
-	clientID: "a55fe0e20d56411f94c1bf70ec77594d",
-	clientSecret: "baf57468898b411f8b71df3d601a8656",
+	clientID: function(usage){
+		var local = "a55fe0e20d56411f94c1bf70ec77594d";
+		var test = "f7d20f9fffe9491ead6820ed42ca074d";
+		var production = "";
+		
+		if (usage.indexOf("local") != -1){ return local }
+		else if (usage.indexOf("test") != -1){ return test }
+		else if (usage.indexOf("production") != -1){ return production }
+	},
+	clientSecret: function(usage){
+		var local = "baf57468898b411f8b71df3d601a8656";
+		var test = "93c8053a000a433ab290f1b6be61bd65";
+		var production = "";
+		
+		if (usage.indexOf("local") != -1){ return local }
+		else if (usage.indexOf("test") != -1){ return test }
+		else if (usage.indexOf("production") != -1){ return production }
+	},
 	token: function(){ return lsGet('todoistAccessToken') },
 	// Methods
 	
@@ -15,7 +31,7 @@ var todoist = {
 		
 		var redirectURL = chrome.identity.getRedirectURL();
 		var authURL =	"https://todoist.com/oauth/authorize/" +
-						"?client_id="	+ this.clientID +
+						"?client_id="	+ this.clientID(usage) +
 						"&scope="		+ jScope +
 						"&state="		+ this.random();
 		
@@ -41,8 +57,8 @@ var todoist = {
 				
 				// Exchange AuthCode for Access Token:
 				accessTokenUrl = "https://todoist.com/oauth/access_token/" + 
-									"?client_id=" + todoist.clientID +  
-									"&client_secret=" + todoist.clientSecret + 
+									"?client_id=" + todoist.clientID(usage) +  
+									"&client_secret=" + todoist.clientSecret(usage) + 
 									"&code=" + authorizationCode + 
 									"&redirect_uri=" + redirectURL;
 				
@@ -60,6 +76,7 @@ var todoist = {
 		);	
 		return
 	},
+	
 	removeToken: function(){
 		var url = "https://todoist.com/api/access_tokens/revoke" + 		
 					"?client_id=" + todoist.clientID + 
@@ -78,8 +95,6 @@ var todoist = {
 	},
 	
 	// Tasks dealing
-	
-	
 	getTasks: function(){
 		var resTypes 	= ['user', 'items'];
 		var reqURL 		= this.apiURL + "/?token=" + this.token() + "&seq_no=0" + "&resource_types=" + JSON.stringify(resTypes);
@@ -263,8 +278,6 @@ var todoist = {
 	export: function(){
 		
 	},
-	
-	
 };
 
 function testPost(url){

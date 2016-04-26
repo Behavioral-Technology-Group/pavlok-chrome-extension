@@ -856,3 +856,7 @@ td.saveOrResetTD{
 	max-height: 120px;
 	min-height: 120px;
 }
+
+#todoistLogin{
+	width: 100px;
+}

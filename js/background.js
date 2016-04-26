@@ -700,6 +700,11 @@ function initialize() {
 					}
 					console.log("Coach running is " + coach.status);
 				}
+				else if (action == "todoistChange"){
+					if (request.change = "oauth"){
+						todoist.getToken();
+						console.log("Oauth request received");
+					}
 				}
 			}
 		}
