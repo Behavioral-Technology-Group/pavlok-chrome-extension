@@ -848,3 +848,11 @@ td.saveOrResetTD{
 	font-family: 'Lato', sans-serif;
 	
 }
+
+.specialListDisplay div.tagsinput {
+	max-width: 350px;
+	min-width: 350px;
+	
+	max-height: 120px;
+	min-height: 120px;
+}
