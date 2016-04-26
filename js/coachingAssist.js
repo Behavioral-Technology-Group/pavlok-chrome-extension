@@ -17,6 +17,7 @@
 
 var coach = {
 	// Variables
+	status: false,
 	timeout: 0,
 	todayPomos: function(pomo){
 		var x = lsGet('todayPomos', 'parse');
@@ -47,25 +48,35 @@ var coach = {
 	},
 
 	getTasks: function(number){
-		var ToDoTasks = lsGet('ToDoTasks', 'parse');
-		if (ToDoTasks == null) { return false }
+		var allTasks = testTodo.backend.read();
+		if (allTasks == null) { return false }
 		
 		// Filter tasks which are done
-		ToDoTasks = _.where(ToDoTasks, {done: false});
+		var regular = _.where(allTasks, {done: false});
+		var daily = _.where(allTasks, {daily: true});
+		var missingDaily = _.filter(daily, function(daily){ return daily.donePomos < daily.pomos; });
 		
-		var nTasks = ToDoTasks.length
+		var possibleTasks = [];
+		for (r = 0; r < regular.length; r++){
+			possibleTasks.push(regular[r]);
+		}
+		for (d = 0; d < missingDaily.length; d++){
+			possibleTasks.push(missingDaily[d]);
+		}
+		
+		var nTasks = possibleTasks.length
 		if (number >= nTasks){
 			console.log("There are only " + nTasks + " tasks. Returning all of them")
-			return ToDoTasks
+			return possibleTasks
 		}
 		
 		randomTasks = [];
 		
 		for (t = 0; t < number; t++){
-			nTasks = ToDoTasks.length;
+			nTasks = possibleTasks.length;
 			index = Math.floor(Math.random() * nTasks);
-			randomTasks.push(ToDoTasks[index]);
-			ToDoTasks.splice(index, 1);
+			randomTasks.push(possibleTasks[index]);
+			possibleTasks.splice(index, 1);
 		}
 		
 		return randomTasks;
@@ -119,13 +130,20 @@ var coach = {
 	},
 
 	startPomoFocus: function(item){
-		pomoTest.updatePomo(item);
+		pavPomo.updatePomo(item);
 		
 		console.log("Item sent");
 		console.log(item);
 	},
 
 	isItTime: function(){
+		var active = coach.status;
+		if (active == false){
+			for (t = 0; t < coach.timeout + 5; t++){
+				clearTimeout(t);
+			}
+		}
+		
 		var now = new Date().getTime();
 		if (now < coach.nextCall) { 
 			console.log("Next call at " + dateFromTime(coach.nextCall));
@@ -134,11 +152,11 @@ var coach = {
 		}
 		
 		coach.lastCall = now;
-		var pomo = lsGet('pomoFocusB', 'parse');
+		var pomo = pavPomo.helpers.lastPomo();
 		
 		var timeLimit = 5 * 60 * 1000;
 		
-		if (coach.timeSincePomo(pomo) > timeLimit){
+		if (coach.timeSincePomo(pomo) > timeLimit && active) {
 			coach.notifyTasks(coach.getTasks(2));
 		}
 		
@@ -152,11 +170,11 @@ var coach = {
 		localStorage.totalPomos = JSON.stringify(totalPomos);
 	},
 	
-	resetPomos: function(){}
+	resetPomos: function(){},
+	
 };
 
 if (usage == "localMVP" ) {
-	console.log("Coach is active");
 	coach.listenCoachingClicks();
 	coach.isItTime();
 }
