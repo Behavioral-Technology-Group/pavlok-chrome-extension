@@ -649,6 +649,15 @@ function restoreCheckBox(checkboxID, condition){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+function enableCoach(){
+	$("#coachPower").change(function(){
+		var status = $(this).prop("checked");
+		msgBackground({
+			action: "coachChange", 
+			change: status
+		});
+	});
+}
 
 
 function enableSignInOut(){
@@ -1274,6 +1283,7 @@ $( document ).ready(function() {
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
+	enableCoach();
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");

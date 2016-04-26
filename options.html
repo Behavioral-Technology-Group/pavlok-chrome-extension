@@ -642,11 +642,12 @@
 									</tr>
 								</table>
 								<br/>
-							</div>
+								</div>
 							<hr>
+							</div>
 							<div id="zapFrequencyBlackListDiv">
 								<h2>Black List zapping countdown</h2>
-								<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
+								<p>Set how long before Pavlok zaps when you get to Black Listed Sites:</p>
 								<select id="blackListTimeWindow" class="pavSetting">
 									<option value="3">3</option>
 									<option value="5">5</option>
@@ -654,9 +655,10 @@
 									<option value="15">15</option>
 									<option value="30">30</option>
 								</select>
-							</div>
+								<span> seconds</span>
 							<hr>
-							<div id="tabNumbersAdvancedDiv">
+							</div>
+							<div id="tabNumbersAdvancedDiv" class="noDisplay">
 								<h2>Tab Numbers extras</h2>
 								<input type="checkbox" name="zapOnClose" id="zapOnClose"  class="pavSetting"/>Zap when closing
 								
@@ -680,7 +682,6 @@
 									<b>?</b>
 								</span></sup>
 								</p>
-							</div>
 							<hr>
 							</div>
 							<div id="timeDaysDiv" class="Display">
@@ -742,11 +743,28 @@
 									<div class="flexItem" >
 										<span class="spinnerText">Start 
 										<input class="timeSelectors pavSetting" id="generalActiveTimeStart"/>
+										</span>
 									</div>
 									<div class="flexItem" >
 										<span>End <input class="timeSelectors pavSetting" id="generalActiveTimeEnd"/></span>
 									</div>
+								<hr>
 								</div>
+							<hr>	
+							</div>
+							
+							<div id="pavCoach">
+								<h2>Have your very own productivity coach<sup><span class="helpSpan" title='<p>
+										Pavlok will both remind you and break down your tasks, inviting you to take pomodoros on your todo list. But it will also tell you when to take a break!
+									</p>
+									'>
+										<b>?</b>
+									</span></sup>
+								</h2>
+								<p>
+									<input type="checkbox" id="coachPower" />
+									Check to turn it on or off
+								</p>
 							</div>
 						</div>
 					</div>
