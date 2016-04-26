@@ -70,6 +70,7 @@ var todoist = {
 						var accessToken = data.access_token;
 						
 						localStorage.setItem('todoistAccessToken', accessToken);
+						msgInterfaces({action: "todoist", change: "logged"})
 						console.log("OAuth2 test concluded");
 					});
 			}
@@ -86,6 +87,10 @@ var todoist = {
 			.done(function(){
 				console.log("Token revoked");
 				lsDel('todoistAccessToken');
+				msgInterfaces({
+					action: "todoist",
+					change: "unlogged"
+				});
 				return true;
 			})
 			.fail(function(){
@@ -178,7 +183,6 @@ var todoist = {
 	// Tasks translation
 	toPavlok: function(task){
 		var pavTask = {
-			id: task.id,
 			task: task.content,
 			done: task.checked,
 			today: false,
@@ -222,7 +226,7 @@ var todoist = {
 		var todoistOnly = [];
 		var pavlokOnly = [];
 		
-		var pavlokTasks = lsGet('ToDoTasks', 'parse') || [];
+		var pavlokTasks = lsGet('allTasks', 'parse') || [];
 		var todoistTasks = lsGet('todoist', 'parse');
 		if (!todoistTasks){
 			todoistTasks = [];
@@ -275,9 +279,52 @@ var todoist = {
 		// Save new task list
 	},
 	
+	import2: function(){
+		var todoistTasks = lsGet('todoist', 'parse');
+		if (!todoistTasks){ todoistTasks = []; }
+		else { todoistTasks = todoistTasks.Items; }
+		
+		var pavlokTasks = testTodo.backend.read();
+		
+		for (t = 0; t < todoistTasks.length; t++){
+			var impTask = todoist.toPavlok(todoistTasks[t]);
+			testTodo.backend.create(impTask);
+		}
+		
+		console.log(todoistTasks.length + " tasks imported");
+		msgInterfaces({action: "updateActions"});
+		
+	},
+	
 	export: function(){
 		
 	},
+	
+	helpers:{
+		
+	},
+	
+	frontend:{
+		toggle: function(){
+			if (todoist.token()){
+				$("#onTodoist").show();
+				$("#offTodoist").hide();
+				return console.log("todoist is logged");
+			}
+			else{
+				$("#onTodoist").hide();
+				$("#offTodoist").show();
+				return console.log("todoist is UNlogged");
+			}
+		}
+	},
+	
+	backend:{
+		
+	},
+	
+	
+	
 };
 
 function testPost(url){

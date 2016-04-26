@@ -857,6 +857,17 @@ td.saveOrResetTD{
 	min-height: 120px;
 }
 
-#todoistLogin{
+.todoistLogo{
 	width: 100px;
+	padding-right: 10px;
+}
+
+#importTodoist{
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	background: yellow;
+	border-radius: 5px;
+	text-decoration: none;
 }

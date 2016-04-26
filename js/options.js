@@ -660,11 +660,34 @@ function enableCoach(){
 }
 
 function enableTodoist(){
-	$("#todoistLogin").click(function(){
+	$("#todoistLogin").click(function(event){
+		event.preventDefault();
+		
 		console.log("clicked on todoist");
 		msgBackground({
 			action: "todoistChange",
 			change: "oauth"
+		});
+	});
+	
+	todoist.frontend.toggle();
+	
+	$("#importTodoist").click(function(event){
+		event.preventDefault();
+		
+		msgBackground({
+			action: "todoistChange",
+			change: "import"
+		});
+	});
+	
+	$("#signOutTodoist").click(function(event){
+		event.preventDefault();
+		
+		console.log("unlogging from todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "signOut"
 		});
 	});
 }
@@ -1356,6 +1379,15 @@ $( document ).ready(function() {
 				
 				else if (request.action == "logged"){
 					showOptions(request.token);
+				}
+				
+				else if (request.action == "todoist"){
+					if (request.change == "unlogged"){
+						todoist.frontend.toggle();
+					}
+					else if (request.change == "logged"){
+						todoist.frontend.toggle();
+					}
 				}
 			}
 		}

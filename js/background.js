@@ -701,9 +701,21 @@ function initialize() {
 					console.log("Coach running is " + coach.status);
 				}
 				else if (action == "todoistChange"){
-					if (request.change = "oauth"){
+					if (request.change == "oauth"){
 						todoist.getToken();
 						console.log("Oauth request received");
+					}
+					else if (request.change == "signOut"){
+						todoist.removeToken();
+						console.log("Signout request made");
+						msgInterfaces({
+							action: "todoist",
+							change: "unlogged"
+						});
+					}
+					else if (request.change == "import"){
+						todoist.getTasks();
+						todoist.import2();
 					}
 				}
 			}
