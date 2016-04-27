@@ -313,9 +313,6 @@ var pavPomo = {
 								action: "updatePomo", 
 								pomo: pomo
 							});
-							
-							// Integrate with coach again
-							
 						}
 						
 						// Page replies
@@ -480,22 +477,6 @@ var pavPomo = {
 			});
 		}
 	},
-	
-		checkDailyTask: function(pomo){
-		var dailyList = lsGet('dailyList', 'parse');
-		var daily = _.where(dailyList, {id: pomo.taskID});
-		if (daily.length == 1){ daily = daily[0]; }
-		completeDailyPomodoro(daily);
-		restoreDailyList('.dailyContainer');	
-	},
-	
-	checkRegularTask: function(taskId){
-		var itemRow = $("#" + taskId);
-		if (itemRow.length == 0){ console.log("no Now Task"); return }
-		$(itemRow).removeClass("nowTaskRow");
-		$("#" + taskId + "Done").attr("checked", true);
-	},
-	
 }
 
 var testTodo = {
