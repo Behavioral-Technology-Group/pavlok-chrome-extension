@@ -138,7 +138,7 @@ function listenDailyListClick(){
 			
 			fillDailyList();
 			createDetailTR($("#" + newDaily.id));
-			msgExt('updateDaily', 'popup');
+			msgInterfaces({action: "updateDaily"});
 			
 		} else{
 			return
@@ -864,7 +864,7 @@ function enableSliders(){
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -880,7 +880,7 @@ function enableSliders(){
 				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -896,7 +896,7 @@ function enableSliders(){
 				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 			
 		});
@@ -1272,8 +1272,7 @@ function initialize() {
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
 		countTabs(localStorage.tabCountAll, UpdateTabCount);
-		msgExt("updateMaxTabs", "popup");
-		msgExt("updateMaxTabs", "options");
+		msgInterfaces({action: "updateMaxTabs"});
 	});
 	
 	

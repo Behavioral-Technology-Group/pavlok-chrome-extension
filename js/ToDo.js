@@ -631,7 +631,7 @@ var testTodo = {
 						
 						fillDailyList();
 						createDetailTR($("#" + newDaily.id));
-						msgExt('updateDaily', 'popup');
+						msgInterfaces({action: "updateDaily"});
 						
 					} else{
 						return

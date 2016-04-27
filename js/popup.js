@@ -134,7 +134,7 @@ function enableStimuliControls() {
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -150,7 +150,7 @@ function enableStimuliControls() {
 				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -166,7 +166,7 @@ function enableStimuliControls() {
 				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 			
 		});
@@ -229,7 +229,7 @@ $( document ).ready(function() {
 		lsSet('maxTabs', maxTabs);
 		countTabs(localStorage.tabCountAll, UpdateTabCount);
 		confirmUpdate(notifyUpdate);
-		msgExt("updateMaxTabs", "options");
+		msgInterfaces({action: "updateMaxTabs"});
 	});
 	
 	$("#instaZap").change(function(){

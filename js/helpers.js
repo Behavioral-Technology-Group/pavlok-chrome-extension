@@ -227,12 +227,6 @@ function removeInlineStyle(element){
 	$(element).attr('style', '');
 }
 
-function msgExt(_action, _target){
-	// Action is used to tell what to act upon
-	// Target is used to tell which page should respond to the stimulus
-	chrome.extension.sendMessage({action: _action, target: _target})
-}
-
 function fixNoEndTime(){
 	var ps = [lsGet('pomoFocusO', 'parse'), lsGet('pomoFocusB', 'parse'), lsGet('pomoFocusP', 'parse')];
 	var pages = ['options', 'background', 'popup'];
@@ -673,8 +667,7 @@ function saveBlackList(){
 	}
 	
 	confirmUpdate(notifyUpdate);
-	msgExt("updateBlackList", "popup");
-	msgExt("updateBlackList", "options");
+	msgInterfaces({action: "updateBlackList"});
 }
 
 function saveWhiteList(){
@@ -690,8 +683,7 @@ function saveWhiteList(){
 	}
 	
 	confirmUpdate(notifyUpdate);
-	msgExt("updateBlackList", "popup");
-	msgExt("updateBlackList", "options");
+	msgInterfaces({action: "updateBlackList"});
 }
 
 function validateTags(list){
