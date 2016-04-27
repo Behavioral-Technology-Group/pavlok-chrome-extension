@@ -706,14 +706,23 @@ function initialize() {
 					oauth();
 				}
 				else if (action == "coachChange"){
-					coach.status = request.change
-					if (coach.status == true){
-						coach.isItTime();
+					if (request.change == "status"){
+						coach.status = request.status
+						if (coach.status == true){
+							coach.notifyTasks(coach.getTasks(2));
+							coach.isItTime();
+						}
+						else{
+							clearTimeout(coach.timeout);
+							coach.isItTime();
+						}
+						console.log("Coach running is " + coach.status);
 					}
-					else{
-						clearTimeout(coach.timeout);
+					else if (request.change == "sync"){
+						sendResponse({
+							status: coach.status
+						});
 					}
-					console.log("Coach running is " + coach.status);
 				}
 				else if (action == "todoistChange"){
 					if (request.change == "oauth"){

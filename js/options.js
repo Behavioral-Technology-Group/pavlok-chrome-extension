@@ -650,11 +650,26 @@ function restoreCheckBox(checkboxID, condition){
 /* ***************************************************************** */
 
 function enableCoach(){
+	chrome.runtime.sendMessage(
+		// Warns background about new page being loaded
+		{
+			target: "background",
+			action: "coachChange",
+			change: "sync"
+		}, 
+		
+		function(response) {
+			console.log(response);
+			$("#coachPower").prop("checked", response.status)
+		}
+	);
+	
 	$("#coachPower").change(function(){
 		var status = $(this).prop("checked");
 		msgBackground({
 			action: "coachChange", 
-			change: status
+			change: "status",
+			status: status
 		});
 	});
 }
