@@ -44,11 +44,13 @@ var coach = {
 			return last;
 		},
 		
-		pushTimeout: function(timeout){
-			var timeouts = coach.timeouts || [];
-			timeouts.push(timeout)
-			coach.timeouts = timeouts;
-			return coach.timeouts
+		clearTimeouts: function(){
+			if (coach.timeouts){
+				for (t = 0; t < coach.timeouts.length; t++){
+					clearTimeout(coach.timeouts[t]);
+				}
+			}
+			coach.timeouts = [];
 		}
 	},
 	
@@ -171,32 +173,42 @@ var coach = {
 	},
 
 	isItTime: function(){
-		var active = coach.status;
-		if (active == false){
-			if (coach.timeouts)
-			for (t = 0; t < coach.timeouts.length; t++){
-				clearTimeout(coach.timeouts[t]);
-			}
-			coach.timeouts = [];
-		}
+		var pavlokActive = isActive();
+		var coachActive = coach.status;
 		
+		// Clear all timeouts if coach is not active
+		if (!coachActive){ coach.helpers.clearTimeouts(); }
+		
+		// Coach must meet two conditions:
+		// -1- time for next call
+		// -2- time since last pomo
 		var now = new Date().getTime();
-		if (now < coach.nextCall) { 
+		
+		// Part 1
+		var waitNextCall = now < coach.nextCall;
+		if (waitNextCall) { 
 			console.log("Next call at " + dateFromTime(coach.nextCall));
+			coach.helpers.clearTimeouts();
 			var timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
 			coach.timeouts.push(timeout);
 			return coach.timeouts
 		}
 		
 		coach.lastCall = now;
+		
+		// Part 2
 		var pomo = pavPomo.helpers.lastPomo();
 		
 		var timeLimit = 5 * 60 * 1000;
+		var elapsedTime = coach.timeSincePomo(pomo);
 		
-		if (coach.timeSincePomo(pomo) > timeLimit && active) {
+		var itsTime = elapsed > timeLimit;
+		
+		if ( itsTime && coachActive && pavlokActive) {
 			coach.notifyTasks(coach.getTasks(2));
 		}
 		
+		// Schedule next call for 5 minutes in the future (to account for ending pomo early) and sets next call
 		coach.nextCall = deltaTime(timeLimit / 1000).getTime();
 		coach.timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
 		coach.timeouts.push(coach.timeout);
