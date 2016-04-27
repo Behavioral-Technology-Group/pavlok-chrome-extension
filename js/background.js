@@ -711,10 +711,12 @@ function initialize() {
 						if (coach.status == true){
 							coach.notifyTasks(coach.getTasks(2));
 							coach.isItTime();
+							lsSet('coachStatus', 'on');
 						}
 						else{
 							clearTimeout(coach.timeout);
 							coach.isItTime();
+							lsSet('coachStatus', 'off');
 						}
 						console.log("Coach running is " + coach.status);
 					}

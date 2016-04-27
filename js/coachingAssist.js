@@ -213,8 +213,6 @@ var coach = {
 	
 };
 
-if (usage == "localMVP" ) {
-	coach.listenCoachingClicks();
-	coach.isItTime();
+if (lsGet('coachStatus') == 'on'){
+	coach.status = true;
 }
-
