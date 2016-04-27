@@ -64,7 +64,6 @@ function createDetailTR(targetRow){
 	var blContent = task.blackList || '';
 	var blackListDiv = $("#blackListTD").children()[0];
 	$(blackListDiv).tagsInput({
-		'onChange' : saveBlackList,
 		'defaultText':'Add site... ie: facebook.com',
 		'removeWithBackspace' : true
 	})
@@ -74,7 +73,6 @@ function createDetailTR(targetRow){
 	var wlContent = task.whiteList || '';
 	var whiteListDiv = $("#whiteListTD").children()[0];
 	$(whiteListDiv).tagsInput({
-		'onChange' : saveWhiteList,
 		'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
 	})
