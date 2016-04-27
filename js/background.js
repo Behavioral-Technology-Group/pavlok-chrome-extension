@@ -652,7 +652,22 @@ function blackListTimer(blackListed, timespan){
 	}
 }
 
-function initialize() {	
+function checkForMigration(){
+	if (lsGet('dailyList') || lsGet('ToDoTasks')) {
+		var tasks = testTodo.helpers.migrateFromSeparateLists();
+		
+		// Create the new tasks in the new system
+		for (t = 0; t < tasks.length; t++){
+			testTodo.backend.create(tasks[t]);
+		}
+		
+		// Save old data in new variable and destroy old variables
+		testTodo.helpers.archiveOldLists()
+	}
+}
+
+function initialize() {
+	checkForMigration();
 	coach.listenCoachingClicks();
 	pavPomo.backend.backListener();
 	persistNotifications();

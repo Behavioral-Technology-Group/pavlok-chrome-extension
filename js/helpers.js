@@ -218,11 +218,6 @@ if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
 if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
 if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 
-// To-Do
-if (!localStorage.dailyList) {
-	lsSet('dailyList', [], 'object');
-}
-if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';

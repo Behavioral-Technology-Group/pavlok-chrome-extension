@@ -1112,10 +1112,21 @@ var testTodo = {
 				t.duration  = parseInt(t.duration)  || 25;
 				t.pomos 	= parseInt(t.pomodoros) || 3;
 				t.donePomos = parseInt(t.donePomos) || 0;
+				t.daily		= true;
 				
 				combinedTasks.push(t);
 			}
 			return combinedTasks;
+		},
+		
+		archiveOldLists: function(){
+			var relics = {};
+			relics.oldDaily = lsGet('dailyList', 'parse');
+			relics.oldRegulars = lsGet('ToDoTasks', 'parse');
+			lsSet('relics', relics, 'object');
+			
+			lsDel('dailyList');
+			lsDel('ToDoTasks');
 		},
 		
 		gatherDaily(){
