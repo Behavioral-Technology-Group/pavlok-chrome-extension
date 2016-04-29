@@ -406,12 +406,18 @@ div.auth{
 }
 
 .toDoItemTR > td {
+	width: 100%;
 	vertical-align: center;
 	padding-left: 5px;
 }
 
-.toDoItemTR > td > div {
-	display: inline-block;
+.todoItemTR > td > div {
+	display: flex;
+	align-items: center;
+}
+
+.toDoItemTR > td > div > div {
+	/* display: inline-block; */
 	margin: 0;
 	padding: 0;
 	height: 26px;
@@ -423,6 +429,7 @@ div.auth{
 
 .toDoTaskTD {
 	width: 60%;
+	vertical-align: center;
 }
 
 .toDoRemoverTD {
@@ -469,6 +476,7 @@ div.auth{
 	color: white;
 	text-align: center;
 }
+
 /* Header and to-do adding buttons */
 #completeAllButton{
 	width: 5%;

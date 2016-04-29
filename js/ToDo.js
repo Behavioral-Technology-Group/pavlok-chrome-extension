@@ -682,8 +682,12 @@ var testTodo = {
 					td.colSpan = 5;
 				}
 				
+				{var containerDiv = document.createElement("div");
+					td.appendChild(containerDiv);
+				}
+				
 				{var doneDiv = document.createElement("div");
-					td.appendChild(doneDiv);
+					containerDiv.appendChild(doneDiv);
 					doneDiv.className = "toDoOKerTD";
 				}
 				
@@ -697,20 +701,20 @@ var testTodo = {
 				}
 				
 				{var taskDiv = document.createElement("div");
-					td.appendChild(taskDiv);
+					containerDiv.appendChild(taskDiv);
 					taskDiv.className = "toDoTaskTD";
 					taskDiv.innerHTML = task.task;
 				}
 				
 				{var buttonsDiv = document.createElement("div");
-					td.appendChild(buttonsDiv);
+					containerDiv.appendChild(buttonsDiv);
 					buttonsDiv.className = "toDoRemoverTD";
 				}
 				
 				{var pomoButton = document.createElement("input");
 					buttonsDiv.appendChild(pomoButton);
 					pomoButton.type = "image";
-					pomoButton.src = "images/pomoFocusIconSmall.png";
+					pomoButton.src = "images/pomodoro(todo)_(Custom).png";
 					pomoButton.alt = "Now";
 					pomoButton.id = task.id + "Pomo";
 					pomoButton.className = "nowToDoItem imgIcon";
