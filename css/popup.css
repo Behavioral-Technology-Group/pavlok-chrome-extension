@@ -397,6 +397,7 @@ div.auth{
 	width: 100%;
 	background: rgb(10, 10, 10);
 	vertical-align: center;
+	height: 40px;
 	/* border-bottom: 1px solid white; */
 }
 
@@ -411,33 +412,35 @@ div.auth{
 	padding-left: 5px;
 }
 
-.todoItemTR > td > div {
+.toDoItemTR > td > div {
 	display: flex;
-	align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	
+	align-content: center;
+	justify-content: space-between;
 }
 
 .toDoItemTR > td > div > div {
-	/* display: inline-block; */
-	margin: 0;
-	padding: 0;
-	height: 26px;
+
 }
 
-.toDoOKerTD {
+.toDoOKerDIV {
 	width: 5%;
 }
 
-.toDoTaskTD {
+.toDoTaskDIV {
 	width: 60%;
-	vertical-align: center;
+	display: flex;
+	align-content: center;
 }
 
-.toDoRemoverTD {
+.toDoRemoverDIV {
 	text-align: right;
-	width: 33%;
+	width: 25%;
 }
 
-.doneTaskRow .toDoTaskTD {
+.doneTaskRow .toDoTaskDIV {
 	text-decoration: line-through;
 	color: gray;
 }

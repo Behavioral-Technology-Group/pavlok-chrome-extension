@@ -35,18 +35,6 @@ function hello(tabId){
 	);
 }
 
-function initialize(){
-	hello();
-	createBanner();
-	enableToggler();
-	
-	$("#pomoFocusBannerPlaceholder").draggable({
-		containment: "body", 
-		axis: "x",
-		scroll: false
-	});
-}
-
 function createBanner(){
 	if (document.getElementById('pomoFocusBannerPlaceholder') == null){
 		/*
@@ -170,8 +158,6 @@ function updateCountDown(pomoFocus) {
 	
 }
 
-
-
 function msgToCount(pomodoro){
 	if (!pomodoro) { 
 		var pomo = {active: false};
@@ -206,9 +192,22 @@ if (x == 0){
 	console.log("already existing listeners");
 }
 
-initialize();
 function enableToggler(){
 	$("#pavlokTogglerSpan").click(function(){
 	  toggleBanner();
 	});
 }
+
+function initialize(){
+	hello();
+	createBanner();
+	enableToggler();
+	
+	$("#pomoFocusBannerPlaceholder").draggable({
+		containment: "body", 
+		axis: "x",
+		scroll: false
+	});
+}
+
+initialize();

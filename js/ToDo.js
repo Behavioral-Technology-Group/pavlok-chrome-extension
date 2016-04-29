@@ -688,7 +688,7 @@ var testTodo = {
 				
 				{var doneDiv = document.createElement("div");
 					containerDiv.appendChild(doneDiv);
-					doneDiv.className = "toDoOKerTD";
+					doneDiv.className = "toDoOKerDIV";
 				}
 				
 				{var doneCheckbox = document.createElement("input");
@@ -702,13 +702,13 @@ var testTodo = {
 				
 				{var taskDiv = document.createElement("div");
 					containerDiv.appendChild(taskDiv);
-					taskDiv.className = "toDoTaskTD";
+					taskDiv.className = "toDoTaskDIV";
 					taskDiv.innerHTML = task.task;
 				}
 				
 				{var buttonsDiv = document.createElement("div");
 					containerDiv.appendChild(buttonsDiv);
-					buttonsDiv.className = "toDoRemoverTD";
+					buttonsDiv.className = "toDoRemoverDIV";
 				}
 				
 				{var pomoButton = document.createElement("input");
