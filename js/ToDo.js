@@ -581,14 +581,13 @@ var testTodo = {
 					var text = $(this).val();
 					if (text.length > 0){
 						// Create a task on the database
-						var task = testTodo.backend.create({task: text});
-						
-						// Create a line for the interface
-						var line = testTodo.frontend.createNewLine(task);
-						$('#toDoTable > tbody').append(line);
-						
-						// Reset input field value
-						$(this).val("");
+						var newTask = {task: text};
+						msgBackground({
+							action: "task change",
+							detail: "new",
+							task: newTask
+						});
+						$(this).val('');
 					}
 				}
 			});
@@ -614,6 +613,12 @@ var testTodo = {
 						createDetailTR($("#" + newDaily.id));
 						msgInterfaces({action: "updateDaily"});
 						
+						msgBackground({
+							action: "task change",
+							detail: "new",
+							taskId: newDaily.id
+						});
+						
 					} else{
 						return
 					}
@@ -626,8 +631,11 @@ var testTodo = {
 				var taskId = $(this).attr('id');
 				taskId = taskId.split('Remove')[0];
 				
-				var deleted = testTodo.backend.delete(taskId);
-				if (deleted) {$("#" + taskId).remove();}
+				msgBackground({
+					action: "task change",
+					detail: "delete",
+					taskId: taskId,
+				});
 			});	
 		},
 		
@@ -661,11 +669,16 @@ var testTodo = {
 					stimuli("vibration", defInt, defAT, "You rock! Let Pavlok massage your wrist a bit!");
 					notifyUser("Yeah! One down!", "You rock! Let Pavlok massage your wrist a bit!", "doneTask");
 				}
-				var update = {done: check};
-				
-				var task = testTodo.backend.update(taskId, update);
-				
+
+				msgBackground({
+					action: "task change",
+					detail: "complete",
+					taskId: taskId,
+					check: check
+				});
+
 				testTodo.frontend.restoreTasks();
+				
 			});
 		},
 		

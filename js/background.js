@@ -705,6 +705,29 @@ function initialize() {
 				if (action == "oauth"){
 					oauth();
 				}
+				
+				else if (action == "task change"){
+					var detail = request.detail;
+					if (detail == "new"){
+						var task = testTodo.backend.create(request.task);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+					
+					else if (detail == "delete"){
+						testTodo.backend.delete(request.taskId);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+					
+					else if (detail == "complete"){
+						var update = {done: request.check};
+						var task = testTodo.backend.update(request.taskId, update);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+				}
+				
 				else if (action == "coachChange"){
 					if (request.change == "status"){
 						coach.status = request.status
@@ -726,13 +749,15 @@ function initialize() {
 						});
 					}
 				}
+				
 				else if (action == "todoistChange"){
 					if (request.change == "oauth"){
-						todoist.getToken();
+						todoist.backend.getToken();
 						console.log("Oauth request received");
 					}
 					else if (request.change == "signOut"){
 						todoist.removeToken();
+						todoist.helpers.addToDoListeners(false);
 						console.log("Signout request made");
 						msgInterfaces({
 							action: "todoist",
@@ -740,8 +765,8 @@ function initialize() {
 						});
 					}
 					else if (request.change == "import"){
-						todoist.getTasks();
-						todoist.import2();
+						// todoist.backend.getTasks();
+						todoist.helpers.sync();
 					}
 				}
 			}
