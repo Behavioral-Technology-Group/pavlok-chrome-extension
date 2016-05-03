@@ -30,6 +30,36 @@ function enableToDo(){
 
 var pavPomo = {
 	helpers: {
+		prompMessage: function(){
+			var msg = "" + 
+				"<p>Lets put some stakes on it. Tell us how long will this take and we will give you the either carrot and the stick. Your choice to do it as you planned!</p>" + 
+				"<p>" + 
+					"<select id='minutesPomodoro'>" + 
+						// "<option value='0.08'>5 seconds</option>" + 
+						"<option value='2'>2 minutes</option>" + 
+						"<option value='5'>5 minutes</option>" + 
+						"<option value='10'>10 minutes</option>" + 
+						"<option value='15'>15 minutes</option>" + 
+						"<option value='20'>20 minutes</option>" + 
+						"<option selected value='25'>25 minutes</option>" + 
+						"<option value='30'>30 minutes</option>" + 
+						"<option value='45'>45 minutes</option>" + 
+						"<option value='60'>1 hour</option>" + 
+						"<option value='90'>1hour and 30 minutes</option>" + 
+						"<option value='120'>2 hours</option>" + 
+					"</select>" + 
+				"</p>" +
+				"<div>" + 
+					"<p>Want to get hyper focused?</p>" +
+					"<p><select id='hyperFocusSelect'>" + 
+						"<option id='audioTrue' value='true'>Yes, get me there!</option>" + 
+						"<option id='audioFalse' value='false'>No, I'm fine.</option>" + 
+					"</select></p>" + 
+				"</div>"
+				;
+				return msg
+		},
+		
 		unbindCounter: function(){
 			var counterContainer = document.getElementById("pomoFocusRemainingTimeContainer");
 			var oldCounter  = document.getElementById("pomoFocusRemainingTime");
@@ -397,7 +427,24 @@ var pavPomo = {
 				var taskId = $(this).attr('id');
 				taskId = parseInt(taskId.split('Pomo')[0]);
 				
-				pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId});
+				$.prompt(pavPomo.helpers.prompMessage(), {
+					title: "Great! Let's tackle this!",
+					buttons: { "Ready! Let me start": true, "No, I don't want help": false },
+					submit: function(e,v,m,f){
+						console.log("Enter PomoFocus result was " + v);
+						var result = v;
+						if (result == true){
+							pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId});
+						}
+					}
+				});
+				
+				
+				
+				
+				
+				
+				
 			});
 			$(".dailyContainer tbody ").on('click', '.dailyPomoNow', function(){
 				var taskId = $(this).attr('id');
@@ -502,7 +549,8 @@ var testTodo = {
 				whiteList:		task.whiteList		|| undefined,
 				instaZap:		task.instaZap		|| false,
 				binaural:		task.binaural		|| false,
-				today:			task.today			|| false
+				today:			task.today			|| false,
+				externalId:		task.externalId		|| undefined
 			}
 			return newTask
 		},
