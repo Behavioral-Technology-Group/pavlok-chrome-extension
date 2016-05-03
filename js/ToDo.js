@@ -1210,22 +1210,3 @@ var testTodo = {
 	}
 
 };
-
-// function setTest(){
-	
-	// var pomo = pavPomo.backend.create({id:2, duration:30});
-	// pavPomo.frontend.updateCountdown(pomo, "background");
-	// console.log("=======================================");
-	// console.log("Created a new pomodoro");
-	// console.log(pomo);
-	
-	// setTimeout(function(){
-		// var pomoAgain = pavPomo.helpers.lastPomo();
-		// var newEnd = pomo.endTime + 5 * 60 * 1000;
-		// pavPomo.backend.update(pomoAgain.id, {endTime: newEnd, active: true});
-		// console.log("=======================================");
-		// console.log("Updated the last pomodoro");
-		// console.log(pavPomo.helpers.lastPomo());
-	// }, 2000);
-// }
-
