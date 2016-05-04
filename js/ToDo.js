@@ -331,7 +331,7 @@ var pavPomo = {
 						}
 						
 						else if (action == "startPomo"){
-							var pomo = pavPomo.backend.create({id: request.forTask});
+							var pomo = pavPomo.backend.create({id: request.forTask, duration: request.duration});
 							
 							pavPomo.frontend.updateCountdown(pavPomo.helpers.lastPomo(), "background");
 							pavPomo.helpers.toInterfaces({
@@ -434,7 +434,8 @@ var pavPomo = {
 						console.log("Enter PomoFocus result was " + v);
 						var result = v;
 						if (result == true){
-							pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId});
+							var duration = parseInt($("#minutesPomodoro").val());
+							pavPomo.helpers.toBackground({action: "startPomo", forTask: taskId, duration: duration});
 						}
 					}
 				});
