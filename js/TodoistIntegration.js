@@ -22,7 +22,7 @@ var todoist = {
 		else if (usage.indexOf("production") != -1){ return production }
 	},
 	token: function(){ return lsGet('todoistAccessToken') },
-	timeouts: 0,
+	intervals: 0,
 	intervalChecks: 30,
 	originalToDo: {
 					create: testTodo.backend.create,
@@ -62,14 +62,9 @@ var todoist = {
 		// To do backend listeners
 		addToDoListeners: function(force){
 			if (force){
-				todoist.timeouts = setTimeout(function(){ 
+				todoist.intervals = setInterval(function(){ 
+					console.log("Syncing with todoist server");
 					todoist.helpers.sync();
-					
-					todoist.timeouts = setTimeout(function(){ 
-						console.log("Syncing with todoist server");
-						todoist.helpers.sync();
-						
-						}, todoist.intervalChecks * 1000);
 					
 					}, todoist.intervalChecks * 1000);
 				
@@ -106,8 +101,8 @@ var todoist = {
 				}
 			}
 			else{
-				clearTimeout(todoist.timeouts);
-				todoist.timeouts = 0;
+				clearinterval(todoist.intervals);
+				todoist.intervals = 0;
 				testTodo.backend.create = todoist.originalToDo.create;
 				testTodo.backend.update = todoist.originalToDo.update;
 				testTodo.backend.delete = todoist.originalToDo.delete;
