@@ -276,27 +276,6 @@ var todoist = {
 				.fail(function(){ console.log("Todoist tasks request failed"); });	
 		},
 		
-		
-			var url = "https://todoist.com/api/access_tokens/revoke" + 		
-						"?client_id=" + todoist.clientID + 
-						"&client_secret=" + todoist.clientSecret + 
-						"&access_token=" & todoist.token();
-			$.post(url)
-				.done(function(){
-					console.log("Token revoked");
-					lsDel('todoistAccessToken');
-					msgInterfaces({
-						action: "todoist",
-						change: "unlogged"
-					});
-					return true;
-				})
-				.fail(function(){
-					console.log("Token revoke failed");
-					return false;
-				});
-		},
-		
 		// Tasks
 		sendTask: function(task){
 			/* Sends a task from Pavlok to Todoist.
