@@ -208,19 +208,31 @@ $( document ).ready(function() {
 	enableBlackList();
 	enableStimuliControls();
 	
-	if (isValid(localStorage.accessToken)){
-		$("#signOut").attr('title', 'Sign Out');
-	} else { 
-		$("#signOut").attr('title', 'Sign In');
-	}
-	
+	$("#signOut").attr('title', 'Sign Out');
 	$("#signOut").click(function(){
-		if (isValid(localStorage.accessToken)){
-			signOut();
+		msgBackground({action: "signOut"});
+	});
+	
+	$("#pavSubmitLogin").click(function(event){
+		event.preventDefault();
+		
+		var userInfo = {
+			userName: $("#pavUserNameLogin").val(),
+			password: $("#pavPasswordLogin").val(),
+		};
+		
+		if (validateUserInfo(userInfo)){
+			var msg = { 
+				action: "oauth", 
+				user: userInfo 
+			};
+			
+			msgBackground( msg );
 		}
 		else{
-			msgBackground({action: "oauth"});
-		}
+			
+		};
+		
 	});
 
 	$("#maxTabsSelect").val( lsGet('maxTabs'));
@@ -308,7 +320,13 @@ $( document ).ready(function() {
 				}
 				
 				else if (request.action == "logged"){
-					showOptions(request.token);
+					var token = request.token;
+					if (token.length == 64){
+						$("#pavUserNameLogin").val('');
+						$("#pavPasswordLogin").val('');
+					}
+					showOptions(token);
+					toggleSignInOut();
 				}
 			}
 		}

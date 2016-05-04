@@ -531,11 +531,47 @@ function clearCookies(){
 	// });
 }
 
+function validateUserInfo(info){
+	var email 	= info.userName;
+	var pass 	= info.password;
+	
+	var problems = [];
+	
+	var hasAt = email.indexOf("@") > 0;
+	var hasDot = email.indexOf(".") > 0;
+	
+	var user;
+	if (hasAt && hasDot) 	{ user = true }
+	else 					{ user = false }
+	
+	var hasPass = pass.length > 0;
+	
+	if (user && pass){ return true}
+	else { return false }
+}
+
+function toggleSignInOut(){
+	var token = lsGet('accessToken');
+	if (isValid(token)){
+		$("#signIn").addClass("noDisplay");
+		$("#signOut").removeClass("noDisplay");
+	}
+	else{
+		$("#signIn").removeClass("noDisplay");
+		$("#signOut").addClass("noDisplay");
+	}
+}
+
 function signOut(){ 
+	revokeAccessToken();
+	UpdateBadgeOnOff("Off");
+	msgInterfaces({action: "logged", token: 'not logged'})
+	
 	localStorage.setItem('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
 	
+	/*
 	// Updates interface
 	showOptions(localStorage.accessToken);
 	UpdateBadgeOnOff();
@@ -545,7 +581,11 @@ function signOut(){
 		'url': 'https://pavlok-mvp.herokuapp.com/users/sign_out', 'interactive': false}, function(response){
 			console.log(response);
 	});
-	
+	*/
+}
+
+function signIn(user){
+	getAccessToken(user);
 }
 
 function showOptions(accessToken){
@@ -772,6 +812,66 @@ function save_options() { // Mark for deletion
 	var select = document.getElementById("wantToSave");
 	localStorage.maxTabs = select;
 	
+}
+
+function getAccessToken(userData, callback){
+	
+	var userName = userData.userName; //"igor.galvao@gmail.com";
+	var password = userData.password; //"Macpp1udemdamamne";
+	var grant_type = "password";
+	console.log("Trying login for " + userName + "\npass: " + password);
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress	= "api/v1/";
+	var x = baseAddress + "api/v1/" + "sign_in" + 
+	   "?grant_type=" + grant_type +
+	   "&username="   + userName +
+	   "&password="   + password;
+	   
+	$.post(x)
+	.done(function(data){
+		console.log("done");
+		console.log(data);
+		var token = data.access_token;
+		lsSet('accessToken', token);
+		lsSet('logged', 'true');
+		
+		spread(token);
+	})
+	.fail(function(){
+		console.log("failed");
+		// Message interface for login failed;
+	});
+}
+
+function spread(token){
+	msgInterfaces({
+		action: "logged",
+		token: token
+	});
+	
+	countTabs(localStorage.tabCountAll, UpdateTabCount);
+}
+
+function revokeAccessToken(){
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress	= "api/v1/";
+	var signOut		= "sign_out"
+	var parameters	= "?token=" + localStorage.accessToken;
+	
+	var target = baseAddress + apiAddress + signOut + parameters;
+	
+	lsDel("accessToken");
+	
+	$.post(target)
+	.done(function(data){
+		console.log("done");
+		console.log(data);
+		lsDel("accessToken");
+		msgInterfaces({action: "logged", token: 'not logged'});
+	})
+	.fail(function(){
+		console.log("failed");
+	});
 }
 
 function oauth() { 

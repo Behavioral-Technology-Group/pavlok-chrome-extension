@@ -703,7 +703,20 @@ function initialize() {
 				var action = request.action;
 				// Oauth
 				if (action == "oauth"){
-					oauth();
+					signIn(request.user, spread)
+					// oauth();
+				}
+				
+				else if (action == "signOut"){
+					signOut();
+				}
+				
+				else if(action == "accessToken"){
+					// Receive access token from a content script
+					var token = request.token;
+					saveAccessToken(token);
+					msgInterfaces({action: "logged", token: token});
+					// sendResponse({message: "Thanks and bye."});
 				}
 				
 				else if (action == "task change"){
