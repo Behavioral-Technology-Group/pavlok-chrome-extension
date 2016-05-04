@@ -184,9 +184,9 @@ var todoist = {
 			
 			var redirectURL = chrome.identity.getRedirectURL();
 			var authURL =	"https://todoist.com/oauth/authorize/" +
-							"?client_id="	+ this.clientID(usage) +
+							"?client_id="	+ todoist.clientID(usage) +
 							"&scope="		+ jScope +
-							"&state="		+ this.random();
+							"&state="		+ todoist.helpers.random();
 			
 			console.log("Step 1: Redirect URL is: " + redirectURL);
 			
@@ -296,8 +296,8 @@ var todoist = {
 			
 			testTodo.backend.update(task.id, {externalId: command.temp_id});
 			
-			url = this.apiURL + 
-					"/?token=" + this.token() +
+			url = todoist.apiURL + 
+					"/?token=" + todoist.token() +
 					"&commands=[" + JSON.stringify(command) + "]";
 			
 			console.log(command);
@@ -330,7 +330,7 @@ var todoist = {
 				args: args
 			}
 			
-			var url = this.apiURL + "/?token=" + this.token() +
+			var url = todoist.apiURL + "/?token=" + todoist.token() +
 					"&commands=[" + JSON.stringify(command) + "]";
 			
 			testPost(url);
@@ -346,7 +346,7 @@ var todoist = {
 				args: args
 			}
 			
-			var url = this.apiURL + "/?token=" + this.token() +
+			var url = todoist.apiURL + "/?token=" + todoist.token() +
 					"&commands=[" + JSON.stringify(command) + "]";
 			
 			testPost(url);
@@ -364,7 +364,7 @@ var todoist = {
 				args: args
 			}
 			
-			var url = this.apiURL + "/?token=" + this.token() +
+			var url = todoist.apiURL + "/?token=" + todoist.token() +
 					"&commands=[" + JSON.stringify(command) + "]";
 			
 			testPost(url);
