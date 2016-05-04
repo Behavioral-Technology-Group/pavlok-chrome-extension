@@ -381,18 +381,21 @@ var todoist = {
 				
 				if (deleted){
 					var pavTask = todoist.helpers.taskExternalId(curT.id);
-					if (pavTask) { testTodo.backend.delete(pavTask.id); }
+					// if (pavTask) { testTodo.backend.delete(pavTask.id); }
+					if (pavTask) { todoist.originalToDo.delete(pavTask.id); }
 				}
 				else{
 					if (exists){
 						impTask = todoist.helpers.taskExternalId(curT.id);
 						var done = curT.checked == 1 // 1 -> true, 0 -> false
 						updates = {done: done};
-						testTodo.backend.update(impTask.id, updates);
+						// testTodo.backend.update(impTask.id, updates);
+						todoist.originalToDo.update(impTask.id, updates);
 					}
 					else {
 						impTask = todoist.helpers.toPavlok(curT);
-						testTodo.backend.create(impTask);
+						// testTodo.backend.create(impTask);
+						todoist.originalToDo.create(impTask);
 					}
 				}
 			}
