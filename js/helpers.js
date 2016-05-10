@@ -9,8 +9,11 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "test"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
+
+var lastVib = 0;
+var limitRep = 500;
 
 // Greetings popup		
 $( document ).ready(function(){
@@ -1009,6 +1012,13 @@ function userInfo(accessToken) {
 }
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
+	var now = new Date().getTime();
+	var dif = now - lastVib;
+	lastVib = now;
+	if (dif < limitRep) { return }
+	console.log(dif);
+	
+	
 	stimuliTypes = ['shock', 'vibration', 'beep'];
 	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
 	

@@ -1,5 +1,9 @@
 New additions
 
+(0.7.10.7)
+GENERAL
+- No stimuli is sent unless more than half a second passed since the last one. This avoids stimuli trumping and getting lost
+
 (0.7.10.6)
 TODOIST
 - Import function uses the original Todo Backend functions. This means that tasks that were just imported won't be sent right away BACK to todoist, as if the change had ocurred via Pavlok's interface. This avoid the ocasional task duplication which happened when checking tasks on todoist.
