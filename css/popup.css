@@ -223,15 +223,6 @@ body, p, tab, span{
 #toDoTable tfoot > tr > td:last-child {
 	border: 0px;
 }
-#status {
-	background-color: #E2A92B;
-	display: none;
-	color: #E2A92B;
-	height: 110px;
-	width: 355px;
-	text-align: center;
-	vertical-align: middle;
-}
 
 body {
 	font-family: Helvetica,Arial,sans-serif;

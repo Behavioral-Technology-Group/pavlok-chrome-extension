@@ -576,7 +576,7 @@ function CreateTabListeners(token) {
 			});
 			getTabInfo(evaluateTabURL);
 		}
-	})
+	});
 }
 
 function getTabInfo(callback){
@@ -662,7 +662,7 @@ function checkForMigration(){
 		}
 		
 		// Save old data in new variable and destroy old variables
-		testTodo.helpers.archiveOldLists()
+		testTodo.helpers.archiveOldLists();
 	}
 }
 

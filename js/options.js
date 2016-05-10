@@ -706,16 +706,8 @@ function enableTodoist(){
 }
 
 function enableSignInOut(){
-	$("#signOutX").click(function(){
-		if (isValid(localStorage.accessToken)){
-			signOut();
-			$(this).attr('title', 'Sign In');
-		}
-		else {
-			msgBackground({action: "oauth"});
-			// oauth(localStorage.accessToken);
-			$(this).attr('title', 'Sign Out');
-		}
+	$("#signOut").click(function(){
+		msgBackground({action: "signOut"});
 	});
 }
 
@@ -1207,6 +1199,29 @@ function toggleOverlay(toState){
 	}
 }
 
+function enableLogin(){
+	$("#pavSubmitLogin").click(function(event){
+		event.preventDefault();
+		
+		var userInfo = {
+			userName: $("#pavUserNameLogin").val(),
+			password: $("#pavPasswordLogin").val(),
+		};
+		
+		if (validateUserInfo(userInfo)){
+			var msg = { 
+				action: "oauth", 
+				user: userInfo 
+			};
+			
+			msgBackground( msg );
+		}
+		else{
+			
+		};
+		
+	});
+}
 // Create the vertical tabs
 function initialize() {
 	var timeFormat = lsGet('timeFormat');
@@ -1220,6 +1235,7 @@ function initialize() {
 	};
 	Globalize.culture( culture );
 	
+	enableLogin();
 	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists

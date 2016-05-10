@@ -1,5 +1,13 @@
 New additions
 
+(0.7.10.6)
+TODOIST
+- Import function uses the original Todo Backend functions. This means that tasks that were just imported won't be sent right away BACK to todoist, as if the change had ocurred via Pavlok's interface. This avoid the ocasional task duplication which happened when checking tasks on todoist.
+
+ToDo
+- Prompt for Pomo duration now uses the designed duration!
+
+
 (0.7.10.5)
 GENERAL
 - Sign in / Sign out are made in the popup window
@@ -11,6 +19,7 @@ GENERAL
 TODO
 - Blacklist for daily dasks corrected (it was not saved consistently)
 - Proper tomato icon on regular tasks
+- Clicking on tomatoes will ask prompt user for how long to take the pomo
 
 TODOIST
 - New substitute method for creating, updating and deleting todo tasks if active
@@ -18,7 +27,6 @@ TODOIST
 - Todoist task importing check for already imported tasks, avoiding duplication of tasks and commands
 - Namespace adjustments (helpers, frontend, backend) for consistency
 - Background listeners for task changes
-- Clicking on tomatoes will ask prompt user for how long to take the pomo
 - Sync every 30s
 - Sends Pavlok updates as soon as they are made
 - There's a known bug when checking a task on Todoist creates duplicated tasks on Pavlok and Todoist. Will be resolved soon

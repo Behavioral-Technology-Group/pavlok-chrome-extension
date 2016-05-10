@@ -403,6 +403,7 @@ var pavPomo = {
 						stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
 						testTodo.helpers.completeTask(p.taskId);
 						pavPomo.helpers.endPomo(p.id, p.endReason);
+						
 					}
 					else {
 						pavPomo.helpers.endPomo(p.id, 'stop');

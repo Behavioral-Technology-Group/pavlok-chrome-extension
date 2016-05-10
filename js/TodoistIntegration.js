@@ -23,12 +23,12 @@ var todoist = {
 	},
 	token: function(){ return lsGet('todoistAccessToken') },
 	intervals: 0,
-	intervalChecks: 30,
+	intervalChecks: 10,
 	originalToDo: {
 					create: testTodo.backend.create,
 					update: testTodo.backend.update,
 					delete: testTodo.backend.delete
-					},
+	},
 	
 	helpers:{
 		seq_no: function(){
@@ -63,7 +63,6 @@ var todoist = {
 		addToDoListeners: function(force){
 			if (force){
 				todoist.intervals = setInterval(function(){ 
-					console.log("Syncing with todoist server");
 					todoist.helpers.sync();
 					
 					}, todoist.intervalChecks * 1000);
@@ -269,8 +268,8 @@ var todoist = {
 				.done(function(data){
 					lsSet('todoistTasks', data.Items, 'object');
 					lsSet('todoist', data, 'object');
-					console.log("Todoist tasks received");
-					console.log(data.Items);
+					// console.log("Todoist tasks received");
+					// console.log(data.Items);
 					todoist.backend.import();
 				})
 				.fail(function(){ console.log("Todoist tasks request failed"); });	
@@ -400,7 +399,7 @@ var todoist = {
 				}
 			}
 			
-			console.log(todoistTasks.length + " tasks imported");
+			console.log("Syncing with Todoist Server: " + todoistTasks.length + " tasks imported");
 			msgInterfaces({action: "updateActions"});
 			
 		},

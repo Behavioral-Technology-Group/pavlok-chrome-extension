@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.7.105",
+  "version": "0.7.106",
   "name": "in House PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  
@@ -47,9 +47,11 @@
     "https://pavlok.herokuapp.com/*",
     "https://pavlok-stage.herokuapp.com/*",
     "https://pavlok-mvp.herokuapp.com/*",
-    "identity",
+    
+	"identity",
 	"notifications",
 	"tabs",
+	
 	"https://github.com/login/oauth/*",
 	"https://www.rescuetime.com/*",
 	"https://todoist.com/api"

@@ -410,7 +410,7 @@ function UpdateBadgeOnOff(badgeText) {
 	
 	if (logged == true){
 		if (badgeStatus == "off"){
-			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'});
 			badgeStatus = "on";
 		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
@@ -570,18 +570,6 @@ function signOut(){
 	localStorage.setItem('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
-	
-	/*
-	// Updates interface
-	showOptions(localStorage.accessToken);
-	UpdateBadgeOnOff();
-	
-	// Logging out of providers CHROME WAY
-	chrome.identity.launchWebAuthFlow({
-		'url': 'https://pavlok-mvp.herokuapp.com/users/sign_out', 'interactive': false}, function(response){
-			console.log(response);
-	});
-	*/
 }
 
 function signIn(user){
