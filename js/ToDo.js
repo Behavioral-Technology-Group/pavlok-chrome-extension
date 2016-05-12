@@ -1137,8 +1137,8 @@ var testTodo = {
 		},
 		
 		migrateFromSeparateLists: function(){
-			var oldRegulars = lsGet('ToDoTasks', 'parse');
-			var oldDailies  = lsGet('dailyList', 'parse');
+			var oldRegulars = lsGet('ToDoTasks', 'parse') || [];
+			var oldDailies  = lsGet('dailyList', 'parse') || [];
 			
 			var combinedTasks = [];
 			var t;
