@@ -51,6 +51,9 @@ function tabsAsAccordion(){
 	}
 	
 	toggleTabs();
+	$('#tabs-0 > .pv-tab-body')
+		.toggle('blind', {}, 250)
+		.addClass('pv-active-tab-body');
 }
 
 function toggleTabs(){
@@ -59,7 +62,9 @@ function toggleTabs(){
 		var tab = $(this).parent();
 		var body = $(tab).children()[1];
 		
-		// If clicked on active tab, inactivate it and close all tabs
+		var clickedTodo = $(body).children()[0].id == "toDoDiv"
+		
+		// If clicked on active tab, inactivate it and close all tabs, except for todo
 		if ($(tab).hasClass("pv-active-tab")){
 			$(tab).removeClass("pv-active-tab");
 			$(header).removeClass("pv-active-tab-header");
@@ -75,7 +80,12 @@ function toggleTabs(){
 				var curTab = tabs[t];
 				var curHeader = $(curTab).children()[0];
 				var curTabBody = $(curTab).children()[1];
-			
+				
+				var isTodo = $($(curHeader).children()[1]).text() == "To-do list"
+				if (isTodo) { 
+					continue 
+				}
+				
 				$(curTab).removeClass("pv-active-tab");
 				$(curHeader).removeClass("pv-active-tab-header");
 				$(curTabBody).removeClass("pv-active-tab-body");
@@ -90,7 +100,12 @@ function toggleTabs(){
 		
 		// Run blind effect on clicked tab body
 		$('.pv-tab-body:not(.pv-active-tab-body)').hide(250);
-		$('.pv-active-tab-body').toggle('blind', {}, 250);
+		if (clickedTodo){
+			$('.pv-active-tab-body').toggle('blind', {}, 250);
+		} else {
+			$('.pv-active-tab-body:not(.sticky)').toggle('blind', {}, 250);
+		}
+		
 	});
 }
 
