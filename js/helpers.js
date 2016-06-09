@@ -1016,8 +1016,6 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	var dif = now - lastVib;
 	lastVib = now;
 	if (dif < limitRep) { return }
-	console.log(dif);
-	
 	
 	stimuliTypes = ['shock', 'vibration', 'beep'];
 	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
