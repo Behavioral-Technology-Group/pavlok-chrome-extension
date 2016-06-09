@@ -6,7 +6,7 @@ var todoist = {
 	clientID: function(usage){
 		var local = "a55fe0e20d56411f94c1bf70ec77594d";
 		var test = "f7d20f9fffe9491ead6820ed42ca074d";
-		var production = "";
+		var production = "1ce5770339b84158932dcb3dcde241c1";
 		
 		if (usage.indexOf("local") != -1){ return local }
 		else if (usage.indexOf("test") != -1){ return test }
@@ -15,7 +15,7 @@ var todoist = {
 	clientSecret: function(usage){
 		var local = "baf57468898b411f8b71df3d601a8656";
 		var test = "93c8053a000a433ab290f1b6be61bd65";
-		var production = "";
+		var production = "f79bc36ad3a648b288e8578c3f8e53fb";
 		
 		if (usage.indexOf("local") != -1){ return local }
 		else if (usage.indexOf("test") != -1){ return test }
