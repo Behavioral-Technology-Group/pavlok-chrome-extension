@@ -1,5 +1,18 @@
 New additions
 
+(0.8.2)
+- ToDo list opens by default on popup start
+- Messing with other tabs won't close Todo tab
+- Manage sites renamed to Blacklist
+
+(0.8.1)
+- Fixed Rescue Time frequency being reseted every time options were opened
+- Fixed Rescue Time bug that prevented it from working for every user
+
+(0.8.0)
+GENERAL
+- Removed bug that was crashing blacklists, autozapper, sticking the blackbox counter on every page and making the page count.
+
 (0.7.10.7)
 GENERAL
 - No stimuli is sent unless more than half a second passed since the last one. This avoids stimuli trumping and getting lost
@@ -90,11 +103,6 @@ COACH TOOL
 - Uses both daily and regular tasks
 - Coach stores it's own timeouts and clear only them
 - Activating pomodoro via the coach creates a new pomo and messages both the background and the interfaces with the new Pomo and updatePomo action
-
-
-
-
-
 
 (0.7.10.3)
 - pomo escapes
