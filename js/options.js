@@ -325,6 +325,9 @@ function enableRescueTime(){
 		}
 	});
 	
+	var RTFreq = lsGet('RTFrequency') || 3;
+	$( "#RTFrequencySelect" ).val(RTFreq);
+	
 	$( "#RTFrequencySelect" ).change(function(){
 		localStorage.RTFrequency = $(this).val();
 		confirmUpdate(notifyUpdate);
