@@ -390,10 +390,12 @@ div.auth{
 	background-color: black;
 	/* border: 1px solid white; */
 	color: white;
+	max-height: 200px;
+	overflow: auto;
 }
 
 #toDoAction table {
-	width: 100%;
+	width: 98%;
 	color: white;
 }
 
@@ -652,4 +654,20 @@ div.auth{
 
 .clickable:hover{
 	cursor: pointer;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(150, 150, 150); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255); 
 }
