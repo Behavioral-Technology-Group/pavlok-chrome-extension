@@ -454,7 +454,7 @@ function enableTimers(){
         if ( Number( value ) == value ) {
           return Number( value );
         }
-        return +Globalize.parseDate( value );
+        return Globalize.parseDate( value );
       }
       return value;
     },
