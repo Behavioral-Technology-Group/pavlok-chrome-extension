@@ -70,12 +70,32 @@ hr {
 	text-align: center;
 }
 
-.onlyUnlogged > p {
-	align-self: center;
-	font-size: 20px;
-	color: rgb(159, 159, 159);
-	font-family: 'Lato', sans-serif;
+/* pavlok login table */
+.loginInput{
+	display: block;
 	
+	width: 336px;
+	height: 35px;
+	margin-top: 24px;
+	
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
+	font-size: 20px;
+	padding-left: 27px;
+	padding-right: 27px;
+	
+	background: #f8e71c;
+}
+
+#pavSubmitLogin{
+	border-radius: 5px;
+	background: white;
+	
+	width: 103%;
+	color: black;
+	border: 0px;
+	
+	margin-bottom: 0px;
 }
 
 .headerImageButton{
@@ -203,15 +223,6 @@ body, p, tab, span{
 #toDoTable tfoot > tr > td:last-child {
 	border: 0px;
 }
-#status {
-	background-color: #E2A92B;
-	display: none;
-	color: #E2A92B;
-	height: 110px;
-	width: 355px;
-	text-align: center;
-	vertical-align: middle;
-}
 
 body {
 	font-family: Helvetica,Arial,sans-serif;
@@ -298,7 +309,7 @@ div.auth{
 	visibility: hidden;
 }
 
-.onlyUnlooged{
+.onlyUnloged{
 	visibility: visible;
 }
 
@@ -379,10 +390,12 @@ div.auth{
 	background-color: black;
 	/* border: 1px solid white; */
 	color: white;
+	max-height: 200px;
+	overflow: auto;
 }
 
 #toDoAction table {
-	width: 100%;
+	width: 98%;
 	color: white;
 }
 
@@ -397,6 +410,7 @@ div.auth{
 	width: 100%;
 	background: rgb(10, 10, 10);
 	vertical-align: center;
+	height: 40px;
 	/* border-bottom: 1px solid white; */
 }
 
@@ -406,30 +420,40 @@ div.auth{
 }
 
 .toDoItemTR > td {
+	width: 100%;
 	vertical-align: center;
 	padding-left: 5px;
 }
+
 .toDoItemTR > td > div {
-	display: inline-block;
-	margin: 0;
-	padding: 0;
-	height: 26px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	
+	align-content: center;
+	justify-content: space-between;
 }
 
-.toDoOKerTD {
+.toDoItemTR > td > div > div {
+
+}
+
+.toDoOKerDIV {
 	width: 5%;
 }
 
-.toDoOTaskTD {
+.toDoTaskDIV {
 	width: 60%;
+	display: flex;
+	align-content: center;
 }
 
-.toDoORemoverTD {
+.toDoRemoverDIV {
 	text-align: right;
-	width: 35%;
+	width: 25%;
 }
 
-.doneTaskRow .toDoOTaskTD {
+.doneTaskRow .toDoTaskDIV {
 	text-decoration: line-through;
 	color: gray;
 }
@@ -468,6 +492,7 @@ div.auth{
 	color: white;
 	text-align: center;
 }
+
 /* Header and to-do adding buttons */
 #completeAllButton{
 	width: 5%;
@@ -625,4 +650,24 @@ div.auth{
 
 .red{
 	color:red;
+}
+
+.clickable:hover{
+	cursor: pointer;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(150, 150, 150); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255); 
 }

@@ -72,25 +72,6 @@ var accessToken = localStorage.accessToken;
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-// To-do Integration
-function timeSincePomo(){
-	var lastPomo = lsGet('pomoFocusB', 'parse');
-	
-	if (lastPomo.active == true){
-		return 0
-	}
-	else {
-		var now = new Date().getTime();
-		var timeSpent = now - lastPomo.lastUpdate;
-		
-		return timeSpent
-	}
-}
-
-
-
-
-
 // RescueTime Integration
 function validateTimeOut(RTTimeOut){
 	if (RTTimeOut == undefined) { RTTimeOut = false }
@@ -157,30 +138,30 @@ function fireRescueTime(APIKey){
 
 // Black List
 function CheckBlackList(curTabURL, curTabDomain) {
-	var daily = lsGet('dailyPomo', 'parse');
+	var pomoFocus = pavPomo.helpers.lastPomo();
+	var task = testTodo.backend.read(pomoFocus.taskId);
 	
-	var locked = lsGet('lockZap') == "true"; // Changes string to boolen
-	var lockedTo = lsGet('lockedTo');
-	var pomoFocus = lsGet('pomoFocusB', 'parse');
+	if (!pomoFocus){ var pomoFocus = {active: false }; };
 	
 	// Checks if it will use regular or daily black and whitelists
-	if (pomoFocus.active && locked){
-		if (curPAVDomain != lockedTo ) { return true }
+	if (pomoFocus.active && pomoFocus.lockZap){
+		if (curPAVDomain != pomoFocus.lockedTo ) { return true }
 		else { return false }
 	}
-	else if (pomoFocus.active && daily && (daily.specialList != false)){
-			var _whiteList = daily.whiteList.split(",");
-			var _blackList = daily.blackList.split(",");
+	else if (pomoFocus.active && task.daily && task.specialList){
+			var _whiteList = task.whiteList.split(",");
+			var _blackList = task.blackList.split(",");
 	}
 	else {
 		var _whiteList = localStorage.whiteList.split(",");
 		var _blackList = localStorage.blackList.split(",");
 	}
 	
-	var curTabSubURL = curTabURL.split("www.", 2);
-	if (curTabURL.split("www.").length > 1){
-		var curTabSubURL = curTabSubURL[1];
-	}
+	
+	// remove Http, Https and www
+	curTabSubURL = curTabURL.split(curTabDomain, 2);
+	curTabSubURL = curTabSubURL[curTabSubURL.length - 1];
+	curTabSubURL = curTabDomain + curTabSubURL;
 	
 	// Presumption of innocence
 	var blacked = false;
@@ -504,136 +485,6 @@ function checkForAudio(){
 	}
 }
 
-
-
-function updateCountdownBack(latest){
-	fixNoEndTime();
-	if (!latest){ var pomoFocusB = getPomoFocus('background'); }
-	else { var pomoFocusB = latest; }
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
-	
-	$(clockDiv).countdown(pomoFocusB.endTime, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	})
-	.on('finish.countdown', function(event) {
-		
-		if (localStorage.endReason == 'time') {
-			var NotList = lsGet('notifications', 'parse');
-			var Not = NotList.pomofocusEnded;
-			notifyUser(Not.title, Not.message, Not.id);
-			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
-		}
-		
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		pomoFocusB.active = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-	});
-}
-
-function checkForUpdateBack(){
-	// Retrieves both objects and compare then. The most recently updated one overrides the older one and triggers countdown with updated values
-	var oCounter = getPomoFocus('options');
-	var pCounter = getPomoFocus('popup');
-	var bCounter = getPomoFocus('background');
-	
-	if (oCounter.lastUpdate == pCounter.lastUpdate && pCounter.lastUpdate == bCounter.lastUpdate) { return }
-	else {
-		// Gather data from the windows and compare to get the latest one. Others follow it.
-		var countersArray = [ oCounter, pCounter, bCounter ];
-		var indexesArray = [0, 1, 2];
-		
-		var lastUpdateArray = [ oCounter.lastUpdate, pCounter.lastUpdate, bCounter.lastUpdate ];
-		var maxIndex = lastUpdateArray.indexOf(Math.max.apply(null, lastUpdateArray));
-		
-		// Capture the latest and the others as separate. Others become equal to latest
-		latest = countersArray[maxIndex];
-		indexesArray.splice(maxIndex, 1);
-		
-		for (c = 0; c < indexesArray.length; c++){
-			countersArray[indexesArray[c]] = latest;
-		}
-		
-		console.log(maxIndex);
-		equalizePomoFocus(latest);
-		updateCountdownBack(latest);
-	}
-}
-
-function createPomoFocusCountDownBack(){
-	pomoFocusB = getPomoFocus('background');
-	pomoFocusB.endReason = 'time';
-	if (localStorage.endReason == 'time' || !localStorage.endReason ){
-		localStorage.endReason = 'time';
-	}
-	
-	var endDate = dateFromTime(pomoFocusB.endTime);
-	
-	var clockDiv = $('#pomoFocusRemainingTime');
-	var taskSpan = $('#pomoFocusTask');
-	
-	var timer = $(clockDiv).countdown(endDate, function(event) {
-		$(this).html(event.strftime('%M:%S'));
-	})
-	.on('finish.countdown', function(event) {
-		
-		if (localStorage.endReason == 'time') {
-			var NotList = lsGet('notifications', 'parse');
-			var Not = NotList.pomofocusEnded;
-			notifyUser(Not.title, Not.message, Not.id);
-			stimuli("vibration", defInt, defAT, Not.title + " " + Not.message);
-		}
-		
-		console.log("PomoFocus ended");
-		pomoFocusB = lsGet('pomoFocusB', 'parse');
-		pomoFocusB.audio = false;
-		pomoFocusB.active = false;
-		savePomoFocus(pomoFocusB, 'background');
-		PFpromptForce = true;
-		localStorage.instaZap = 'false';
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-	});
-}
-
-function calibratePomoFocus(){
-	var pomoFocus = lsGet('pomoFocusB', 'parse');
-	var dailyPomo = lsGet('dailyPomo');
-	
-	if (pomoFocus.endTime < new Date().getTime()){
-		pomoFocus.active = false;
-	}
-	
-	if (pomoFocus.active == false){
-		pomoFocus.audio = false;
-		pomoFocus.daily = false;
-		pomoFocus.specialList = false;
-		lsDel('lockZap');
-		lsDel('dailyPomo');
-		lsDel('instaZap');
-	}
-}
-
-var countDownSafetyCheck = setInterval(function(){ 
-	updateCountdownBack();
-	}, 2000);
-	
-var restorePomoCheck = setInterval(function(){ 
-	checkForUpdateBack();
-	checkForAudio();
-	calibratePomoFocus();
-	}, 500);
-
-$( document ).ready( function() { updateCountdownBack(); });
-
-
-
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -716,71 +567,16 @@ function CreateTabListeners(token) {
 	// When active tab change
 	chrome.tabs.onActivated.addListener(function(info){
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
+			var pomoF = pavPomo.helpers.lastPomo();
 			var tabId = info.tabId;
 			windowId = info.windowId;
 			chrome.tabs.sendMessage(tabId, {
 				action: "hello",
-				pomodoro: lsGet('pomoFocusB', 'parse')
+				pomodoro: pomoF
 			});
 			getTabInfo(evaluateTabURL);
 		}
-	})
-}
-
-function initialize() {	
-	persistNotifications();
-	onUpdateAvailable();
-	onInstall();
-	notifyClicked();
-	
-	UpdateBadgeOnOff(" ");
-	var accessToken = localStorage.getItem("accessToken");
-	
-	CreateTabListeners(accessToken);
-	testInterval = setInterval(
-		function(){
-			if (checkActiveDayHour() == true) {
-				if (isValid(localStorage.accessToken)){
-					timeWindow = localStorage.timeWindow;
-					rescueTimeChecker();
-					RTTimeOut = localStorage.RTTimeOut;
-				}
-			} else {
-				UpdateBadgeOnOff("Zzz");
-			}
-		}
-	, 800);
-	createPomoFocusCountDownBack();
-	
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.target == "background"){
-				if (request.action == "volumeUp"){
-					var myAudioVol = parseFloat(myAudio.volume);
-					if (myAudioVol + 0.1 > 1) { myAudioVol = 1; }
-					else { myAudioVol = myAudioVol + 0.1; }
-					
-					myAudio.volume = myAudioVol;
-				}
-				
-				else if (request.action == "volumeDown"){
-					var prevAudioVol = parseFloat(myAudio.volume);
-					var newAudioVol;
-					if (prevAudioVol - 0.1 < 0) { newAudioVol = 0; }
-					else { newAudioVol = prevAudioVol - 0.1; }
-					
-					myAudio.volume = newAudioVol;
-				}
-				
-				else if (request.action == "newPage") {
-					var pomoFocus = lsGet('pomoFocusB', 'parse');
-					sendResponse({
-						pomodoro: pomoFocus
-					});
-				}
-			}
-		}
-	);
+	});
 }
 
 function getTabInfo(callback){
@@ -812,7 +608,9 @@ function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
 	
 	if(_result == true){		//blacklisted site
 		// Variables
-		var instaZap = localStorage.instaZap == "true";
+		var pomo = pavPomo.helpers.lastPomo();
+		
+		var instaZap = (pomo.active && pomo.instaZap);
 		var firstZap = localStorage.firstZap == "true";
 		var timeWindowZap = parseInt(localStorage.timeWindow);
 		// var timeWindowZap = 3;
@@ -852,6 +650,141 @@ function blackListTimer(blackListed, timespan){
 			}, timespan * 1000);
 		}
 	}
+}
+
+function checkForMigration(){
+	if (lsGet('dailyList') || lsGet('ToDoTasks')) {
+		var tasks = testTodo.helpers.migrateFromSeparateLists();
+		
+		// Create the new tasks in the new system
+		for (t = 0; t < tasks.length; t++){
+			testTodo.backend.create(tasks[t]);
+		}
+		
+		// Save old data in new variable and destroy old variables
+		testTodo.helpers.archiveOldLists();
+	}
+}
+
+function initialize() {
+	checkForMigration();
+	coach.listenCoachingClicks();
+	pavPomo.backend.backListener();
+	persistNotifications();
+	onUpdateAvailable();
+	onInstall();
+	notifyClicked();
+	
+	UpdateBadgeOnOff(" ");
+	var accessToken = localStorage.getItem("accessToken");
+	
+	CreateTabListeners(accessToken);
+	testInterval = setInterval(
+		function(){
+			if (checkActiveDayHour() == true) {
+				if (isValid(localStorage.accessToken)){
+					timeWindow = localStorage.timeWindow;
+					rescueTimeChecker();
+					RTTimeOut = localStorage.RTTimeOut;
+				}
+			} else {
+				UpdateBadgeOnOff("Zzz");
+			}
+			
+			if (dayChange()){
+				testTodo.helpers.resetDailyTasks;
+			}
+		}
+	, 1000);
+	
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.target == "background"){
+				var action = request.action;
+				// Oauth
+				if (action == "oauth"){
+					signIn(request.user, spread)
+					// oauth();
+				}
+				
+				else if (action == "signOut"){
+					signOut();
+				}
+				
+				else if(action == "accessToken"){
+					// Receive access token from a content script
+					var token = request.token;
+					saveAccessToken(token);
+					msgInterfaces({action: "logged", token: token});
+					// sendResponse({message: "Thanks and bye."});
+				}
+				
+				else if (action == "task change"){
+					var detail = request.detail;
+					if (detail == "new"){
+						var task = testTodo.backend.create(request.task);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+					
+					else if (detail == "delete"){
+						testTodo.backend.delete(request.taskId);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+					
+					else if (detail == "complete"){
+						var update = {done: request.check};
+						var task = testTodo.backend.update(request.taskId, update);
+						msgInterfaces({action: "updateDaily"});
+						msgInterfaces({action: "updateActions"});
+					}
+				}
+				
+				else if (action == "coachChange"){
+					if (request.change == "status"){
+						coach.status = request.status
+						if (coach.status == true){
+							coach.notifyTasks(coach.getTasks(2));
+							coach.isItTime();
+							lsSet('coachStatus', 'on');
+						}
+						else{
+							clearTimeout(coach.timeout);
+							coach.isItTime();
+							lsSet('coachStatus', 'off');
+						}
+						console.log("Coach running is " + coach.status);
+					}
+					else if (request.change == "sync"){
+						sendResponse({
+							status: coach.status
+						});
+					}
+				}
+				
+				else if (action == "todoistChange"){
+					if (request.change == "oauth"){
+						todoist.backend.getToken();
+						console.log("Oauth request received");
+					}
+					else if (request.change == "signOut"){
+						todoist.removeToken();
+						todoist.helpers.addToDoListeners(false);
+						console.log("Signout request made");
+						msgInterfaces({
+							action: "todoist",
+							change: "unlogged"
+						});
+					}
+					else if (request.change == "import"){
+						// todoist.backend.getTasks();
+						todoist.helpers.sync();
+					}
+				}
+			}
+		}
+	);
 }
 
 initialize();

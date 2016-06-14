@@ -1,4 +1,144 @@
 New additions
+
+(0.8.2)
+- ToDo list opens by default on popup start
+- Messing with other tabs won't close Todo tab
+- Manage sites renamed to Blacklist
+
+(0.8.1)
+- Fixed Rescue Time frequency being reseted every time options were opened
+- Fixed Rescue Time bug that prevented it from working for every user
+
+(0.8.0)
+GENERAL
+- Removed bug that was crashing blacklists, autozapper, sticking the blackbox counter on every page and making the page count.
+
+(0.7.10.7)
+GENERAL
+- No stimuli is sent unless more than half a second passed since the last one. This avoids stimuli trumping and getting lost
+
+(0.7.10.6)
+TODOIST
+- Import function uses the original Todo Backend functions. This means that tasks that were just imported won't be sent right away BACK to todoist, as if the change had ocurred via Pavlok's interface. This avoid the ocasional task duplication which happened when checking tasks on todoist.
+
+ToDo
+- Prompt for Pomo duration now uses the designed duration!
+
+
+(0.7.10.5)
+GENERAL
+- Sign in / Sign out are made in the popup window
+- Unlogged window displays Email and Password fields and a submit button
+- No more crashes when doing sign in and sign out
+- User input validation before accessing the server
+- Listeners for new token
+
+TODO
+- Blacklist for daily dasks corrected (it was not saved consistently)
+- Proper tomato icon on regular tasks
+- Clicking on tomatoes will ask prompt user for how long to take the pomo
+
+TODOIST
+- New substitute method for creating, updating and deleting todo tasks if active
+- If todoist is active, it will sync complete, uncomplete, create and deleting of tasks from Pavlok to TODOIST
+- Todoist task importing check for already imported tasks, avoiding duplication of tasks and commands
+- Namespace adjustments (helpers, frontend, backend) for consistency
+- Background listeners for task changes
+- Sync every 30s
+- Sends Pavlok updates as soon as they are made
+- There's a known bug when checking a task on Todoist creates duplicated tasks on Pavlok and Todoist. Will be resolved soon
+
+(0.7.10.4)
+
+GENERAL
+- Time until zap option returned under advaced options
+- Checks for blacklisted sites now use the pomodoro and tasks directly
+- Checks for blacklisted sites use a simpler and more accurate method for getting the url
+
+TODO
+ENGINES
+- ToDo is encapsulated in variables (testTodo, pavPomo)
+- Edits are done via update function
+- ToDo functions were divided in backend (database), frontend (calls and interfaces) and helper (budlers and utilities) for each variable
+-- Calls for pomodoro now use the pavPomo.helpers.lastPomo() function
+- All tasks are now standardized, so there's a single database for regular and daily tasks
+-- scaffold function is the core standardizer
+- Migration functions (from old two-database models to new single-database model)
+
+PRESENTATION
+- Line creation for tasks is done completely via javascript
+
+......................
+
+POMODOROS
+ENGINES
+- All pomodoro timers are executed in the background page
+- unbindCounter function avoid the recurrence of stimuli after pomodoro end.
+- All pomodoros are stored in a allPomos variable
+- Pomodoros are related, but separed from tasks
+- toInterfaces helper function also sends messages to content scripts
+- endPomo fixes audio
+- Default duration changed to 25 minutes
+
+PRESENTATION
+- Button listeners moved to background
+- Button effectors moved to background
+
+......................
+
+TODOIST INTEGRATION
+- Encapsulated under todoist variable
+- Core functions (getToken, removeToken, getTasks, toPavlok, fromPavlok) defined
+- Helper functions (toggle between logged and unlogged states)
+- Basic implementation on Options page (sign in, sign out, import tasks button)
+- Listners on options and background to make it happen
+- No export function yet
+
+......................
+
+COACH TOOL
+- Check for on/off on options page
+- Basic implementation
+- Works on the background (even if no Chrome windows are open!)
+- Uses both daily and regular tasks
+- Coach stores it's own timeouts and clear only them
+- Activating pomodoro via the coach creates a new pomo and messages both the background and the interfaces with the new Pomo and updatePomo action
+
+(0.7.10.3)
+- pomo escapes
+- Correct server configuration
+
+(0.7.10.2)
+- New audio for binaural
+- Binaural buttons working normally
+- Binaural sounds ended when pomo ends
+- oauth done via background
+
+(0.7.10.1)
+- Fixed broken clock on windows for first install
+- Todoist integration moved to background
+- Todoist has no more default token
+- Todoist getToken and removeToken functions act properly
+- Todoist removed automatic oauth on options page
+
+(0.7.10)
+- Mouse changes to clickable when hovering over binaural controllers
+- Assistant for tasks
+- Todoist integrations
+- Lots of backend enhancements
+
+(0.7.9)
+- Fixed Rescue stimuli can be selected and are saved
+- Check and fix for users URLs on black and whitelists without other warnings
+- Fixed sign out. It will require login again after doing it
+
+
+(0.7.8)
+- Fix to-do list overlay problem
+
+(0.7.7)
+- Check for bad items on whitelist
+
 (0.7.6)
 - Stimuli intensity defined in the options page now returns proper values, not the last one
 - Separate way to convert beep + vibration and stimuli ranges from % to raw

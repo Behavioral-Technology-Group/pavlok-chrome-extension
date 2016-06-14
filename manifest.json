@@ -2,8 +2,8 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.7.6",
-  "name": "inHouse STAGE PAVLOK Productivity",
+  "version": "0.8.2",
+  "name": "in House PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  
   "description": "Stay Focused. Eliminate Distraction.",
@@ -47,10 +47,13 @@
     "https://pavlok.herokuapp.com/*",
     "https://pavlok-stage.herokuapp.com/*",
     "https://pavlok-mvp.herokuapp.com/*",
-    "identity",
+    
+	"identity",
 	"notifications",
 	"tabs",
+	
 	"https://github.com/login/oauth/*",
-	"https://www.rescuetime.com/*"
+	"https://www.rescuetime.com/*",
+	"https://todoist.com/api"
     ]
 }

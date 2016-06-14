@@ -13,6 +13,14 @@ var toDoChecker;
 
 /* sandbox */
 
+/* end of sandbox */
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           TO-DO SECTION           *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
 function visibleDaily(targetRow, detailRow){
 	if ($(targetRow).hasClass("activeDailyTR")){
 		$(targetRow).removeClass("activeDailyTR");
@@ -33,129 +41,55 @@ function visibleDaily(targetRow, detailRow){
 }
 
 function createDetailTR(targetRow){
+	var clickedId = parseInt(targetRow.attr("id"));
+	
+	// Removes any detail row before
 	$(".taskDetailTR").hide(200).remove();
 	
 	// Insert a new TR for details of clicked task
-	$(targetRow).after('<tr class="taskDetailTR noDisplay"><td colspan="3">Test</td></tr')[0];
+	var newDetailTR = document.createElement("tr");
+	newDetailTR.className = "taskDetailTR noDisplay";
+	
+	var newTD = document.createElement("td");
+	newDetailTR.appendChild(newTD);
+	newTD.colSpan = 3;
+	
+	$(targetRow).after(newDetailTR);
+	
+	// Fill details of the clicked task
+	newTD.appendChild(testTodo.frontend.dailyDetail(clickedId));
+	
+	var task = testTodo.backend.read(clickedId);
+	
+	var blContent = task.blackList || '';
+	var blackListDiv = $("#blackListTD").children()[0];
+	$(blackListDiv).tagsInput({
+		'defaultText':'Add site... ie: facebook.com',
+		'removeWithBackspace' : true
+	})
+	.importTags(blContent);
+	removeInlineStyle("#blackListDaily_tagsinput");
+	
+	var wlContent = task.whiteList || '';
+	var whiteListDiv = $("#whiteListTD").children()[0];
+	$(whiteListDiv).tagsInput({
+		'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
+		'removeWithBackspace' : true
+	})
+	.importTags(wlContent);
+	removeInlineStyle("#whiteListDaily_tagsinput");
+
+	// Show detail row and reformat clicked rows
 	var detailRow = $(".taskDetailTR");
-	var clickedId = targetRow.attr("id");
-	clickedId = clickedId.split('y')[1];
 	
 	visibleDaily(targetRow, detailRow);
-	
-	
-	// Fill with boiler plate
-	fillDetailTR(detailRow, targetRow);
-	// Fill with actual info
-	expandDailyDetails(clickedId);
-	
 }
 
-function fillDetailTR(detailRow, targetRow) {
-	$(".taskDetailTR > td").html(
-		'<table id="dailyListDetails">' + 
-		'<tbody>' + 
-			'<tr class="noDisplay">' + 
-				'<td class="categoryName">Daily ID</td>' + 
-				'<td id="dailyTaskIdTD">' + 
-					'<input type="text" id="dailyTaskIdInput" disabled/>' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr>' + 
-				'<td class="categoryName">Task Name</td>' + 
-				'<td id="dailyTaskTD">' + 
-					'<input type="text" id="dailyTaskNameInput" />' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr>' + 
-				'<td class="categoryName">Pomodoros per day</td>' + 
-				'<td id="pomodorosPerDayTD">' + 
-					'<select id="pomosPerDaySelect">' + 
-						'<option value="1">1</option>' + 
-						'<option value="2">2</option>' + 
-						'<option value="3">3</option>' + 
-						'<option value="4">4</option>' + 
-						'<option value="5">5</option>' + 
-						'<option value="6">6</option>' + 
-					'</select>' + 
-					'<span>    lasting for </span>' + 
-					'<select id="dailyPomoDuration">' + 
-						'<option value="2">2</option>' + 
-						'<option value="5">5</option>' + 
-						'<option value="10">10</option>' + 
-						'<option value="15">15</option>' + 
-						'<option selected value="25">25</option>' + 
-						'<option value="35">35</option>' + 
-					'</select>' + 
-					'<span> minutes</span>' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr>' + 
-				'<td class="categoryName">Page controls</td>' + 
-				'<td id="specialListsTD">' + 
-					'<input id="specialListsInput" type="checkbox" />Use special black and whitelists' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr class="specialListDisplay">' + 
-				'<td class="categoryName">BlackList</td>' + 
-				'<td class="" id="blackListTD">' + 
-					'<div class="tagcontainer">' + 
-						'<input id="blackListDaily" value="">' + 
-					'</div>' + 
-				'</td>' +  
-		'</tr>' + 
-			'<tr class="specialListDisplay">' + 
-				'<td class="categoryName">WhiteList</td>' + 
-				'<td id="whiteListTD">' + 
-					'<div class="tagcontainer">' + 
-						'<input id="whiteListDaily" value="">' + 
-					'</div>' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr class="noDisplay">' + 
-				'<td class="categoryName noDisplay">Hyper Focus</td>' + 
-				'<td id="hyperFocusTD">' + 
-				'<div id="dailyHiperOptions">' + 
-					'<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>' + 
-					'<span><input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>' + 
-				'</div>' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr class="noDisplay">' + 
-				'<td class="categoryName ">Description</td>' + 
-				'<td id="descriptionTD">' + 
-					'<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>' + 
-				'</td>' +  
-			'</tr>' + 
-			'<tr>' +
-				'<td></td>' +
-				'<td colspan="2" class="saveOrResetTD">' +
-					'<div class="saveOrResetContainer">' + 
-						'<a href="" id="saveDaily"  class="buttonLink">Save</a>' + 
-						'<a href="" id="deleteDaily" class="buttonLink">Delete</a>' + 
-					'</div>' +
-				'</td>' + 
-			'</tr>' + 
-		'</tbody>' + 
-	'</table>'
-	
-	);
-	
-}
-
-/* end of sandbox */
-
-/* ***************************************************************** */
-/* ***************                                   *************** */
-/* ***************           TO-DO SECTION           *************** */
-/* ***************                                   *************** */
-/* ***************************************************************** */
-
-// fill the daily tasks listStyleType
 function fillDailyList(){
 	$('.dailyListTR').remove()
-	var dailyList = lsGet('dailyList', 'parse');
-	var dailyList = dailyList.reverse();
+	var allTasks = lsGet('allTasks', 'parse');
+	var dailyList = _.where(allTasks, {daily: true});
+	dailyList = dailyList.reverse();
 	
 	for (d = 0; d < dailyList.length; d++ ) {
 		var daily = dailyList[d];
@@ -164,12 +98,12 @@ function fillDailyList(){
 		else { specialList = 'Not Using'; }
 		
 		var newLine = '' +
-			'<tr id="daily' + daily.id + '" class="dailyListTR">' +
+			'<tr id="' + daily.id + '" class="dailyListTR">' +
 				'<td>' + daily.task 		+ '</td>' + 
-				'<td>' + daily.pomodoros + " x " + daily.duration	+ " min" + '</td>' +
+				'<td>' + daily.pomos + " x " + daily.duration	+ " min" + '</td>' +
 				'<td>' + specialList 		+ '</td>' +
 			'</tr>' +
-			'<tr id="daily' + daily.id + 'details" class="dailyDetailTR">' +
+			'<tr id="' + daily.id + 'details" class="dailyDetailTR">' +
 			
 			'</tr>'
 			;
@@ -181,59 +115,28 @@ function fillDailyList(){
 function listenDailyListClick(){
 	$("#dailyListTable tbody ").on('click', '.dailyListTR', function(){
 		var clickedTR = $(this);
-		var clickedId = $(this).attr('id');
-		var dailyId = clickedId.split('y')[1];
+		var clickedId = parseInt($(this).attr('id'));
 		
 		createDetailTR(clickedTR);
-		// expandDailyDetails(dailyId);
 	});
 	
-	// $("#dailyListTable tbody ").on('click', '#saveDaily', function(){
-		// event.preventDefault();
-		
-		// gatherDailyInfo();
-		// $(".taskDetailTR").hide(300, 
-			// function(){$(".taskDetailTR").remove( function(){
-				// $(".dailyListTR").css("background", "initial", function(){
-					// fillDailyList();
-				// });
-			// });
-		// });
-		
-	// });
-	
-	// // $("#deleteDaily").click(function( event ){
-	// $("#dailyListTable tbody ").on('click', '#deleteDaily', function(){
-		// event.preventDefault();
-		
-		// var dailyId = parseInt($('#dailyTaskIdInput').val());
-		// var daily = dailyFromId(dailyId);
-		// var dailyList = lsGet('dailyList', 'parse');
-		// var index = dailyTaskIndex(daily);
-		// dailyList.splice(index, 1);
-		
-		// lsSet('dailyList', dailyList, 'object');
-		// $(".taskDetailTR").hide(300, 
-			// function(){$(".taskDetailTR").remove( function(){
-				// $(".dailyListTR").css("background", "initial", function(){
-					// fillDailyList();
-				// });
-			// });
-		// });
-		
-		// // $(".taskDetailTR").hide(200).remove();
-		// // fillDailyList();
-		// // $(".dailyListTR").css("background", "initial");
-	// });
-		
 	$("#createNewDailyTaskButton").click(function(){
 		var newTaskName = $("#newDailyTaskInput").val()
 		if (newTaskName.length > 0 && newTaskName != " "){
 			$('#newDailyTaskInput').val('');
-			var newDaily = addDailyTask(newTaskName);
+
+			var newDaily = {
+				task: newTaskName,
+				daily: true,
+				pomos: 1,
+			};
+			newDaily = testTodo.backend.create(newDaily);
+			
+			testTodo.frontend.restoreTasks("options");
+			
 			fillDailyList();
-			createDetailTR($("#daily"+newDaily.id));
-			msgExt('updateDaily', 'popup');
+			createDetailTR($("#" + newDaily.id));
+			msgInterfaces({action: "updateDaily"});
 			
 		} else{
 			return
@@ -244,64 +147,6 @@ function listenDailyListClick(){
 		sampleBinaural();
 	});
 	
-}
-
-function expandDailyDetails(dailyId){
-	$( "#dailyListDetailsDIV" ).toggle( 'blind', {}, 300 );
-	
-	var dailyId = parseInt(dailyId);
-	var daily = dailyFromId(dailyId)
-	
-	if (daily == false ) { return }
-	
-	var id 			= daily.id || parseInt(lsGet('lastDailyID')) + 1;
-	var task 		= daily.task || '';
-	var pomodoros	= daily.pomodoros 	|| '1';
-	var duration	= daily.duration 	|| '15';
-	var specialList = daily.specialList || false;
-	var blackList	= daily.blackList 	|| ' ';
-	var whiteList	= daily.whiteList 	|| ' ';
-	var binaural	= daily.binaural 	|| false;
-	var instaZap	= daily.instaZap 	|| false;
-	var description	= daily.description || '';
-	
-	// Fill fields
-	$('#dailyTaskTitleSpan').html(task);
-	
-	$('#dailyTaskIdInput')	.val(id);
-	$('#dailyTaskNameInput').val(task);
-	$('#pomosPerDaySelect')	.val(pomodoros);
-	$('#dailyPomoDuration')	.val(duration);
-	$('#specialListsInput')	.prop('checked', specialList);
-	if (specialList == true){
-		$('.specialListDisplay').show();
-	} else { $('.specialListDisplay').hide(); }
-	$('#blackListDaily')	.importTags(blackList);
-	$('#whiteListDaily')	.importTags(whiteList);
-	$('#binauralDaily')		.prop('checked', binaural);
-	$('#instaZapDaily')		.prop('checked', instaZap);
-	$('#dailyDescriptionInput').val(description);
-	
-}
-
-function gatherDailyInfo(){
-	var newDaily = {};
-	newDaily.id				= parseInt($('#dailyTaskIdInput').val());
-	newDaily.task 			= $('#dailyTaskNameInput').val();
-	newDaily.pomodoros 		= $('#pomosPerDaySelect').val();
-	newDaily.duration 		= $('#dailyPomoDuration').val();
-	newDaily.specialList	= $('#specialListsInput').prop('checked')
-	newDaily.blackList 		= $('#blackListDaily').val();
-	newDaily.whiteList 		= $('#whiteListDaily').val();
-	newDaily.binaural 		= $('#binauralDaily').prop('checked');
-	newDaily.instaZap 		= $('#instaZapDaily').prop('checked');
-	newDaily.description 	= $('#dailyDescriptionInput').val();
-	newDaily.hyper			= true;
-	
-	updateDailyTask(newDaily);
-}
-
-function toggleBlackDaily(dailyId){
 	$("#dailyListTable").on('click', '#specialListsInput', function( event ){
 		var checked = $('#specialListsInput').prop('checked');
 		if (checked == true){
@@ -317,7 +162,10 @@ function toggleBlackDaily(dailyId){
 	$("#dailyListTable").on('click', '#saveDaily', function( event ){
 		event.preventDefault();
 		
-		gatherDailyInfo()
+		var updates = testTodo.helpers.gatherDaily();
+		var task = testTodo.backend.update(updates.id, updates);
+		console.log(task);
+		
 		$(".taskDetailTR").hide(300, function(){$(".taskDetailTR").remove()});
 		
 		fillDailyList();
@@ -327,25 +175,14 @@ function toggleBlackDaily(dailyId){
 	$("#dailyListTable").on('click', '#deleteDaily', function( event ){
 		event.preventDefault();
 		
-		var dailyId = parseInt($('#dailyTaskIdInput').val());
-		var daily = dailyFromId(dailyId);
-		var dailyList = lsGet('dailyList', 'parse');
-		var index = dailyTaskIndex(daily);
-		dailyList.splice(index, 1);
-		
-		lsSet('dailyList', dailyList, 'object');
-		$(".taskDetailTR").hide(100, 
-			function(){$(".taskDetailTR").remove()}
-		); 
-		// $(".dailyListTR").css("background", "initial");
+		var id = parseInt($('#dailyTaskIdInput').val());
+		testTodo.backend.delete(id);
 		visibleDaily($(".activeDailyTR"));
 		fillDailyList();
 	});
 }
 	
 function enableBlackDaily(){
-	toggleBlackDaily();
-	// $('#blackListDaily')[0].value = ' ';
 	$('#blackListDaily').tagsInput({
 		'defaultText':'Add site... ie: facebook.com',
 		'removeWithBackspace' : true
@@ -353,7 +190,6 @@ function enableBlackDaily(){
 	$('#blackListDaily_tagsinput').attr('style', '');
 	
 	
-	// $('#whiteListDaily')[0].value = '';
 	$('#whiteListDaily').tagsInput({
 		'defaultText':'facebook.com/groups/772212156222588/',
 		'removeWithBackspace' : true
@@ -364,9 +200,7 @@ function enableBlackDaily(){
 function enableDaily(){
 	fillDailyList();
 	listenDailyListClick();
-	
 }
-// 
 
 /* ***************************************************************** */
 /* ***************                                   *************** */
@@ -491,6 +325,9 @@ function enableRescueTime(){
 		}
 	});
 	
+	var RTFreq = lsGet('RTFrequency') || 3;
+	$( "#RTFrequencySelect" ).val(RTFreq);
+	
 	$( "#RTFrequencySelect" ).change(function(){
 		localStorage.RTFrequency = $(this).val();
 		confirmUpdate(notifyUpdate);
@@ -584,12 +421,12 @@ function enableRescueTime(){
 	
 	// Save Values:
 	$("#RTPosLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTWarnLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTNegLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTWarnLimit").change(function(){localStorage.RTWarnLimit = $(this).val();});
+	$("#RTNegLimit").change(function(){localStorage.RTNegLimit = $(this).val();});
 	
-	$("#RTPosSti").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTWarnSti").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTNegSti").change(function(){localStorage.RTPosLimit = $(this).val();});
+	$("#RTPosSti").change(function(){localStorage.RTPosSti = $(this).val();});
+	$("#RTWarnSti").change(function(){localStorage.RTWarnSti = $(this).val();});
+	$("#RTNegSti").change(function(){localStorage.RTNegSti = $(this).val();});
 
 	changeRTVisibility();
 }
@@ -617,7 +454,7 @@ function enableTimers(){
         if ( Number( value ) == value ) {
           return Number( value );
         }
-        return +Globalize.parseDate( value );
+        return Globalize.parseDate( value );
       }
       return value;
     },
@@ -813,18 +650,67 @@ function restoreCheckBox(checkboxID, condition){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
+function enableCoach(){
+	chrome.runtime.sendMessage(
+		// Warns background about new page being loaded
+		{
+			target: "background",
+			action: "coachChange",
+			change: "sync"
+		}, 
+		
+		function(response) {
+			console.log(response);
+			$("#coachPower").prop("checked", response.status)
+		}
+	);
+	
+	$("#coachPower").change(function(){
+		var status = $(this).prop("checked");
+		msgBackground({
+			action: "coachChange", 
+			change: "status",
+			status: status
+		});
+	});
+}
 
+function enableTodoist(){
+	$("#todoistLogin").click(function(event){
+		event.preventDefault();
+		
+		console.log("clicked on todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "oauth"
+		});
+	});
+	
+	todoist.frontend.toggle();
+	
+	$("#importTodoist").click(function(event){
+		event.preventDefault();
+		
+		msgBackground({
+			action: "todoistChange",
+			change: "import"
+		});
+	});
+	
+	$("#signOutTodoist").click(function(event){
+		event.preventDefault();
+		
+		console.log("unlogging from todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "signOut"
+		});
+	});
+}
 
 function enableSignInOut(){
-	$("#signOutX").click(function(){
-		if (isValid(localStorage.accessToken)){
-			signOut();
-			$(this).attr('title', 'Sign In');
-		}
-		else {
-			oauth(localStorage.accessToken);
-			$(this).attr('title', 'Sign Out');
-		}
+	$("#signOut").click(function(){
+		msgBackground({action: "signOut"});
 	});
 }
 
@@ -971,7 +857,7 @@ function enableSliders(){
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -987,7 +873,7 @@ function enableSliders(){
 				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -1003,7 +889,7 @@ function enableSliders(){
 				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 			
 		});
@@ -1012,7 +898,7 @@ function enableSliders(){
 		
 	});
 	
-	$("#resetIntensity").click(function(){
+	$("#resetIntensity").click(function( event ){
 		event.preventDefault();
 		
 		var defVib = 60;
@@ -1316,6 +1202,29 @@ function toggleOverlay(toState){
 	}
 }
 
+function enableLogin(){
+	$("#pavSubmitLogin").click(function(event){
+		event.preventDefault();
+		
+		var userInfo = {
+			userName: $("#pavUserNameLogin").val(),
+			password: $("#pavPasswordLogin").val(),
+		};
+		
+		if (validateUserInfo(userInfo)){
+			var msg = { 
+				action: "oauth", 
+				user: userInfo 
+			};
+			
+			msgBackground( msg );
+		}
+		else{
+			
+		};
+		
+	});
+}
 // Create the vertical tabs
 function initialize() {
 	var timeFormat = lsGet('timeFormat');
@@ -1329,6 +1238,7 @@ function initialize() {
 	};
 	Globalize.culture( culture );
 	
+	enableLogin();
 	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists
@@ -1378,8 +1288,8 @@ function initialize() {
 	// Max Tabs
 	$("#maxTabsSelect").change(function(){
 		localStorage.maxTabs = $(this).val();
-		msgExt("updateMaxTabs", "popup");
-		msgExt("updateMaxTabs", "options");
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
+		msgInterfaces({action: "updateMaxTabs"});
 	});
 	
 	
@@ -1396,7 +1306,10 @@ function initialize() {
 	enableInputs();
 	enableRescueTime();
 	enableToDo();
-	syncToDo('options');
+	
+	// syncToDo('options');
+	pavPomo.helpers.initialSync();
+	
 	enableDaily();
 	
 	$(".allCaps").text().toUpperCase();
@@ -1433,6 +1346,8 @@ $( document ).ready(function() {
 	restoreOptions();
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
+	enableCoach();
+	enableTodoist();
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");
@@ -1453,6 +1368,8 @@ $( document ).ready(function() {
 	$("body").on('change', '.pavSetting', function(){ 
 		confirmUpdate(notifyUpdate);
 	});
+	
+	
 	
 	// Message listeners
 	chrome.extension.onMessage.addListener(
@@ -1484,6 +1401,23 @@ $( document ).ready(function() {
 						$("#sliderBeep")		.slider("value", parseInt(lsGet('beepPosition'		)));
 						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
 						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
+					}
+				}
+				
+				else if (request.action == "updatePomo"){
+					pavPomo.frontend.updateCountdown(request.pomo);
+				}
+				
+				else if (request.action == "logged"){
+					showOptions(request.token);
+				}
+				
+				else if (request.action == "todoist"){
+					if (request.change == "unlogged"){
+						todoist.frontend.toggle();
+					}
+					else if (request.change == "logged"){
+						todoist.frontend.toggle();
 					}
 				}
 			}

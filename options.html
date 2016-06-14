@@ -1,788 +1,829 @@
 <html>
-<head>
-	<meta charset="UTF-8"/>
-	<title>PAVLOK Productivity</title>
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
-	<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
-	<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
-	<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
-	<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
-	<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-	
-	<script src="js/external/underscore.js" type="text/javascript"></script>
-	<script src="js/external/jquery.js"></script>
-	<script src="js/external/notify.js"></script>
-	<script src="js/helpers.js"></script>
-	<script src="js/external/globalize.js"></script>
-	<script src="js/external/globalize.culture.de-DE.js"></script>
-	<script src="js/external/jquery-ui.js"></script>
-	<script src="js/external/jquery.ui.timepicker.js"></script>
-	<script src="js/external/jquery-impromptu.js"></script>
-	<script src="js/external/jquery.countdown.js"></script>
-	<script src="jquery.tagsinput.js"></script>
-	<script src="js/ToDo.js"></script>
-	<!-- <script src="js/options.js"></script>	 -->
-	
-	<link rel="stylesheet" href="css/options.css">
-</head>
+	<head>
+		<meta charset="UTF-8"/>
+		<title>PAVLOK Productivity</title>
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
+		<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
+		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		
+		<script src="js/external/underscore.js" type="text/javascript"></script>
+		<script src="js/external/jquery.js"></script>
+		<script src="js/helpers.js"></script>
+		<script src="js/external/globalize.js"></script>
+		<script src="js/external/globalize.culture.de-DE.js"></script>
+		<script src="js/external/jquery-ui.js"></script>
+		<script src="js/external/jquery.ui.timepicker.js"></script>
+		<script src="js/external/jquery-impromptu.js"></script>
+		<script src="js/external/jquery.countdown.js"></script>
+		<script src="jquery.tagsinput.js"></script>
+		<script src="js/ToDo.js"></script>
+		<script src="js/TodoistIntegration.js" type="text/javascript"></script>
+		<!-- <script src="js/options.js"></script>	 -->
+		
+		<link rel="stylesheet" href="css/options.css">
+	</head>
 
-<body>
-	<div class="generalContainer">
-		<div class="fixedHeader">
-			<div class="headerContainer">
-				<div id="topHeader" class="flexContainer space-between header">
-				<div id="logoDiv" class="flexItem">
-					<img src="../images/pavlok-logo.png"/>
+	<body>
+		<div class="generalContainer">
+			<div class="fixedHeader">
+				<div class="headerContainer">
+					<div id="topHeader" class="flexContainer space-between header">
+					<div id="logoDiv" class="flexItem">
+						<img src="../images/pavlok-logo.png"/>
+					</div>
+					<div id="likeDiv" class="flexItem">
+						<span id="coolSpan"><i class="fa fa-thumbs-o-up"></i>  </span>
+						<span id="likeSpan"><a href="https://chrome.google.com/webstore/detail/pavlok-productivity/hefieeppocndiofffcfpkbfnjcooacib/reviews">Like Pavlok? Rate it!</a></span>
+					</div>
 				</div>
-				<div id="likeDiv" class="flexItem">
-					<span id="coolSpan"><i class="fa fa-thumbs-o-up"></i>  </span>
-					<span id="likeSpan"><a href="https://chrome.google.com/webstore/detail/pavlok-productivity/hefieeppocndiofffcfpkbfnjcooacib/reviews">Like Pavlok? Rate it!</a></span>
 				</div>
-			</div>
-			</div>
 
-			<div class="navBarContainer">
-				<div class="navBar">
-					<div id="indexDiv" class="flexContainer space-between">
-						<span class="scrollableLink flexItem" id="@blackListContainerDiv">Black List</span>
-						<span class="scrollableLink flexItem"  id="@tabNumbersContainerDiv">Tab Numbers</span>
-						<span class="scrollableLink flexItem"  id="@stimuliContainerDiv">Stimuli</span>
-						<span class="scrollableLink flexItem"  id="@toDoContainerDiv">To-Do Lists</span>
-						<span class="scrollableLink flexItem"  id="@appIntegrationsContainerDiv">App Integrations</span>
-						<span class="scrollableLink flexItem"  id="@advancedOptionsContainerDiv">Advanced Options</span>
-						<span class="flexItem">
-							<img id="testPairingX" src="../images/testpairing.png" title="Test Pairing"/>
-							<img id="signOutX" src="../images/signout.png" title="Sign out"/>
-						</span>
+				<div class="navBarContainer">
+					<div class="navBar">
+						<div id="indexDiv" class="flexContainer space-between">
+							<span class="scrollableLink flexItem" id="@blackListContainerDiv">Black List</span>
+							<span class="scrollableLink flexItem"  id="@tabNumbersContainerDiv">Tab Numbers</span>
+							<span class="scrollableLink flexItem"  id="@stimuliContainerDiv">Stimuli</span>
+							<span class="scrollableLink flexItem"  id="@toDoContainerDiv">To-Do Lists</span>
+							<span class="scrollableLink flexItem"  id="@appIntegrationsContainerDiv">App Integrations</span>
+							<span class="scrollableLink flexItem"  id="@advancedOptionsContainerDiv">Advanced Options</span>
+							<span class="flexItem">
+								<img id="testPairingX" src="../images/testpairing.png" title="Test Pairing"/>
+								<img id="signOutX" src="../images/signout.png" title="Sign out"/>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="fixedHeaderPlaceHolder"></div>
-		<div class="bodyContainer">
-			<div class="contentContainer">
-				<div class="onlyUnlogged">
-					<p id="unloggedMessage">Oh, looks like you are unlogged.
-					<br/>
-					<b><span class="yellow">Click the power button to login!</span></b></p>
-				</div>
-				<div class="onlyLogged" id="loggedDIV">
-						<div id="blackListContainerDiv">
-							<div id="blackListContainer">
-								<h2 class="sectionTitle">Black List
-									<sup>
-										<span class="helpSpan" title='	<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
-										<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on your blacklist. If you visit the site, you will get zapped.</p>
-										<p>For listing sites, type in the address and hit Enter or click Save.</p>'>
-											<b>?</b>
-										</span>
-									</sup>
-								</h2>
-								<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
-								<div class="tagcontainer">
-									<input name="blackList" id="blackList" value="" class="pavSetting"/>
-								</div>
-							</div>
-								
-							<div id="whiteListContainer">
-								<h2 class="sectionTitle">Exception List
-									<sup>
-										<span class="helpSpan" 
-										title='<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p><p>For instance: <span class="yellow"><i>"amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"><i>"amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just type the address, minus the "www." there, and it will ignore anything within that address.</p>'>
-											?
-										</span>
-									</sup>
-								</h2>
-									
-								<p>Please tell your exceptions for black sites, separated by commas. </p>
-								<div class="tagcontainer">
-									<input name="whiteList" id="whiteList" value="" class="pavSetting">
-								</div>
-							</div>
-						</div>
-						<div id="tabNumbersContainerDiv"> <!-- Tab Numbers-->
-							<div id="settingsDIV">
-								<h2 class="sectionTitle">Tab Numbers
-									<sup>
-										<span class="helpSpan" title='	
-										<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
-
-										<p>For instance: say you have a <b>10 tabs limit</b>.</p>
-										<ul>
-										<li>When you <b>get close to your limit</b> (think 9 tabs, one step away from the red line), Pavlok will <span class="yellow">Vibrate</span>.</li>
-										
-										<li>If you get <b>to the limit</b>, it will <span class="yellow">Beep</span>.</li>
-
-										<li>If you <b>cross that limit</b>, it will <span class="yellow">shock you as long as you keep opening more tabs.</span></li>
-										</ul>'>
-											?
-										</span>
-									</sup>
-								</h2>
-								<p>Set the max amount of tabs allowed open at once</p>
-								<hr>
-								<span id="label-text">Set tab limit:</span>
-								<select id="maxTabsSelect" class="pavSetting">
-									<option value="no">no</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-									<option value="9">9</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-									<option value="13">13</option>
-									<option value="14">14</option>
-									<option value="15">15</option>
-									<option value="20">20</option>
-									<option value="25">25</option>
-									<option value="30">30</option>
-									<option value="35">35</option>
-									<option value="40">40</option>
-									<option value="45">45</option>
-									<option value="50">50</option>
-								</select>
-								<br/>
-							</div>
-						</div>
-						<div id="stimuliContainerDiv"> <!-- Stimuli -->
-							<h2 class="sectionTitle">Stimuli</h2>
-							<p>Control the intensity of the stimuli. Select increments of 10%</p>
-							<hr>
-								
-							<div class="stimuliControlContainer">
-								<label for="beepInt"><img class="stimuliControlIcon" id="testBeepInt" src="../images/BeepIcon.png"/></label>
-								<div class="sliderTicksComboContainer">
-									<div class="ticks">
-										<span class="big">
-											<span class="bigSub">10%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">50%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">100%</span>
-										</span>
-									</div>
-									<div class="stimuliControlSlider" id="sliderBeep" class="pavSetting"></div>
-								</div>
-								<!-- <span id="beepIntensity"  class="stimuliIntensityDisplay noDisplay pavSetting"></span> -->
-							</div>
-							
-							
-							
-							<div class="stimuliControlContainer">
-								<label for="vibrationInt"><img class="stimuliControlIcon" id="testVibrationInt" src="../images/vibrateIcon.png"/></label>
-								<div class="sliderTicksComboContainer">
-									<div class="ticks">
-										<span class="big">
-											<span class="bigSub">10%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">50%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">100%</span>
-										</span>
-									</div>
-									<div class="stimuliControlSlider" id="sliderVibration" class="pavSetting"></div>
-								</div>
-								<span id="vibrationIntensity"  class="stimuliIntensityDisplay"></span>
-							</div>
-						
-							<div class="stimuliControlContainer">
-								<label for="zapInt"><img class="stimuliControlIcon" id="testZapInt" src="../images/zapIcon.png"/></label>
-								<div class="sliderTicksComboContainer">
-									<div class="ticks">
-										<span class="big">
-											<span class="bigSub">10%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">50%</span>
-										</span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span></span>
-										<span class="big">
-											<span class="bigSub">100%</span>
-										</span>
-									</div>
-									<div class="stimuliControlSlider" id="sliderZap" class="pavSetting"></div>
-								</div>
-								<span id="zapIntensity"  class="stimuliIntensityDisplay"></span>
-							</div>
-							
-							<div id="stimuliControlButtonsDiv" class="saveOrResetContainer">
-								<!-- <a href="#" id="saveIntensity" class="buttonLink">Save</a> -->
-								<a href="#" id="resetIntensity" class="buttonLink">Reset values</a>
-							</div>
-						</div>
-						<div id="toDoContainerDiv"> <!-- To-Do -->
-							<div id="toDoDiv" class="nooDisplay">
-								<h2 class="sectionTitle">Your To-do List</h2>
-								<p>Your list can be seen and acted upon clicking in the extension icon, which is always a click away from you. It is divided in regular <span class="yellow">regular</span> and <span class="yellow">daily</span> tasks.</p>
-								<p>Regular tasks are just what you're used to: a list task to be dealt and BOOM, done. Dailies differ a bit.</p>
-								
-								<h3>Dailies</h3>
-								<div id="dailiesDiv">
-									<p>Dailies are actions that you want to repeat, such as creating habits. They can get you organized with things you need to do on a recurring basis. Also, we add a layer of Pomodoro here, so that you can skyrocket your productivity and habits formation</p>
-									<hr>
-									<div id="dailiesListDiv">
-										<table id="dailyListTable" class="toDoTable pavSetting">
-											<thead>
-												<tr>
-													<td colspan="3" id="newDailyTaskTD">
-														<div class="flexContainer space-between">
-															<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task" class="flexItem"/>
-															<input type="button" id="createNewDailyTaskButton" value="Create" class="flexItem clickAction"/>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<th>Daily Task</th>
-													<th>Pomodoros</th>
-													<th>Special Lists</th>
-												</tr>
-											</thead>
-											<tbody>
-											</tbody>
-										</table>
-										<br/>
-										<!-- <div id="dailyListDetailsDIV"  class="noDisplay toDoTable">
-											<hr>
-											<br/>
-											<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
-											<table id="dailyListDetails">
-												<tbody>
-													<tr class="noDisplay">
-														<td class="categoryName">Daily ID</td>
-														<td id="dailyTaskIdTD">
-															<input type="text" id="dailyTaskIdInput" disabled/>
-														</td>
-													</tr>
-													<tr>
-														<td class="categoryName">Daily Task</td>
-														<td id="dailyTaskTD">
-															<input type="text" id="dailyTaskNameInput" />
-														</td>
-													</tr>
-													<tr>
-														<td class="categoryName">Pomodoros per day</td>
-														<td id="pomodorosPerDayTD">
-															<select id="pomosPerDaySelect">
-																<option value="1">1</option>
-																<option value="2">2</option>
-																<option value="3">3</option>
-																<option value="4">4</option>
-																<option value="5">5</option>
-																<option value="6">6</option>
-															</select>
-															 lasting for 
-															 <select id="dailyPomoDuration">
-																<option value="2">2</option>
-																<option value="5">5</option>
-																<option value="10">10</option>
-																<option value="15">15</option>
-																<option selected value="25">25</option>
-																<option value="35">35</option>
-															 </select>
-															  minutes
-														</td>
-													</tr>
-													<tr>
-														<td class="categoryName">Page controls</td>
-														<td id="specialListsTD">
-															<input id="specialListsInput" type="checkbox" />Use special black and whitelists
-														</td>
-													</tr>
-													<tr class="specialListDisplay">
-														<td class="categoryName">BlackList</td>
-														<td id="blackListTD">
-															<div class="tagcontainer">
-																<input id="blackListDaily" value="">
-															</div>
-														</td>
-													</tr>
-													<tr class="specialListDisplay">
-														<td class="categoryName">WhiteList</td>
-														<td id="whiteListTD">
-															<div class="tagcontainer">
-																<input id="whiteListDaily" value="">
-															</div>
-														</td>
-													</tr>
-													<tr class="noDisplay">
-														<td class="categoryName noDisplay">Hyper Focus</td>
-														<td id="hyperFocusTD">
-															<div id="dailyHiperOptions">
-																<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
-																<span><input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>
-															</div>
-														</td>
-													</tr>
-													<tr class="noDisplay">
-														<td class="categoryName ">Description</td>
-														<td id="descriptionTD">
-															<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>
-														</td>
-													</tr>
-												
-												</tbody>
-											</table>
-											<div class="saveOrResetContainer">
-												<a href="" id="saveDaily"  class="buttonLink">Save</a>
-												<a href="" id="deleteDaily" class="buttonLink">Delete</a>
-											</div>
-										</div> -->
-									</div>
-								</div>
-							</div>
-							<br/>
-							<div id="musicControlDiv" class="noDisplay">
-								<h2>Pomodoro on Steroids</h2>
-								<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
-								<p>
-									<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
-									<sup><span class="helpSpan" title='help text'>
-											<b>?</b>
-										</span></sup>
-									<img src="images/help.png" class="helpIcon" title='
-									<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
-									'/>
-								</p>
-								<p>
-									<input type="checkbox" id="audioFocus">Binaural Soundtrack
-									<sup><span class="helpSpan" title='help text'>
-											<b>?</b>
-										</span></sup>
-									<img src="images/help.png" class="helpIcon" title='
-									<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
-									'/>
-								</p>
-							</div>
-							<div id="pomodoroFocusDiv" class="noDisplay">
-								<h2><span id="pomoFocusTask"></span></h2>
-								<h3>Remaining Time: 
-									<span id="pomoFocusRemainingTime" class="yellow"></span>
-								</h3>
-								
-								<p>
-									<a href="#" class="noDecoration pomoFocusButtons buttonLink" id="pomoFocusCompleteTask" title='BOOM! Done!'>
-										<span class="fa-stack fa-lg yellow">
-											<i class="fa fa-check-square-o"></i>
-										</span>
-									</a>
-									<a href="#" class="noDecoration pomoFocusButtons buttonLink" id="pomoFocusStop" title='Cancel this pomoFocus'>
-										<span class="fa-stack fa-lg yellow">
-											<i class="fa fa-stop-circle-o"></i>
-										</span>
-									</a>
-									<a href="#" class="noDecoration pomoFocusButtons  buttonLink" id="pomoFocus5minutes" title='Add 5 minutes!'>
-										<span class="fa-stack fa-lg yellow">
-											<i class="fa fa-plus"></i>
-										</span>
-									</a>
-								</p>
-							</div>
-						</div>
-						<div id="appIntegrationsContainerDiv">
-							<div id="autoZapperContainerDiv"> <!-- AutoZapper -->
-								<h2 class="sectionTitle">Free up your hands!</h2>
-								<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
-								<p>Here is how it works:</p>
-								<ol>
-									<li>
-										Set the 
-										<span class="yellow">intensity of the zap
+			<div class="fixedHeaderPlaceHolder"></div>
+			<div class="bodyContainer">
+				<div class="contentContainer">
+					<div class="onlyUnlogged">
+						<p id="unloggedMessage">Oh, looks like you are unlogged.</p>
+						<input placeholder="Email Address" id="pavUserNameLogin" type="text" class="loginInput" alt="Your email"/><br/>
+						<input placeholder="Password" id="pavPasswordLogin" type="password" class="loginInput" alt="Your password"/><br/>
+						<input id="pavSubmitLogin" type="button" value="Submit" class="loginInput clickable" alt="Submit"/><br/>
+						<p><a href="http://pavlok-mvp.herokuapp.com/users/password/new" target="blank">Forgot your password?</a></p>
+					</div>
+					<div class="onlyLogged" id="loggedDIV">
+							<div id="blackListContainerDiv">
+								<div id="blackListContainer">
+									<h2 class="sectionTitle">Black List
 										<sup>
-											<span class="helpSpan" title='
-												<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
-												<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
-												<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'>
+											<span class="helpSpan" title='	<p>Black list allow your Pavlok to zap, vibrate and beep if you visit some site you want to avoid.</p>
+											<p>For instance: <span class="yellow"><i>"facebook.com"</i></span> might be on your blacklist. If you visit the site, you will get zapped.</p>
+											<p>For listing sites, type in the address and hit Enter or click Save.</p>'>
 												<b>?</b>
 											</span>
 										</sup>
-										</span>
-									</li>
-									<li>Set the <span class="yellow">duration</span> of your session</li>
-									<li id="puHook3">Set the <span class="yellow">frequency</span> for the zap to come</li>
-									<li id="puHook4">Get whatever you need (cigarettes, junk food, random sites, etc)</li>
-									<li id="puHook5">Brace yourself and rock on the go button</li>
-								</ol>
-								
-								<table id="autoZapperTable">
-									<thead>
-										<th>Intensity</th>
-										<th>Duration</th>
-										<th>Frequency</th>
-										<th>Now we...</th>
-									</thead>
-									<tbody>
-										<tr id="autoZapperStartLine">
-											<td><p><input id="autoZapperIntensity" class="50px"> <span class="yellowX"><b>%</b></span></p></td>
-											<td style="text-align: center">
-												<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> <span class="yellowX"><b>Mins.</b></span></p>
-												<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
-											</td>
-											<td><p><input id="autoZapperFrequency" class="50px"> <span class="yellowX"><b>Secs.</b></span></p></td>
-											<td>
-												<p class="autoZapperConf">
-													<a id="autoZapperStart" href="#appIntegrationsContainerDiv" class="buttonLink"><b>GO!</b></a>
-												</p>
-												<p class="autoZapperActive noDisplay">
-													<a id="autoZapperStop" href="#appIntegrationsContainerDiv" class="buttonLink"><b>Stop!</b></a>
-												</p>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<div id="rescuetimeContainerDiv"> <!-- RescueTime -->
-								<h2 class="sectionTitle">Get help from RescueTime 
-									<sup><span class="helpSpan" title='<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
-										<p>Pavlok will make notifications visceral!</p>
-										<ul>
-											<li>If your productivity falls <b>below 30%</b>, you get a <span class="yellow">zap</span> to get back to the present</li>
-											<li>If your productivity falls <b>bellow 50%</b>, you get a <span class="yellow">beep</span> reminder to focus again</li>
-											<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class="yellow">Pavlok will vibrate</span> for a good massage! Good job, you are going strong!</li>
-										</ul>
-										<p>The limits and stimulus for fired can be changed in the <span class="yellow">Define your Thresholds</span> section</p>'>
-										<b>?</b>
-									</span></sup>
-								</h2>
-								<div id="NoRTCodeOnly">
-									<p>Let's get your ball rolling!</p>
-									<ol>
-										<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
-										<li>Then insert your Key here and click GO!
-										<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
-										</li>
-										<li>That's it! Enjoy!</li>
-									</ol>
-								</div>
-								<div id="RTCodeOnly">
-									<div id="RTResultDiv">
-										<p><span id="RTResultsHolder">Gathering data... </span></p>
+									</h2>
+									<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
+									<div class="tagcontainer">
+										<input name="blackList" id="blackList" value="" class="pavSetting"/>
 									</div>
-									<div id="RTConfiguration">
-										<table>
-											<tr>
-												<td>
-													<p>Integration is:</p>
+								</div>
+									
+								<div id="whiteListContainer">
+									<h2 class="sectionTitle">Exception List
+										<sup>
+											<span class="helpSpan" 
+											title='<p>Exception addresses allow you to use a part of some site without triggering stimuli.</p><p>For instance: <span class="yellow"><i>"amazon.com"</i></span> might be on your blacklist. But you want to use <span class="yellow"><i>"amazon.com<b>/music</b>"</i></span> without being shocked.</p><p>Just type the address, minus the "www." there, and it will ignore anything within that address.</p>'>
+												?
+											</span>
+										</sup>
+									</h2>
+										
+									<p>Please tell your exceptions for black sites, separated by commas. </p>
+									<div class="tagcontainer">
+										<input name="whiteList" id="whiteList" value="" class="pavSetting">
+									</div>
+								</div>
+							</div>
+							<div id="tabNumbersContainerDiv"> <!-- Tab Numbers-->
+								<div id="settingsDIV">
+									<h2 class="sectionTitle">Tab Numbers
+										<sup>
+											<span class="helpSpan" title='	
+											<p>Tab Number Control will help you getting out of the infinite tabs from hell. It will vibrate, beep and zap you out of it.</p>
+
+											<p>For instance: say you have a <b>10 tabs limit</b>.</p>
+											<ul>
+											<li>When you <b>get close to your limit</b> (think 9 tabs, one step away from the red line), Pavlok will <span class="yellow">Vibrate</span>.</li>
+											
+											<li>If you get <b>to the limit</b>, it will <span class="yellow">Beep</span>.</li>
+
+											<li>If you <b>cross that limit</b>, it will <span class="yellow">shock you as long as you keep opening more tabs.</span></li>
+											</ul>'>
+												?
+											</span>
+										</sup>
+									</h2>
+									<p>Set the max amount of tabs allowed open at once</p>
+									<hr>
+									<span id="label-text">Set tab limit:</span>
+									<select id="maxTabsSelect" class="pavSetting">
+										<option value="no">no</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+										<option value="13">13</option>
+										<option value="14">14</option>
+										<option value="15">15</option>
+										<option value="20">20</option>
+										<option value="25">25</option>
+										<option value="30">30</option>
+										<option value="35">35</option>
+										<option value="40">40</option>
+										<option value="45">45</option>
+										<option value="50">50</option>
+									</select>
+									<br/>
+								</div>
+							</div>
+							<div id="stimuliContainerDiv"> <!-- Stimuli -->
+								<h2 class="sectionTitle">Stimuli</h2>
+								<p>Control the intensity of the stimuli. Select increments of 10%</p>
+								<hr>
+									
+								<div class="stimuliControlContainer">
+									<label for="beepInt"><img class="stimuliControlIcon" id="testBeepInt" src="../images/BeepIcon.png"/></label>
+									<div class="sliderTicksComboContainer">
+										<div class="ticks">
+											<span class="big">
+												<span class="bigSub">10%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">50%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">100%</span>
+											</span>
+										</div>
+										<div class="stimuliControlSlider" id="sliderBeep" class="pavSetting"></div>
+									</div>
+									<!-- <span id="beepIntensity"  class="stimuliIntensityDisplay noDisplay pavSetting"></span> -->
+								</div>
+								
+								
+								
+								<div class="stimuliControlContainer">
+									<label for="vibrationInt"><img class="stimuliControlIcon" id="testVibrationInt" src="../images/vibrateIcon.png"/></label>
+									<div class="sliderTicksComboContainer">
+										<div class="ticks">
+											<span class="big">
+												<span class="bigSub">10%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">50%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">100%</span>
+											</span>
+										</div>
+										<div class="stimuliControlSlider" id="sliderVibration" class="pavSetting"></div>
+									</div>
+									<span id="vibrationIntensity"  class="stimuliIntensityDisplay"></span>
+								</div>
+							
+								<div class="stimuliControlContainer">
+									<label for="zapInt"><img class="stimuliControlIcon" id="testZapInt" src="../images/zapIcon.png"/></label>
+									<div class="sliderTicksComboContainer">
+										<div class="ticks">
+											<span class="big">
+												<span class="bigSub">10%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">50%</span>
+											</span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span></span>
+											<span class="big">
+												<span class="bigSub">100%</span>
+											</span>
+										</div>
+										<div class="stimuliControlSlider" id="sliderZap" class="pavSetting"></div>
+									</div>
+									<span id="zapIntensity"  class="stimuliIntensityDisplay"></span>
+								</div>
+								
+								<div id="stimuliControlButtonsDiv" class="saveOrResetContainer">
+									<!-- <a href="#" id="saveIntensity" class="buttonLink">Save</a> -->
+									<a href="#" id="resetIntensity" class="buttonLink">Reset values</a>
+								</div>
+							</div>
+							<div id="toDoContainerDiv"> <!-- To-Do -->
+								<div id="toDoDiv" class="nooDisplay">
+									<h2 class="sectionTitle">Your To-do List</h2>
+									<p>Your list can be seen and acted upon clicking in the extension icon, which is always a click away from you. It is divided in regular <span class="yellow">regular</span> and <span class="yellow">daily</span> tasks.</p>
+									<p>Regular tasks are just what you're used to: a list task to be dealt and BOOM, done. Dailies differ a bit.</p>
+									
+									<h3>Dailies</h3>
+									<div id="dailiesDiv">
+										<p>Dailies are actions that you want to repeat, such as creating habits. They can get you organized with things you need to do on a recurring basis. Also, we add a layer of Pomodoro here, so that you can skyrocket your productivity and habits formation</p>
+										<hr>
+										<div id="dailiesListDiv">
+											<table id="dailyListTable" class="toDoTable pavSetting">
+												<thead>
+													<tr>
+														<td colspan="3" id="newDailyTaskTD">
+															<div class="flexContainer space-between">
+																<input type="text" id="newDailyTaskInput" placeholder="Enter a new daily task" class="flexItem"/>
+																<input type="button" id="createNewDailyTaskButton" value="Create" class="flexItem clickAction"/>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<th>Daily Task</th>
+														<th>Pomodoros</th>
+														<th>Special Lists</th>
+													</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+											<br/>
+											<!-- <div id="dailyListDetailsDIV"  class="noDisplay toDoTable">
+												<hr>
+												<br/>
+												<h2><span class="yellow" id="dailyTaskTitleSpan"></span> details</h2><br/>
+												<table id="dailyListDetails">
+													<tbody>
+														<tr class="noDisplay">
+															<td class="categoryName">Daily ID</td>
+															<td id="dailyTaskIdTD">
+																<input type="text" id="dailyTaskIdInput" disabled/>
+															</td>
+														</tr>
+														<tr>
+															<td class="categoryName">Daily Task</td>
+															<td id="dailyTaskTD">
+																<input type="text" id="dailyTaskNameInput" />
+															</td>
+														</tr>
+														<tr>
+															<td class="categoryName">Pomodoros per day</td>
+															<td id="pomodorosPerDayTD">
+																<select id="pomosPerDaySelect">
+																	<option value="1">1</option>
+																	<option value="2">2</option>
+																	<option value="3">3</option>
+																	<option value="4">4</option>
+																	<option value="5">5</option>
+																	<option value="6">6</option>
+																</select>
+																 lasting for 
+																 <select id="dailyPomoDuration">
+																	<option value="2">2</option>
+																	<option value="5">5</option>
+																	<option value="10">10</option>
+																	<option value="15">15</option>
+																	<option selected value="25">25</option>
+																	<option value="35">35</option>
+																 </select>
+																  minutes
+															</td>
+														</tr>
+														<tr>
+															<td class="categoryName">Page controls</td>
+															<td id="specialListsTD">
+																<input id="specialListsInput" type="checkbox" />Use special black and whitelists
+															</td>
+														</tr>
+														<tr class="specialListDisplay">
+															<td class="categoryName">BlackList</td>
+															<td id="blackListTD">
+																<div class="tagcontainer">
+																	<input id="blackListDaily" value="">
+																</div>
+															</td>
+														</tr>
+														<tr class="specialListDisplay">
+															<td class="categoryName">WhiteList</td>
+															<td id="whiteListTD">
+																<div class="tagcontainer">
+																	<input id="whiteListDaily" value="">
+																</div>
+															</td>
+														</tr>
+														<tr class="noDisplay">
+															<td class="categoryName noDisplay">Hyper Focus</td>
+															<td id="hyperFocusTD">
+																<div id="dailyHiperOptions">
+																	<input type="checkbox" id="binauralDaily" />Binaural Sounds (<span class="yellow" id="testBinaural">Test</span>)<br/>
+																	<span><input type="checkbox" id="instaZapDaily">Instant zap on blacklist</span>
+																</div>
+															</td>
+														</tr>
+														<tr class="noDisplay">
+															<td class="categoryName ">Description</td>
+															<td id="descriptionTD">
+																<input type="text" id="dailyDescriptionInput" placeholder="Why and what do you want to achieve?"/>
+															</td>
+														</tr>
+													
+													</tbody>
+												</table>
+												<div class="saveOrResetContainer">
+													<a href="" id="saveDaily"  class="buttonLink">Save</a>
+													<a href="" id="deleteDaily" class="buttonLink">Delete</a>
+												</div>
+											</div> -->
+										</div>
+									</div>
+								</div>
+								<br/>
+								<div id="musicControlDiv" class="noDisplay">
+									<h2>Pomodoro on Steroids</h2>
+									<p>You can turbocharge your Hyper Focus time on Pomodoros. Here are a few options for you:</p>
+									<p>
+										<input type="checkbox" id="instaZap">Instant Zap on blacklisted sites
+										<sup><span class="helpSpan" title='help text'>
+												<b>?</b>
+											</span></sup>
+										<img src="images/help.png" class="helpIcon" title='
+										<p>Blacklist will <span class="yellow">instantly Zap you out of the offending website</span> and every 5 seconds after the initial zap. No excuses approach to better results!</p>
+										'/>
+									</p>
+									<p>
+										<input type="checkbox" id="audioFocus">Binaural Soundtrack
+										<sup><span class="helpSpan" title='help text'>
+												<b>?</b>
+											</span></sup>
+										<img src="images/help.png" class="helpIcon" title='
+										<p>A <span class="yellow">concentration inducing soundtrack</span> will play as long as your Pomodoro is ticking.</p>
+										'/>
+									</p>
+								</div>
+								<div id="pomodoroFocusDiv" class="noDisplay">
+									<h2><span id="pomoFocusTask"></span></h2>
+									<h3 id="pomoFocusRemainingTimeContainer">Remaining Time: 
+										<span id="pomoFocusRemainingTime" class="yellow"></span>
+									</h3>
+									
+									<p>
+										<a href="#" class="noDecoration pomoFocusButtons buttonLink" id="pomoFocusCompleteTask" title='BOOM! Done!'>
+											<span class="fa-stack fa-lg yellow">
+												<i class="fa fa-check-square-o"></i>
+											</span>
+										</a>
+										<a href="#" class="noDecoration pomoFocusButtons buttonLink" id="pomoFocusStop" title='Cancel this pomoFocus'>
+											<span class="fa-stack fa-lg yellow">
+												<i class="fa fa-stop-circle-o"></i>
+											</span>
+										</a>
+										<a href="#" class="noDecoration pomoFocusButtons  buttonLink" id="pomoFocus5minutes" title='Add 5 minutes!'>
+											<span class="fa-stack fa-lg yellow">
+												<i class="fa fa-plus"></i>
+											</span>
+										</a>
+									</p>
+								</div>
+							</div>
+							<div id="appIntegrationsContainerDiv">
+								<div id="autoZapperContainerDiv"> <!-- AutoZapper -->
+									<h2 class="sectionTitle">Free up your hands!</h2>
+									<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
+									<p>Here is how it works:</p>
+									<ol>
+										<li>
+											Set the 
+											<span class="yellow">intensity of the zap
+											<sup>
+												<span class="helpSpan" title='
+													<p>This intensity only works for this training session, having no impact on the zap intensity of regular functioning.</p>
+													<p>We still advise you test the intensity on the Stimuli Tab. After a few zaps, you can get a tad more sensitive, so start a little below your usual and give it a try. If it feels weak at the end of the session, up it in the next one.</p>
+													<p>Also, be aware that <span class="yellow">popups will not show even if you enabled them</span>. That is how we will keep the flow, so you do not need to click anything.</p>'>
+													<b>?</b>
+												</span>
+											</sup>
+											</span>
+										</li>
+										<li>Set the <span class="yellow">duration</span> of your session</li>
+										<li id="puHook3">Set the <span class="yellow">frequency</span> for the zap to come</li>
+										<li id="puHook4">Get whatever you need (cigarettes, junk food, random sites, etc)</li>
+										<li id="puHook5">Brace yourself and rock on the go button</li>
+									</ol>
+									
+									<table id="autoZapperTable">
+										<thead>
+											<th>Intensity</th>
+											<th>Duration</th>
+											<th>Frequency</th>
+											<th>Now we...</th>
+										</thead>
+										<tbody>
+											<tr id="autoZapperStartLine">
+												<td><p><input id="autoZapperIntensity" class="50px"> <span class="yellowX"><b>%</b></span></p></td>
+												<td style="text-align: center">
+													<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> <span class="yellowX"><b>Mins.</b></span></p>
+													<p style="text-align: center" class="autoZapperActive noDisplay"><b><span class="yellow" id="countDownTraining"></span></b></p>
 												</td>
+												<td><p><input id="autoZapperFrequency" class="50px"> <span class="yellowX"><b>Secs.</b></span></p></td>
 												<td>
-													<select id="RTOnOffSelect" class="pavSetting">
-														<option value="On">On</option>
-														<option value="Off">Off</option>
-													</select>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<p>Updates Frequency:</p>
-												</td>
-												<td>
-													<p>
-														<select id="RTFrequencySelect" class="pavSetting">
-															<option value="3">3</option>
-															<option value="5">5</option>
-															<option value="10">10</option>
-															<option value="15">15</option>
-															<option value="30">30</option>
-														</select>
-														Minutes 
-														
-														<sup><span class="helpSpan" title='
-															<p>Pavlok will get your productivity according to the inverval you set.</p>
-															<p><b>There are differences in the frequency you will get an updated pulse from RescueTime</b>. <span class="yellow">Paid accounts</span> can get it updated every 3 minutes, while <span class="yellow">free accounts</span> get it updated every 15 minutes.</p>
-															<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you will get the same score 3 times (after 5, 10 and 15 minutes).</p>
-															<p><b>We advise <span class="yellow">Free RescueTime accounts</span> to keep update frequency in <span class="yellow">15 or 30 minutes option</span> for reliability.</b></p>
-														'>
-															<b>?</b>
-														</span></sup>
+													<p class="autoZapperConf">
+														<a id="autoZapperStart" href="#appIntegrationsContainerDiv" class="buttonLink"><b>GO!</b></a>
+													</p>
+													<p class="autoZapperActive noDisplay">
+														<a id="autoZapperStop" href="#appIntegrationsContainerDiv" class="buttonLink"><b>Stop!</b></a>
 													</p>
 												</td>
 											</tr>
-										</table>
-										<div>	
-										<hr>
-										<h3>Define your Thresholds</h3>
-											
-											<table id="RTThresholdTable">
+										</tbody>
+									</table>
+								</div>
+								<div id="rescuetimeContainerDiv"> <!-- RescueTime -->
+									<h2 class="sectionTitle">Get help from RescueTime 
+										<sup><span class="helpSpan" title='<p>RescueTime can help you classify activities you take on your computer. Then, they generate a score for your actions, called <i>productivity pulse</i></p>
+											<p>Pavlok will make notifications visceral!</p>
+											<ul>
+												<li>If your productivity falls <b>below 30%</b>, you get a <span class="yellow">zap</span> to get back to the present</li>
+												<li>If your productivity falls <b>bellow 50%</b>, you get a <span class="yellow">beep</span> reminder to focus again</li>
+												<li>If your productivity goes <b>above 80%</b>, you get nice pat on your bac... I mean, wrist! <span class="yellow">Pavlok will vibrate</span> for a good massage! Good job, you are going strong!</li>
+											</ul>
+											<p>The limits and stimulus for fired can be changed in the <span class="yellow">Define your Thresholds</span> section</p>'>
+											<b>?</b>
+										</span></sup>
+									</h2>
+									<div id="NoRTCodeOnly">
+										<p>Let's get your ball rolling!</p>
+										<ol>
+											<li>Get your Api Key for Pavlok <a target="_blank" href="https://www.rescuetime.com/anapi/get_api_key_for/pavlok">here</a>:</li>
+											<li>Then insert your Key here and click GO!
+											<p><input id="rescueTimeAPIKey" /><input type="button" id="fireRTIntegration" value="Go!"/></p>
+											</li>
+											<li>That's it! Enjoy!</li>
+										</ol>
+									</div>
+									<div id="RTCodeOnly">
+										<div id="RTResultDiv">
+											<p><span id="RTResultsHolder">Gathering data... </span></p>
+										</div>
+										<div id="RTConfiguration">
+											<table>
 												<tr>
-													<th>Stimulus</th>
-													<th>Threshold</th>
-													<th>Triggers</th>
-												</tr>
-												<tr id="RTPosTR">
-													<td><p>Positive</p></td>
-													<td><p>Above <input id="RTPosLimit" class="RTThreshold pavSetting"/></p></td>
 													<td>
-														<select id="RTPosSti" class="pavSetting">
-															<option value="shock">Zap</option>
-															<option value="vibration">Vibrate</option>
-															<option value="beep">Beep</option>
+														<p>Integration is:</p>
+													</td>
+													<td>
+														<select id="RTOnOffSelect" class="pavSetting">
+															<option value="On">On</option>
+															<option value="Off">Off</option>
 														</select>
 													</td>
 												</tr>
-												<tr id="RTWarnTR">
-													<td><p>Warning</p></td>
-													<td><p> Below <input id="RTWarnLimit" class="RTThreshold pavSetting"/></p></td>
+												<tr>
 													<td>
-														<select id="RTWarnSti" class="pavSetting">
-															<option value="shock">Zap</option>
-															<option value="vibration">Vibrate</option>
-															<option value="beep">Beep</option>
-														</select>
+														<p>Updates Frequency:</p>
 													</td>
-												</tr>
-												<tr id="RTNegTR">
-													<td><p>Negative</p></td>
-													<td><p> Below <input id="RTNegLimit" class="RTThreshold pavSetting"/></p></td>
 													<td>
-														<select id="RTNegSti" class="pavSetting">
-															<option value="shock">Zap</option>
-															<option value="vibration">Vibrate</option>
-															<option value="beep">Beep</option>
-														</select>
+														<p>
+															<select id="RTFrequencySelect" class="pavSetting">
+																<option value="3">3</option>
+																<option value="5">5</option>
+																<option value="10">10</option>
+																<option value="15">15</option>
+																<option value="30">30</option>
+															</select>
+															Minutes 
+															
+															<sup><span class="helpSpan" title='
+																<p>Pavlok will get your productivity according to the inverval you set.</p>
+																<p><b>There are differences in the frequency you will get an updated pulse from RescueTime</b>. <span class="yellow">Paid accounts</span> can get it updated every 3 minutes, while <span class="yellow">free accounts</span> get it updated every 15 minutes.</p>
+																<p>For instance: if you have a <b>free account</b> on RescueTime and set the update frequency here to every five minutes, you will get the same score 3 times (after 5, 10 and 15 minutes).</p>
+																<p><b>We advise <span class="yellow">Free RescueTime accounts</span> to keep update frequency in <span class="yellow">15 or 30 minutes option</span> for reliability.</b></p>
+															'>
+																<b>?</b>
+															</span></sup>
+														</p>
 													</td>
 												</tr>
 											</table>
+											<div>	
+											<hr>
+											<h3>Define your Thresholds</h3>
+												
+												<table id="RTThresholdTable">
+													<tr>
+														<th>Stimulus</th>
+														<th>Threshold</th>
+														<th>Triggers</th>
+													</tr>
+													<tr id="RTPosTR">
+														<td><p>Positive</p></td>
+														<td><p>Above <input id="RTPosLimit" class="RTThreshold pavSetting"/></p></td>
+														<td>
+															<select id="RTPosSti" class="pavSetting">
+																<option value="shock">Zap</option>
+																<option value="vibration">Vibrate</option>
+																<option value="beep">Beep</option>
+															</select>
+														</td>
+													</tr>
+													<tr id="RTWarnTR">
+														<td><p>Warning</p></td>
+														<td><p> Below <input id="RTWarnLimit" class="RTThreshold pavSetting"/></p></td>
+														<td>
+															<select id="RTWarnSti" class="pavSetting">
+																<option value="shock">Zap</option>
+																<option value="vibration">Vibrate</option>
+																<option value="beep">Beep</option>
+															</select>
+														</td>
+													</tr>
+													<tr id="RTNegTR">
+														<td><p>Negative</p></td>
+														<td><p> Below <input id="RTNegLimit" class="RTThreshold pavSetting"/></p></td>
+														<td>
+															<select id="RTNegSti" class="pavSetting">
+																<option value="shock">Zap</option>
+																<option value="vibration">Vibrate</option>
+																<option value="beep">Beep</option>
+															</select>
+														</td>
+													</tr>
+												</table>
+												
+												<div class="noDisplay" id="miniChart">
+													<div id="badRT" class="miniChartDiv">Negative</div>
+													<div id="warnRT" class="miniChartDiv">Warning</div>
+													<div id="notifyRT" class="miniChartDiv">Neutral</div>
+													<div id="goodRT" class="miniChartDiv">Positive</div>
+												</div>
 											
-											<div class="noDisplay" id="miniChart">
-												<div id="badRT" class="miniChartDiv">Negative</div>
-												<div id="warnRT" class="miniChartDiv">Warning</div>
-												<div id="notifyRT" class="miniChartDiv">Neutral</div>
-												<div id="goodRT" class="miniChartDiv">Positive</div>
 											</div>
+										</div>
+											
+										<hr>
 										
+										<div id="RTAPIKeyDiv">
+											<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
+											<p>
+												<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
+												<sup><span class="helpSpan" title='
+													<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
+
+													<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
+
+													<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>
+												'>
+													<b>?</b>
+												</span></sup>
+											</p>
 										</div>
 									</div>
-										
-									<hr>
 									
-									<div id="RTAPIKeyDiv">
-										<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
-										<p>
-											<input type="button" value="Disconnect from RescueTime?" id="removeRTAPIKey" />
-											<sup><span class="helpSpan" title='
-												<p>By continuing, your Pavlok will disconnect from RescueTime. But are you sure you want to do that?</p>
-
-												<p>Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?</p>
-
-												<p>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?</p>
-											'>
-												<b>?</b>
-											</span></sup>
-										</p>
-									</div>
+									
 								</div>
-								
-								
-							</div>
-						</div>
-						<div id="advancedOptionsContainerDiv"> <!-- Advanced Options -->
-							<h2 class="sectionTitle">Advanced Options</h2>
-							<div id="stimuliNotificationsDiv" class="noDisplay">
-								<div id="reallySpecificControls">
-								<h2>Stimuli Notifications 
-								<sup><span class="helpSpan" title='
-									<p>
-										You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
-									</p>
-									<p>
-										We advise you <span class="yellow"><i>keep at least the Zap popup active</i></span>, as it will help you understand better why you get that zap. Being more conscious about it, you will be better off tackling the habit changes.
-									</p>
-									<p>
-										Note that you will only get the popup notifications checked here.
-									</p>
-								'>
-									<b>?</b>
-								</span></sup>
-								
-								</h2>
-								<p> Check the ones you wish to keep.</p>
-								<table>
-									<tr>
-										<td>
-											<p>
-												<input type="checkbox" id="notifyZap" class="pavSetting">Zap
-											</p>
-										</td>
-										<td>
-											<p><input type="checkbox" id="notifyVibration" class="pavSetting"><label name="notifyZap">Vibration</label></p>
-										</td>
-										<td>
-											<p><input type="checkbox" id="notifyBeep" class="pavSetting"><label name="notifyZap">Beep</label></p>
-										</td>
-									</tr>
-								</table>
-								<br/>
-							</div>
-							<hr>
-							<div id="zapFrequencyBlackListDiv">
-								<h2>Black List zapping countdown</h2>
-								<p>Set how long, <i>in seconds</i>, it takes before Pavlok zaps when you get to Black Listed Sites:</p>
-								<select id="blackListTimeWindow" class="pavSetting">
-									<option value="3">3</option>
-									<option value="5">5</option>
-									<option value="10">10</option>
-									<option value="15">15</option>
-									<option value="30">30</option>
-								</select>
-							</div>
-							<hr>
-							<div id="tabNumbersAdvancedDiv">
-								<h2>Tab Numbers extras</h2>
-								<input type="checkbox" name="zapOnClose" id="zapOnClose"  class="pavSetting"/>Zap when closing
-								
-								<sup><span class="helpSpan" title='
-									<p>For those really inclined to stop opening to many habits!</p>
-									<p>This will send a zap whenever you are above your tab limit, <b><span class="yellow">EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You will sure think about opening more tabs after that!</p>
-									<p>If not checked, you will only get zaps when opening tabs above the your limit.</p>
-								'>
+								<div id="todoistContainerDiv">
+									<h2 class="sectionTitle">Sync your tasks with Todoist  
+										<sup><span class="helpSpan" title='<p>Todoist is a popular Task management app. It can now get super powers syncing with Pavlok!</p>
+										'>
 											<b>?</b>
 										</span></sup>
-								<p>Count tabs on 
-								<select id="allTabsCountSelect" class="pavSetting">
-									<option value="allWindows">ALL windows</option>
-									<option value="activeWindow">CURRENT Window</option>
-								</select>
-								<sup><span class="helpSpan" title='
-									<p>This option makes the Extension count either the tabs on the window you are working or on all windows open!</p>
-									<p><b><span class="yellow">If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class="yellow">YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You will sure think about opening more tabs after that!</p>
-									<p>If not checked, Chrome will only work on your current window. In the same example above, <b><span class="yellow">YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
-									'>
-									<b>?</b>
-								</span></sup>
-								</p>
-							</div>
-							<hr>
-							</div>
-							<div id="timeDaysDiv" class="Display">
-								<h2>Conform it to your schedule
-									<sup><span class="helpSpan" title='<p>
-										Pavlok will only work in the days you checked and while you are between the start and end times.
-									</p>
-									<p>
-										For instance: you set a 9-to-5 (check weekdays and put <span class="yellow"><i>Start at 09:00</i></span> and <span class="yellow"><i>End at 17:00</i></span>. If you visit some blocked site (say, Facebook) at 10:30, you will get notifications and a zap, just as you would expect.
-									</p>
-									<p>
-										If you happen  to get to Facebook by 08:00, there will be nothing going on from Pavlok for you.
-									</p>
-									<p>
-										You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
-									</p>'>
-										<b>?</b>
-									</span></sup>
-								</h2>
-								<p>Select days and hours for Pavlok to help you focus</p>
-								<div id="daysOfTheWeekDiv" class="60percent flexContainer space-between">
-									<div>
-										<input type="checkbox" id="sundayActive" class="activeDay pavSetting"> 
-										<span><label for="sundayActive">Sun</label></span>
+									</h2>
+									<div id="offTodoist">
+										<p>Todoist will require you to login and to allow Pavlok to manage your tasks.</p>
+										<p>
+											To do so, just click the icon
+											<img id="todoistLogin" class="clickAction todoistLogo" src="images/Todoist_logo.png" alt="todoist">
+											</a>
+										</p>
 									</div>
-									<div>
-										<input type="checkbox" id="mondayActive" class="activeDay pavSetting"> 
-										<span><label for="mondayActive">Mon</label></span>
-									</div>
-									<div>
-										<input type="checkbox" id="tuesdayActive" class="activeDay pavSetting"> 
-										<span><label for="tuesdayActive">Tues</label></span>
-									</div>
-									<div>
-										<input type="checkbox" id="wednesdayActive" class="activeDay pavSetting"> 
-										<span><label for="wednesdayActive">Wed</label></span>
-									</div>
-									<div>
-										<input type="checkbox" id="thursdayActive" class="activeDay pavSetting"> 
-										<span><label for="thursdayActive">Thu</label></span>
-									</div>
-									<div>
-										<input type="checkbox" id="fridayActive" class="activeDay pavSetting"> 
-										<span><label for="fridayActive">Fri</label></span>
-									</div>
-									<div>
-										<input type="checkbox" id="saturdayActive" class="activeDay pavSetting"> 
-										<span><label for="saturdayActive">Sat</label></span>
+									<div id="onTodoist">
+										<p><img class="clickAction todoistLogo" src="images/Todoist_logo.png" alt="todoist"> is active.</p>
+										<p><a href="#" id="importTodoist" class="clickAction">Import your tasks</a></p>
+										<p><a href="#" id="signOutTodoist">Unplug todoist</a></p>
 									</div>
 								</div>
+							</div>
+							<div id="advancedOptionsContainerDiv"> <!-- Advanced Options -->
+								<h2 class="sectionTitle">Advanced Options</h2>
+								<div id="stimuliNotificationsDiv" class="noDisplay">
+									<div id="reallySpecificControls">
+									<h2>Stimuli Notifications 
+									<sup><span class="helpSpan" title='
+										<p>
+											You might find too many popups before stimuli annoying and want to turn it off. Totally ok!
+										</p>
+										<p>
+											We advise you <span class="yellow"><i>keep at least the Zap popup active</i></span>, as it will help you understand better why you get that zap. Being more conscious about it, you will be better off tackling the habit changes.
+										</p>
+										<p>
+											Note that you will only get the popup notifications checked here.
+										</p>
+									'>
+										<b>?</b>
+									</span></sup>
+									
+									</h2>
+									<p> Check the ones you wish to keep.</p>
+									<table>
+										<tr>
+											<td>
+												<p>
+													<input type="checkbox" id="notifyZap" class="pavSetting">Zap
+												</p>
+											</td>
+											<td>
+												<p><input type="checkbox" id="notifyVibration" class="pavSetting"><label name="notifyZap">Vibration</label></p>
+											</td>
+											<td>
+												<p><input type="checkbox" id="notifyBeep" class="pavSetting"><label name="notifyZap">Beep</label></p>
+											</td>
+										</tr>
+									</table>
+									<br/>
+									</div>
+								<hr>
+								</div>
+								<div id="zapFrequencyBlackListDiv">
+									<h2>Black List zapping countdown</h2>
+									<p>Set how long before Pavlok zaps when you get to Black Listed Sites:</p>
+									<select id="blackListTimeWindow" class="pavSetting">
+										<option value="3">3</option>
+										<option value="5">5</option>
+										<option value="10">10</option>
+										<option value="15">15</option>
+										<option value="30">30</option>
+									</select>
+									<span> seconds</span>
+								<hr>
+								</div>
+								<div id="tabNumbersAdvancedDiv" class="noDisplay">
+									<h2>Tab Numbers extras</h2>
+									<input type="checkbox" name="zapOnClose" id="zapOnClose"  class="pavSetting"/>Zap when closing
+									
+									<sup><span class="helpSpan" title='
+										<p>For those really inclined to stop opening to many habits!</p>
+										<p>This will send a zap whenever you are above your tab limit, <b><span class="yellow">EVEN IF YOU ARE CLOSING EXCESS TABS</span></b>. You will sure think about opening more tabs after that!</p>
+										<p>If not checked, you will only get zaps when opening tabs above the your limit.</p>
+									'>
+												<b>?</b>
+											</span></sup>
+									<p>Count tabs on 
+									<select id="allTabsCountSelect" class="pavSetting">
+										<option value="allWindows">ALL windows</option>
+										<option value="activeWindow">CURRENT Window</option>
+									</select>
+									<sup><span class="helpSpan" title='
+										<p>This option makes the Extension count either the tabs on the window you are working or on all windows open!</p>
+										<p><b><span class="yellow">If you want to strike the too many tabs habit just like that, select ALL windows</span></b> and it will count all tabs open on all windows, no exceptions. So, if you have a limit of 10 tabs, and find you self browsing on a window with 4 tabs, but have another with 8 tabs, <b><span class="yellow">YOU WILL GET ZAPPED because the total tabs is over your limit</span></b>. You will sure think about opening more tabs after that!</p>
+										<p>If not checked, Chrome will only work on your current window. In the same example above, <b><span class="yellow">YOU WILL NOT GET ZAPPED</span></b>, as your current window will have either 4 or 8 tabs, both under the limit.</p>
+										'>
+										<b>?</b>
+									</span></sup>
+									</p>
+								<hr>
+								</div>
+								<div id="timeDaysDiv" class="Display">
+									<h2>Conform it to your schedule
+										<sup><span class="helpSpan" title='<p>
+											Pavlok will only work in the days you checked and while you are between the start and end times.
+										</p>
+										<p>
+											For instance: you set a 9-to-5 (check weekdays and put <span class="yellow"><i>Start at 09:00</i></span> and <span class="yellow"><i>End at 17:00</i></span>. If you visit some blocked site (say, Facebook) at 10:30, you will get notifications and a zap, just as you would expect.
+										</p>
+										<p>
+											If you happen  to get to Facebook by 08:00, there will be nothing going on from Pavlok for you.
+										</p>
+										<p>
+											You can know if Pavlok is sleeping checking the icon. If <span class="yellow">Pavlok is sleeping, there will be a "zzz" instead of the tabs count</span>.
+										</p>'>
+											<b>?</b>
+										</span></sup>
+									</h2>
+									<p>Select days and hours for Pavlok to help you focus</p>
+									<div id="daysOfTheWeekDiv" class="60percent flexContainer space-between">
+										<div>
+											<input type="checkbox" id="sundayActive" class="activeDay pavSetting"> 
+											<span><label for="sundayActive">Sun</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="mondayActive" class="activeDay pavSetting"> 
+											<span><label for="mondayActive">Mon</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="tuesdayActive" class="activeDay pavSetting"> 
+											<span><label for="tuesdayActive">Tues</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="wednesdayActive" class="activeDay pavSetting"> 
+											<span><label for="wednesdayActive">Wed</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="thursdayActive" class="activeDay pavSetting"> 
+											<span><label for="thursdayActive">Thu</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="fridayActive" class="activeDay pavSetting"> 
+											<span><label for="fridayActive">Fri</label></span>
+										</div>
+										<div>
+											<input type="checkbox" id="saturdayActive" class="activeDay pavSetting"> 
+											<span><label for="saturdayActive">Sat</label></span>
+										</div>
+									</div>
+									
+									<div id="generalActiveHours" class="flexContainer space-between">
+										<div class="flexItem">
+											<select id="timeFormat" class="pavSetting">
+												<option value="12">AM/PM</option>
+												<option value="24">24H</option>
+											</select>
+										</div>
+										<div class="flexItem" >
+											<span class="spinnerText">Start 
+											<input class="timeSelectors pavSetting" id="generalActiveTimeStart"/>
+											</span>
+										</div>
+										<div class="flexItem" >
+											<span>End <input class="timeSelectors pavSetting" id="generalActiveTimeEnd"/></span>
+										</div>
+									<hr>
+									</div>
+								<hr>	
+								</div>
 								
-								<div id="generalActiveHours" class="flexContainer space-between">
-									<div class="flexItem">
-										<select id="timeFormat" class="pavSetting">
-											<option value="12">AM/PM</option>
-											<option value="24">24H</option>
-										</select>
-									</div>
-									<div class="flexItem" >
-										<span class="spinnerText">Start 
-										<input class="timeSelectors pavSetting" id="generalActiveTimeStart"/>
-									</div>
-									<div class="flexItem" >
-										<span>End <input class="timeSelectors pavSetting" id="generalActiveTimeEnd"/></span>
-									</div>
+								<div id="pavCoach">
+									<h2>Have your very own productivity coach<sup><span class="helpSpan" title='<p>
+											Pavlok will both remind you and break down your tasks, inviting you to take pomodoros on your todo list. But it will also tell you when to take a break!
+										</p>
+										'>
+											<b>?</b>
+										</span></sup>
+									</h2>
+									<p>
+										<input type="checkbox" id="coachPower" />
+										Check to turn it on or off
+									</p>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="footerContainer">
-			<div class="footerThings">
-			<p>Want to get more out of the chrome extension? <b>Pair it with a pavlok</b> - <a href="http://buy.pavlok.com/">click here to get one</a></p>
-			<!-- Future divulgation -->
-			<!-- 
-				<div class="logoBlock">
-					<div><img class="footerLogo" src="" alt="" title=""/></div>
-					<div><a href="#">PAVLOK</a></div>
+			<div class="footerContainer">
+				<div class="footerThings">
+				<p>Want to get more out of the chrome extension? <b>Pair it with a pavlok</b> - <a href="http://buy.pavlok.com/">click here to get one</a></p>
+				<!-- Future divulgation -->
+				<!-- 
+					<div class="logoBlock">
+						<div><img class="footerLogo" src="" alt="" title=""/></div>
+						<div><a href="#">PAVLOK</a></div>
+					</div>
+					
+					<div class="logoBlock">
+						<div><img class="footerLogo" src="" alt="" title=""/></div>
+						<div><a href="#">PAVLOK Blog</a></div>
+					</div>
+					
+					<span> Get to know our products</span>
+					<div class="logoBlock">
+						<div><img class="footerLogo" alt="Wake up" src="https://4.bp.blogspot.com/-6AC0N5w9q_4/Vnhc4GQHgJI/AAAAAAAAAFI/QyfGX9Ukb-4/s1600/icon_2.png" title="Wake up"/></div>
+						<div><a href="#">Wake up</a></div>
+					</div>
+					
+					<div class="logoBlock">
+						<div><img class="footerLogo" alt="Break bad habits" src="https://cloud.githubusercontent.com/assets/7434744/11156791/fd7cfabc-8a1b-11e5-9359-9280da05530a.png" title="Break Bad Habits"/></div>
+						<div><a href="#">Break Bad Habits</a></div>
+					</div>
+					-->
 				</div>
-				
-				<div class="logoBlock">
-					<div><img class="footerLogo" src="" alt="" title=""/></div>
-					<div><a href="#">PAVLOK Blog</a></div>
-				</div>
-				
-				<span> Get to know our products</span>
-				<div class="logoBlock">
-					<div><img class="footerLogo" alt="Wake up" src="https://4.bp.blogspot.com/-6AC0N5w9q_4/Vnhc4GQHgJI/AAAAAAAAAFI/QyfGX9Ukb-4/s1600/icon_2.png" title="Wake up"/></div>
-					<div><a href="#">Wake up</a></div>
-				</div>
-				
-				<div class="logoBlock">
-					<div><img class="footerLogo" alt="Break bad habits" src="https://cloud.githubusercontent.com/assets/7434744/11156791/fd7cfabc-8a1b-11e5-9359-9280da05530a.png" title="Break Bad Habits"/></div>
-					<div><a href="#">Break Bad Habits</a></div>
-				</div>
-				-->
 			</div>
 		</div>
-	</div>
-		
-</body>
+			
+	</body>
 </html>
 <script src="js/options.js"></script>

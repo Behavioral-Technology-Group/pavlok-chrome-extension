@@ -9,7 +9,7 @@ var pomoFocusO;
 var pomoFocusB;
 
 var todayDivTest;
-var focusCompleteMsg = "IGAO Keep the zone going, you rock star!";
+var focusCompleteMsg = "Keep the zone going, you rock star!";
 var focusStopMsg = ''; 
 var defInt = '';			// Use default intensity for stimuli
 var defAT = '';				// Use default Access Token for stimuli
@@ -51,6 +51,9 @@ function tabsAsAccordion(){
 	}
 	
 	toggleTabs();
+	$('#tabs-0 > .pv-tab-body')
+		.toggle('blind', {}, 250)
+		.addClass('pv-active-tab-body');
 }
 
 function toggleTabs(){
@@ -59,7 +62,9 @@ function toggleTabs(){
 		var tab = $(this).parent();
 		var body = $(tab).children()[1];
 		
-		// If clicked on active tab, inactivate it and close all tabs
+		var clickedTodo = $(body).children()[0].id == "toDoDiv"
+		
+		// If clicked on active tab, inactivate it and close all tabs, except for todo
 		if ($(tab).hasClass("pv-active-tab")){
 			$(tab).removeClass("pv-active-tab");
 			$(header).removeClass("pv-active-tab-header");
@@ -75,7 +80,12 @@ function toggleTabs(){
 				var curTab = tabs[t];
 				var curHeader = $(curTab).children()[0];
 				var curTabBody = $(curTab).children()[1];
-			
+				
+				var isTodo = $($(curHeader).children()[1]).text() == "To-do list"
+				if (isTodo) { 
+					continue 
+				}
+				
 				$(curTab).removeClass("pv-active-tab");
 				$(curHeader).removeClass("pv-active-tab-header");
 				$(curTabBody).removeClass("pv-active-tab-body");
@@ -90,7 +100,12 @@ function toggleTabs(){
 		
 		// Run blind effect on clicked tab body
 		$('.pv-tab-body:not(.pv-active-tab-body)').hide(250);
-		$('.pv-active-tab-body').toggle('blind', {}, 250);
+		if (clickedTodo){
+			$('.pv-active-tab-body').toggle('blind', {}, 250);
+		} else {
+			$('.pv-active-tab-body:not(.sticky)').toggle('blind', {}, 250);
+		}
+		
 	});
 }
 
@@ -134,7 +149,7 @@ function enableStimuliControls() {
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
@@ -150,7 +165,7 @@ function enableStimuliControls() {
 				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
@@ -166,7 +181,7 @@ function enableStimuliControls() {
 				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgExt("updateStimuli", "options");
+				msgInterfaces({action: "updateStimuli"});
 			}
 			
 		});
@@ -202,61 +217,83 @@ $( document ).ready(function() {
 	presentName();
 	enableTestButtons();
 	enableToDo();
-	syncToDo('options');
 	showOptions(localStorage.accessToken);
-	restoreDailyList('.dailyContainer');
 		
 	tabsAsAccordion();
 	enableBlackList();
 	enableStimuliControls();
 	
-	if (isValid(localStorage.accessToken)){
-		$("#signOut").attr('title', 'Sign Out');
-	} else { 
-		$("#signOut").attr('title', 'Sign In');
-	}
-	
+	$("#signOut").attr('title', 'Sign Out');
 	$("#signOut").click(function(){
-		if (isValid(localStorage.accessToken)){
-			signOut();
+		msgBackground({action: "signOut"});
+	});
+	
+	$("#pavSubmitLogin").click(function(event){
+		event.preventDefault();
+		
+		var userInfo = {
+			userName: $("#pavUserNameLogin").val(),
+			password: $("#pavPasswordLogin").val(),
+		};
+		
+		if (validateUserInfo(userInfo)){
+			var msg = { 
+				action: "oauth", 
+				user: userInfo 
+			};
+			
+			msgBackground( msg );
 		}
 		else{
-			oauth();
-		}
+			
+		};
+		
 	});
 
 	$("#maxTabsSelect").val( lsGet('maxTabs'));
 	$("#maxTabsSelect").change(function(){
 		var maxTabs = $(this).val();
 		lsSet('maxTabs', maxTabs);
+		countTabs(localStorage.tabCountAll, UpdateTabCount);
 		confirmUpdate(notifyUpdate);
+		msgInterfaces({action: "updateMaxTabs"});
 	});
 	
 	$("#instaZap").change(function(){
-		lsSet('instaZap', $(this).prop( "checked" ));
+		updates = {instaZap: $(this).prop( "checked" )};
+		
+		var pomo = pavPomo.helpers.lastPomo();
+		pavPomo.backend.update(pomo.id, updates);
 		confirmUpdate(notifyUpdate);
 	});
 	
 	$("#lockZap").change(function(){
-		lsSet('lockZap', $(this).prop( "checked" ));
-		confirmUpdate(notifyUpdate);
-		
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			curPAVTab = tabs[0];
-			curPAVUrl = tabs[0].url;
-			curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
-			
-			if(curPAVDomain.length == 0){
-				console.log("unable to resolve domain for " + curPAVUrl);
-				curPAVDomain = curPAVUrl;
+			var active = $("#lockZap").prop("checked");
+			var updates = { lockZap: active };
+			if (active){
+				curPAVTab = tabs[0];
+				curPAVUrl = tabs[0].url;
+				curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+				
+				if(curPAVDomain.length == 0){
+					console.log("unable to resolve domain for " + curPAVUrl);
+					curPAVDomain = curPAVUrl;
+				}
+				
+				updates.lockedTo = curPAVDomain;
 			}
+			else { updates.lockedTo = undefined; }
 			
-			lsSet('lockedTo', curPAVDomain);
-			
+			var pomo = pavPomo.helpers.lastPomo();
+			pavPomo.backend.update(pomo.id, updates);
+			confirmUpdate(notifyUpdate);
 		});
 		
 	});
 	
+	pavPomo.helpers.initialSync();
+
 	// Message listeners
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -273,9 +310,38 @@ $( document ).ready(function() {
 							return
 					}
 					else{
+						// leave as is
 					}
-						$("#blackList").importTags(newBlackList);
-						$("#whiteList").importTags(newWhiteList);
+					$("#blackList").importTags(newBlackList);
+					$("#whiteList").importTags(newWhiteList);
+				}
+				
+				else if (request.action == "updatePomo"){
+					console.log(request);
+					var pomo = request.pomo;
+					if(!pomo){
+						console.log("No pomo");
+						return
+					}
+					pavPomo.frontend.updateCountdown(pomo);
+					console.log("received pomo");
+					console.log(pomo);
+					
+				}
+				
+				else if (request.action == "updateActions"){
+					var pomo = request.pomo;
+					testTodo.frontend.restoreTasks();
+				}
+				
+				else if (request.action == "logged"){
+					var token = request.token;
+					if (token.length == 64){
+						$("#pavUserNameLogin").val('');
+						$("#pavPasswordLogin").val('');
+					}
+					showOptions(token);
+					toggleSignInOut();
 				}
 			}
 		}

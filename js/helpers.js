@@ -12,6 +12,9 @@ var server = "MVP" 			// STAGE or MVP
 var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
+var lastVib = 0;
+var limitRep = 500;
+
 // Greetings popup		
 $( document ).ready(function(){
 	// var updateMessage = '' +
@@ -132,6 +135,7 @@ lsSet('baseAddress', baseAddress);
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
 // Stimuli intensity
+{ // Defaults
 if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
 if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
 if (!localStorage.beepPosition ) { localStorage.beepPosition = 100; } //Random tune
@@ -217,39 +221,13 @@ if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
 if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
 if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
 
-// To-Do
-if (!localStorage.pomoFocusO) { 
-	var pomoFocusO = {}
-	pomoFocusO.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusO', pomoFocusO, 'object');
-}
-if (!localStorage.pomoFocusB) { 
-	var pomoFocusB = {}
-	pomoFocusB.lastUpdate = new Date().getTime();
-	lsSet('pomoFocusB', pomoFocusB, 'object');
-}
-if (!localStorage.pomoFocusP) { 
-	var pomoFocusP = {}
-	pomoFocusP.lastUpdate = new Date().getTime();
-	pomoFocusP.endTime = deltaTime(0).getTime();
-	lsSet('pomoFocusP', pomoFocusP, 'object');
-}
-if (!localStorage.dailyList) {
-	lsSet('dailyList', [], 'object');
-}
-if (!localStorage.lastDailyID) { lsSet('lastDailyID', 0); }
 
 var defInt = '';
 var defAT = '';
+}
 
 function removeInlineStyle(element){
 	$(element).attr('style', '');
-}
-
-function msgExt(_action, _target){
-	// Action is used to tell what to act upon
-	// Target is used to tell which page should respond to the stimulus
-	chrome.extension.sendMessage({action: _action, target: _target})
 }
 
 function fixNoEndTime(){
@@ -307,10 +285,11 @@ function savePomoFocus(pomoFocus, win){
 		pomoFocus.active = false;
 	}
 
-	equalizePomoFocus(pomoFocus);
-	
-	updateCountdown();
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+		if (tabs.length == 0) {
+			console.log("background debugger selected");
+			return
+		}
 		chrome.tabs.sendMessage(tabs[0].id, 
 		{
 			action: "pomodoro", 
@@ -318,6 +297,7 @@ function savePomoFocus(pomoFocus, win){
 		});
 	});
 	
+	lsSet('pomoFocusB', pomoFocus, 'object');
 	return pomoFocus
 }
 
@@ -339,6 +319,8 @@ function lsSet(key, data, dataType){
 }
 
 function lsGet(key, parse){
+	if (localStorage.getItem(key) == null) { return undefined };
+	
 	if (!parse) { parse = 'string' };
 	var returnData;
 	
@@ -423,6 +405,7 @@ function confirmUpdate(notify){
 function openOptions(){
 	window.open('options.html','_blank');
 }
+
 // Background
 function UpdateBadgeOnOff(badgeText) {
 	var logged = isValid(localStorage.accessToken);
@@ -430,7 +413,7 @@ function UpdateBadgeOnOff(badgeText) {
 	
 	if (logged == true){
 		if (badgeStatus == "off"){
-			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'})
+			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'});
 			badgeStatus = "on";
 		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
@@ -522,16 +505,6 @@ function evaluateTabCount(tabCount){
 	notifyTabCount(tabCount, situation);
 }
 
-
-// function hideSignIn(){ 
-	// $('#signIn').hide();
-// }
-
-// function showSignOut(){ 
-	// $('#signOut').html("<a href='#' id='signOut' class='sign_out'>Sign Out!</a>")
-	// .click(signOut);
-// }
-
 function clearCookies(){
 	/* Currently unsupported */
 	
@@ -561,29 +534,49 @@ function clearCookies(){
 	// });
 }
 
-function signOut(){ 
-	// Logging out of providers
-	signOutURL = " https://pavlok-mvp.herokuapp.com/api/v1/sign_out?access_token=" + localStorage.accessToken;
-	console.log("url for Sign Out is " + signOutURL)
+function validateUserInfo(info){
+	var email 	= info.userName;
+	var pass 	= info.password;
 	
-	// Proper way of handling it in our server
-	$.post(signOutURL)
-		.done(function(data){
-			console.log("Signed out. Data is: " + JSON.stringify(data) + " !");
-		})
-		.fail(function(){
-			console.log("Failed to sign out")
-		});
-	// Destroy login data
+	var problems = [];
+	
+	var hasAt = email.indexOf("@") > 0;
+	var hasDot = email.indexOf(".") > 0;
+	
+	var user;
+	if (hasAt && hasDot) 	{ user = true }
+	else 					{ user = false }
+	
+	var hasPass = pass.length > 0;
+	
+	if (user && pass){ return true}
+	else { return false }
+}
+
+function toggleSignInOut(){
+	var token = lsGet('accessToken');
+	if (isValid(token)){
+		$("#signIn").addClass("noDisplay");
+		$("#signOut").removeClass("noDisplay");
+	}
+	else{
+		$("#signIn").removeClass("noDisplay");
+		$("#signOut").addClass("noDisplay");
+	}
+}
+
+function signOut(){ 
+	revokeAccessToken();
+	UpdateBadgeOnOff("Off");
+	msgInterfaces({action: "logged", token: 'not logged'})
+	
 	localStorage.setItem('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
-	
-	// Updates interface
-	showOptions(localStorage.accessToken);
-	UpdateBadgeOnOff();
-	
-	
+}
+
+function signIn(user){
+	getAccessToken(user);
 }
 
 function showOptions(accessToken){
@@ -599,12 +592,6 @@ function showOptions(accessToken){
 	}
 }
 
-// function hideOptions(){ 
-	// var options = document.getElementById("optionsDiv");
-	// options.style.visibility = "hidden";
-	// return
-// }
-
 function showName(name){ // mark for review
 	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
 		console.log("SHOW NAME has username as undefined. Name is " + name)
@@ -619,13 +606,6 @@ function showName(name){ // mark for review
 	}
 	return
 }
-
-// function hideName(){
-	// var userName = document.getElementById("userName");
-	// userName.style.visibility = "hidden";
-	// userName.innerHTML = "";
-	// return
-// }
 
 function updateNameAndEmail(name, email){
 	if ( $("#userName")  ) 	{ $("#userName").html(name); }
@@ -704,22 +684,37 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-
 function saveBlackList(){
-	lsSet('blackList', $("#blackList")[0].value);
+	var curBlackList = $("#blackList")[0].value;
+	
+	var ok = validateTags(curBlackList);
+	if (ok == true){
+		lsSet('blackList', curBlackList);
+	}
+	else {
+		var faulty = curBlackList.split(',');
+		var newList = fixTags(faulty);
+		lsSet('blackList', newList);
+	}
+	
 	confirmUpdate(notifyUpdate);
-	msgExt("updateBlackList", "popup");
-	msgExt("updateBlackList", "options");
+	msgInterfaces({action: "updateBlackList"});
 }
 
 function saveWhiteList(){
 	curWhiteList = $("#whiteList")[0].value;
-	validateTags(curWhiteList);
+	var ok = validateTags(curWhiteList);
+	if (ok == true){
+		lsSet('whiteList', curWhiteList);
+	}
+	else {
+		var faulty = curWhiteList.split(',');
+		var newList = fixTags(faulty);
+		lsSet('whiteList', newList);
+	}
 	
-	lsSet('whiteList', curWhiteList);
 	confirmUpdate(notifyUpdate);
-	msgExt("updateBlackList", "popup");
-	msgExt("updateBlackList", "options");
+	msgInterfaces({action: "updateBlackList"});
 }
 
 function validateTags(list){
@@ -744,9 +739,31 @@ function validateTags(list){
 	}
 	
 	if (problems.length > 0){
-		notifyBadTags(problems)
+		return false
 	}
+	return true
 	
+}
+
+function fixTags(problems){
+	var list = [];
+	for (p = 0; p < problems.length; p++){
+		var original = problems[p];
+		var work = original;
+		
+		var targets = ["https://", "http://", "www."];
+		
+		for (t = 0; t < targets.length; t++){
+			curTarget = targets[t];
+			if (work.indexOf(curTarget) == 0){
+				work = work.split(curTarget)[1];
+			};
+		}
+		
+		list.push(work);
+		console.log(original + "\n" + work);
+	}
+	return list;
 }
 
 function notifyBadTags(problems){
@@ -754,15 +771,17 @@ function notifyBadTags(problems){
 		return
 	}
 	
+	var corrections = fixTags(problems);
+	
 	notifyInterval = false;
 	setTimeout(function(){notifyInterval = true}, 10000);
 	
 	var fixMessage = 	'' +
-						'<p>You have a few whitelisted sites that will not fire properly.</p><p><b>Please, remove any http or www it might have</b>. For instance:</p>' + 
+						'<p>You had a few whitelisted sites that will not fire properly.</p><p><b>We adjusted them for you, but check if you still recognize them</b>. For instance:</p>' + 
 						'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
 						'<p>The addresses who need your attention are:</p><ul>';
 	for (p = 0; p < problems.length; p++){
-		fixMessage = fixMessage + '<li>' + problems[p] + '</li>';
+		fixMessage = fixMessage + '<li>' + corrections[p] + " which was " + problems[p] + '</li>';
 	}
 	fixMessage = fixMessage + "</ul>"
 	
@@ -784,6 +803,66 @@ function save_options() { // Mark for deletion
 	var select = document.getElementById("wantToSave");
 	localStorage.maxTabs = select;
 	
+}
+
+function getAccessToken(userData, callback){
+	
+	var userName = userData.userName; //"igor.galvao@gmail.com";
+	var password = userData.password; //"Macpp1udemdamamne";
+	var grant_type = "password";
+	console.log("Trying login for " + userName + "\npass: " + password);
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress	= "api/v1/";
+	var x = baseAddress + "api/v1/" + "sign_in" + 
+	   "?grant_type=" + grant_type +
+	   "&username="   + userName +
+	   "&password="   + password;
+	   
+	$.post(x)
+	.done(function(data){
+		console.log("done");
+		console.log(data);
+		var token = data.access_token;
+		lsSet('accessToken', token);
+		lsSet('logged', 'true');
+		
+		spread(token);
+	})
+	.fail(function(){
+		console.log("failed");
+		// Message interface for login failed;
+	});
+}
+
+function spread(token){
+	msgInterfaces({
+		action: "logged",
+		token: token
+	});
+	
+	countTabs(localStorage.tabCountAll, UpdateTabCount);
+}
+
+function revokeAccessToken(){
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress	= "api/v1/";
+	var signOut		= "sign_out"
+	var parameters	= "?token=" + localStorage.accessToken;
+	
+	var target = baseAddress + apiAddress + signOut + parameters;
+	
+	lsDel("accessToken");
+	
+	$.post(target)
+	.done(function(data){
+		console.log("done");
+		console.log(data);
+		lsDel("accessToken");
+		msgInterfaces({action: "logged", token: 'not logged'});
+	})
+	.fail(function(){
+		console.log("failed");
+	});
 }
 
 function oauth() { 
@@ -844,10 +923,9 @@ function oauth() {
 					console.log(data);
 					var accessToken = data.access_token;
 
+					msgInterfaces({action: 'logged', token: accessToken});
 					localStorage.setItem('logged', 'true');
 					localStorage.setItem('accessToken', accessToken);
-					var logged = document.getElementById("logged");
-					$( "#logged" ).append("<span>in</span>");
 					chrome.windows.getLastFocused(function(win) {
 						countTabs(localStorage.tabCountAll, UpdateTabCount);
 						showOptions(accessToken);
@@ -934,6 +1012,11 @@ function userInfo(accessToken) {
 }
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
+	var now = new Date().getTime();
+	var dif = now - lastVib;
+	lastVib = now;
+	if (dif < limitRep) { return }
+	
 	stimuliTypes = ['shock', 'vibration', 'beep'];
 	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
 	
@@ -1043,6 +1126,26 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function dayChange(){
+	var now = new Date();
+	var today = now.getDate();
+	var month = now.getMonth();
+	var curDate = today + "-" + month;
+	
+	var lastTime = lsGet('lastTimeCheck') || 0;
+	
+	var lastDate = new Date(lastTime);
+	var lastDay  = lastDate.getDate();
+	var lastMonth = lastDate.getMonth();
+	var prevDate = lastDay + "-" + lastMonth;
+	
+	lsSet('lastTimeCheck', now);
+	if (curDate != prevDate){
+		return true
+	}
+	else {return false}
+}
+
 function convertTimeFormat(time, toFormat){
 	var curFormat = 12;
 	var newTime;
@@ -1119,7 +1222,6 @@ function dateFromTime(time){
 	return date
 }
 
-
 function percentToRaw(percent, stimulus){
 	var rawRange;
 	if (stimulus == 'zap'){
@@ -1155,4 +1257,23 @@ function isActive(){
 	var token = isValid(localStorage.accessToken);
 	
 	return dayHour && token
+}
+
+function msgInterfaces(msg){
+	msg.target = "popup";
+	chrome.runtime.sendMessage(msg);
+	msg.target = "options";
+	chrome.runtime.sendMessage(msg);
+}
+
+function msgBackground(msg){
+	msg.target = "background";
+	chrome.runtime.sendMessage(msg);
+}
+
+function arrayObjectIndexOf(myArray, searchTerm, property) {
+    for (var i = 0, len = myArray.length; i < len; i++) {
+        if (myArray[i][property] === searchTerm) return i;
+    }
+    return -1;
 }
