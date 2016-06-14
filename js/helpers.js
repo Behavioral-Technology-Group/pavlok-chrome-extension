@@ -9,7 +9,7 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "test"; 	// local OR test OR production (MVP or STAGE added at the end)
+var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
 usage = usage + server;
 
 var lastVib = 0;
