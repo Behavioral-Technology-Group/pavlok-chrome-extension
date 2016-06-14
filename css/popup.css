@@ -1,0 +1,673 @@
+body{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+@font-face {
+	font-family: 'Lato', sans-serif;
+}
+
+a:visited{
+    color: initial;
+}
+
+a:link {
+    color: initial;
+}
+
+#actionSection a,
+#actionSection span,
+#actionSection p,
+#actionSection h1,
+#actionSection h2,
+#actionSection h3{
+	color: rgb(159, 159, 159);
+	font-family: 'Lato', sans-serif;
+	font-size: 16px;
+}
+
+#actionSection > tab > div.pv-active-tab-header > span{
+	color: white;
+	font-weight: bold;
+} 
+
+.flexContainer{
+	display: -webkit-flex;
+	display: flex;
+}
+
+.space-between { 
+  -webkit-justify-content: space-between; 
+  justify-content: space-between; 
+}
+
+.centered {
+	justify-content: center;
+}
+
+.centerer > .felxItem {
+	align-self: center;
+}
+
+#topSection{
+	width: 100%;
+}
+
+hr {
+	width: 120%;
+	margin-left: -30px;
+	border: 0px;
+	border-top: 1px solid rgb(200, 200, 200);
+}
+
+#topSection > div:last-child{
+	width: 20%;
+	margin-right: 5%;
+}
+
+.onlyUnlogged{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+}
+
+/* pavlok login table */
+.loginInput{
+	display: block;
+	
+	width: 336px;
+	height: 35px;
+	margin-top: 24px;
+	
+	border-top: 1px solid white;
+	border-bottom: 1px solid white;
+	font-size: 20px;
+	padding-left: 27px;
+	padding-right: 27px;
+	
+	background: #f8e71c;
+}
+
+#pavSubmitLogin{
+	border-radius: 5px;
+	background: white;
+	
+	width: 103%;
+	color: black;
+	border: 0px;
+	
+	margin-bottom: 0px;
+}
+
+.headerImageButton{
+	height: 30px;
+	align-self: center;
+	cursor: pointer;
+}
+
+.pv-tab-header{
+	display: flex;
+	justify-content: flex-start;
+	cursor: pointer;
+	height: 40px;
+}
+
+.pv-tab-header:hover{
+	font-weight: bold;
+}
+
+.pv-tab-header-icon{
+	height: 30px;
+	width: 30px;
+	margin: 5px;
+	margin-right: 15px;
+}
+
+.pv-tab-header-span{
+	/* transform: translate(0px,-1px); */
+	align-self: center;
+	font-size: 16px;
+
+}
+
+.pv-tab-body{
+	display: none;
+	width: 100%;
+}
+
+.pv-active-tab-header{
+	background: #222222;
+}
+.pv-active-tab-header span{
+	color: white;
+	font-weight: bold;
+}
+
+.pv-active-tab-body{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left:5%;
+}
+
+body, p, tab, span{
+	color:white;
+}
+
+.stimuliControlContainer{
+	width: 95%;
+	/* background:blue; */
+}
+
+.stimuliControlContainer > *{
+	display: inline-block;
+}
+
+.stimuliControlIcon{
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+
+.stimuliControlSlider{
+	width: 60%;
+	margin-left: 6%;
+	transform: translate(0px,-14px);
+}
+
+.stimuliIntensityDisplay{
+	margin-left: 10px;
+	transform: translate(0px,-12px);
+}
+
+
+.saveOrResetContainer > a{
+	text-decoration: underline;
+	color: white;
+	font-size: 12px;
+}
+
+#footerSection{
+	display: flex;
+	justify-content: center;
+	height: 70px;
+	width: 120%;
+	margin-left:-30px;
+	margin-bottom:-30px;
+	margin-top: 8px;
+	background: #f8e71c;
+}
+
+#footerSection > span {
+	align-self: center;
+	color: black;
+	font-size: 18px;
+	font-family: 'Lato', sans-serif;
+}
+
+#pavlokFootIcon{
+	text-decoration: none;
+}
+
+
+
+#toDoTable tfoot > tr > {
+	background: black;
+	border: 0px;
+}
+
+#toDoTable tfoot > tr > td {
+	background: black;
+	border: 0px;
+	border-right: 1px solid gray;
+}
+
+#toDoTable tfoot > tr > td:last-child {
+	border: 0px;
+}
+
+body {
+	font-family: Helvetica,Arial,sans-serif;
+	font-size:small;
+	color:#000;
+	background: black;
+	width: 24rem;
+	padding: 1rem;
+}
+
+#save{
+	background-image: url('../images/save.png');
+	margin-top: 1em;
+}
+
+p {
+	color: white;
+	font-family: Helvetica;
+}
+
+h2 {
+	color: white;
+	font-family: Helvetica;
+	margin-bottom: 0
+}
+
+h3 {
+	color: white;
+	font-family: Helvetica;
+	margin-bottom: 0
+}
+
+#label-text {
+	color: white;
+}
+
+
+
+#optionsLink{
+	color: yellow;
+	/* background-color: #47639E; */
+	background-color: black;
+	border: 1px solid white;
+	padding: 2px 11px 2px 11px;
+	margin-bottom: 5px;
+	border-radius: 7px;
+	display: block;
+	text-align: center;
+}
+
+ul.nav{
+	list-style-type: none;
+	left:0;
+	padding:0;
+}
+
+div.auth{
+	text-decoration: none;
+}
+
+#optionsDiv{
+	visibility: hidden;
+}
+
+
+.helpIcon {
+	height:20px;
+	width: 20px;
+}
+
+.helpBox {
+	display: none;
+		padding-top: 20px;
+		padding-bottom: 20px;
+		padding-left: 80px;
+
+}
+
+.yellow{
+	color: yellow;
+}
+
+.onlyLogged{
+	visibility: hidden;
+}
+
+.onlyUnloged{
+	visibility: visible;
+}
+
+.tagcontainer {
+	background: red;
+	width: 340px;
+	/* width: 100%; */
+	height: 100px;
+	margin-bottom: 30px;
+	margin-top: 5px;
+}
+
+#blackList_addTag{
+	width: 200px;
+}
+
+
+#whiteList_addTag{
+	width: 95%;
+}
+
+
+#blackList_addTag > input, #whiteList_addTag > input{
+	width: 100%;
+	max-width: 100%;
+	color: rgb(102, 102, 102);
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+}
+
+
+
+
+/* input#blackList_tag, input#whiteList_tag{
+	color: rgb(102, 102, 102);
+	font-size: 14px;
+	font-family: 'Lato', sans-serif;
+} */
+
+.noDisplay {
+	display: none;
+}
+
+.logo{
+	width: 190px;
+	/* height: 50px; */
+	padding: 5px;
+	
+}
+
+.testStimulusButton{
+	width: 25px;
+	height: 25px;
+}
+
+#navHeader{
+	width: 100%;
+	/* border: 1px solid red; */
+	border-collapse: collapse;
+}
+
+#navHeader td{
+	/* border: 1px solid blue; */
+}
+
+.centered {
+	text-align: center;
+}
+
+/* ***************************************************************** */
+/* ***************                                   *************** */
+/* ***************           To-Do Section           *************** */
+/* ***************                                   *************** */
+/* ***************************************************************** */
+
+#toDoAction {
+	width: 100%;
+	background-color: black;
+	/* border: 1px solid white; */
+	color: white;
+	max-height: 200px;
+	overflow: auto;
+}
+
+#toDoAction table {
+	width: 98%;
+	color: white;
+}
+
+#toDoAction table > tfoot > tr{
+	font-weight: bold;
+	background-color: rgb(100, 100, 100);
+}
+
+
+/* Items themselves */
+.toDoItemTR{
+	width: 100%;
+	background: rgb(10, 10, 10);
+	vertical-align: center;
+	height: 40px;
+	/* border-bottom: 1px solid white; */
+}
+
+.toDoItemTR:hover{
+	background: #f8e71c;
+	
+}
+
+.toDoItemTR > td {
+	width: 100%;
+	vertical-align: center;
+	padding-left: 5px;
+}
+
+.toDoItemTR > td > div {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	
+	align-content: center;
+	justify-content: space-between;
+}
+
+.toDoItemTR > td > div > div {
+
+}
+
+.toDoOKerDIV {
+	width: 5%;
+}
+
+.toDoTaskDIV {
+	width: 60%;
+	display: flex;
+	align-content: center;
+}
+
+.toDoRemoverDIV {
+	text-align: right;
+	width: 25%;
+}
+
+.doneTaskRow .toDoTaskDIV {
+	text-decoration: line-through;
+	color: gray;
+}
+
+.todayTaskRow .todayToDoItem  {
+	
+}
+
+/* Footer buttons and fields */
+#toDoNItemsLeft {
+	padding-left: 15px;
+	width: 28%;
+	text-align: left;
+}
+
+#clearCompletedToDo{
+	padding-right: 15px;
+	width: 28%;
+	text-align: right;
+}
+
+#clearCompletedToDo a{
+	text-decoration: none;
+	color: white;
+}
+
+.toDoScopes{
+	width: 14.5%;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	text-align: center;
+}
+
+.toDoScopes a{
+	text-decoration: none;
+	color: white;
+	text-align: center;
+}
+
+/* Header and to-do adding buttons */
+#completeAllButton{
+	width: 5%;
+}
+
+#toDoAdd {
+	width: 100%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 3px;
+	margin-left: 3px;
+	border: none;
+}
+
+#toDoAction .imgIcon{
+	width: 28px;
+	height: 28px;
+}
+
+/* debug */
+#toDoAction table, #toDoAction tr, #toDoAction td {
+	/* border: 1px solid blue; */
+	border-collapse: collapse;
+}
+
+#pomoFocusRemainingTime{
+	font-size: 200%;
+}
+
+.noDecoration{
+	text-decoration: none;
+}
+
+.pomoFocusButtons {
+	height: 35px;
+	width: 35px;
+}
+
+.pomoFocusButtons > span{
+	font-size: 35px;
+	text-align: center;
+	height: 35px;
+	width: 35px;
+}
+
+.grayscale {
+	-webkit-filter: grayscale(100%);
+}
+
+.jqimessage p{
+	color: rgb(68, 68, 68);
+}
+
+#overLay {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.nowToDoItem{
+	/* display: none; */
+}
+
+/* ************************************************************ */
+/* ************************************************************ */
+
+/* 							Dailies								*/
+
+/* ************************************************************ */
+/* ************************************************************ */
+
+.dailyContainer{
+	width: 100%;
+	background: rgb(10, 10, 10);
+	vertical-align: center;
+	border-collapse: collapse;
+	/* border-bottom: 1px solid white; */
+	color: white;
+}
+
+.dailyItemTR{
+	width: 100%;
+	border: none;
+	/* border-bottom: 1px solid white; */
+}
+
+.dailyItemTR > td{
+	border: none;
+}
+.dailyItemTR > * {
+	vertical-align: middle;
+}
+
+.dailyItemTR:hover{
+	background: #f8e71c;
+}
+
+.dailyTaskName {
+	padding-left: 2%;
+	width: 48%;
+	text-align: left;
+	/* border: 1px solid blue; */
+}
+
+
+.pomoFocusHolders {
+	padding-right: 1%;
+	/* border: 1px solid white; */
+	width: 47%;
+	text-align: right;
+}
+
+.dailyPomoNow {
+	vertical-align: middle;
+	width: 28px;
+	height: 28px;
+}
+
+.doneDaily{
+	width: 28px;
+	height: 28px;
+	padding: 3px;
+	vertical-align: middle;
+}
+
+.dailyItemTR > td > div {
+	display: inline-block;
+	height: 26px;
+}
+
+#signOut{
+	transform: translate(0px, -2px);
+}
+
+#actionSection > tab > div > h2 > sup > span.helpSpan{
+	font-size: 10px;
+	font-weight: bold;
+	color: rgb(220, 220, 220);
+	
+	text-align: center;
+	vertical-align: super;
+
+	border: 1px solid black;
+	border-color: rgb(159, 159, 159);
+	border-collapse: separate;
+	border-radius: 25px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+.helpSpan:hover{
+	cursor: help;
+}
+
+.red{
+	color:red;
+}
+
+.clickable:hover{
+	cursor: pointer;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgb(150, 150, 150); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255); 
+}

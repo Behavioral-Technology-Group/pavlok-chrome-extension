@@ -1,44 +1,59 @@
 {
-  "background": {"scripts": ["background.js"]},
+"update_url": "https://clients2.google.com/service/update2/crx",
 
-  "options_page": "options.html",
-
-  "browser_action": {
-
-    "default_icon": "images/browser_action_16x16.png",
-
-    "default_title": "Pavlok Tab Productivity",
-
-    "default_popup": "options.html"
-
-  },
-
-  "icons": {
-
-    "16": "images/browser_action_16x16.png",
-
-    "48": "images/browser_action_48x48.png",
-
-    "128": "images/logo_128x128.png"
-
-  },
-
+  "manifest_version": 2,
+  "version": "0.8.2",
+  "name": "in House PAVLOK Productivity",
+  "short_name": "PAVLOK Prod",
+ 
   "description": "Stay Focused. Eliminate Distraction.",
+  "icons": {
+    "16": "images/browser_action_16x16.png",
+    "48": "images/browser_action_48x48.png",
+    "128": "images/logo_128x128.png"
+  },
+  
+  "browser_action": {
+    "default_icon": "images/browser_action_16x16.png",
+    "default_title": "Pavlok Tab Productivity",
+    "default_popup": "popup.html"
+  },
 
-  "name": "Pavlok Chrome Extension",
-
+  "content_scripts": [
+	{
+		"matches": ["<all_urls>"],
+		"exclude_globs": ["*.pdf"],
+		"css": ["css/injected.css"],
+		"js": [
+			"js/external/jquery.min.js", 
+			"js/external/jquery.countdown.min.js", 
+			"js/external/jquery-ui.min.js", 
+			"js/injected.js"
+		],
+		"run_at": "document_end"
+	}
+  ],
+  
+  "background": {"page": "background.html"},
+  "options_page": "options.html",
+  
+  "web_accessible_resources": [
+    "images/*.png"
+  ],
+  
   "permissions": [
-    "tabs",
-    "idle",
-    "activeTab",
-    "https://pavlok.herokuapp.com/",
-    "http://localhost:3000/",
-    "http://*.facebook.com/*",
-    "cookies",
-    "identity"
-    ],
-
-  "version": "0.3.8",
-
-  "manifest_version": 2
+	"background",
+	"cookies",
+    "https://pavlok.herokuapp.com/*",
+    "https://pavlok-stage.herokuapp.com/*",
+    "https://pavlok-mvp.herokuapp.com/*",
+    
+	"identity",
+	"notifications",
+	"tabs",
+	
+	"https://github.com/login/oauth/*",
+	"https://www.rescuetime.com/*",
+	"https://todoist.com/api"
+    ]
 }
