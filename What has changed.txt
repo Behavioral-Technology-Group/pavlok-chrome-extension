@@ -4,6 +4,8 @@ New additions
 - ToDo list opens by default on popup start
 - Messing with other tabs won't close Todo tab
 - Manage sites renamed to Blacklist
+- Tab Numbers renamed to Set Max Tabs
+- Stimuli controls renamed to Remote Control
 
 (0.8.1)
 - Fixed Rescue Time frequency being reseted every time options were opened
