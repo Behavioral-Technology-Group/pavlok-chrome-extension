@@ -12,6 +12,8 @@ at the end of the pomodoro ==> Congrats! Take a 5 minute break!
 
 */
 // Globals
+var heartBeatLoop;
+var timeOnBlackList;
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
 var curBlackListTimer = false;
 var elapsedTime = 0;
@@ -29,6 +31,18 @@ var testInterval;
 
 var defAT = '';
 var defInt = '';
+
+
+var blackGlobal = lsGet("blackGlobal", "parse"); 
+if (!blackGlobal) { 
+	blackGlobal = {
+		status: true,
+		type: "daily",
+		limit: 0
+	};
+	lsSet("blackGlobal", blackGlobal, "object");
+	
+}
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 /*--------                                                           --------*/
@@ -88,7 +102,6 @@ function createTimeout(){
 		// Clearing up
 		RTTimeOut = false;
 		localStorage.RTTimeOut = false;
-		// alert("Timeout Ended");
 	}, parseInt(localStorage.RTFrequency) * 60 * 1000); // Gotta put this on 3 minutes
 	localStorage.RTTimeOut = x;
 	return x
@@ -137,70 +150,19 @@ function fireRescueTime(APIKey){
 }
 
 // Black List
-function CheckBlackList(curTabURL, curTabDomain) {
-	var pomoFocus = pavPomo.helpers.lastPomo();
-	var task = testTodo.backend.read(pomoFocus.taskId);
+
+
+function blackListTime(curTabURL, siteStatus){
+	// Check ALL sites
+		// Check dailly
+		// Check hourly
+		
+	// Check this site
+		// Check dailly
+		// Check hourly
 	
-	if (!pomoFocus){ var pomoFocus = {active: false }; };
-	
-	// Checks if it will use regular or daily black and whitelists
-	if (pomoFocus.active && pomoFocus.lockZap){
-		if (curPAVDomain != pomoFocus.lockedTo ) { return true }
-		else { return false }
-	}
-	else if (pomoFocus.active && task.daily && task.specialList){
-			var _whiteList = task.whiteList.split(",");
-			var _blackList = task.blackList.split(",");
-	}
-	else {
-		var _whiteList = localStorage.whiteList.split(",");
-		var _blackList = localStorage.blackList.split(",");
-	}
-	
-	
-	// remove Http, Https and www
-	curTabSubURL = curTabURL.split(curTabDomain, 2);
-	curTabSubURL = curTabSubURL[curTabSubURL.length - 1];
-	curTabSubURL = curTabDomain + curTabSubURL;
-	
-	// Presumption of innocence
-	var blacked = false;
-	var whited = false;
-	
-	// Validate lists
-	if (_blackList[0].length < 2){ _blackList = false }
-	if (_whiteList[0].length < 2){ _whiteList = false }
-	
-	// Checks domain against BlackList and URL agains WhiteList
-	if (_blackList != false ){ 
-		for (b = 0; b < _blackList.length; b++){
-			if (curTabSubURL.indexOf(_blackList[b]) == 0) { 
-				blacked = true; 
-				break
-			}
-		}
-	}
-	
-	if (_whiteList != false) {
-		for (w = 0; w < _blackList.length; w++){
-			if (curTabSubURL.indexOf(_whiteList[w]) == 0) { 
-				whited = true; 
-				break
-			}
-		}		
-	};
-	
-	if (blacked == true && whited == false) { 
-		console.log(curTabSubURL + " is blacklisted and NOT whitelisted");
-		return true
-	}
-	else { 
-		if (blacked == true && whited == true){
-			console.log(curTabSubURL + " is blacklisted, BUT whitelisted too");
-		}
-		return false 
-	}
 }
+
 
 // Notifications
 function notifyTabCount(tabs, situation){
@@ -500,7 +462,7 @@ function CreateTabListeners(token) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
@@ -511,14 +473,14 @@ function CreateTabListeners(token) {
 				countTabs(localStorage.tabCountAll, evaluateTabCount);
 			}
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
 	// When tab is updated
 	chrome.tabs.onUpdated.addListener(function(tab){
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 	
@@ -527,7 +489,7 @@ function CreateTabListeners(token) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
@@ -536,7 +498,7 @@ function CreateTabListeners(token) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, evaluateTabCount);
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
@@ -544,7 +506,7 @@ function CreateTabListeners(token) {
 	chrome.windows.getLastFocused(function(win) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
@@ -552,7 +514,7 @@ function CreateTabListeners(token) {
 	chrome.windows.onCreated.addListener(function(win) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 
@@ -560,7 +522,7 @@ function CreateTabListeners(token) {
 	chrome.windows.onFocusChanged.addListener(function(win) {
 		if (isActive() && localStorage.tabNumbersActive == "true" ) {
 			// countTabs(localStorage.tabCountAll, UpdateTabCount);
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
 	
@@ -574,82 +536,9 @@ function CreateTabListeners(token) {
 				action: "hello",
 				pomodoro: pomoF
 			});
-			getTabInfo(evaluateTabURL);
+			getTabInfo(blackList.resolver);
 		}
 	});
-}
-
-function getTabInfo(callback){
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-		if (tabs.length == 0 ) { // no active tabs
-            console.log("background debugger activated");
-			return;
-        }
-		
-		curPAVTab = tabs[0];
-		curPAVUrl = tabs[0].url;
-		curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
-		
-		if(curPAVDomain.length == 0){
-			console.log("unable to resolve domain for " + curPAVUrl);
-			curPAVDomain = curPAVUrl;
-		}
-		// console.log("Tab " + curPAVTab + " has url " + curPAVUrl + " on domain " + curPAVDomain);
-		
-		document.title = curPAVTab.id + " " + curPAVTab.url; // Debug. Shows on background.html
-		if (typeof callback === "function"){
-			callback(curPAVTab, curPAVUrl, curPAVDomain);
-		}
-	});
-}
-
-function evaluateTabURL(curPAVTab, curPAVUrl, curPAVDomain, callback){
-	_result = CheckBlackList(curPAVUrl, curPAVDomain);
-	
-	if(_result == true){		//blacklisted site
-		// Variables
-		var pomo = pavPomo.helpers.lastPomo();
-		
-		var instaZap = (pomo.active && pomo.instaZap);
-		var firstZap = localStorage.firstZap == "true";
-		var timeWindowZap = parseInt(localStorage.timeWindow);
-		// var timeWindowZap = 3;
-		if (instaZap){
-			timeWindowZap = 8;
-			if (firstZap == false){ 
-			stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
-			notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-
-			// Substitute timeWindow
-			lsSet('firstZap', true);
-			}
-		}
-	}
-	
-	blackListTimer(_result, timeWindowZap);
-}
-
-function blackListTimer(blackListed, timespan){
-	if (blackListed == false){
-		if (curBlackListTimer) {
-			clearTimeout(curBlackListTimer);
-			curBlackListTimer = false;
-			lsSet('firstZap', false);
-			clearNotifications();
-		}
-	}
-	else if (blackListed == true){
-		notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + "  seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-		if (curBlackListTimer == false){
-			// notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + " seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
-			curBlackListTimer = setTimeout(function(){
-				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
-				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				curBlackListTimer = false;
-				getTabInfo(evaluateTabURL);
-			}, timespan * 1000);
-		}
-	}
 }
 
 function checkForMigration(){
@@ -668,6 +557,8 @@ function checkForMigration(){
 
 function initialize() {
 	checkForMigration();
+	blackList.checkForMigration();
+	blackList.setTime();
 	coach.listenCoachingClicks();
 	pavPomo.backend.backListener();
 	persistNotifications();
@@ -679,6 +570,7 @@ function initialize() {
 	var accessToken = localStorage.getItem("accessToken");
 	
 	CreateTabListeners(accessToken);
+	
 	testInterval = setInterval(
 		function(){
 			if (checkActiveDayHour() == true) {
@@ -693,57 +585,95 @@ function initialize() {
 			
 			if (dayChange()){
 				testTodo.helpers.resetDailyTasks;
+				blackList.resetTime();
 			}
 		}
 	, 1000);
 	
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
-			if (request.target == "background"){
-				var action = request.action;
+			r = request;
+			if (r.target == "background"){
+				var action = r.action;
 				// Oauth
 				if (action == "oauth"){
-					signIn(request.user, spread)
+					signIn(r.user, spread)
 					// oauth();
 				}
-				
 				else if (action == "signOut"){
 					signOut();
 				}
 				
 				else if(action == "accessToken"){
 					// Receive access token from a content script
-					var token = request.token;
+					var token = r.token;
 					saveAccessToken(token);
 					msgInterfaces({action: "logged", token: token});
 					// sendResponse({message: "Thanks and bye."});
 				}
 				
+				else if (action == "blackList"){
+					var nBL = blackList.get("blackList");
+					var nWL = blackList.get("whiteList");
+					
+					if (r.list === "black"){
+						if (r.do === "edit" || r.do === "new"){
+							if ( r.do === "edit" ) { 
+								delete nBL[r.oldName]; 
+								blackList.changeTime({site: r.oldName, newSite: r.name, action: "edit"});
+							}
+							else if (r.do == "new"){
+								blackList.changeTime({site: r.oldName, newSite: r.name, action: "add"});
+							}
+							
+							nBL[r.name] = {};
+							nBL[r.name]["limit"] = parseInt(r.limit);
+							nBL[r.name]["type"] = r.type;
+						}
+						else if (r.do === "delete"){
+							delete nBL[r.name];
+							blackList.changeTime({site: r.name, action: "delete"});
+						}
+						
+						blackList.fixAddress(nBL, "black");
+						
+						lsSet('blackList', nBL, 'object');
+					}
+					
+					else if (r.list === "global"){
+						blackGlobal["limit"] = r.limit;
+						blackGlobal["type"]  = r.type;
+						blackGlobal["status"] = r.status;
+						lsSet("blackGlobal", blackGlobal, "object");
+					}
+					msgInterfaces({ action: 'updateBlackList' })
+					
+				}
 				else if (action == "task change"){
-					var detail = request.detail;
+					var detail = r.detail;
 					if (detail == "new"){
-						var task = testTodo.backend.create(request.task);
+						var task = testTodo.backend.create(r.task);
 						msgInterfaces({action: "updateDaily"});
 						msgInterfaces({action: "updateActions"});
 					}
 					
 					else if (detail == "delete"){
-						testTodo.backend.delete(request.taskId);
+						testTodo.backend.delete(r.taskId);
 						msgInterfaces({action: "updateDaily"});
 						msgInterfaces({action: "updateActions"});
 					}
 					
 					else if (detail == "complete"){
-						var update = {done: request.check};
-						var task = testTodo.backend.update(request.taskId, update);
+						var update = {done: r.check};
+						var task = testTodo.backend.update(r.taskId, update);
 						msgInterfaces({action: "updateDaily"});
 						msgInterfaces({action: "updateActions"});
 					}
 				}
 				
 				else if (action == "coachChange"){
-					if (request.change == "status"){
-						coach.status = request.status
+					if (r.change == "status"){
+						coach.status = r.status
 						if (coach.status == true){
 							coach.notifyTasks(coach.getTasks(2));
 							coach.isItTime();
@@ -756,7 +686,7 @@ function initialize() {
 						}
 						console.log("Coach running is " + coach.status);
 					}
-					else if (request.change == "sync"){
+					else if (r.change == "sync"){
 						sendResponse({
 							status: coach.status
 						});
@@ -764,11 +694,11 @@ function initialize() {
 				}
 				
 				else if (action == "todoistChange"){
-					if (request.change == "oauth"){
+					if (r.change == "oauth"){
 						todoist.backend.getToken();
 						console.log("Oauth request received");
 					}
-					else if (request.change == "signOut"){
+					else if (r.change == "signOut"){
 						todoist.removeToken();
 						todoist.helpers.addToDoListeners(false);
 						console.log("Signout request made");
@@ -777,7 +707,7 @@ function initialize() {
 							change: "unlogged"
 						});
 					}
-					else if (request.change == "import"){
+					else if (r.change == "import"){
 						// todoist.backend.getTasks();
 						todoist.helpers.sync();
 					}
@@ -787,4 +717,396 @@ function initialize() {
 	);
 }
 
+
+
+
+
+
+// Sandbox
+function globalTime(timeSpent){
+	// Bogus variables
+	var dailyLimit = 5;
+	// var timeSpent = 5;
+	
+	// Logic
+	return timeSpent > dailyLimit
+	
+}
+
+var blackList = {
+	setTime: function(){
+		timeOnBlackList = lsGet("timeOnBlackList", "parse");
+		if (!timeOnBlackList){
+			blackList.resetTime();
+			lsSet("timeOnBlackList", timeOnBlackList, "object");
+		}
+	},
+	resetTime: function(){
+		timeOnBlackList = {};
+		var BL = blackList.get("blackList");
+		var keys = Object.keys(BL);
+
+		for (t = 0; t < 24; t++){
+		  timeOnBlackList[t] = {};
+		  for (s = 0; s < keys.length; s++){
+			x = keys[s];
+			timeOnBlackList[t][x] = 0;
+		  }
+		}
+	},
+	changeTime: function(par){
+		var action = par.action || "add";
+		var site = par.site;
+		var newSite = par.newSite;
+		var value;
+		
+		for (t = 0; t < 24; t++){
+			if (action == "delete"){
+				delete timeOnBlackList[t][site];
+			}
+			else if (action == "add"){
+				timeOnBlackList[t][newSite] = 0;
+			}
+			else if (action == "edit") {
+				value = parseInt(timeOnBlackList[t][site]);
+				delete timeOnBlackList[t][site];
+				timeOnBlackList[t][newSite] = value;
+			}
+		}
+	},
+	
+	set: function(data){
+		if (data.list == "white"){
+			localStorage.whiteList = JSON.stringify(data.list);
+		}
+		else if (data.list == "black") {
+			localStorage.blackList = JSON.stringify(data.list);
+		}
+		else if (data.list == "global"){
+			localStorage.blackGlobal = JSON.strigify(data.global);
+		}
+	},
+	get: function(list){
+		var cList;
+		if (list == "whiteList"){ cList = lsGet("whiteList").split(","); }
+		else if (list == "blackList") { cList = lsGet("blackList", "parse"); }
+		else if (list == "global")	{ cList = lsGet("blackGlobal", "parse"); }
+		return cList;
+	},
+	
+	badSite: function(curTabURL, curTabDomain) {
+		var _blackList;
+		var _whiteList;
+		var curTabSubURL;
+		
+		var pomoFocus = pavPomo.helpers.lastPomo();
+		var task = testTodo.backend.read(pomoFocus.taskId);
+		
+		if (!pomoFocus){ var pomoFocus = {active: false }; };
+		
+		// Checks if it will use regular or daily black and whitelists
+		if (pomoFocus.active && pomoFocus.lockZap && curPAVDomain != pomoFocus.lockedTo) { return true; }
+		
+		else if (pomoFocus.active && task.daily && task.specialList){
+				var _whiteList = task.whiteList.split(",");
+				var _blackList = task.blackList.split(",");
+		}
+		else {
+			var _whiteList = blackList.get("whiteList");
+			var _blackList = Object.keys(blackList.get("blackList"));
+		}
+		
+		
+		// remove Http, Https and www
+		curTabSubURL = curTabURL.split(curTabDomain, 2);
+		curTabSubURL = curTabSubURL[curTabSubURL.length - 1];
+		curTabSubURL = curTabDomain + curTabSubURL;
+		
+		// Presumption of innocence
+		var blacked = false;
+		var whited = false;
+		
+		// Validate lists
+		if ( isEmpty(_blackList) || isEmpty(_blackList[0]) ){ _blackList = false }
+		if ( isEmpty(_whiteList) || isEmpty(_whiteList[0]) ){ _whiteList = false }
+		
+		// Checks domain against BlackList and URL agains WhiteList
+		if (_blackList != false ){ 
+			for (b = 0; b < _blackList.length; b++){
+				if (curTabSubURL.indexOf(_blackList[b]) == 0) { 
+					blacked = true; 
+					break
+				}
+			}
+		}
+		
+		if (_whiteList != false) {
+			for (w = 0; w < _whiteList.length; w++){
+				if (curTabSubURL.indexOf(_whiteList[w]) == 0) { 
+					whited = true; 
+					break
+				}
+			}		
+		};
+		
+		if (blacked == true && whited == false) { 
+			console.log(curTabSubURL + " is blacklisted and NOT whitelisted");
+			return _blackList[b];
+		}
+		else { 
+			if (blacked == true && whited == true){
+				console.log(curTabSubURL + " is blacklisted, BUT whitelisted too");
+			}
+			return false 
+		}
+	},
+	overQuota: function(site, mode){
+		var nBL = blackList.get("blackList");
+		var spent;
+		var hour = new Date().getHours();
+		
+		var quota = blackGlobal.status ? blackGlobal.limit : parseInt(nBL[site]["limit"]);;
+		var type = blackGlobal.status ? blackGlobal.type : nBL[site]["type"];
+		
+		if 		(type == "hourly" && blackGlobal.status == true ) {
+			spent = (blackList.trackTime({hour: hour}) / 60).toFixed(2);	
+		}
+		else if (type == "hourly" && blackGlobal.status == false) {
+			spent = (blackList.trackTime({domain: site, hour: hour}) / 60).toFixed(2);	
+		}
+		
+		else if (type == "daily" && blackGlobal.status == true ) {
+			spent = (blackList.trackTime() / 60).toFixed(2);	
+		}
+		else if (type == "daily" && blackGlobal.status == false) {
+			spent = (blackList.trackTime({domain: site}) / 60).toFixed(2);
+		}
+		
+		if (spent > quota) 	{ 
+			
+			return true; 
+		}
+		else 				{ return false; }
+	},
+	
+	resolver: function(curPAVTab, curPAVUrl, curPAVDomain, callback){
+		var badSite = blackList.badSite(curPAVUrl, curPAVDomain);
+		if (badSite){
+			blackList.heartBeat(badSite);
+			var overQuota = blackList.overQuota(badSite);
+		}
+		else {
+			clearTimeout(heartBeatLoop);
+		}
+		
+		_result = (badSite && overQuota);
+		
+		if(_result == true){		//blacklisted site, quota exceeded
+			// Variables
+			var pomo = pavPomo.helpers.lastPomo();
+			
+			var instaZap = (pomo.active && pomo.instaZap);
+			var firstZap = localStorage.firstZap == "true";
+			var timeWindowZap = parseInt(localStorage.timeWindow);
+			// var timeWindowZap = 3;
+			if (instaZap){
+				timeWindowZap = 8;
+				if (firstZap == false){ 
+				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
+				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
+
+				// Substitute timeWindow
+				lsSet('firstZap', true);
+				}
+			}
+		}
+		
+		blackList.countDown(_result, timeWindowZap);
+	},
+	countDown: function(blackListed, timespan){
+		if (blackListed == false){
+			if (curBlackListTimer) {
+				clearTimeout(curBlackListTimer);
+				curBlackListTimer = false;
+				lsSet('firstZap', false);
+				clearNotifications();
+			}
+		}
+		else if (blackListed == true){
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + "  seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
+			if (curBlackListTimer == false){
+				curBlackListTimer = setTimeout(function(){
+					stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
+					notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
+					curBlackListTimer = false;
+					getTabInfo(blackList.resolver);
+				}, timespan * 1000);
+			}
+		}
+	},
+	
+	trackTime: function(par){
+		if (!par) { par = {}; }
+		var time = par.time || 0;
+		var hour = par.hour || "all";
+		if (par.hour === 0) { hour = 0; }
+		var domain = par.domain;
+		
+		var total = 0;
+		var sites;
+		var site;
+		var sTime;
+		var cHour;
+		var init = 0;
+		var end = 24;
+		
+		if (hour != "all") { 
+			init = hour; 
+			end = hour + 1;
+		}
+		
+		for (h = init; h < end; h++){
+			cHour = timeOnBlackList[h];
+			sites = Object.keys(cHour);
+			
+			if (domain) {
+				(_.contains(sites, domain)) ? sites = [domain] : sites = [];
+			}
+			
+			if (sites.length === 0) { continue; }
+			
+			for (s = 0; s < sites.length; s++){
+				site = sites[s];
+				sTime = timeOnBlackList[h][site];
+				if (typeof sTime === "undefined") { sTime = 0; }
+				total = total + sTime;
+			}
+		}
+		console.log("Total for " + domain + " from " + init + " to " + end + " is: " + total);
+		
+		return total
+	},
+	
+	fixAddress: function(list, type){
+		var add;
+		var keys;
+		var obj;
+		
+		var black = (type === "black");
+		
+		(black) ? keys = Object.keys(list) : keys = _.flatten([list.split(",")]);
+				
+		for (i = 0; i < keys.length; i++){
+			var original = keys[i];
+			var work = original;
+			
+			var targets = ["https://", "http://", "www."];
+			
+			for (t = 0; t < targets.length; t++){
+				curTarget = targets[t];
+				if (work.indexOf(curTarget) == 0){
+					work = work.split(curTarget)[1];
+				};
+			}		
+		}
+		
+		if (black){
+			obj = list[original];
+			list[work] = {};
+			list[work] = obj;
+			// delete list[original];
+		}
+		
+		else{
+			list.push(work);
+		}
+		return list;
+	},
+	
+	heartBeat: function(domain){
+		var frequency = 2; // Repeats every n seconds;
+		var hour = new Date().getHours();
+		var params = {
+			frequency: frequency,
+			domain: domain,
+			hour: hour,
+			heartBeat: heartBeatLoop
+		};
+		
+		
+		
+		// Add first second
+		timeOnBlackList[hour][domain]++;
+		
+		timeOnBlackList[domain]
+		
+		// Clears existing timeouts
+		if (heartBeatLoop > 0) { clearTimeout(heartBeatLoop); }
+		
+		// Starts a new timeout;
+		heartBeatLoop = setTimeout(function(params){
+			timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] + params.frequency - 1;
+			lsSet("timeOnBlackList", timeOnBlackList, "object");
+			
+			console.log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
+			
+			if (blackList.overQuota(domain)){
+				getTabInfo(blackList.resolver);
+			}
+			
+			blackList.heartBeat(params.domain);
+		}, frequency * 1000, params);
+		
+		
+		//return heartBeatLoop;
+	},
+	
+	checkForMigration: function(){
+		var cBL;
+		var nBL;
+		
+		try {cBL = JSON.parse(localStorage.blackList);}
+		catch(err){
+			cBL = lsGet("blackList");
+			var keys = cBL.split(",");
+			
+			nBL = {};
+			for (var k = 0; k < keys.length; k++){
+				nBL[keys[k]] = {}
+				nBL[keys[k]]["limit"] = 0;
+				nBL[keys[k]]["type"] = "daily";
+			}
+			
+			lsSet("blackList", nBL, "object");
+		}
+	},
+	
+};
+
+
 initialize();
+
+	function getTabInfo(callback){
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			if (tabs.length == 0 ) { // no active tabs
+				console.log("background debugger activated");
+				return;
+			}
+			
+			curPAVTab = tabs[0];
+			curPAVUrl = tabs[0].url;
+			curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+			
+			if(curPAVDomain.length == 0){
+				console.log("unable to resolve domain for " + curPAVUrl);
+				curPAVDomain = curPAVUrl;
+			}
+			// console.log("Tab " + curPAVTab + " has url " + curPAVUrl + " on domain " + curPAVDomain);
+			
+			document.title = curPAVTab.id + " " + curPAVTab.url; // Debug. Shows on background.html
+			if (typeof callback === "function"){
+				callback(curPAVTab, curPAVUrl, curPAVDomain);
+			}
+		});
+	}
+

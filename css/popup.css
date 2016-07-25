@@ -1,4 +1,4 @@
-body{
+body {
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
@@ -6,7 +6,7 @@ body{
 	font-family: 'Lato', sans-serif;
 }
 
-a:visited{
+a:visited {
     color: initial;
 }
 
@@ -19,18 +19,18 @@ a:link {
 #actionSection p,
 #actionSection h1,
 #actionSection h2,
-#actionSection h3{
+#actionSection h3 {
 	color: rgb(159, 159, 159);
 	font-family: 'Lato', sans-serif;
 	font-size: 16px;
 }
 
-#actionSection > tab > div.pv-active-tab-header > span{
+#actionSection > tab > div.pv-active-tab-header > span {
 	color: white;
 	font-weight: bold;
 } 
 
-.flexContainer{
+.flexContainer {
 	display: -webkit-flex;
 	display: flex;
 }
@@ -48,7 +48,7 @@ a:link {
 	align-self: center;
 }
 
-#topSection{
+#topSection {
 	width: 100%;
 }
 
@@ -59,19 +59,19 @@ hr {
 	border-top: 1px solid rgb(200, 200, 200);
 }
 
-#topSection > div:last-child{
+#topSection > div:last-child {
 	width: 20%;
 	margin-right: 5%;
 }
 
-.onlyUnlogged{
+.onlyUnlogged {
 	display: flex;
 	justify-content: center;
 	text-align: center;
 }
 
 /* pavlok login table */
-.loginInput{
+.loginInput {
 	display: block;
 	
 	width: 336px;
@@ -87,7 +87,7 @@ hr {
 	background: #f8e71c;
 }
 
-#pavSubmitLogin{
+#pavSubmitLogin {
 	border-radius: 5px;
 	background: white;
 	
@@ -98,61 +98,64 @@ hr {
 	margin-bottom: 0px;
 }
 
-.headerImageButton{
+.headerImageButton {
 	height: 30px;
 	align-self: center;
 	cursor: pointer;
 }
 
-.pv-tab-header{
+.pv-tab-header {
 	display: flex;
 	justify-content: flex-start;
 	cursor: pointer;
 	height: 40px;
 }
 
-.pv-tab-header:hover{
+.pv-tab-header:hover {
 	font-weight: bold;
 }
 
-.pv-tab-header-icon{
+.pv-tab-header-icon {
 	height: 30px;
 	width: 30px;
 	margin: 5px;
 	margin-right: 15px;
 }
 
-.pv-tab-header-span{
+.pv-tab-header-span {
 	/* transform: translate(0px,-1px); */
 	align-self: center;
 	font-size: 16px;
 
 }
 
-.pv-tab-body{
+.pv-tab-body {
 	display: none;
 	width: 100%;
 }
 
-.pv-active-tab-header{
+.pv-active-tab-header {
 	background: #222222;
 }
-.pv-active-tab-header span{
+.pv-active-tab-header span {
 	color: white;
 	font-weight: bold;
 }
 
-.pv-active-tab-body{
+.pv-active-tab-body {
 	margin-top: 5px;
 	margin-bottom: 5px;
 	margin-left:5%;
+	
+	max-height: 400px;
+	overflow: auto;
 }
 
-body, p, tab, span{
+body, p, tab, span {
 	color:white;
 }
 
-.stimuliControlContainer{
+.stimuliControlContainer {
 	width: 95%;
 	/* background:blue; */
 }
@@ -161,31 +164,31 @@ body, p, tab, span{
 	display: inline-block;
 }
 
-.stimuliControlIcon{
+.stimuliControlIcon {
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
 }
 
-.stimuliControlSlider{
+.stimuliControlSlider {
 	width: 60%;
 	margin-left: 6%;
 	transform: translate(0px,-14px);
 }
 
-.stimuliIntensityDisplay{
+.stimuliIntensityDisplay {
 	margin-left: 10px;
 	transform: translate(0px,-12px);
 }
 
 
-.saveOrResetContainer > a{
+.saveOrResetContainer > a {
 	text-decoration: underline;
 	color: white;
 	font-size: 12px;
 }
 
-#footerSection{
+#footerSection {
 	display: flex;
 	justify-content: center;
 	height: 70px;
@@ -203,7 +206,7 @@ body, p, tab, span{
 	font-family: 'Lato', sans-serif;
 }
 
-#pavlokFootIcon{
+#pavlokFootIcon {
 	text-decoration: none;
 }
 
@@ -233,7 +236,7 @@ body {
 	padding: 1rem;
 }
 
-#save{
+#save {
 	background-image: url('../images/save.png');
 	margin-top: 1em;
 }
@@ -261,7 +264,7 @@ h3 {
 
 
 
-#optionsLink{
+#optionsLink {
 	color: yellow;
 	/* background-color: #47639E; */
 	background-color: black;
@@ -273,17 +276,17 @@ h3 {
 	text-align: center;
 }
 
-ul.nav{
+ul.nav {
 	list-style-type: none;
 	left:0;
 	padding:0;
 }
 
-div.auth{
+div.auth {
 	text-decoration: none;
 }
 
-#optionsDiv{
+#optionsDiv {
 	visibility: hidden;
 }
 
@@ -301,15 +304,15 @@ div.auth{
 
 }
 
-.yellow{
+.yellow {
 	color: yellow;
 }
 
-.onlyLogged{
+.onlyLogged {
 	visibility: hidden;
 }
 
-.onlyUnloged{
+.onlyUnloged {
 	visibility: visible;
 }
 
@@ -322,17 +325,17 @@ div.auth{
 	margin-top: 5px;
 }
 
-#blackList_addTag{
+#blackList_addTag {
 	width: 200px;
 }
 
 
-#whiteList_addTag{
+#whiteList_addTag {
 	width: 95%;
 }
 
 
-#blackList_addTag > input, #whiteList_addTag > input{
+#blackList_addTag > input, #whiteList_addTag > input {
 	width: 100%;
 	max-width: 100%;
 	color: rgb(102, 102, 102);
@@ -343,7 +346,7 @@ div.auth{
 
 
 
-/* input#blackList_tag, input#whiteList_tag{
+/* input#blackList_tag, input#whiteList_tag {
 	color: rgb(102, 102, 102);
 	font-size: 14px;
 	font-family: 'Lato', sans-serif;
@@ -353,25 +356,25 @@ div.auth{
 	display: none;
 }
 
-.logo{
+.logo {
 	width: 190px;
 	/* height: 50px; */
 	padding: 5px;
 	
 }
 
-.testStimulusButton{
+.testStimulusButton {
 	width: 25px;
 	height: 25px;
 }
 
-#navHeader{
+#navHeader {
 	width: 100%;
 	/* border: 1px solid red; */
 	border-collapse: collapse;
 }
 
-#navHeader td{
+#navHeader td {
 	/* border: 1px solid blue; */
 }
 
@@ -399,14 +402,14 @@ div.auth{
 	color: white;
 }
 
-#toDoAction table > tfoot > tr{
+#toDoAction table > tfoot > tr {
 	font-weight: bold;
 	background-color: rgb(100, 100, 100);
 }
 
 
 /* Items themselves */
-.toDoItemTR{
+.toDoItemTR {
 	width: 100%;
 	background: rgb(10, 10, 10);
 	vertical-align: center;
@@ -414,7 +417,7 @@ div.auth{
 	/* border-bottom: 1px solid white; */
 }
 
-.toDoItemTR:hover{
+.toDoItemTR:hover {
 	background: #f8e71c;
 	
 }
@@ -469,32 +472,32 @@ div.auth{
 	text-align: left;
 }
 
-#clearCompletedToDo{
+#clearCompletedToDo {
 	padding-right: 15px;
 	width: 28%;
 	text-align: right;
 }
 
-#clearCompletedToDo a{
+#clearCompletedToDo a {
 	text-decoration: none;
 	color: white;
 }
 
-.toDoScopes{
+.toDoScopes {
 	width: 14.5%;
 	border-left: 1px solid black;
 	border-right: 1px solid black;
 	text-align: center;
 }
 
-.toDoScopes a{
+.toDoScopes a {
 	text-decoration: none;
 	color: white;
 	text-align: center;
 }
 
 /* Header and to-do adding buttons */
-#completeAllButton{
+#completeAllButton {
 	width: 5%;
 }
 
@@ -507,7 +510,7 @@ div.auth{
 	border: none;
 }
 
-#toDoAction .imgIcon{
+#toDoAction .imgIcon {
 	width: 28px;
 	height: 28px;
 }
@@ -518,11 +521,11 @@ div.auth{
 	border-collapse: collapse;
 }
 
-#pomoFocusRemainingTime{
+#pomoFocusRemainingTime {
 	font-size: 200%;
 }
 
-.noDecoration{
+.noDecoration {
 	text-decoration: none;
 }
 
@@ -531,7 +534,7 @@ div.auth{
 	width: 35px;
 }
 
-.pomoFocusButtons > span{
+.pomoFocusButtons > span {
 	font-size: 35px;
 	text-align: center;
 	height: 35px;
@@ -542,7 +545,7 @@ div.auth{
 	-webkit-filter: grayscale(100%);
 }
 
-.jqimessage p{
+.jqimessage p {
 	color: rgb(68, 68, 68);
 }
 
@@ -554,7 +557,7 @@ div.auth{
 	height: 100%;
 }
 
-.nowToDoItem{
+.nowToDoItem {
 	/* display: none; */
 }
 
@@ -566,7 +569,7 @@ div.auth{
 /* ************************************************************ */
 /* ************************************************************ */
 
-.dailyContainer{
+.dailyContainer {
 	width: 100%;
 	background: rgb(10, 10, 10);
 	vertical-align: center;
@@ -575,20 +578,20 @@ div.auth{
 	color: white;
 }
 
-.dailyItemTR{
+.dailyItemTR {
 	width: 100%;
 	border: none;
 	/* border-bottom: 1px solid white; */
 }
 
-.dailyItemTR > td{
+.dailyItemTR > td {
 	border: none;
 }
 .dailyItemTR > * {
 	vertical-align: middle;
 }
 
-.dailyItemTR:hover{
+.dailyItemTR:hover {
 	background: #f8e71c;
 }
 
@@ -613,7 +616,7 @@ div.auth{
 	height: 28px;
 }
 
-.doneDaily{
+.doneDaily {
 	width: 28px;
 	height: 28px;
 	padding: 3px;
@@ -625,11 +628,11 @@ div.auth{
 	height: 26px;
 }
 
-#signOut{
+#signOut {
 	transform: translate(0px, -2px);
 }
 
-#actionSection > tab > div > h2 > sup > span.helpSpan{
+#actionSection > tab > div > h2 > sup > span.helpSpan {
 	font-size: 10px;
 	font-weight: bold;
 	color: rgb(220, 220, 220);
@@ -644,15 +647,15 @@ div.auth{
 	padding-left: 4px;
 	padding-right: 4px;
 }
-.helpSpan:hover{
+.helpSpan:hover {
 	cursor: help;
 }
 
-.red{
+.red {
 	color:red;
 }
 
-.clickable:hover{
+.clickable:hover {
 	cursor: pointer;
 }
 
@@ -670,4 +673,116 @@ div.auth{
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255); 
+}
+
+
+#blackList {
+	padding-bottom: 15px;
+}
+
+#blackListTable {
+	margin-top: 15px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#blackListTable input[type="text"] {
+	font-size: 15px;
+	text-align: center;
+
+	border: none;
+
+	width: 100%;
+}
+
+#blackListTable tr:hover {
+	background: rgb(70, 70, 70);
+}
+
+#blackListTable tr:hover td.hoverOnly > input { 
+	visibility: visible; 
+}
+
+#blackListTable .limitType, 
+#blackListTable .limitMinutes, 
+#blackListTable .siteAddress {
+	background: black;
+	color: white;
+	
+	border: none;
+	
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#blackListTable select.limitType {
+	width: 100%;
+	font-size: 13px;
+}
+
+#blackListTable th.limitType, 
+#blackListTable th.limitMinutes, 
+#blackListTable th.siteAddressTH { 
+	color: white;
+	background: black;
+	font-size: 15px;
+}
+
+#blackListTable input.deleteRowButton {
+	color: red;
+	background: rgb(70, 70, 70);
+	
+	border: none;
+	
+	cursor: pointer;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+#blackListTable td.limitTimeTD, 
+#blackListTable th.limitTimeTH, 
+#blackListTable td.limitTypeTD, 
+#blackListTable th.limitTypeTH {
+	width: 15%;
+}
+
+#blackListTable th.buttonHolder, 
+#blackListTable td.buttonHolder {
+	max-width: 25px;
+	width: 1%;
+}
+
+#blackListTable #addNewBL {
+	width: 100%;
+}
+
+#blackListTable .addNewBLButton {
+	color: green;
+	font-weight: bold;
+	
+	border: 0;
+	background: rgb(70, 70, 70);
+	
+	cursor: pointer;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+#blackListTable .hoverOnly > input {
+	visibility: hidden;
+}
+
+#blackListTable .inLiner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#blackListTable tfoot > tr{
+	border-top: 15px solid black;
+	
 }

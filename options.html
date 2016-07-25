@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css" />
 		<link rel="stylesheet" type="text/css" href="css/jquery.ui.timepicker.css" />
 		<link rel="stylesheet" type="text/css" href="css/jquery-impromptu.min.css" />
-		<link rel="stylesheet" type="text/css" href="jquery.tagsinput.css" />
+		<link rel="stylesheet" type="text/css" href="css/jquery.tagsinput.css" />
 		<link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		
@@ -19,7 +19,7 @@
 		<script src="js/external/jquery.ui.timepicker.js"></script>
 		<script src="js/external/jquery-impromptu.js"></script>
 		<script src="js/external/jquery.countdown.js"></script>
-		<script src="jquery.tagsinput.js"></script>
+		<script src="js/jquery.tagsinput.js"></script>
 		<script src="js/ToDo.js"></script>
 		<script src="js/TodoistIntegration.js" type="text/javascript"></script>
 		<!-- <script src="js/options.js"></script>	 -->
@@ -81,10 +81,12 @@
 											</span>
 										</sup>
 									</h2>
-									<p>Please choose your black sites, minus the "www."  and separated by commas (<span class="yellow">facebook.com, reddit.com</span>):</p>
-									<div class="tagcontainer">
-										<input name="blackList" id="blackList" value="" class="pavSetting"/>
+									<p>Please choose your black sites, minus the "www." (ex: <span class="yellow">facebook.com, reddit.com</span>):</p>
+									
+									<div id="blackList">
+										
 									</div>
+									
 								</div>
 									
 								<div id="whiteListContainer">

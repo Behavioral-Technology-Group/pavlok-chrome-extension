@@ -5,7 +5,7 @@
 /*                                                 */
 /*                                                 */
 /* ----------------------------------------------- */
-body{
+body {
 	margin-left: 0px;
 	margin-right: 0px;
 	margin-top: 0px;
@@ -13,24 +13,24 @@ body{
 
 }
 
-.generalContainer{
+.generalContainer {
 	width: 100%;
 	background: #222222;
 }
 
-.fixedHeader{
+.fixedHeader {
 	position: fixed;
 	height: 186px;
 	width: 100%;
 }
 
-.fixedHeaderPlaceHolder{
+.fixedHeaderPlaceHolder {
 	width: 100%;
 	height: 182px;
 	background: #222222;
 }
 
-.headerContainer{
+.headerContainer {
 	padding-top: 30px;
 	width:100%;
 	height: 90px;
@@ -39,14 +39,14 @@ body{
 	justify-content: center;
 }
 
-.header{
+.header {
 	width: 1200px;
 	height: 100%;
 	/* border-left: 1px solid yellow;
 	border-right: 1px solid yellow; */
 }
 
-.navBarContainer{
+.navBarContainer {
 	width: 100%;
 	height: 60px;
 	display: flex;
@@ -56,13 +56,13 @@ body{
 	border-bottom: 1px solid white;
 }
 
-.navBar{
+.navBar {
 	width:1200px;
 	background: black;
 	/* border: 10px solid yellow; */
 }
 
-.bodyContainer{
+.bodyContainer {
 	width: 100%;
 	display: flex;
 	background: #222222;
@@ -71,7 +71,7 @@ body{
 	justify-content: center;
 }
 
-.contentContainer{
+.contentContainer {
 	width: 1200px;
 }
 
@@ -82,7 +82,7 @@ body{
 	
 }
 
-.footerThings{
+.footerThings {
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -111,17 +111,17 @@ body {
 }
 
 /* Text elements font family and color */
-p, span, div, a, h1, h2, h3, h4, li, th, td{
+p, span, div, a, h1, h2, h3, h4, li, th, td {
 	color: rgb(159, 159, 159);
 	font-family: 'Lato', sans-serif;
 }
 
-.yellow, .yellowX{
+.yellow, .yellowX {
 	color: yellow;
 }
 
 /* Text element sizes */
-body p, body span, body a, body li, body th, body td{
+body p, body span, body a, body li, body th, body td {
 	font-size: 20px;
 }
 
@@ -141,15 +141,15 @@ body h3 {
 /*                                                 */
 /* ----------------------------------------------- */
 
-.clickable:hover{
+.clickable:hover {
 	cursor: pointer;
 }
 
-span.activeSection{ /* Changes the index of active section */
+span.activeSection { /* Changes the index of active section */
 	color: white;
 }
 
-.flexContainer{
+.flexContainer {
 	display: -webkit-flex;
 	display: flex;
 }
@@ -172,10 +172,10 @@ hr.bigger {
 	left: -3%;
 }
 
-.onlyLogged{
+.onlyLogged {
 }
 
-.sectionTitle{
+.sectionTitle {
 	font-size:40px;
 	color: #e0d01b;
 	font-weight: initial;
@@ -183,7 +183,7 @@ hr.bigger {
 	margin-bottom: 20px;
 }
 
-.helpSpan{
+.helpSpan {
 	font-size: 10px;
 	font-weight: bold;
 	color: rgb(220, 220, 220);
@@ -198,12 +198,12 @@ hr.bigger {
 	padding-left: 4px;
 	padding-right: 4px;
 }
-.helpSpan:hover{
+.helpSpan:hover {
 	cursor: help;
 }
 
 /* Default element presentation */
-select{
+select {
 	padding: 3px;
 	border-radius: 5px;
 	font-size: 18px;
@@ -221,7 +221,7 @@ hr {
     padding: 0; 
 }
 
-.ui-spinner-input{
+.ui-spinner-input {
 	margin-top: 0px;
 	margin-bottom: 0px;
 	margin-left: 0px;
@@ -251,7 +251,7 @@ hr {
 	width: 230px;
 }
 
-#likeDiv{
+#likeDiv {
 	border: 1px solid black;
 	border-color: #e0d01b;
 	border-radius: 10px;
@@ -270,7 +270,7 @@ hr {
 	font-size: 20px;
 }
 
-#coolSpan{
+#coolSpan {
 	margin-right:10px;
 }
 #likeDiv > #likeSpan {
@@ -279,7 +279,7 @@ hr {
 	font-size: 20px;
 }
 
-#likeDiv > #likeSpan > a{
+#likeDiv > #likeSpan > a {
 	text-decoration: none;
 	color: inherit;
 }
@@ -304,26 +304,26 @@ hr {
 	align-self: center;
 }
 
-#indexDiv > span.flexItem:first-child{
+#indexDiv > span.flexItem:first-child {
 	padding-left:0;
 }
 
-.scrollableLink{
+.scrollableLink {
 	padding: 8px;
 	font-weight: bold;
 }
 
-.scrollableLink:hover{
+.scrollableLink:hover {
 	cursor:pointer;
 	color: white;
 }
 
-#testPairingX, #signOutX{
+#testPairingX, #signOutX {
 	padding:6px;
 	cursor:pointer;
 }
 
-#signOutX{
+#signOutX {
 	transform: translate(0px, -2px);
 }
 /* ----------------------------------------------- */
@@ -334,7 +334,7 @@ hr {
 /*                                                 */
 /* ----------------------------------------------- */
 
-/* #contentsContainer{
+/* #contentsContainer {
 	display: block;
 	margin-top: 190px;
 	margin-left: auto;
@@ -346,25 +346,25 @@ hr {
 /* BLACK AND WHITE LISTS */
 /* --------------------- */
 
-div.tagcontainer{
+div.tagcontainer {
 	width: 100%;
 	height: 200px;
 }
 
 
-#blackList_addTag{
+#blackList_addTag {
 	width: 330px
 }
 
-#blackList_addTag > input{
+#blackList_addTag > input {
 	width: 100%;
 }
 
-#whiteList_addTag{
+#whiteList_addTag {
 	width: 700px
 }
 
-#whiteList_addTag > input{
+#whiteList_addTag > input {
 	width: 100%;
 }
 
@@ -374,7 +374,7 @@ div.tagcontainer{
 /*  TAB NUMBERS CONTROL  */
 /* --------------------- */
 
-#maxTabsSelect{
+#maxTabsSelect {
 	margin-left: 20px;
 } 
 
@@ -382,24 +382,24 @@ div.tagcontainer{
 /* STIMULI CONTROL/TEST  */
 /* --------------------- */
 
-.stimuliControlContainer{
+.stimuliControlContainer {
 	margin-bottom: 30px;
 }
 
-.stimuliControlIcon{
+.stimuliControlIcon {
 	width: 50px;
 	height: 50px;
 	display: inline-block;
 	cursor: pointer;
 }
 
-.sliderTicksComboContainer{
+.sliderTicksComboContainer {
 	display: inline-block;
 	margin-left: 50px;
 	width: 60%;
 	transform: translate(0px, -10px);
 }
-.stimuliControlSlider{
+.stimuliControlSlider {
 	width: 100%;
 	display: inline-block;
 	height: 1px;
@@ -411,7 +411,7 @@ div.tagcontainer{
 	/* background: yellow; */
 }
 
-.ticks{
+.ticks {
 	position: relative;
 	height: 10px;
 	display: flex;
@@ -420,27 +420,27 @@ div.tagcontainer{
 	top: -14px;
 }
 
-.ticks > span{
+.ticks > span {
 	width: 1px;
 	height: 15px;
 	background: white;
 	align-self: center;
 }
 
-.ticks > .big{
+.ticks > .big {
 	width: 1px;
 	height: 25px;
 	background: yellow;
 	
 }
 
-.bigSub{
+.bigSub {
 	position: relative;
 	top: 100%;
 	left: -20px;	
 }
 
-.stimuliIntensityDisplay{
+.stimuliIntensityDisplay {
 	margin-left: 20px;
 	transform: translate(0px, -28px);
 	display: none;
@@ -448,7 +448,7 @@ div.tagcontainer{
 
 
 
-.saveOrResetContainer > a{
+.saveOrResetContainer > a {
 	display: inline-block;
 	color: white;
 	text-decoration: underline;
@@ -456,24 +456,24 @@ div.tagcontainer{
 	/* font-weight: bold; */
 }
 
-.saveOrResetContainer > a:first-child{
+.saveOrResetContainer > a:first-child {
 	margin-right: 30px;
 }
 
 
 
-.noDisplay{
+.noDisplay {
 	display:none;
 }
 
 
 /* To-do section */
 
-.toDoTable{
+.toDoTable {
 	border-collapse: collapse;
 }
 
-.toDoTable th, .toDoTable td{
+.toDoTable th, .toDoTable td {
 	/* border: 1px solid white; */
 	border-collapse: collapse;
 	color: white;
@@ -482,17 +482,17 @@ div.tagcontainer{
 	text-align: center;
 }
 
-#dailyListTable{
+#dailyListTable {
 	width: 50%;
 }
 
-#dailyListTable th{
+#dailyListTable th {
 	padding: 5px;
 	padding-left: 15px;
 	padding-right: 15px;
 }
 
-#newDailyTaskTD{
+#newDailyTaskTD {
 	border-top: none;
 	border-left: none;
 	border-right: none;
@@ -504,7 +504,7 @@ div.tagcontainer{
 	height: 100%;
 }
 
-#newDailyTaskInput{
+#newDailyTaskInput {
 	flex-grow: 6;
 	/* padding-bottom:10px; */
 	height: 100%;
@@ -519,7 +519,7 @@ div.tagcontainer{
 }
 
 
-#createNewDailyTaskButton{
+#createNewDailyTaskButton {
 	border-radius: 5px;
 	background: yellow;
 	padding-left: 35px;
@@ -533,53 +533,53 @@ div.tagcontainer{
 	font-family: 'Lato', sans-serif;
 }
 
-.taskDetailTR{
+.taskDetailTR {
 	background: #555555;
 }
 
-.taskDetailTR div.saveOrResetContainer{
+.taskDetailTR div.saveOrResetContainer {
 	padding-bottom: 10px;
 }
 
-#dailyListDetails{
+#dailyListDetails {
 	width: 100%;
 	margin-top: 10px;
 }
 
-#dailyListDetails td{
+#dailyListDetails td {
 	padding-bottom: 10px;
 	text-align: left;
 	padding-left: 10px;
 }
 
-#dailyListDetails td:last-child{
+#dailyListDetails td:last-child {
 	padding-bottom: 0px;
 }
 
-#pomodorosPerDayTD, #specialListsTD{
+#pomodorosPerDayTD, #specialListsTD {
 	text-align: justify;
 }
 
-#pomodorosPerDayTD > span{
+#pomodorosPerDayTD > span {
 	color: white;
 }
 
-#dailyTaskNameInput{
+#dailyTaskNameInput {
 	width: 100%;
 	font-size: 20px;
 	padding-left: 10px;
 }
 
-td.saveOrResetTD{
+td.saveOrResetTD {
 	padding-bottom: 0px;
 }
 
-.dailyListTR:hover{
+.dailyListTR:hover {
 	background: rgb(70, 70, 70);
 	cursor: pointer;
 }
 
-.activeDailyTR{
+.activeDailyTR {
 	background: #898989;
 	padding-top: 10px;
 	padding-bottom: 10px;
@@ -588,7 +588,7 @@ td.saveOrResetTD{
 	
 }
 
-#blackListTD{
+#blackListTD {
 	width: 70%;
 }
 
@@ -601,22 +601,22 @@ td.saveOrResetTD{
 	color: rgb(159, 159, 159);
 }
 
-.flexCenterV{
+.flexCenterV {
 	align-self: center;
 }
 
-.clickAction:hover{
+.clickAction:hover {
 	cursor: pointer;
 }
 
 
 
-#autoZapperTable{
+#autoZapperTable {
 	width: 60%;
 	border-collapse: collapse;
 }
 
-#autoZapperTable th{
+#autoZapperTable th {
 	width: 25%;
 	border-collapse: collapse;
 	border: 1px solid white;
@@ -629,13 +629,13 @@ td.saveOrResetTD{
 	font-size: 20px;
 }
 
-#autoZapperTable th:last-child{
+#autoZapperTable th:last-child {
 	visibility: hidden;
 	border-bottom: 0px;
 }
 
 
-#autoZapperTable td{
+#autoZapperTable td {
 	text-align: center;
 	width: 25%;
 	border: none;
@@ -650,18 +650,18 @@ td.saveOrResetTD{
 	border:none;
 }
 
-#autoZapperTable td > p > span > input{
+#autoZapperTable td > p > span > input {
 	/* background: white; */
 	/* color: black; */
 	width: 100%;
 	/* padding-left: 10px; */
 }
 
-#autoZapperTable td > p > span > a{
+#autoZapperTable td > p > span > a {
 	border: none;
 }
 
-#autoZapperStop{
+#autoZapperStop {
 	border-radius: 5px;
 	background: red;
 	padding-left: 45px;
@@ -679,7 +679,7 @@ td.saveOrResetTD{
 	font-family: 'Lato', sans-serif;
 }
 
-#autoZapperStart{
+#autoZapperStart {
 	border-radius: 5px;
 	background: yellow;
 	padding-left: 45px;
@@ -712,55 +712,55 @@ td.saveOrResetTD{
 	border:none;
 }
 
-#RTThresholdTable td > p > span > input{
+#RTThresholdTable td > p > span > input {
 	background: white;
 	color: black;
 	width: 100%;
 	padding-left: 10px;
 }
 
-#RTThresholdTable td > p > span > a{
+#RTThresholdTable td > p > span > a {
 	border: none;
 }
 
-#RTThresholdTable select{
+#RTThresholdTable select {
 	width: 100%;
 	height: 100%;
 	font-size: 15px;
 }
 
-#timeDaysDiv, #advancedOptionsContainerDiv{
+#timeDaysDiv, #advancedOptionsContainerDiv {
 	width: 100%;
 }
 
-#advancedOptionsContainerDiv{
+#advancedOptionsContainerDiv {
 	padding-bottom: 500px;
 }
 
-#daysOfTheWeekDiv{
+#daysOfTheWeekDiv {
 	width: 60%;
 	text-align: center;
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
 
-#generalActiveHours{
+#generalActiveHours {
 	width: 60%;
 }
 
-#generalActiveHours .ui-spinner{
+#generalActiveHours .ui-spinner {
 	width: 135px;
 }
 
-#generalActiveHours .timeSelectors{
+#generalActiveHours .timeSelectors {
 	width: 100%;
 }
 
-.spinnerText{
+.spinnerText {
 	margin-left: 60px;
 }
 
-#timeFormat{
+#timeFormat {
 	font-size: 15px;
 	padding: 10px;
 }
@@ -769,7 +769,7 @@ td.saveOrResetTD{
 /* --------------------- */
 /*    FOOTER SECTION     */
 /* --------------------- */
-.logoBlock{
+.logoBlock {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -780,7 +780,7 @@ td.saveOrResetTD{
 	border-radius: 5px;
 }
 
-.logoBlock > div{
+.logoBlock > div {
 	justify-content: center;
 	display: flex;
 	border: 1px solid red;
@@ -788,7 +788,7 @@ td.saveOrResetTD{
 }
 
 
-.footerLogo{
+.footerLogo {
 	height: 90px;
 	width: 90px;
 	
@@ -797,7 +797,7 @@ td.saveOrResetTD{
 /* --------------------- */
 /*        OVERLAY        */
 /* --------------------- */
-#bigOverlay{
+#bigOverlay {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -814,7 +814,7 @@ td.saveOrResetTD{
 	/* z-index: 9999999999999; */
 }
 
-#bigOverlayContents{
+#bigOverlayContents {
 	position: fixed;
 	width: 350px;
 	border: 2px solid yellow;
@@ -840,7 +840,7 @@ td.saveOrResetTD{
 /* --------------------- */
 
 /* pavlok login table */
-.loginInput{
+.loginInput {
 	display: block;
 	
 	width: 336px;
@@ -856,7 +856,7 @@ td.saveOrResetTD{
 	background: #f8e71c;
 }
 
-#pavSubmitLogin{
+#pavSubmitLogin {
 	border-radius: 5px;
 	background: white;
 	
@@ -867,13 +867,13 @@ td.saveOrResetTD{
 	margin-bottom: 0px;
 }
 
-.headerImageButton{
+.headerImageButton {
 	height: 30px;
 	align-self: center;
 	cursor: pointer;
 }
 
- .onlyUnlogged{
+ .onlyUnlogged {
 	width: 325px;
 	display: flex;
 	flex-direction: column;
@@ -897,12 +897,12 @@ td.saveOrResetTD{
 	min-height: 120px;
 }
 
-.todoistLogo{
+.todoistLogo {
 	width: 100px;
 	padding-right: 10px;
 }
 
-#importTodoist{
+#importTodoist {
 	padding-left: 20px;
 	padding-right: 20px;
 	padding-top: 15px;
@@ -910,4 +910,136 @@ td.saveOrResetTD{
 	background: yellow;
 	border-radius: 5px;
 	text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#blackList {
+	padding-bottom: 15px;
+}
+
+#blackListTable {
+	margin-top: 15px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#blackListTable input[type="text"] {
+	font-size: 15px;
+	text-align: center;
+
+	border: none;
+
+	width: 100%;
+}
+
+#blackListTable tr:hover {
+	background: rgb(70, 70, 70);
+}
+
+#blackListTable tr:hover td.hoverOnly > input { 
+	visibility: visible; 
+}
+
+#blackListTable .limitType, 
+#blackListTable .limitMinutes, 
+#blackListTable .siteAddress {
+	background: #222222;
+	color: white;
+	
+	border: none;
+	
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#blackListTable select.limitType {
+	width: 100%;
+	font-size: 15px;
+}
+
+#blackListTable th.limitType, 
+#blackListTable th.limitMinutes, 
+#blackListTable th.siteAddressTH{
+	color: white;
+	background: rgb(34, 34, 34);
+}
+
+#blackListTable #totalLimitSpan { 
+	color: white;
+	margin-left: 5px;
+}
+
+#blackListTable input.deleteRowButton {
+	color: red;
+	background: rgb(70, 70, 70);
+	
+	border: none;
+	
+	cursor: pointer;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+#blackListTable td.limitTimeTD, 
+#blackListTable th.limitTimeTH, 
+#blackListTable td.limitTypeTD, 
+#blackListTable th.limitTypeTH {
+	width: 15%;
+}
+
+#blackListTable th.buttonHolder, 
+#blackListTable td.buttonHolder {
+	max-width: 25px;
+	width: 1%;
+}
+
+#blackListTable #addNewBL {
+	width: 100%;
+}
+
+#blackListTable .addNewBLButton {
+	color: green;
+	font-weight: bold;
+	
+	border: 0;
+	background: rgb(70, 70, 70);
+	
+	cursor: pointer;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+
+#blackListTable .hoverOnly > input {
+	visibility: hidden;
+}
+
+#blackListTable .inLiner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#blackListTable #totalLimitPH { display: none; }
+
+#blackListTable tfoot > tr{
+	border-top: 15px solid #222222;
+	
 }

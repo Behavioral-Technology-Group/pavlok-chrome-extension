@@ -110,14 +110,9 @@ function toggleTabs(){
 }
 
 function enableBlackList(){
-	var blackListContents = lsGet('blackList');
-	$('#blackList').tagsInput({
-		'onChange' : saveBlackList,
-		'defaultText':'Add site... ie: facebook.com',
-		'removeWithBackspace' : true
-	})
-	.importTags(blackListContents);
-	removeInlineStyle("#blackList_tagsinput");
+	var bl = lsGet('blackList', 'parse');
+	blackListTable.create(bl, "blackList");
+	
 	
 	var whiteListContents = lsGet('whiteList');
 	$('#whiteList').tagsInput({
@@ -299,21 +294,14 @@ $( document ).ready(function() {
 		function(request, sender, sendResponse) {
 			if (request.target == "popup"){
 				if (request.action == "updateBlackList"){
-					var curBlackList = $("#blackList").val();
-					var curWhiteList = $("#whiteList").val();
+					var wl = compareSetting("whiteList", "#whiteList");
 					
-					var newBlackList = lsGet("blackList");
-					var newWhiteList = lsGet("whiteList");
+					if (wl == false){
+						$("#whiteList").importTags(lsGet('whiteList'));
+					}
 					
-					if (curBlackList == newBlackList && 
-						curWhiteList == newWhiteList){
-							return
-					}
-					else{
-						// leave as is
-					}
-					$("#blackList").importTags(newBlackList);
-					$("#whiteList").importTags(newWhiteList);
+					var nBL = lsGet('blackList', 'parse');
+					blackListTable.create(nBL, 'blackList');
 				}
 				
 				else if (request.action == "updatePomo"){
