@@ -660,8 +660,10 @@ function enableCoach(){
 		}, 
 		
 		function(response) {
-			console.log(response);
-			$("#coachPower").prop("checked", response.status)
+			if (response){
+				console.log(response);
+				$("#coachPower").prop("checked", (response.status || false));
+			}
 		}
 	);
 	
@@ -1242,19 +1244,6 @@ function initialize() {
 	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists
-	var blackListContent = localStorage.blackList;
-	
-	var bl = document.getElementById("blackList");
-	if (bl) {
-		$('#blackList')[0].value = localStorage["blackList"];
-		$('#blackList').tagsInput({
-			'onChange' : saveBlackList,
-			'defaultText':'Add site... ie: facebook.com',
-			'removeWithBackspace' : true,
-		});
-	
-	}
-	
 	var wl = document.getElementById("blackList");
 	if (wl) {
 		$('#whiteList')[0].value = localStorage["whiteList"];
@@ -1369,8 +1358,8 @@ $( document ).ready(function() {
 		confirmUpdate(notifyUpdate);
 	});
 	
-	
-	
+	blackListTable.create(lsGet('blackList', 'parse'), 'blackList');
+	blackListTable.listenClicks();
 	// Message listeners
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
@@ -1383,6 +1372,9 @@ $( document ).ready(function() {
 						$("#blackList").importTags(lsGet('blackList'));
 						$("#whiteList").importTags(lsGet('whiteList'));
 					}
+					
+					var nBL = lsGet('blackList', 'parse');
+					blackListTable.create(nBL, 'blackList');
 				}
 				
 				else if (request.action == "updateMaxTabs"){

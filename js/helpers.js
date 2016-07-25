@@ -146,7 +146,7 @@ if (!localStorage.vibrationPosition ) { localStorage.vibrationPosition = 60; } /
 
 // Blacklist and tabs
 if (!localStorage.timeWindow) { localStorage.timeWindow = 15};
-if (!localStorage.blackList) { localStorage.blackList = " "; }
+if (!localStorage.blackList) { localStorage.blackList = JSON.stringify({}); }
 if (!localStorage.whiteList) { localStorage.whiteList = " "; }
 if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
 if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
@@ -322,9 +322,18 @@ function lsGet(key, parse){
 	if (localStorage.getItem(key) == null) { return undefined };
 	
 	if (!parse) { parse = 'string' };
-	var returnData;
+	var returnData = localStorage.getItem(key);
 	
-	if (parse == 'parse') { returnData = JSON.parse(localStorage.getItem(key)); }
+	if (parse == 'parse') { 
+		try {
+			returnData = JSON.parse(returnData)
+		}
+		catch(err){
+			console.log("Problem trying to parse " + key);
+			console.log(err);
+			console.log(returnData);
+		}
+	}
 	else { returnData = localStorage.getItem(key); }
 	
 	return returnData
@@ -684,6 +693,20 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function isEmpty(x){
+	var answer;
+	
+	if (typeof(x) == "undefined") { return true; }
+	if (typeof(x) == "array"){
+		if (x.length === 0) { return true; } // Empty Array
+	}
+	if (typeof(x) == "object"){
+		if (Object.keys(x).length === 0) { return true; } // Empty Object
+	}
+	if(x.length === 0) { return true; }
+	return false;
+}
+
 function saveBlackList(){
 	var curBlackList = $("#blackList")[0].value;
 	
@@ -914,7 +937,14 @@ function oauth() {
 			console.log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = localStorage.baseAddress + '' + "/oauth/token?" + 'client_id=' + clientID +  '&client_secret=' + clientSecret + '&code=' + authorizationCode + '&grant_type=authorization_code' + '&redirect_uri=' + redirectURL;
+			accessTokenUrl = 
+				localStorage.baseAddress 
+				+ "/oauth/token?" 
+				+ 'client_id=' + clientID 
+				+ '&client_secret=' + clientSecret 
+				+ '&code=' + authorizationCode 
+				+ '&grant_type=authorization_code' 
+				+ '&redirect_uri=' + redirectURL;
 			
 			console.log("Step 4: Access token Url is: " + accessTokenUrl);
 			
@@ -1276,4 +1306,270 @@ function arrayObjectIndexOf(myArray, searchTerm, property) {
         if (myArray[i][property] === searchTerm) return i;
     }
     return -1;
+}
+
+function toBoolean(string){
+	try { string = string.toLowerCase() }
+	catch(err) { console.log(err); }
+	
+	var bStatus = true;
+	
+	if (
+		isEmpty(string) || 
+		string === "false" || 
+		string === false
+		) { bStatus = false; }
+	
+	return bStatus
+}
+
+
+
+
+
+
+
+
+
+
+
+
+var blackListTable = {
+	create: function(list, target){
+		var base = target;
+		target = "#" + target;
+		
+		var table = $(target + " > table");
+		
+		var hour;
+		var day;
+		var row;
+		var newSiteRow;
+		var titlesRow;
+		var limitRow;
+		
+		var s;
+		var site;
+		var sites = Object.keys(list);
+		
+		var global = lsGet("blackGlobal", "parse") || false;
+		var globalHourly = (global.status === "hourly");
+		
+		console.log(global);
+		console.log(lsGet("blackGlobal", "parse"));
+		
+		// Empty table structure
+		var tableCode = 
+			$("<table>", {id: base + "Table"})
+				.append( $("<thead>") )
+				.append( $("<tbody>") )
+				.append( $("<tfoot>") );
+				
+		if (table.length === 0){
+			$(target).append(tableCode);
+		}
+		else {
+			$(table).replaceWith( tableCode );
+		}
+		
+		newSiteRow = $("<tr>", {class: "newBLTR"})
+			.append( $("<td>")
+				.append( $("<input>", {type: "text", id: "siteName", class: "siteAddress", placeholder: "Add site... ie: facebook.com" }) )
+			)
+			.append( $("<td>", {class: "limitTimeTH"}) 
+				.append( $("<input>", {type: "text", id: "limit" + "new", class: "limitTime", placeholder: "ie: 5" }) )
+			)
+			.append( $("<td>", {class: "limitTypeTH"}) 
+				.append( $("<select>", {id: "scope" + "new", class: "limitType" })
+					.append( $("<option>", {value: "daily", text: "daily"}) )
+					.append( $("<option>", {value: "hourly", text: "hourly"}) )
+				)
+			)
+			.append( $("<td>", {class: "hoverOnly"}) 
+				.append( $("<input>", {type: "button", id: "addNewBL", class: "addNewBLButton", value: "+" }) )
+			);
+		
+		titlesRow = $("<tr>", {class: ""})
+			.append( $("<th>", {text: "Site", class: "siteAddressTH"}) )
+			.append( $("<th>", {text: "Minutes", class: "limitMinutes"}) )
+			.append( $("<th>", {text: "Frequency", class: "limitType"}) )
+			.append( $("<th>", {text: ""}) );
+		
+		limitRow = $("<tr>", {class: "totalLimitTR"})
+			.append( $("<td>", {class: "inLiner"})
+				.append( $("<input>", {type: "checkbox", id: "totalLimit", checked: global.status }) )
+				.append( $("<span>", {text: "Total Limit", id: "totalLimitSpan" }) )
+			)
+			.append( $("<td>", {class: "limitTimeTH"}) 
+				.append( $("<input>", {type: "text", id: "limit" + "global", class: "limitTime", placeholder: "ie: 5", value:  global.limit}) )
+			)
+			.append( $("<td>", {class: "limitTypeTH"}) 
+				.append( $("<select>", {id: "scope" + "global", class: "limitType" })
+					.append( $("<option>", {value: "daily", text: "daily"}) )
+					.append( $("<option>", {value: "hourly", text: "hourly"}) )
+				)
+			)
+			.append( $("<td>", {class: "hoverOnly"}) );
+		
+		
+		
+		$(target + " > table > thead").append(titlesRow);
+		$(target + " > table > thead").append(newSiteRow);
+		
+		$(target + " > table > tfoot").append(limitRow);
+		// Filling rows
+		for (s = 0; s < sites.length; s++){
+			site = sites[s];
+			limit = list[site].limit;
+			type = list[site].type;
+			
+			if (type == "daily") {
+				dailyOpt = $("<option>", {value: "daily", text: "daily", selected: true});
+				hourlyOpt = $("<option>", {value: "hourly", text: "hourly"});
+			}
+			else{
+				dailyOpt = $("<option>", {value: "daily", text: "daily"});
+				hourlyOpt = $("<option>", {value: "hourly", text: "hourly", selected: true});
+			}
+			row = $("<tr>", {class: "blackListRow"})
+				.append( $("<td>")
+					.append( $("<input>", {type: "text", id: "address" + site, class: "siteAddress", value: site }) )
+				)
+				.append( $("<td>", {class: "limitTimeTD"}) 
+					.append( $("<input>", {type: "text", id: "limit" + site, class: "limitTime", value: limit }) )
+				)
+				.append( $("<td>", {class: "limitTypeTD"}) 
+					.append( $("<select>", {id: "scope" + site, class: "limitType" })
+						.append( dailyOpt )
+						.append( hourlyOpt )
+					)
+				)
+				.append( $("<td>", { class: "hoverOnly buttonHolder" }) 
+					.append( $("<input>", {type: "button", id: "delete" + site, class: "deleteRowButton", value: "x" }) )
+				);
+			$(target + " > table > tbody").append(row);
+		}
+		
+		blackListTable.listenClicks();
+		$("#scopeglobal").val(global.type);
+	},
+	
+	listenClicks: function(){
+		
+		$('#blackList input').on('keydown', function(e) {
+			// Create and Edit Black List items
+			if (e.which == 13) {
+				e.preventDefault();
+				var msg = blackListTable.getRowInfo(this);
+				
+				console.log(msg);
+				msgBackground(msg);
+			}
+		});
+		
+		$('#blackList select').on('change', function(e) {
+			// Change evaluation between hourly and daily
+			e.preventDefault();
+			var msg = blackListTable.getRowInfo(this);
+			
+			console.log(msg);
+			msgBackground(msg);
+		});
+		
+		$('#blackList input:checkbox').on('change', function(e) { 
+			// Change the global status
+			var msg = blackListTable.getRowInfo(this);
+			
+			console.log(msg);
+			msgBackground(msg);
+			status = $(this).prop("checked");
+			status = toBoolean(status);
+			blackListTable.toggle(status);
+			
+		});
+		
+		$("#blackList .deleteRowButton").on("click", function(){
+			var name = $(this)
+						.attr("id")
+						.replace("delete", "");
+					
+			msg = {
+				action: "blackList",
+				do: "delete",
+				name: name,
+				list: "black"
+			};
+			
+			msgBackground(msg);
+		});
+	},
+	
+	toggle: function(globalBL){
+		
+		globalBL = globalBL === "true";
+		
+		// All the regular inputs go one way
+		$(".limitTime").prop("disabled", globalBL);
+		$(".limitType").prop("disabled", globalBL);
+		
+		// Total time goes the other way
+		$("#limitglobal").prop("disabled", !globalBL);
+		$("#scopeglobal").prop("disabled", !globalBL);
+		
+	},
+	
+	getRowInfo: function(focused){
+		var action = "new";
+		var oldName;
+		var status;
+		
+		var row = $(focused).closest("tr");
+		var rowType;
+		
+		if 		( $(row).hasClass("totalLimitTR") ) { rowType = "global"; }
+		else if ( $(row).hasClass("blackListRow") ) { rowType = "old Site"; }
+		else if ( $(row).hasClass("newBLTR") ) 		{ rowType = "new Site"; }
+		
+		var limit = parseInt($(focused).closest("tr").find("input.limitTime").val()) || 0;
+		var type = $(focused).closest("tr").find("select.limitType").val() || "daily";
+			
+		if (rowType == "old Site" || rowType == "new Site"){
+			var name = $(focused).closest("tr").find("input.siteAddress").val();
+			
+			// Validation
+			if (name.length === 0) { return; }
+			
+			if ( rowType == "old Site" ){
+				action = "edit";
+				oldName = $(focused).closest("tr").find("input.siteAddress").prop('id');
+				oldName = oldName.replace("address", "");
+			}
+			else { action = "new"; }
+			
+			msg = {
+				name: name,
+				limit: limit,
+				type: type,
+				do: action,
+				action: 'blackList',
+				list: "black"
+			};
+		
+			if (action == "edit"){ msg["oldName"] = oldName; }
+		}
+		else if (rowType == "global"){
+			status = $("#totalLimit").prop("checked");
+			status = toBoolean(status);
+			
+			msg = {
+				list: "global",
+				limit: limit,
+				type: type,
+				status: status,
+				action: "blackList"
+			}
+		}
+		
+		return msg;
+	}
 }
