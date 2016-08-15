@@ -16,35 +16,7 @@ var lastVib = 0;
 var limitRep = 500;
 
 // Greetings popup		
-$( document ).ready(function(){
-	// var updateMessage = '' +
-			// '<p>Hey there, buddy! <b>We just updated (feb 19th) the phone apps and you must have the newest version of the app to use this extension with Pavlok</b>.</p>' +
-			// '<p>If you have any trouble getting the stimulus (zaps, vibrations, beeps) to your Pavlok, check on the AppStore (iOS) or PlayStore (Android) if you already have it up to date!</p>' +
-			// "<p>Best,</p>" + 
-			// "<p>Pavlok Team</p>" + 
-		// '';
-	// // if (localStorage.showAgain == 'false') { return }
-	// if (lsGet('showAgain') == 'false' || lsGet('showAgain') == false) { return }
-	// else {
-		// $.prompt(updateMessage, {
-			// title: "Update your App to use the extension with your Pavlok",
-			// defaultButton: 1,
-			// buttons: { "Ok, don't tell me again": true, "Remind me again": false },
 
-			// submit: function(e,v,m,f){
-				// console.log("result was " + v);
-				// var result = v;
-				// if (result == true){
-					// // localStorage.showAgain = 'false';
-					// lsSet('showAgain', 'false');
-				// }
-				// else{
-					// // do nothing
-				// }
-			// }
-		// });
-	// }
-});
 
 /* Future universal settings object
 
@@ -697,17 +669,34 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
+function clearSpaces(string){
+	var x = string;
+	x[0] = x.replace(" ", "");
+	x[0] = x.replace(/\s/g, "");
+	x[0] = x.replace(/\t/g, "");
+	x[0] = x.replace(/\n/g, "");
+	x[0] = x.replace(/\r/g, "");
+	
+	return x;
+}
+
 function isEmpty(x){
 	var answer;
 	
 	if (typeof(x) == "undefined") { return true; }
 	if (typeof(x) == "array"){
 		if (x.length === 0) { return true; } // Empty Array
+		if (x.length === 1) {
+			if (clearSpaces(x[0]).length === 0) { return true }
+		}
 	}
 	if (typeof(x) == "object"){
 		if (Object.keys(x).length === 0) { return true; } // Empty Object
 	}
 	if(x.length === 0) { return true; }
+	if (typeof(x) == "string") {
+		if (clearSpaces(x).length === 0) { return true }
+	}
 	return false;
 }
 
@@ -1272,6 +1261,7 @@ function percentToRaw(percent, stimulus){
 }
 
 function rawToPercent(raw, stimulus){
+	raw = parseInt(raw);
 	var rawRange;
 	if (stimulus == 'zap'){
 		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
@@ -1327,8 +1317,80 @@ function toBoolean(string){
 	return bStatus
 }
 
+function setVal(data){
+	var target = $(data.dom);
+	if (isEmpty(target)) { target = data.dom2; }
+	
+	var type = $(target).prop("nodeName");
+	var subType = $(target).prop("type") || "none";
+	
+	if (type == "INPUT" && subType == "checkbox"){
+		$(target).prop("checked", data.value);
+	}
+	else {
+		$(target).val(data.value);
+	}
+	
+	return
+}
 
-
+function interfaceListeners(page){
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.target == page){
+				if (request.action == "updateBlackList"){
+					var bl = compareSetting("blackList", "#blackList");
+					var wl = compareSetting("whiteList", "#whiteList");
+					
+					if (bl == false || wl == false){
+						$("#blackList").importTags(lsGet('blackList'));
+						$("#whiteList").importTags(lsGet('whiteList'));
+					}
+					
+					var nBL = lsGet('blackList', 'parse');
+					blackListTable.create(nBL, 'blackList');
+				}
+				
+				// else if (request.action == "updateMaxTabs"){
+					// var maxTabs = request.maxTabs;
+					// var mt = compareSetting(maxTabs, "#maxTabsSelect");
+					// if (mt == false){ 
+						// setVal({target: "#maxTabsSelect", value: maxTabs});
+					// }
+				// }
+				
+				else if (request.action == "updateStimuli"){
+					var bi = compareSetting("beepPosition", $("#sliderBeep").slider("value").toString(), "override");
+					var zi = compareSetting("zapPosition", $("#sliderZap").slider("value").toString(), "override");
+					var vi = compareSetting("vibrationPosition", $("#sliderVibration").slider("value").toString(), "override");
+					
+					if ((bi && zi && vi) == false ){
+						$("#sliderBeep")		.slider("value", parseInt(lsGet('beepPosition'		)));
+						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
+						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
+					}
+				}
+				
+				else if (request.action == "updatePomo"){
+					pavPomo.frontend.updateCountdown(request.pomo);
+				}
+				
+				else if (request.action == "logged"){
+					showOptions(request.token);
+				}
+				
+				else if (request.action == "todoist"){
+					if (request.change == "unlogged"){
+						todoist.frontend.toggle();
+					}
+					else if (request.change == "logged"){
+						todoist.frontend.toggle();
+					}
+				}
+			}
+		}
+	);
+}
 
 
 
@@ -1359,9 +1421,6 @@ var blackListTable = {
 		var global = lsGet("blackGlobal", "parse") || false;
 		var globalHourly = (global.status === "hourly");
 		
-		console.log(global);
-		console.log(lsGet("blackGlobal", "parse"));
-		
 		// Empty table structure
 		var tableCode = 
 			$("<table>", {id: base + "Table"})
@@ -1380,10 +1439,10 @@ var blackListTable = {
 			.append( $("<td>")
 				.append( $("<input>", {type: "text", id: "siteName", class: "siteAddress", placeholder: "Add site... ie: facebook.com" }) )
 			)
-			.append( $("<td>", {class: "limitTimeTH"}) 
+			.append( $("<td>", {class: "limitTime"}) 
 				.append( $("<input>", {type: "text", id: "limit" + "new", class: "limitTime", placeholder: "ie: 5" }) )
 			)
-			.append( $("<td>", {class: "limitTypeTH"}) 
+			.append( $("<td>", {class: "limitType"}) 
 				.append( $("<select>", {id: "scope" + "new", class: "limitType" })
 					.append( $("<option>", {value: "daily", text: "daily"}) )
 					.append( $("<option>", {value: "hourly", text: "hourly"}) )
@@ -1394,7 +1453,7 @@ var blackListTable = {
 			);
 		
 		titlesRow = $("<tr>", {class: ""})
-			.append( $("<th>", {text: "Site", class: "siteAddressTH"}) )
+			.append( $("<th>", {text: "Site", class: "siteAddress"}) )
 			.append( $("<th>", {text: "Minutes", class: "limitMinutes"}) )
 			.append( $("<th>", {text: "Frequency", class: "limitType"}) )
 			.append( $("<th>", {text: ""}) );
@@ -1404,10 +1463,10 @@ var blackListTable = {
 				.append( $("<input>", {type: "checkbox", id: "totalLimit", checked: global.status }) )
 				.append( $("<span>", {text: "Total Limit", id: "totalLimitSpan" }) )
 			)
-			.append( $("<td>", {class: "limitTimeTH"}) 
+			.append( $("<td>", {class: "limitTime"}) 
 				.append( $("<input>", {type: "text", id: "limit" + "global", class: "limitTime", placeholder: "ie: 5", value:  global.limit}) )
 			)
-			.append( $("<td>", {class: "limitTypeTH"}) 
+			.append( $("<td>", {class: "limitType"}) 
 				.append( $("<select>", {id: "scope" + "global", class: "limitType" })
 					.append( $("<option>", {value: "daily", text: "daily"}) )
 					.append( $("<option>", {value: "hourly", text: "hourly"}) )
@@ -1439,10 +1498,10 @@ var blackListTable = {
 				.append( $("<td>")
 					.append( $("<input>", {type: "text", id: "address" + site, class: "siteAddress", value: site }) )
 				)
-				.append( $("<td>", {class: "limitTimeTD"}) 
+				.append( $("<td>", {class: "limitTime"}) 
 					.append( $("<input>", {type: "text", id: "limit" + site, class: "limitTime", value: limit }) )
 				)
-				.append( $("<td>", {class: "limitTypeTD"}) 
+				.append( $("<td>", {class: "limitType"}) 
 					.append( $("<select>", {id: "scope" + site, class: "limitType" })
 						.append( dailyOpt )
 						.append( hourlyOpt )
@@ -1577,3 +1636,81 @@ var blackListTable = {
 		return msg;
 	}
 }
+
+var maxTabsPack = {
+	create: function(page, value){
+		if (!value || isNaN(parseInt(value))){
+			value = 8;
+		}
+		var old = $("#maxTabsSelect");
+		var menu = $("<select>", {id: "maxTabsSelect", class: "pavSetting"})
+		var item;
+		
+		var range = ["no", 
+					1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+					11, 12, 13, 14, 15,
+					20, 25, 30, 35, 40, 45, 50
+					];
+		
+		for (i = 0; i < range.length; i++){
+			var v = range[i];
+			if (v == parseInt(value)){
+				item = $("<option>", {text: v, value: v, selected: true});
+			} else{
+				item = $("<option>", {text: v, value: v});
+			}
+			$(menu).append(item);
+		}
+		
+		$(old).replaceWith(menu);
+		
+		maxTabsPack.frontListener(page);
+	},
+	
+	set: function(value){
+		setVal({dom: "#maxTabsSelect", value});
+	},
+	
+	frontListener: function(page){
+		$("#maxTabsSelect").change(function(){
+			var maxTabs = $(this).val();
+			msgBackground({
+				change: "settings",
+				action: "update Max Tabs",
+				maxTabs: maxTabs
+			});
+		});
+		
+		chrome.runtime.onMessage.addListener(
+			function(request, sender, sendResponse) {
+				r = request;
+				if (r.target == page && r.action == "update Max Tabs"){
+					var curV = $("#maxTabsSelect").val();
+					var recV = r.value.toString();
+
+					countTabs(localStorage.tabCountAll, UpdateTabCount);
+					
+					if (curV != recV){
+						maxTabsPack.set(r.value);	
+						confirmUpdate(true);
+					}
+					
+				}
+				
+			}
+		);
+	},
+	
+	backListener: function(r){
+		if (r.action == "update Max Tabs"){
+			localStorage.maxTabs = r.maxTabs;
+			var msg = {
+				action: "update Max Tabs", 
+				dom: "#maxTabsSelect", 
+				value: r.maxTabs
+			}
+			msgInterfaces(msg);
+		}
+	}
+}
+

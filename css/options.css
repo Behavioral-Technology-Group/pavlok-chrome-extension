@@ -971,13 +971,6 @@ td.saveOrResetTD {
 	font-size: 15px;
 }
 
-#blackListTable th.limitType, 
-#blackListTable th.limitMinutes, 
-#blackListTable th.siteAddressTH{
-	color: white;
-	background: rgb(34, 34, 34);
-}
-
 #blackListTable #totalLimitSpan { 
 	color: white;
 	margin-left: 5px;
@@ -996,10 +989,10 @@ td.saveOrResetTD {
 	padding-right: 6px;
 }
 
-#blackListTable td.limitTimeTD, 
-#blackListTable th.limitTimeTH, 
-#blackListTable td.limitTypeTD, 
-#blackListTable th.limitTypeTH {
+#blackListTable td.limitTime, 
+#blackListTable th.limitTime, 
+#blackListTable td.limitType, 
+#blackListTable th.limitType {
 	width: 15%;
 }
 
@@ -1042,4 +1035,13 @@ td.saveOrResetTD {
 #blackListTable tfoot > tr{
 	border-top: 15px solid #222222;
 	
+}
+
+.jqimessage #migrationTable{
+	width: 100%;
+}
+
+.jqimessage #migrationTable td,
+.jqimessage #migrationTable th{
+	text-align: center;
 }

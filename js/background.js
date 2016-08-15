@@ -24,6 +24,41 @@ var myAudio = new Audio('../Audio/focus1min.mp3');
 var playing = false;
 if (!localStorage.badgeStatus) { localStorage.badgeStatus = "off" };
 
+var settings = {
+	blackList: {
+		black: {},
+		white: "",
+		countdown: 15
+	},
+	maxTabs: 30,
+	remote: {
+		zap: 153,
+		vib: 153,
+		beep: 153
+	},
+	rescueTime: {},
+	todoist: {},
+	schedule: {
+		start: "07:06 AM",
+		end: "07:05 PM",
+		format: "AM/PM",
+		Sun: true,
+		Mon: true,
+		Tue: true,
+		Wed: true,
+		Thu: true,
+		Fri: true,
+		Sat: true
+	},
+	coach: {},
+	todo: {
+		pomo: {},
+		tasks: {},
+		dailies: {},
+		
+	}
+	
+}
 // var maxTabs = parseInt(localStorage.maxTabs);
 var previousTabs = 0;
 var RTTimeOut;
@@ -60,7 +95,7 @@ var msgBorderlineTabs = ["Tabs limit approaching", "Keep them at bay and watch o
 var msgLimitTabs = ["Tabs limit reached!", "You're on the verge! Open no more tabs! Stay true to yourself!", "Back to safety, but still on the limit!"]
 
 // For Blacklisted sites
-var msgBlacklisted = ["BLACKLISTED SITE!!!", "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Outta here! Fast!", "blacklisted", ""];
+var msgBlacklisted = ["BLACKLISTED SITE!!!", "Watch out! You have " + localStorage.timeWindow + " seconds before the zap! Click here to close this page!", "blacklisted", ""];
 var msgZaped = ["Ouch!", "Too much time on blacklisted sites! Hurry outta here! Another zap is coming in " + localStorage.timeWindow + " secs!", ""];
 
 
@@ -355,6 +390,18 @@ function notifyClicked(){
 			chrome.notifications.clear("installed");
 			openOptions();
 		}
+		else if (notId == "blacklisted"){
+			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+				if (tabs.length == 0 ) { // no active tabs
+					console.log("background debugger activated");
+					return;
+				}
+			
+				chrome.tabs.remove(tabs[0].id);
+				getTabInfo(blackList.resolve);
+			}
+			);
+		}
 	});
 }
 
@@ -555,47 +602,22 @@ function checkForMigration(){
 	}
 }
 
-function initialize() {
-	checkForMigration();
-	blackList.checkForMigration();
-	blackList.setTime();
-	coach.listenCoachingClicks();
-	pavPomo.backend.backListener();
-	persistNotifications();
-	onUpdateAvailable();
-	onInstall();
-	notifyClicked();
-	
-	UpdateBadgeOnOff(" ");
-	var accessToken = localStorage.getItem("accessToken");
-	
-	CreateTabListeners(accessToken);
-	
-	testInterval = setInterval(
-		function(){
-			if (checkActiveDayHour() == true) {
-				if (isValid(localStorage.accessToken)){
-					timeWindow = localStorage.timeWindow;
-					rescueTimeChecker();
-					RTTimeOut = localStorage.RTTimeOut;
-				}
-			} else {
-				UpdateBadgeOnOff("Zzz");
-			}
-			
-			if (dayChange()){
-				testTodo.helpers.resetDailyTasks;
-				blackList.resetTime();
-			}
-		}
-	, 1000);
-	
+function msgListeners(){
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			r = request;
 			if (r.target == "background"){
+				// blackList:
+				// countdown
+				// whiteList
+				
+				// maxTabs
+				
+				// vib
+				// zap
+				
 				var action = r.action;
-				// Oauth
+
 				if (action == "oauth"){
 					signIn(r.user, spread)
 					// oauth();
@@ -604,6 +626,10 @@ function initialize() {
 					signOut();
 				}
 				
+				else if (r.change == "settings"){
+					maxTabsPack.backListener(r);
+				}
+				else if (action == ""){}
 				else if(action == "accessToken"){
 					// Receive access token from a content script
 					var token = r.token;
@@ -717,10 +743,44 @@ function initialize() {
 	);
 }
 
-
-
-
-
+function initialize() {
+	migrations.backListener();
+	checkForMigration();
+	blackList.checkForMigration();
+	blackList.setTime();
+	coach.listenCoachingClicks();
+	pavPomo.backend.backListener();
+	persistNotifications();
+	onUpdateAvailable();
+	onInstall();
+	notifyClicked();
+	
+	UpdateBadgeOnOff(" ");
+	var accessToken = localStorage.getItem("accessToken");
+	
+	CreateTabListeners(accessToken);
+	
+	testInterval = setInterval(
+		function(){
+			if (checkActiveDayHour() == true) {
+				if (isValid(localStorage.accessToken)){
+					timeWindow = localStorage.timeWindow;
+					rescueTimeChecker();
+					RTTimeOut = localStorage.RTTimeOut;
+				}
+			} else {
+				UpdateBadgeOnOff("Zzz");
+			}
+			
+			if (dayChange()){
+				testTodo.helpers.resetDailyTasks;
+				blackList.resetTime();
+			}
+		}
+	, 1000);
+	
+	msgListeners();
+}
 
 // Sandbox
 function globalTime(timeSpent){
@@ -776,13 +836,13 @@ var blackList = {
 	},
 	
 	set: function(data){
-		if (data.list == "white"){
+		if (data.receiver == "white"){
 			localStorage.whiteList = JSON.stringify(data.list);
 		}
-		else if (data.list == "black") {
+		else if (data.receiver == "black") {
 			localStorage.blackList = JSON.stringify(data.list);
 		}
-		else if (data.list == "global"){
+		else if (data.receiver == "global"){
 			localStorage.blackGlobal = JSON.strigify(data.global);
 		}
 	},
@@ -933,7 +993,7 @@ var blackList = {
 			}
 		}
 		else if (blackListed == true){
-			notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + "  seconds before the zap! Outta here! Fast!", "blacklisted", "blacklisted");
+			notifyUser(msgBlacklisted[0], "Watch out! You have " + timespan + "  seconds before the zap! Click here to close this page!", "blacklisted", "blacklisted");
 			if (curBlackListTimer == false){
 				curBlackListTimer = setTimeout(function(){
 					stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
@@ -1082,8 +1142,6 @@ var blackList = {
 	},
 	
 };
-
-
 initialize();
 
 	function getTabInfo(callback){

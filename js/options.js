@@ -1104,7 +1104,7 @@ function restoreOptions() {
 		confirmUpdate(notifyUpdate);
 	});
 		
-	$("#maxTabsSelect").val(localStorage.maxTabs);
+	// $("#maxTabsSelect").val(localStorage.maxTabs);
 	
 	$("#timeFormat").val(localStorage.timeFormat);
 
@@ -1275,11 +1275,7 @@ function initialize() {
 	});
 	
 	// Max Tabs
-	$("#maxTabsSelect").change(function(){
-		localStorage.maxTabs = $(this).val();
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
-		msgInterfaces({action: "updateMaxTabs"});
-	});
+	maxTabsPack.create( "options", lsGet("maxTabs") );
 	
 	
 	// Enablers
@@ -1364,59 +1360,7 @@ $( document ).ready(function() {
 	
 	blackListTable.create(lsGet('blackList', 'parse'), 'blackList');
 	blackListTable.listenClicks();
-	// Message listeners
-	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.target == "options"){
-				if (request.action == "updateBlackList"){
-					var bl = compareSetting("blackList", "#blackList");
-					var wl = compareSetting("whiteList", "#whiteList");
-					
-					if (bl == false || wl == false){
-						$("#blackList").importTags(lsGet('blackList'));
-						$("#whiteList").importTags(lsGet('whiteList'));
-					}
-					
-					var nBL = lsGet('blackList', 'parse');
-					blackListTable.create(nBL, 'blackList');
-				}
-				
-				else if (request.action == "updateMaxTabs"){
-					var mt = compareSetting("maxTabs", "#maxTabsSelect");
-					if (mt == false){
-						$("#maxTabsSelect").val(lsGet('maxTabs'));
-					}
-				}
-				
-				else if (request.action == "updateStimuli"){
-					var bi = compareSetting("beepPosition", $("#sliderBeep").slider("value").toString(), "override");
-					var zi = compareSetting("zapPosition", $("#sliderZap").slider("value").toString(), "override");
-					var vi = compareSetting("vibrationPosition", $("#sliderVibration").slider("value").toString(), "override");
-					
-					if ((bi && zi && vi) == false ){
-						$("#sliderBeep")		.slider("value", parseInt(lsGet('beepPosition'		)));
-						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
-						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
-					}
-				}
-				
-				else if (request.action == "updatePomo"){
-					pavPomo.frontend.updateCountdown(request.pomo);
-				}
-				
-				else if (request.action == "logged"){
-					showOptions(request.token);
-				}
-				
-				else if (request.action == "todoist"){
-					if (request.change == "unlogged"){
-						todoist.frontend.toggle();
-					}
-					else if (request.change == "logged"){
-						todoist.frontend.toggle();
-					}
-				}
-			}
-		}
-	);
+	
+	interfaceListeners("options");
+	
 });

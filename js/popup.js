@@ -132,6 +132,8 @@ function enableStimuliControls() {
 		defVib = parseInt(lsGet('vibrationPosition'));
 		defBeep = parseInt(lsGet('beepPosition'));
 		
+		console.log(localStorage);
+		
 		$( "#sliderBeep" ).slider({
 			value:defBeep,
 			min: 10,
@@ -207,89 +209,7 @@ function enableStimuliControls() {
 	});
 }
 
-$( document ).ready(function() {
-	enableTooltips();
-	presentName();
-	enableTestButtons();
-	enableToDo();
-	showOptions(localStorage.accessToken);
-		
-	tabsAsAccordion();
-	enableBlackList();
-	enableStimuliControls();
-	
-	$("#signOut").attr('title', 'Sign Out');
-	$("#signOut").click(function(){
-		msgBackground({action: "signOut"});
-	});
-	
-	$("#pavSubmitLogin").click(function(event){
-		event.preventDefault();
-		
-		var userInfo = {
-			userName: $("#pavUserNameLogin").val(),
-			password: $("#pavPasswordLogin").val(),
-		};
-		
-		if (validateUserInfo(userInfo)){
-			var msg = { 
-				action: "oauth", 
-				user: userInfo 
-			};
-			
-			msgBackground( msg );
-		}
-		else{
-			
-		};
-		
-	});
-
-	$("#maxTabsSelect").val( lsGet('maxTabs'));
-	$("#maxTabsSelect").change(function(){
-		var maxTabs = $(this).val();
-		lsSet('maxTabs', maxTabs);
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
-		confirmUpdate(notifyUpdate);
-		msgInterfaces({action: "updateMaxTabs"});
-	});
-	
-	$("#instaZap").change(function(){
-		updates = {instaZap: $(this).prop( "checked" )};
-		
-		var pomo = pavPomo.helpers.lastPomo();
-		pavPomo.backend.update(pomo.id, updates);
-		confirmUpdate(notifyUpdate);
-	});
-	
-	$("#lockZap").change(function(){
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			var active = $("#lockZap").prop("checked");
-			var updates = { lockZap: active };
-			if (active){
-				curPAVTab = tabs[0];
-				curPAVUrl = tabs[0].url;
-				curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
-				
-				if(curPAVDomain.length == 0){
-					console.log("unable to resolve domain for " + curPAVUrl);
-					curPAVDomain = curPAVUrl;
-				}
-				
-				updates.lockedTo = curPAVDomain;
-			}
-			else { updates.lockedTo = undefined; }
-			
-			var pomo = pavPomo.helpers.lastPomo();
-			pavPomo.backend.update(pomo.id, updates);
-			confirmUpdate(notifyUpdate);
-		});
-		
-	});
-	
-	pavPomo.helpers.initialSync();
-
-	// Message listeners
+function msgListeners(){
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.target == "popup"){
@@ -334,6 +254,90 @@ $( document ).ready(function() {
 			}
 		}
 	);
+}
+
+$( document ).ready(function() {
+	enableTooltips();
+	presentName();
+	enableTestButtons();
+	enableToDo();
+	showOptions(localStorage.accessToken);
+		
+	tabsAsAccordion();
+	enableBlackList();
+	enableStimuliControls();
+	
+	$("#signOut").attr('title', 'Sign Out');
+	$("#signOut").click(function(){
+		msgBackground({action: "signOut"});
+	});
+	
+	$("#pavSubmitLogin").click(function(event){
+		event.preventDefault();
+		
+		var userInfo = {
+			userName: $("#pavUserNameLogin").val(),
+			password: $("#pavPasswordLogin").val(),
+		};
+		
+		if (validateUserInfo(userInfo)){
+			var msg = { 
+				action: "oauth", 
+				user: userInfo 
+			};
+			
+			msgBackground( msg );
+		}
+		else{
+			
+		};
+		
+	});
+
+	maxTabsPack.create( "popup", lsGet("maxTabs") );
+	
+	$("#instaZap").change(function(){
+		updates = {instaZap: $(this).prop( "checked" )};
+		
+		var pomo = pavPomo.helpers.lastPomo();
+		pavPomo.backend.update(pomo.id, updates);
+		confirmUpdate(notifyUpdate);
+	});
+	
+	$("#lockZap").change(function(){
+		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+			var active = $("#lockZap").prop("checked");
+			var updates = { lockZap: active };
+			if (active){
+				curPAVTab = tabs[0];
+				curPAVUrl = tabs[0].url;
+				curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
+				
+				if(curPAVDomain.length == 0){
+					console.log("unable to resolve domain for " + curPAVUrl);
+					curPAVDomain = curPAVUrl;
+				}
+				
+				updates.lockedTo = curPAVDomain;
+			}
+			else { updates.lockedTo = undefined; }
+			
+			var pomo = pavPomo.helpers.lastPomo();
+			pavPomo.backend.update(pomo.id, updates);
+			confirmUpdate(notifyUpdate);
+		});
+		
+		
+	});
+	
+	pavPomo.helpers.initialSync();
+	
+	migrations.frontListener();
+	migrations.frontStarter();
+	// migrations.convertAll(JSON.parse(localStorage.updateRequest));
+	
+	// Message listeners
+	msgListeners();
 });
 
 function newsUpdate(){
@@ -360,4 +364,7 @@ function newsUpdate(){
 	}
 	
 	$.prompt(message);
+	
+	
 }
+

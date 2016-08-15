@@ -2,8 +2,8 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.8.3",
-  "name": "in House PAVLOK Productivity",
+  "version": "0.9.2",
+  "name": "PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  
   "description": "Stay Focused. Eliminate Distraction.",
