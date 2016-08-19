@@ -132,7 +132,7 @@ function enableStimuliControls() {
 		defVib = parseInt(lsGet('vibrationPosition'));
 		defBeep = parseInt(lsGet('beepPosition'));
 		
-		console.log(localStorage);
+		log(localStorage);
 		
 		$( "#sliderBeep" ).slider({
 			value:defBeep,
@@ -141,7 +141,7 @@ function enableStimuliControls() {
 			step: 10,
 			slide: function( event, ui ) {
 				var beepPos = ui.value;
-				console.log(beepPos);
+				log(beepPos);
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
@@ -225,15 +225,15 @@ function msgListeners(){
 				}
 				
 				else if (request.action == "updatePomo"){
-					console.log(request);
+					log(request);
 					var pomo = request.pomo;
 					if(!pomo){
-						console.log("No pomo");
+						log("No pomo");
 						return
 					}
 					pavPomo.frontend.updateCountdown(pomo);
-					console.log("received pomo");
-					console.log(pomo);
+					log("received pomo");
+					log(pomo);
 					
 				}
 				
@@ -314,7 +314,7 @@ $( document ).ready(function() {
 				curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
 				
 				if(curPAVDomain.length == 0){
-					console.log("unable to resolve domain for " + curPAVUrl);
+					log("unable to resolve domain for " + curPAVUrl);
 					curPAVDomain = curPAVUrl;
 				}
 				

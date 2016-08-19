@@ -146,14 +146,14 @@ function fireRescueTime(APIKey){
 	requestAddress = "https://www.rescuetime.com/anapi/current_productivity_pulse.json?key=" + APIKey;
 	localStorage.RTAPIKey = APIKey;
 	
-	console.log("get request to\n" + requestAddress);
+	log("get request to\n" + requestAddress);
 	$.get(requestAddress)
 	.done(function (data) {
 		localStorage.RTPulse = data.pulse;
 		localStorage.RTHour = data.comment.split(" ")[9];
 		localStorage.Comment = data.comment;
 		
-		console.log("Productivity pulse from 30 minutes before " + localStorage.RTHour + "is " + data.pulse)
+		log("Productivity pulse from 30 minutes before " + localStorage.RTHour + "is " + data.pulse)
 		
 		var prod = data.pulse;
 		if ( prod == 0 || prod == null || prod == 'null') { return }
@@ -178,7 +178,7 @@ function fireRescueTime(APIKey){
 	})
 	.fail(function(){
 		resultHolder.text("Failed");
-		console.log("BAD key. Fails on API.");
+		log("BAD key. Fails on API.");
 		localStorage.removeitem['RTAPIKey'];
 		return false
 	});
@@ -266,13 +266,13 @@ function checkActiveDayHour(){
 	var now = new Date();
 	var start = localStorage.generalActiveTimeStart;
 	var end = localStorage.generalActiveTimeEnd;
-	// console.log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
+	// log("Now is: " + now + "\nStarts at: " + start + "\nEnds at: " + end);
 	start = convert12To24(start);
 	end = convert12To24(end);
 	
 	var dayActive = checkActiveDay(now);
 	var hourActive = checkActiveHour(start, end);
-	// console.log("So, active day is " + dayActive + " and hour activity is " + hourActive);
+	// log("So, active day is " + dayActive + " and hour activity is " + hourActive);
 	
 	if (dayActive == true && hourActive == true) { return true }
 	else { return false }
@@ -393,7 +393,7 @@ function notifyClicked(){
 		else if (notId == "blacklisted"){
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 				if (tabs.length == 0 ) { // no active tabs
-					console.log("background debugger activated");
+					log("background debugger activated");
 					return;
 				}
 			
@@ -710,7 +710,7 @@ function msgListeners(){
 							coach.isItTime();
 							lsSet('coachStatus', 'off');
 						}
-						console.log("Coach running is " + coach.status);
+						log("Coach running is " + coach.status);
 					}
 					else if (r.change == "sync"){
 						sendResponse({
@@ -722,12 +722,12 @@ function msgListeners(){
 				else if (action == "todoistChange"){
 					if (r.change == "oauth"){
 						todoist.backend.getToken();
-						console.log("Oauth request received");
+						log("Oauth request received");
 					}
 					else if (r.change == "signOut"){
 						todoist.removeToken();
 						todoist.helpers.addToDoListeners(false);
-						console.log("Signout request made");
+						log("Signout request made");
 						msgInterfaces({
 							action: "todoist",
 							change: "unlogged"
@@ -910,12 +910,12 @@ var blackList = {
 		};
 		
 		if (blacked == true && whited == false) { 
-			console.log(curTabSubURL + " is blacklisted and NOT whitelisted");
+			log(curTabSubURL + " is blacklisted and NOT whitelisted");
 			return _blackList[b];
 		}
 		else { 
 			if (blacked == true && whited == true){
-				console.log(curTabSubURL + " is blacklisted, BUT whitelisted too");
+				log(curTabSubURL + " is blacklisted, BUT whitelisted too");
 			}
 			return false 
 		}
@@ -1042,7 +1042,7 @@ var blackList = {
 				total = total + sTime;
 			}
 		}
-		console.log("Total for " + domain + " from " + init + " to " + end + " is: " + total);
+		log("Total for " + domain + " from " + init + " to " + end + " is: " + total);
 		
 		return total
 	},
@@ -1108,7 +1108,7 @@ var blackList = {
 			timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] + params.frequency - 1;
 			lsSet("timeOnBlackList", timeOnBlackList, "object");
 			
-			console.log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
+			log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
 			
 			if (blackList.overQuota(domain)){
 				getTabInfo(blackList.resolver);
@@ -1147,7 +1147,7 @@ initialize();
 	function getTabInfo(callback){
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			if (tabs.length == 0 ) { // no active tabs
-				console.log("background debugger activated");
+				log("background debugger activated");
 				return;
 			}
 			
@@ -1156,10 +1156,10 @@ initialize();
 			curPAVDomain = new URL(curPAVUrl).hostname.replace("www.", "");
 			
 			if(curPAVDomain.length == 0){
-				console.log("unable to resolve domain for " + curPAVUrl);
+				log("unable to resolve domain for " + curPAVUrl);
 				curPAVDomain = curPAVUrl;
 			}
-			// console.log("Tab " + curPAVTab + " has url " + curPAVUrl + " on domain " + curPAVDomain);
+			// log("Tab " + curPAVTab + " has url " + curPAVUrl + " on domain " + curPAVDomain);
 			
 			document.title = curPAVTab.id + " " + curPAVTab.url; // Debug. Shows on background.html
 			if (typeof callback === "function"){

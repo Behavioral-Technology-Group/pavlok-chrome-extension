@@ -97,7 +97,7 @@ var pavPomo = {
 			msg.target = "external page"
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 				if (tabs.length == 0){
-					console.log("Chrome Internal page selected");
+					log("Chrome Internal page selected");
 					return
 				}
 				chrome.tabs.sendMessage(tabs[0].id, msg);
@@ -127,7 +127,7 @@ var pavPomo = {
 			var allPomos = pavPomo.backend.read();
 			
 			if (allPomos.length == 0){
-				console.log("No pomos yet");
+				log("No pomos yet");
 				return false
 			}
 			
@@ -152,7 +152,7 @@ var pavPomo = {
 			
 			var taskId = options.id;
 			var task = testTodo.backend.read(taskId);
-			if (!task){ console.log("no task with " + taskId + " id"); return }
+			if (!task){ log("no task with " + taskId + " id"); return }
 			
 			var duration = options.duration || 25;
 			
@@ -180,8 +180,8 @@ var pavPomo = {
 			}
 			
 			if (!newPomo.task){
-				console.log("No task assigned");
-				console.log(newPomo);
+				log("No task assigned");
+				log(newPomo);
 				return
 			}
 			
@@ -203,7 +203,7 @@ var pavPomo = {
 			var pomo = _.where(allPomos, {id: id});
 			
 			if (pomo.length == 0) { 
-				console.log("pomodoro not found"); 
+				log("pomodoro not found"); 
 				return false
 			}
 			
@@ -212,7 +212,7 @@ var pavPomo = {
 		update: function(id, updates){
 			var pomo = pavPomo.backend.read(id)
 			if (!pomo) {
-				console.log("No pomodoro found with " + id+ " id");
+				log("No pomodoro found with " + id+ " id");
 				return false
 			}
 			
@@ -356,7 +356,7 @@ var pavPomo = {
 						else if (action == "syncPomo"){
 							var allPomos = lsGet('allPomos', 'parse');
 							if (!allPomos){
-								console.log("no pomos");
+								log("no pomos");
 								return
 							}
 							var pomo = allPomos.slice(-1).pop();
@@ -413,7 +413,7 @@ var pavPomo = {
 						action: "updatePomo",
 						pomo: pavPomo.helpers.lastPomo()
 					});
-					console.log("PomoFocus ended");
+					log("PomoFocus ended");
 					
 					pavPomo.helpers.unbindCounter();
 				}
@@ -432,7 +432,7 @@ var pavPomo = {
 					title: "Great! Let's tackle this!",
 					buttons: { "Ready! Let me start": true, "No, I don't want help": false },
 					submit: function(e,v,m,f){
-						console.log("Enter PomoFocus result was " + v);
+						log("Enter PomoFocus result was " + v);
 						var result = v;
 						if (result == true){
 							var duration = parseInt($("#minutesPomodoro").val());
@@ -570,8 +570,8 @@ var testTodo = {
 			lsSet('allTasks', allTasks, 'object');
 			
 			lsSet('lastID', task.id);
-			console.log("New task added:")
-			console.log(task)
+			log("New task added:")
+			log(task)
 			return task
 		},
 		
@@ -589,7 +589,7 @@ var testTodo = {
 			var task = testTodo.backend.read(taskId);
 			
 			if (!task) { 
-				console.log("Couldn't find task of ID " + taskId); 
+				log("Couldn't find task of ID " + taskId); 
 				return false;
 			}
 			
@@ -614,7 +614,7 @@ var testTodo = {
 			var index = arrayObjectIndexOf(allTasks, id, 'id');
 			
 			if (index == -1 ){ 
-				console.log("Task ID " + id + " not found"); 
+				log("Task ID " + id + " not found"); 
 				return false;
 			}
 			
@@ -896,7 +896,7 @@ var testTodo = {
 			var task = testTodo.backend.read(id);
 			
 			if (task.length == 0){
-				console.log("Task of id " + id + " not found or not daily");
+				log("Task of id " + id + " not found or not daily");
 				return false
 			}
 			

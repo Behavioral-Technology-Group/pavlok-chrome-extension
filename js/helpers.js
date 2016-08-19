@@ -9,8 +9,20 @@
 
 // Server settings
 var server = "MVP" 			// STAGE or MVP
-var usage = "local"; 	// local OR test OR production (MVP or STAGE added at the end)
-usage = usage + server;
+var intent = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
+
+// Fail safe
+try {
+	var extensionURL = window.location.href;
+	console.log(extensionURL);
+	if 		(extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; }
+	else if (extensionURL.indexOf("bgjnliglpcichfboncdhmaiagbdhplij") != -1) { intent = "local"; }
+}
+catch(err){
+	console.log(err);
+}
+
+var usage = intent + server;
 
 var lastVib = 0;
 var limitRep = 500;
@@ -259,7 +271,7 @@ function savePomoFocus(pomoFocus, win){
 
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 		if (tabs.length == 0) {
-			console.log("background debugger selected");
+			log("background debugger selected");
 			return
 		}
 		chrome.tabs.sendMessage(tabs[0].id, 
@@ -301,9 +313,9 @@ function lsGet(key, parse){
 			returnData = JSON.parse(returnData)
 		}
 		catch(err){
-			console.log("Problem trying to parse " + key);
-			console.log(err);
-			console.log(returnData);
+			log("Problem trying to parse " + key);
+			log(err);
+			log(returnData);
 		}
 	}
 	else { returnData = localStorage.getItem(key); }
@@ -346,16 +358,16 @@ function isValid(token){
 	else { return false }
 
 	// Tries the code against API
-	console.log(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken);
+	log(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken);
 	
 	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
 	.done(function (data) {
-		console.log(data);
-		console.log("GOOD token. Works on API.");
+		log(data);
+		log("GOOD token. Works on API.");
 		return true
 	})
 	.fail(function(){
-		console.log("BAD token. Fails on API.");
+		log("BAD token. Fails on API.");
 		return false
 	});
 }
@@ -469,7 +481,7 @@ function evaluateTabCount(tabCount){
 	if(tabCount > maxTabs) {
 		situation.status = "over";
 		stimuli("shock", defInt, defAT, "Too many tabs");
-		console.log("total tabs over max tabs");
+		log("total tabs over max tabs");
 	}
 	else if (tabCount == maxTabs ){ 
 		situation.status = "limit";
@@ -579,7 +591,7 @@ function showOptions(accessToken){
 
 function showName(name){ // mark for review
 	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
-		console.log("SHOW NAME has username as undefined. Name is " + name)
+		log("SHOW NAME has username as undefined. Name is " + name)
 		return
 	}
 	else {
@@ -587,7 +599,7 @@ function showName(name){ // mark for review
 		userName.style.visibility = "visible";
 		userName.innerHTML = ", " + localStorage.userName;
 		
-		console.log('Username is ' + userName);
+		log('Username is ' + userName);
 	}
 	return
 }
@@ -777,7 +789,7 @@ function fixTags(problems){
 		}
 		
 		list.push(work);
-		console.log(original + "\n" + work);
+		log(original + "\n" + work);
 	}
 	return list;
 }
@@ -826,7 +838,7 @@ function getAccessToken(userData, callback){
 	var userName = userData.userName; //"igor.galvao@gmail.com";
 	var password = userData.password; //"Macpp1udemdamamne";
 	var grant_type = "password";
-	console.log("Trying login for " + userName + "\npass: " + password);
+	log("Trying login for " + userName + "\npass: " + password);
 	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
 	var apiAddress	= "api/v1/";
 	var x = baseAddress + "api/v1/" + "sign_in" + 
@@ -836,8 +848,8 @@ function getAccessToken(userData, callback){
 	   
 	$.post(x)
 	.done(function(data){
-		console.log("done");
-		console.log(data);
+		log("done");
+		log(data);
 		var token = data.access_token;
 		lsSet('accessToken', token);
 		lsSet('logged', 'true');
@@ -845,7 +857,7 @@ function getAccessToken(userData, callback){
 		spread(token);
 	})
 	.fail(function(){
-		console.log("failed");
+		log("failed");
 		// Message interface for login failed;
 	});
 }
@@ -871,13 +883,13 @@ function revokeAccessToken(){
 	
 	$.post(target)
 	.done(function(data){
-		console.log("done");
-		console.log(data);
+		log("done");
+		log(data);
 		lsDel("accessToken");
 		msgInterfaces({action: "logged", token: 'not logged'});
 	})
 	.fail(function(){
-		console.log("failed");
+		log("failed");
 	});
 }
 
@@ -918,16 +930,16 @@ function oauth() {
 		'&response_type=code' +
 		'&prompt=select_account';
 	
-	console.log("Step 1: Redirect URL is: " + redirectURL);
+	log("Step 1: Redirect URL is: " + redirectURL);
 	
 	chrome.identity.launchWebAuthFlow(
 		{url: authURL, interactive: true},
 		
 		function(responseUrl) {
 			// Get Auth code
-			console.log("Step 2: Response url with code is:" + responseUrl);
+			log("Step 2: Response url with code is:" + responseUrl);
 			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
-			console.log("Step 3: Authorizaion code is: " + authorizationCode);
+			log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = 
@@ -939,11 +951,11 @@ function oauth() {
 				+ '&grant_type=authorization_code' 
 				+ '&redirect_uri=' + redirectURL;
 			
-			console.log("Step 4: Access token Url is: " + accessTokenUrl);
+			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
 			$.post(accessTokenUrl)
 				.done(function (data) {
-					console.log(data);
+					log(data);
 					var accessToken = data.access_token;
 
 					msgInterfaces({action: 'logged', token: accessToken});
@@ -954,7 +966,7 @@ function oauth() {
 						showOptions(accessToken);
 						userInfo(accessToken);
 					});
-					console.log("OAuth2 test concluded");
+					log("OAuth2 test concluded");
 					chrome.notifications.clear("installed");
 					notifyUser('Hooray! Welcome aboard!', 'Click here to start using the Productivity Extension', 'signedIn');
 				});
@@ -976,16 +988,16 @@ function rescueTimeOAuth() {
 		'&scope=' + scope +
 		'&state=' + state;
 	
-	console.log("Step 1: Redirect URL is: " + redirectURL);
+	log("Step 1: Redirect URL is: " + redirectURL);
 	
 	chrome.identity.launchWebAuthFlow(
 		{url: authURL, interactive: true},
 		
 		function(responseUrl) {
 			// Get Auth code
-			console.log("Step 2: Response url with code is:" + responseUrl);
+			log("Step 2: Response url with code is:" + responseUrl);
 			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
-			console.log("Step 3: Authorizaion code is: " + authorizationCode);
+			log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = 'https://github.com/login/oauth/access_token?' + 
@@ -995,11 +1007,11 @@ function rescueTimeOAuth() {
 			'&redirect_uri=' + redirectURL;
 			'&state=' + state;
 			
-			console.log("Step 4: Access token Url is: " + accessTokenUrl);
+			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
 			$.post(accessTokenUrl)
 				.done(function (data) {
-					console.log(data);
+					log(data);
 					var accessToken = data.split("=")[1];
 					localStorage.setItem('loggedRT', 'true');
 					localStorage.setItem('accessTokenRT', accessToken);
@@ -1009,7 +1021,7 @@ function rescueTimeOAuth() {
 					
 				});
 			
-			console.log("OAuth2 test concluded");
+			log("OAuth2 test concluded");
 			
 		}
 	);	
@@ -1023,14 +1035,14 @@ function userInfo(accessToken) {
 	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
-				console.log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
+				log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
 				localStorage.setItem('userEmail', data.email)
 				localStorage.setItem('userName', data.name);
 				updateNameAndEmail(localStorage.userName, localStorage.userEmail);
 				return data.name;
 		})
 		.fail(function(){
-			console.log('User information request failed');
+			log('User information request failed');
 		});
 }
 
@@ -1067,16 +1079,16 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
 	else { alert("stimuli without reason"); }
 	
-	console.log("URL being POSTED is:\n" + postURL);
+	log("URL being POSTED is:\n" + postURL);
 	$.post(postURL)
 		.done(function (data, result) {
-			return console.log(stimulus + ' succeeded!\n' + data + " " + result);
+			return log(stimulus + ' succeeded!\n' + data + " " + result);
 		})
 		.fail( function() {
-			console.log('Failed the new API. Trying the old one');
+			log('Failed the new API. Trying the old one');
 			objectCode = localStorage.objectCode;
 			if (stimulus == "vibration") { stimulus = "vibro"; }
-			console.log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
 			$.get('https://pavlok.herokuapp.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
 			
 			return 
@@ -1103,24 +1115,24 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 		// '&scope=' + scope +
 		// '&state=' + state;
 	
-	console.log("Step 1: Redirect URL is: " + redirectURL);
+	log("Step 1: Redirect URL is: " + redirectURL);
 	
 	chrome.identity.launchWebAuthFlow(
 		{url: authURL, interactive: true},
 		
 		function(responseUrl) {
 			// Get Auth code
-			console.log("Step 2: Response url with code is:" + responseUrl);
+			log("Step 2: Response url with code is:" + responseUrl);
 			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
-			console.log("Step 3: Authorizaion code is: " + authorizationCode);
+			log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = tokenURL;
-			console.log("Step 4: Access token Url is: " + accessTokenUrl);
+			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
 			$.post(accessTokenUrl)
 				.done(function (data) {
-					console.log(data);
+					log(data);
 					localStorage.lastOAuthData = data;//JSON.strigigy(data);
 					var accessToken = data.split("=")[1];
 					localStorage.setItem('oauthSuccess', 'true');
@@ -1128,10 +1140,10 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 					localStorage.setItem('lastAccessToken', accessToken);
 					
 					
-					console.log("OAuth2 test concluded");
+					log("OAuth2 test concluded");
 				})
 				.fail(function() {
-					console.log("OAuth failed.")
+					log("OAuth failed.")
 				});
 		}
 	);
@@ -1304,7 +1316,7 @@ function arrayObjectIndexOf(myArray, searchTerm, property) {
 
 function toBoolean(string){
 	try { string = string.toLowerCase() }
-	catch(err) { console.log(err); }
+	catch(err) { log(err); }
 	
 	var bStatus = true;
 	
@@ -1525,7 +1537,7 @@ var blackListTable = {
 				e.preventDefault();
 				var msg = blackListTable.getRowInfo(this);
 				
-				console.log(msg);
+				log(msg);
 				msgBackground(msg);
 			}
 		});
@@ -1535,7 +1547,7 @@ var blackListTable = {
 			e.preventDefault();
 			var msg = blackListTable.getRowInfo(this);
 			
-			console.log(msg);
+			log(msg);
 			msgBackground(msg);
 		});
 		
@@ -1543,7 +1555,7 @@ var blackListTable = {
 			// Change the global status
 			var msg = blackListTable.getRowInfo(this);
 			
-			console.log(msg);
+			log(msg);
 			msgBackground(msg);
 			status = $(this).prop("checked");
 			status = toBoolean(status);
@@ -1714,3 +1726,9 @@ var maxTabsPack = {
 	}
 }
 
+function log(msg){
+	try{
+		if (JSON.parse(localStorage.verbose)){ console.log(msg); }
+	}
+	catch(err){}
+}

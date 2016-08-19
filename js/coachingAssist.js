@@ -93,7 +93,7 @@ var coach = {
 		
 		var nTasks = possibleTasks.length
 		if (number >= nTasks){
-			console.log("There are only " + nTasks + " tasks. Returning all of them")
+			log("There are only " + nTasks + " tasks. Returning all of them")
 			return possibleTasks
 		}
 		
@@ -111,7 +111,7 @@ var coach = {
 	
 	notifyTasks: function(tasks){
 		if (tasks.length > 2){
-			console.log("only two buttons avaible. Using the first 2 tasks");
+			log("only two buttons avaible. Using the first 2 tasks");
 			tasks = [tasks[0], tasks[1]];
 		}
 		else if (tasks.length == 0){ return; }
@@ -169,7 +169,7 @@ var coach = {
 			pomo: pavPomo.helpers.lastPomo()
 		});
 		
-		console.log("Starting pomo for " + task.task);
+		log("Starting pomo for " + task.task);
 	},
 
 	isItTime: function(){
@@ -187,7 +187,7 @@ var coach = {
 		// Part 1
 		var waitNextCall = now < coach.nextCall;
 		if (waitNextCall) { 
-			console.log("Next call at " + dateFromTime(coach.nextCall));
+			log("Next call at " + dateFromTime(coach.nextCall));
 			coach.helpers.clearTimeouts();
 			var timeout = setTimeout(function(){coach.isItTime();}, 10 * 1000);
 			coach.timeouts.push(timeout);

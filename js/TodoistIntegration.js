@@ -69,7 +69,7 @@ var todoist = {
 				
 				testTodo.backend.create = function(task){
 					var newTask = todoist.originalToDo.create(arguments[0]);
-					console.log("Sending " + newTask.task);
+					log("Sending " + newTask.task);
 					todoist.backend.sendTask(todoist.helpers.fromPavlok(newTask));
 					return newTask
 				};
@@ -78,14 +78,14 @@ var todoist = {
 					id = parseInt(id);
 					var delTask = testTodo.backend.read(id);
 					todoist.originalToDo.delete(id);
-					console.log("Deleting item ");
+					log("Deleting item ");
 					todoist.backend.delete(delTask.externalId);
-					console.log("Item deleted");
+					log("Item deleted");
 				}
 				
 				testTodo.backend.update = function(taskId, updates){
 					var upTask = todoist.originalToDo.update(taskId, updates);
-					console.log("Updating " + upTask.task);
+					log("Updating " + upTask.task);
 					
 					var props = Object.keys(updates);
 					if (props.indexOf("done") != -1){
@@ -96,7 +96,7 @@ var todoist = {
 						}
 					}
 					
-					console.log("Test done");
+					log("Test done");
 				}
 			}
 			else{
@@ -165,12 +165,12 @@ var todoist = {
 			if (todoist.token()){
 				$("#onTodoist").show();
 				$("#offTodoist").hide();
-				return console.log("todoist is logged");
+				return log("todoist is logged");
 			}
 			else{
 				$("#onTodoist").hide();
 				$("#offTodoist").show();
-				return console.log("todoist is UNlogged");
+				return log("todoist is UNlogged");
 			}
 		}
 	},
@@ -187,14 +187,18 @@ var todoist = {
 							"&scope="		+ jScope +
 							"&state="		+ todoist.helpers.random();
 			
-			console.log("Step 1: Redirect URL is: " + redirectURL);
+			log("Step 1: Redirect URL is: " + redirectURL);
 			
 			chrome.identity.launchWebAuthFlow(
 				{url: authURL, interactive: true},
 				
 				function(responseUrl) {
+					if (!responseUrl) {
+						console.log("error. Response is empty");
+						return false
+					}
 					// Get Auth code
-					console.log("Step 2: Response url with code is:" + responseUrl);
+					log("Step 2: Response url with code is:" + responseUrl);
 					var authData = responseUrl.substring(responseUrl.indexOf("=")+1);
 					authData = authData.split("&code=");
 					
@@ -205,7 +209,7 @@ var todoist = {
 					
 					// validate received state
 					
-					console.log("Step 3: Authorizaion code is: " + authorizationCode);
+					log("Step 3: Authorizaion code is: " + authorizationCode);
 					
 					// Exchange AuthCode for Access Token:
 					accessTokenUrl = "https://todoist.com/oauth/access_token/" + 
@@ -214,16 +218,16 @@ var todoist = {
 										"&code=" + authorizationCode + 
 										"&redirect_uri=" + redirectURL;
 					
-					console.log("Step 4: Access token Url is: " + accessTokenUrl);
+					log("Step 4: Access token Url is: " + accessTokenUrl);
 					
 					$.post(accessTokenUrl)
 						.done(function (data) {
-							console.log(data);
+							log(data);
 							var accessToken = data.access_token;
 							
 							localStorage.setItem('todoistAccessToken', accessToken);
 							msgInterfaces({action: "todoist", change: "logged"})
-							console.log("OAuth2 test concluded");
+							log("OAuth2 test concluded");
 							
 							todoist.helpers.addToDoListeners(true);
 						});
@@ -238,7 +242,7 @@ var todoist = {
 						"&access_token=" & todoist.token();
 			$.post(url)
 				.done(function(){
-					console.log("Token revoked");
+					log("Token revoked");
 					lsDel('todoistAccessToken');
 					msgInterfaces({
 						action: "todoist",
@@ -247,7 +251,7 @@ var todoist = {
 					return true;
 				})
 				.fail(function(){
-					console.log("Token revoke failed");
+					log("Token revoke failed");
 					return false;
 				});
 		},
@@ -268,11 +272,11 @@ var todoist = {
 				.done(function(data){
 					lsSet('todoistTasks', data.Items, 'object');
 					lsSet('todoist', data, 'object');
-					// console.log("Todoist tasks received");
-					// console.log(data.Items);
+					// log("Todoist tasks received");
+					// log(data.Items);
 					todoist.backend.import();
 				})
-				.fail(function(){ console.log("Todoist tasks request failed"); });	
+				.fail(function(){ log("Todoist tasks request failed"); });	
 		},
 		
 		// Tasks
@@ -299,10 +303,10 @@ var todoist = {
 					"/?token=" + todoist.token() +
 					"&commands=[" + JSON.stringify(command) + "]";
 			
-			console.log(command);
+			log(command);
 			$.post(url)
 				.done(function(data){
-					console.log(data);
+					log(data);
 					var syncStatus 	= data.SyncStatus;
 					var tempId 		= Object.keys(data.TempIdMapping)[0];
 					var newId 		= data.TempIdMapping[tempId];
@@ -399,7 +403,7 @@ var todoist = {
 				}
 			}
 			
-			console.log("Syncing with Todoist Server: " + todoistTasks.length + " tasks imported");
+			log("Syncing with Todoist Server: " + todoistTasks.length + " tasks imported");
 			msgInterfaces({action: "updateActions"});
 			
 		},
@@ -414,12 +418,12 @@ if (todoist.token()){
 }
 
 function testPost(url){
-	console.log("Posting attemp to\n" + url);
+	log("Posting attemp to\n" + url);
 	$.post(url)
-	.done(function(data){ console.log("done"); console.log(data);})
-	.fail(function(data){ console.log("fail"); console.log(data);});
+	.done(function(data){ log("done"); log(data);})
+	.fail(function(data){ log("fail"); log(data);});
 }
-console.log("Todoist integration is active");
+log("Todoist integration is active");
 
 /* Test cases for todoist ingegration 
 

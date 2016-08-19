@@ -164,7 +164,7 @@ function listenDailyListClick(){
 		
 		var updates = testTodo.helpers.gatherDaily();
 		var task = testTodo.backend.update(updates.id, updates);
-		console.log(task);
+		log(task);
 		
 		$(".taskDetailTR").hide(300, function(){$(".taskDetailTR").remove()});
 		
@@ -345,7 +345,7 @@ function enableRescueTime(){
 			defaultButton: 1,
 			buttons: { "No, I want to be productive": false, "Yes, disconnect from RescueTime": true },
 			submit: function(e,v,m,f){
-				console.log("result was " + v);
+				log("result was " + v);
 				var result = v;
 				if (result == true){
 					delete localStorage.RTAPIKey;
@@ -563,7 +563,7 @@ function enableAutoZapper(){
 			title: "Are you Ready?",
 			buttons: { "Yes, I'm Ready": true, "No, let me change this": false },
 			submit: function(e,v,m,f){
-				console.log("result was " + v);
+				log("result was " + v);
 				var result = v;
 				if (result == true){
 					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ), 'zap');
@@ -594,7 +594,7 @@ function enableAutoZapper(){
 					});
 					
 					var trainingSession = setInterval(function() {
-						console.log("Occured at ");
+						log("Occured at ");
 						stimuli("shock", localStorage.trainingSessionZI, defAT, "Training Session. Keep going!", "false");
 					}, parseInt(localStorage.trainingSessionZF));
 					localStorage.trainingSession = trainingSession;
@@ -661,7 +661,7 @@ function enableCoach(){
 		
 		function(response) {
 			if (response){
-				console.log(response);
+				log(response);
 				$("#coachPower").prop("checked", (response.status || false));
 			}
 		}
@@ -681,7 +681,7 @@ function enableTodoist(){
 	$("#todoistLogin").click(function(event){
 		event.preventDefault();
 		
-		console.log("clicked on todoist");
+		log("clicked on todoist");
 		msgBackground({
 			action: "todoistChange",
 			change: "oauth"
@@ -702,7 +702,7 @@ function enableTodoist(){
 	$("#signOutTodoist").click(function(event){
 		event.preventDefault();
 		
-		console.log("unlogging from todoist");
+		log("unlogging from todoist");
 		msgBackground({
 			action: "todoistChange",
 			change: "signOut"
@@ -854,7 +854,7 @@ function enableSliders(){
 			step: 10,
 			slide: function( event, ui ) {
 				var beepPos = ui.value;
-				console.log(beepPos);
+				log(beepPos);
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
@@ -1059,7 +1059,7 @@ function restoreOptions() {
 	
 	// Black and white lists
 	var blackList = localStorage.blackList;
-	// console.log(blackList);
+	// log(blackList);
 	if (blackList == undefined) { blackList = ' '; }
 	// $("#blackList").val(blackList);
 	$("#blackList").importTags(blackList);
@@ -1153,7 +1153,7 @@ function moveToLink(clickedLink){
 	var position = $(target).offset().top;
 	var positionUpdated = position - topSize;
 	
-	// console.log(positionUpdated);
+	// log(positionUpdated);
 	// window.scrollTo(0, positionUpdated);
 	$('html, body').animate({
 		scrollTop: positionUpdated
@@ -1236,7 +1236,7 @@ function initialize() {
 		culture = "de-DE";
 		localStorage.timeFormat = "24";
 		$("#timeFormat").val("24");
-		console.log("timeFormat is broken: " + timeFormat);
+		log("timeFormat is broken: " + timeFormat);
 	};
 	Globalize.culture( culture );
 	
