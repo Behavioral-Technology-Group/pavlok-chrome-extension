@@ -384,7 +384,7 @@ function onInstall(){
 function notifyClicked(){
 	chrome.notifications.onClicked.addListener(function(notId){
 		if (notId == "installed"){
-			oauth();
+			openOptions();
 		}
 		else if (notId == "signedIn"){
 			chrome.notifications.clear("installed");
@@ -921,6 +921,9 @@ var blackList = {
 		}
 	},
 	overQuota: function(site, mode){
+		var pomoFocus = pavPomo.helpers.lastPomo();
+		if (pomoFocus.active && pomoFocus.lockMe) { return true; }
+		
 		var nBL = blackList.get("blackList");
 		var spent;
 		var hour = new Date().getHours();
@@ -942,10 +945,7 @@ var blackList = {
 			spent = (blackList.trackTime({domain: site}) / 60).toFixed(2);
 		}
 		
-		if (spent > quota) 	{ 
-			
-			return true; 
-		}
+		if (spent > quota) 	{ return true; }
 		else 				{ return false; }
 	},
 	

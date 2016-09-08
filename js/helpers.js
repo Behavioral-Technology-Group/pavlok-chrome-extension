@@ -15,8 +15,9 @@ var intent = "production"; 	// local OR test OR production (MVP or STAGE added a
 try {
 	var extensionURL = window.location.href;
 	console.log(extensionURL);
-	if 		(extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; }
-	else if (extensionURL.indexOf("bgjnliglpcichfboncdhmaiagbdhplij") != -1) { intent = "local"; }
+	if 		(extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; server = "MVP"}
+	else if (extensionURL.indexOf("bgjnliglpcichfboncdhmaiagbdhplij") != -1) { intent = "local"; server = "MVP" }
+	else if (extensionURL.indexOf("jnpgmlnoaibdgbohdjhhnhfaoodnipkg") != -1) { intent = "test"; server = "STAGE"; }
 }
 catch(err){
 	console.log(err);

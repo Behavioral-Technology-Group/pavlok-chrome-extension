@@ -1,5 +1,26 @@
 New additions
 
+
+(0.9.6)
+- Fixed LockMe not firing
+- Fixed welcome window from the notification not signing in
+
+(0.9.5)
+
+- Fixed extension breaking on start up
+
+(0.9.4)
+- Extension became optionally less noisy for developers
+--- Verbose requires localStorage.verbose = JSON.stringify(true)
+--- Injected script won't use the console.log anymore
+
+(0.9.2)
+- Import your settings if you upgrade from an unofficial extension, as some people were using the test extension, instead of the main one
+... bug fixes
+
+(0.8.3)
+- Black List now has "allowance" systems, so that you can say "let me get on Facebook for 30 minutes today", but be warned about if your time there exceeds the allowance
+
 (0.8.2)
 - ToDo list opens by default on popup start
 - Messing with other tabs won't close Todo tab
