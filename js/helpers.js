@@ -116,6 +116,7 @@ settings.prompts.showAgain = '';
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
 lsSet('baseAddress', baseAddress);
+localStorage.baseAddress = baseAddress;
 
 localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
 
@@ -579,6 +580,8 @@ function showOptions(accessToken){
 		$(".onlyUnlogged").css('display', 'none'); 
 		$("#testPairing").show();
 		$("#testPairingX").show();
+		$("#pavUserNameLogin").val("");
+		$("#pavPasswordLogin").val("");
 	}
 	else { 
 		$(".onlyLogged").css('visibility', 'hidden'); 
@@ -840,9 +843,8 @@ function getAccessToken(userData, callback){
 	var password = userData.password; //"Macpp1udemdamamne";
 	var grant_type = "password";
 	log("Trying login for " + userName + "\npass: " + password);
-	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
 	var apiAddress	= "api/v1/";
-	var x = baseAddress + "api/v1/" + "sign_in" + 
+	var x = localStorage.baseAddress + "api/v1/" + "sign_in" + 
 	   "?grant_type=" + grant_type +
 	   "&username="   + userName +
 	   "&password="   + password;
@@ -898,32 +900,28 @@ function oauth() {
 	var redirectURL = chrome.identity.getRedirectURL();
 	
 	if ( usage == "localMVP" ) {
-		var clientID = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
+		var clientID     = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
 		var clientSecret = "220898a0635c04696dd3aab7b6990b6735cc7fc2817eed5be9f1bb1b5063e288";
 	}
 	else if (usage == "localSTAGE") {
-		var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
+		var clientID     = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
 		var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
 	}
 	else if ( usage == "testMVP" ){
-		var clientID = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
+		var clientID     = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
 		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
 	else if (usage == "testSTAGE") {
-		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		clientID     = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
 		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
 	else if ( usage == "productionSTAGE" ){
-		var clientID = "57267f5569ea936fb30c53e77ec617b4272f1b7001a23a0995d252c0487855c2";
-		var clientSecret = "f05083a0974ce75a945a146b7be2a4493c754b1ca44ca627f0aa0c33df53b673";
+		var clientID     = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		var clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
 	else if ( usage == "productionMVP" ) {
-		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
+		var clientID     = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
 		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
-	}
-	else if (usage == "varunSTAGE" || usage || "varunMVP" ){
-		var clientID = "f55f448e93f68a8a3b9e4723be626e62553d6d54c9ebe2924bf022c4e88695e0";
-		var clientSecret = "7cf4d85e884193dab1365845dcb1593c5c6529c538d9310df3b7c485daf40682";
 	}
 	var authURL = localStorage.baseAddress + "oauth/authorize?" + 
 		'client_id=' + clientID +
@@ -1725,6 +1723,32 @@ var maxTabsPack = {
 			msgInterfaces(msg);
 		}
 	}
+}
+
+function enter_on_sign_in(){
+	$('.onlyUnlogged input').on('keydown', function(e) {
+		if (e.which == 13) {
+			e.preventDefault();
+			var userInfo = {
+				userName: $("#pavUserNameLogin").val(),
+				password: $("#pavPasswordLogin").val(),
+			};
+			
+			if (validateUserInfo(userInfo)){
+				var msg = { 
+					action: "oauth", 
+					user: userInfo 
+				};
+				
+				msgBackground( msg );
+			}
+			else{
+				
+			};
+
+		}
+	
+	});
 }
 
 function log(msg){

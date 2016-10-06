@@ -262,7 +262,8 @@ $( document ).ready(function() {
 	enableTestButtons();
 	enableToDo();
 	showOptions(localStorage.accessToken);
-		
+    enter_on_sign_in();	
+	
 	tabsAsAccordion();
 	enableBlackList();
 	enableStimuliControls();
@@ -367,4 +368,3 @@ function newsUpdate(){
 	
 	
 }
-

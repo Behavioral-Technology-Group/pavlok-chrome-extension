@@ -1307,6 +1307,7 @@ function initialize() {
 
 initialize();
 $( document ).ready(function() {
+	enter_on_sign_in();
 	showOptions(localStorage.accessToken);
 	if (localStorage.logged == 'true') { 
 		toggleOverlay("options");
