@@ -1093,8 +1093,6 @@ var blackList = {
 			heartBeat: heartBeatLoop
 		};
 		
-		
-		
 		// Add first second
 		timeOnBlackList[hour][domain]++;
 		
@@ -1108,11 +1106,12 @@ var blackList = {
 			timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] + params.frequency - 1;
 			lsSet("timeOnBlackList", timeOnBlackList, "object");
 			
-			log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
-			
 			if (blackList.overQuota(domain)){
 				getTabInfo(blackList.resolver);
+				timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] - params.frequency + 1;
 			}
+			
+			log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
 			
 			blackList.heartBeat(params.domain);
 		}, frequency * 1000, params);
@@ -1148,6 +1147,9 @@ initialize();
 		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
 			if (tabs.length == 0 ) { // no active tabs
 				log("background debugger activated");
+				if (typeof callback === "function"){
+					callback("", "", "");
+				}
 				return;
 			}
 			

@@ -1,9 +1,9 @@
 New additions
 
-
 (0.9.6)
 - Fixed LockMe not firing
 - Fixed welcome window from the notification not signing in
+- Fixed Enter to work on login screens
 
 (0.9.5)
 
