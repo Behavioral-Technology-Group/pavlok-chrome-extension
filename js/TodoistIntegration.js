@@ -236,10 +236,10 @@ var todoist = {
 			return
 		},
 		removeToken: function(){
-			var url = "https://todoist.com/api/access_tokens/revoke" + 		
-						"?client_id=" + todoist.clientID + 
-						"&client_secret=" + todoist.clientSecret + 
-						"&access_token=" & todoist.token();
+			var url = "https://todoist.com/api/access_tokens/revoke" +
+						"?client_id=" + todoist.clientID(intent) + 
+						"&client_secret=" + todoist.clientSecret(intent) + 
+						"&access_token=" + todoist.token();
 			$.post(url)
 				.done(function(){
 					log("Token revoked");
@@ -248,10 +248,17 @@ var todoist = {
 						action: "todoist",
 						change: "unlogged"
 					});
+					todoist.helpers.addToDoListeners(false);
 					return true;
 				})
 				.fail(function(){
 					log("Token revoke failed");
+					lsDel('todoistAccessToken');
+					todoist.helpers.addToDoListeners(false);
+					msgInterfaces({
+						action: "todoist",
+						change: "unlogged"
+					});
 					return false;
 				});
 		},

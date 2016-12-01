@@ -1,5 +1,11 @@
 New additions
 
+(0.9.8)
+- Fixed a problem with Todoist. Sign out will work, regardless of their server response.
+
+(0.9.7)
+- Fixed a bug where closing the window while on a blacklisted page would still count as being on blacklisted page.
+
 (0.9.6)
 - Fixed LockMe not firing
 - Fixed welcome window from the notification not signing in

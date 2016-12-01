@@ -725,7 +725,7 @@ function msgListeners(){
 						log("Oauth request received");
 					}
 					else if (r.change == "signOut"){
-						todoist.removeToken();
+						todoist.backend.removeToken();
 						todoist.helpers.addToDoListeners(false);
 						log("Signout request made");
 						msgInterfaces({
