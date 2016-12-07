@@ -861,7 +861,7 @@ function getAccessToken(userData, callback){
 	})
 	.fail(function(){
 		log("failed");
-		// Message interface for login failed;
+		msgInterfaces({	action: "login failed" });
 	});
 }
 
@@ -1389,6 +1389,9 @@ function interfaceListeners(page){
 				else if (request.action == "logged"){
 					showOptions(request.token);
 				}
+				else if (request.action == "login failed"){
+					wrong_login();
+				}
 				
 				else if (request.action == "todoist"){
 					if (request.change == "unlogged"){
@@ -1756,4 +1759,9 @@ function log(msg){
 		if (JSON.parse(localStorage.verbose)){ console.log(msg); }
 	}
 	catch(err){}
+}
+
+function wrong_login(){
+	$("#unloggedMessage").effect("highlight", {color: 'white'}, 400);
+	$("#unloggedMessage").text("Invalid password and email combination");
 }

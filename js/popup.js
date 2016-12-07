@@ -250,6 +250,10 @@ function msgListeners(){
 					}
 					showOptions(token);
 					toggleSignInOut();
+					$("#unloggedMessage").text("Oh, looks like you are not signed in.");
+				}
+				else if (request.action == "login failed") {
+					wrong_login();
 				}
 			}
 		}
