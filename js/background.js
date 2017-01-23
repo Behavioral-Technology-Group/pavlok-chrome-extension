@@ -12,6 +12,7 @@ at the end of the pomodoro ==> Congrats! Take a 5 minute break!
 
 */
 // Globals
+var lockMeInBlock = "---not_the_locked_in"
 var heartBeatLoop;
 var timeOnBlackList;
 var curPAVTab, curPAVUrl, curPAVDomain, _result, timeBegin;
@@ -855,9 +856,10 @@ var blackList = {
 	},
 	
 	badSite: function(curTabURL, curTabDomain) {
-		var _blackList;
-		var _whiteList;
+		var _whiteList = blackList.get("whiteList");
+		var	_blackList = Object.keys(blackList.get("blackList"));
 		var curTabSubURL;
+		var pomoCondemned = false;
 		
 		var pomoFocus = pavPomo.helpers.lastPomo();
 		var task = testTodo.backend.read(pomoFocus.taskId);
@@ -865,17 +867,12 @@ var blackList = {
 		if (!pomoFocus){ var pomoFocus = {active: false }; };
 		
 		// Checks if it will use regular or daily black and whitelists
-		if (pomoFocus.active && pomoFocus.lockZap && curPAVDomain != pomoFocus.lockedTo) { return true; }
+		if (pomoFocus.active && pomoFocus.lockZap && curPAVDomain != pomoFocus.lockedTo) { pomoCondemned = true; }
 		
-		else if (pomoFocus.active && task.daily && task.specialList){
-				var _whiteList = task.whiteList.split(",");
-				var _blackList = task.blackList.split(",");
+		if (pomoFocus.active && task.daily && task.specialList){
+			_whiteList = task.whiteList.split(",");
+			_blackList = task.blackList.split(",");
 		}
-		else {
-			var _whiteList = blackList.get("whiteList");
-			var _blackList = Object.keys(blackList.get("blackList"));
-		}
-		
 		
 		// remove Http, Https and www
 		curTabSubURL = curTabURL.split(curTabDomain, 2);
@@ -887,8 +884,8 @@ var blackList = {
 		var whited = false;
 		
 		// Validate lists
-		if ( isEmpty(_blackList) || isEmpty(_blackList[0]) ){ _blackList = false }
-		if ( isEmpty(_whiteList) || isEmpty(_whiteList[0]) ){ _whiteList = false }
+		if ( isEmpty(_blackList) || isEmpty(_blackList[0]) ){ _blackList = false; }
+		if ( isEmpty(_whiteList) || isEmpty(_whiteList[0]) ){ _whiteList = false; }
 		
 		// Checks domain against BlackList and URL agains WhiteList
 		if (_blackList != false ){ 
@@ -899,6 +896,9 @@ var blackList = {
 				}
 			}
 		}
+		
+		if ( pomoCondemned == true && blacked == true ) { return _blackList[b]; }
+		else if ( pomoCondemned == true && blacked == false ) { return lockMeInBlock; }
 		
 		if (_whiteList != false) {
 			for (w = 0; w < _whiteList.length; w++){
@@ -922,7 +922,7 @@ var blackList = {
 	},
 	overQuota: function(site, mode){
 		var pomoFocus = pavPomo.helpers.lastPomo();
-		if (pomoFocus.active && pomoFocus.lockMe) { return true; }
+		if (pomoFocus.active && pomoFocus.lockZap) { return true; }
 		
 		var nBL = blackList.get("blackList");
 		var spent;
@@ -1103,16 +1103,17 @@ var blackList = {
 		
 		// Starts a new timeout;
 		heartBeatLoop = setTimeout(function(params){
-			timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] + params.frequency - 1;
-			lsSet("timeOnBlackList", timeOnBlackList, "object");
+			if (params.domain != lockMeInBlock) { 
+				timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] + params.frequency - 1;
+				lsSet("timeOnBlackList", timeOnBlackList, "object");
 			
-			if (blackList.overQuota(domain)){
-				getTabInfo(blackList.resolver);
-				timeOnBlackList[hour][domain] = timeOnBlackList[hour][domain] - params.frequency + 1;
-			}
 			
-			log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
-			
+				if (blackList.overQuota(domain)){
+					getTabInfo(blackList.resolver);
+				}
+				
+				log(timeOnBlackList[hour][domain] + " seconds on " + params.domain);
+			}	
 			blackList.heartBeat(params.domain);
 		}, frequency * 1000, params);
 		

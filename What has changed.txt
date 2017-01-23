@@ -1,5 +1,8 @@
 New additions
 
+(0.9.801)
+- Fixed a problem with LockMe during pomodoros, where it wouldn't run.
+
 (0.9.8)
 - Fixed a problem with Todoist. Sign out will work, regardless of their server response.
 
