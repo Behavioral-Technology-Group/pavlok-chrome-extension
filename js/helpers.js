@@ -8,7 +8,7 @@
 */
 
 // Server settings
-var server = "MVP" 			// STAGE or MVP
+var server = "MVP";			// STAGE or MVP
 var intent = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
 
 // Fail safe
@@ -838,18 +838,14 @@ function save_options() { // Mark for deletion
 }
 
 function getAccessToken(userData, callback){
+	var url = localStorage.baseAddress + "api/v1/sign_in";
+	var params = {
+		username: userData.userName;
+		password: userData.password;
+		grant_type: "password";
+	};
 	
-	var userName = userData.userName; //"igor.galvao@gmail.com";
-	var password = userData.password; //"Macpp1udemdamamne";
-	var grant_type = "password";
-	log("Trying login for " + userName + "\npass: " + password);
-	var apiAddress	= "api/v1/";
-	var x = localStorage.baseAddress + "api/v1/" + "sign_in" + 
-	   "?grant_type=" + grant_type +
-	   "&username="   + userName +
-	   "&password="   + password;
-	   
-	$.post(x)
+	$.post(url, params)
 	.done(function(data){
 		log("done");
 		log(data);
@@ -875,16 +871,12 @@ function spread(token){
 }
 
 function revokeAccessToken(){
-	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
-	var apiAddress	= "api/v1/";
-	var signOut		= "sign_out"
-	var parameters	= "?token=" + localStorage.accessToken;
+	var apiAddress	= "api/v1/sign_out"
+	var params	= {token: localStorage.accessToken};
 	
-	var target = baseAddress + apiAddress + signOut + parameters;
+	var sign_out_url = baseAddress + apiAddress;
 	
-	lsDel("accessToken");
-	
-	$.post(target)
+	$.post(sign_out_url, params)
 	.done(function(data){
 		log("done");
 		log(data);
@@ -941,18 +933,19 @@ function oauth() {
 			log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 
-				localStorage.baseAddress 
-				+ "/oauth/token?" 
-				+ 'client_id=' + clientID 
-				+ '&client_secret=' + clientSecret 
-				+ '&code=' + authorizationCode 
-				+ '&grant_type=authorization_code' 
-				+ '&redirect_uri=' + redirectURL;
+			accessTokenUrl = localStorage.baseAddress + "/oauth/token" 
+			params = {
+				client_id: clientID,
+				client_secret: clientSecret,
+				code: authorizationCode,
+				grant_type: 'authorization_code',
+				redirect_uri: redirectURL
+			}
+				
 			
 			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
-			$.post(accessTokenUrl)
+			$.post(accessTokenUrl, params)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.access_token;
@@ -999,16 +992,18 @@ function rescueTimeOAuth() {
 			log("Step 3: Authorizaion code is: " + authorizationCode);
 			
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://github.com/login/oauth/access_token?' + 
-			'client_id=' + clientID + 
-			'&client_secret=' + clientSecret + 
-			'&code=' + authorizationCode + 
-			'&redirect_uri=' + redirectURL;
-			'&state=' + state;
-			
+			accessTokenUrl = 'https://github.com/login/oauth/access_token'
+			params = {
+				client_id: clientID,
+				client_secret: clientSecret,
+				code: authorizationCode,
+				redirect_uri: redirectURL,
+				state: state
+			}
+				
 			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
-			$.post(accessTokenUrl)
+			$.post(accessTokenUrl, params)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.split("=")[1];
@@ -1069,17 +1064,16 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	
 	// if (notify) { $.prompt(textAlert); }
 	
-	postURL = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
-				stimulus + '/' + 
-				value + 
-				'?access_token=' + accessToken;
+	stimulusUrl = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
+				stimulus + '/' + value
+	params = { access_token: accessToken };
 				
 	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
 	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
 	else { alert("stimuli without reason"); }
 	
 	log("URL being POSTED is:\n" + postURL);
-	$.post(postURL)
+	$.post(stimulusUrl, params)
 		.done(function (data, result) {
 			return log(stimulus + ' succeeded!\n' + data + " " + result);
 		})

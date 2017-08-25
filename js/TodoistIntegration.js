@@ -212,16 +212,18 @@ var todoist = {
 					log("Step 3: Authorizaion code is: " + authorizationCode);
 					
 					// Exchange AuthCode for Access Token:
-					accessTokenUrl = "https://todoist.com/oauth/access_token/" + 
-										"?client_id=" + todoist.clientID(usage) +  
-										"&client_secret=" + todoist.clientSecret(usage) + 
-										"&code=" + authorizationCode + 
-										"&redirect_uri=" + redirectURL;
+					accessTokenUrl = "https://todoist.com/oauth/access_token/";
+					params = {
+						client_id: todoist.clientID(usage),
+						client_secret: todoist.clientSecret(usage),
+						code: authorizationCode,
+						redirect_uri: redirectURL
+					};
 					
 					log("Step 4: Access token Url is: " + accessTokenUrl);
 					
-					$.post(accessTokenUrl)
-						.done(function (data) {
+					$.post(accessTokenUrl, params)
+						.done(function (data, params) {
 							log(data);
 							var accessToken = data.access_token;
 							
@@ -236,11 +238,14 @@ var todoist = {
 			return
 		},
 		removeToken: function(){
-			var url = "https://todoist.com/api/access_tokens/revoke" +
-						"?client_id=" + todoist.clientID(intent) + 
-						"&client_secret=" + todoist.clientSecret(intent) + 
-						"&access_token=" + todoist.token();
-			$.post(url)
+			var sign_out_url = "https://todoist.com/api/access_tokens/revoke";
+			var params = {
+				client_id: todoist.clientID(intent),
+				client_secret: todoist.clientSecret(intent),
+				access_token: todoist.token()
+			};+
+
+			$.post(sign_out_url, params)
 				.done(function(){
 					log("Token revoked");
 					lsDel('todoistAccessToken');
@@ -269,13 +274,15 @@ var todoist = {
 			var seq_no;
 			if (!force) { seq_no = todoist.helpers.seq_no() } else {seq_no = 0 };
 
-			var reqURL 	= 	todoist.apiURL +
-							"/?token=" + todoist.token() + 
-							"&seq_no=" + seq_no +
-							"&resource_types=" + JSON.stringify(resTypes);
-								
+			var reqURL 	= 	todoist.apiURL;
+			var params = {
+				token: todoist.token(),
+				seq_no: seq_no,
+				resource_types: JSON.stringify(resTypes)
+			}
+
 			var data;
-			$.post(reqURL)
+			$.post(reqURL, params)
 				.done(function(data){
 					lsSet('todoistTasks', data.Items, 'object');
 					lsSet('todoist', data, 'object');
@@ -306,12 +313,15 @@ var todoist = {
 			
 			testTodo.backend.update(task.id, {externalId: command.temp_id});
 			
-			url = todoist.apiURL + 
-					"/?token=" + todoist.token() +
-					"&commands=[" + JSON.stringify(command) + "]";
+			command_url = todoist.apiURL;
+			params = {
+				token: todoist.token(),
+				commands: [JSON.stringify(command)]				
+			}
+
 			
 			log(command);
-			$.post(url)
+			$.post(command_url, params)
 				.done(function(data){
 					log(data);
 					var syncStatus 	= data.SyncStatus;
