@@ -840,9 +840,9 @@ function save_options() { // Mark for deletion
 function getAccessToken(userData, callback){
 	var url = localStorage.baseAddress + "api/v1/sign_in";
 	var params = {
-		username: userData.userName;
-		password: userData.password;
-		grant_type: "password";
+		username: userData.userName,
+		password: userData.password,
+		grant_type: "password"
 	};
 	
 	$.post(url, params)
@@ -1062,17 +1062,14 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 	if ( forceNotify == 'false' ) { notify = false; }
 	else if ( forceNotify == 'true' ) { notify = true; }
 	
-	// if (notify) { $.prompt(textAlert); }
-	
 	stimulusUrl = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
 				stimulus + '/' + value
 	params = { access_token: accessToken };
 				
-	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
-	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
+	if (textAlert.length > 0) { params.reason = textAlert; }
 	else { alert("stimuli without reason"); }
 	
-	log("URL being POSTED is:\n" + postURL);
+	log("URL being POSTED is:\n" + stimulusUrl);
 	$.post(stimulusUrl, params)
 		.done(function (data, result) {
 			return log(stimulus + ' succeeded!\n' + data + " " + result);
@@ -1081,7 +1078,7 @@ function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
 			log('Failed the new API. Trying the old one');
 			objectCode = localStorage.objectCode;
 			if (stimulus == "vibration") { stimulus = "vibro"; }
-			log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			log(stimulus + ' failed!\nUrl was: ' + stimulusUrl + "\nTrying the old API at: ");
 			$.get('https://pavlok.herokuapp.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
 			
 			return 
