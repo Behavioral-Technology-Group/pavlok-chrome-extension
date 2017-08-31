@@ -1,4 +1,10 @@
 New additions
+(0.9.803)
+- Sign in now can use special characters
+- Blacklist intensifier: if more than 3 zaps were sent in less than a minute, a popup appears to tell so to the user. This helps users not wearing Pavlok to curb bad browsing habits.
+
+(0.9.802)
+- Bug fixes on sign in
 
 (0.9.801)
 - Fixed a problem with LockMe during pomodoros, where it wouldn't run.
