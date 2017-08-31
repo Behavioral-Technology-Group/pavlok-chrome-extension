@@ -974,8 +974,8 @@ var blackList = {
 				if (firstZap == false){ 
 				stimuli("shock", defInt, defAT, "Not here, buddy. Don't do this on yourself. Love yourself and get focused!");
 				notifyUser("Not here, buddy", "Don't do this on yourself. Love yourself and get focused!", "zapped");
-				blackList.blocking_popup.add_time_to_tail();
-				blackList.blocking_popup.appear_if_needed();
+				blackList.blockingPopup.addTimeToTail();
+				blackList.blockingPopup.appear_if_needed();
 
 				// Substitute timeWindow
 				lsSet('firstZap', true);
@@ -1003,8 +1003,8 @@ var blackList = {
 					curBlackListTimer = false;
 					getTabInfo(blackList.resolver);
 					
-					blackList.blocking_popup.add_time_to_tail();
-					blackList.blocking_popup.appear_if_needed();
+					blackList.blockingPopup.addTimeToTail();
+					blackList.blockingPopup.appear_if_needed();
 				}, timespan * 1000);
 			}
 		}
@@ -1126,38 +1126,38 @@ var blackList = {
 		//return heartBeatLoop;
 	},
 	
-	blocking_popup: {
+	blockingPopup: {
 		// Structure
-		last_zaps: [],
-		zap_limit_before_popup: 3,
-		time_limit_between_zaps: 60 * 1000, // 1 minute
+		lastZaps: [],
+		zapLimitBeforePopup: 3,
+		timeLimitBetweenZaps: 60 * 1000, // 1 minute
 		
 		// Getters and setters
-		add_time_to_tail: function() {
-			blackList.blocking_popup.last_zaps.push(new Date);
-			if (blackList.blocking_popup.last_zaps.length > blackList.blocking_popup.zap_limit_before_popup) {
-				blackList.blocking_popup.remove_time_from_head();
+		addTimeToTail: function() {
+			blackList.blockingPopup.lastZaps.push(new Date);
+			if (blackList.blockingPopup.lastZaps.length > blackList.blockingPopup.zapLimitBeforePopup) {
+				blackList.blockingPopup.removeTimeFromHead();
 			}
 			
-			console.log(blackList.blocking_popup.last_zaps);
+			console.log(blackList.blockingPopup.lastZaps);
 		},
-		remove_time_from_head: function() {
-			blackList.blocking_popup.last_zaps.splice(0, 1);
-			console.log(blackList.blocking_popup.last_zaps);
+		removeTimeFromHead: function() {
+			blackList.blockingPopup.lastZaps.splice(0, 1);
+			console.log(blackList.blockingPopup.lastZaps);
 		},
 		
 		// Logic
-		need_popup: function() {
-			if (blackList.blocking_popup.last_zaps.length < blackList.blocking_popup.zap_limit_before_popup){
+		needPopup: function() {
+			if (blackList.blockingPopup.lastZaps.length < blackList.blockingPopup.zapLimitBeforePopup){
 				return false;
 			}
 			else {
-				return (blackList.blocking_popup.zap_interval() < blackList.blocking_popup.time_limit_between_zaps)
+				return (blackList.blockingPopup.zapInterval() < blackList.blockingPopup.timeLimitBetweenZaps)
 			}
 		},
-		zap_interval: function() {
-			if (blackList.blocking_popup.last_zaps.length > 0) {
-				var array = blackList.blocking_popup.last_zaps;
+		zapInterval: function() {
+			if (blackList.blockingPopup.lastZaps.length > 0) {
+				var array = blackList.blockingPopup.lastZaps;
 				latest = array[0];
 				oldest = array[array.length - 1];
 				return oldest - latest;
@@ -1167,11 +1167,11 @@ var blackList = {
 			}
 		},
 		alert: function() {
-			alert("Hey, Pavlokian, " + blackList.blocking_popup.zap_limit_before_popup + " zaps in less than a minute. What are you doing, buddy?");
+			alert("Hey, Pavlokian, " + blackList.blockingPopup.zapLimitBeforePopup + " zaps in less than a minute. What are you doing, buddy?");
 		},
 		appear_if_needed: function() {
-			if (blackList.blocking_popup.need_popup()) {
-				blackList.blocking_popup.alert();
+			if (blackList.blockingPopup.needPopup()) {
+				blackList.blockingPopup.alert();
 			}
 		}
 	},
