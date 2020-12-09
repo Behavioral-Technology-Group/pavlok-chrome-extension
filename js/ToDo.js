@@ -4,11 +4,6 @@
 	
 	Test an import of old model (daily and regular tasks separated)
 	
-	
-	Test the import with todoist
-	Debate on how to implement sync decisions
-	Implement overriding rules
-	
 	Design coaching intervals
 	Design to avoid coaching catch 22 (like showing the 0 tasks notification call)
 			

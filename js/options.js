@@ -677,39 +677,6 @@ function enableCoach(){
 	});
 }
 
-function enableTodoist(){
-	$("#todoistLogin").click(function(event){
-		event.preventDefault();
-		
-		log("clicked on todoist");
-		msgBackground({
-			action: "todoistChange",
-			change: "oauth"
-		});
-	});
-	
-	todoist.frontend.toggle();
-	
-	$("#importTodoist").click(function(event){
-		event.preventDefault();
-		
-		msgBackground({
-			action: "todoistChange",
-			change: "import"
-		});
-	});
-	
-	$("#signOutTodoist").click(function(event){
-		event.preventDefault();
-		
-		log("unlogging from todoist");
-		msgBackground({
-			action: "todoistChange",
-			change: "signOut"
-		});
-	});
-}
-
 function enableSignInOut(){
 	$("#signOutX").click(function(){
 		msgBackground({action: "signOut"});
@@ -1337,7 +1304,6 @@ $( document ).ready(function() {
 	if ($('#blackListDaily_tagsinput').length > 0){ return }
 	enableBlackDaily();
 	enableCoach();
-	enableTodoist();
 	
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");

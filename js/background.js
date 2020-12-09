@@ -38,7 +38,6 @@ var settings = {
 		beep: 153
 	},
 	rescueTime: {},
-	todoist: {},
 	schedule: {
 		start: "07:06 AM",
 		end: "07:05 PM",
@@ -720,25 +719,6 @@ function msgListeners(){
 					}
 				}
 				
-				else if (action == "todoistChange"){
-					if (r.change == "oauth"){
-						todoist.backend.getToken();
-						log("Oauth request received");
-					}
-					else if (r.change == "signOut"){
-						todoist.backend.removeToken();
-						todoist.helpers.addToDoListeners(false);
-						log("Signout request made");
-						msgInterfaces({
-							action: "todoist",
-							change: "unlogged"
-						});
-					}
-					else if (r.change == "import"){
-						// todoist.backend.getTasks();
-						todoist.helpers.sync();
-					}
-				}
 			}
 		}
 	);

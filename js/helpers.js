@@ -1394,15 +1394,6 @@ function interfaceListeners(page){
 				else if (request.action == "login failed"){
 					wrong_login();
 				}
-				
-				else if (request.action == "todoist"){
-					if (request.change == "unlogged"){
-						todoist.frontend.toggle();
-					}
-					else if (request.change == "logged"){
-						todoist.frontend.toggle();
-					}
-				}
 			}
 		}
 	);

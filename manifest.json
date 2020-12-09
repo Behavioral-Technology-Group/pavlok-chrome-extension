@@ -42,18 +42,17 @@
   ],
   
   "permissions": [
-	"background",
-	"cookies",
-    "https://pavlok.herokuapp.com/*",
-    "https://pavlok-stage.herokuapp.com/*",
-    "https://pavlok-mvp.herokuapp.com/*",
+    "background",
+    "cookies",
+      "https://pavlok.herokuapp.com/*",
+      "https://pavlok-stage.herokuapp.com/*",
+      "https://pavlok-mvp.herokuapp.com/*",
+      
+    "identity",
+    "notifications",
+    "tabs",
     
-	"identity",
-	"notifications",
-	"tabs",
-	
-	"https://github.com/login/oauth/*",
-	"https://www.rescuetime.com/*",
-	"https://todoist.com/api"
-    ]
+    "https://github.com/login/oauth/*",
+    "https://www.rescuetime.com/*"
+  ]
 }
