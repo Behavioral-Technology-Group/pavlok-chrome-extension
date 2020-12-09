@@ -21,6 +21,7 @@ function enableToDo(){
 	testTodo.frontend.doneCheckListener();
 	testTodo.frontend.removeTaskListener();
 	testTodo.frontend.tagTodayListener();
+	testTodo.frontend.clearCompletedListener();
 	testTodo.frontend.restoreTasks();
 	
 	pavPomo.frontend.startPomoListener();
@@ -703,6 +704,22 @@ var testTodo = {
 				testTodo.backend.update(taskId, {today: isToday});
 				testTodo.frontend.restoreTasks();
 				// todo.editLine(task);
+			});
+		},
+		
+		clearCompletedListener: function() {
+			$("#toDoTable tfoot ").on('click', '#clearToDoLink', function(){
+				var allTasks = lsGet('allTasks', 'parse') || [];
+				allTasks.forEach((task) => {
+					if (task.done) {
+						msgBackground({
+							action: "task change",
+							detail: "delete",
+							taskId: task.id,
+						});
+					}
+				})
+				
 			});
 		},
 		
