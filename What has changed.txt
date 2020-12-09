@@ -1,4 +1,8 @@
 New additions
+(0.9.813)
+- Removes Todoist integration
+- Fixes styling issues
+
 (0.9.812)
 - Updates stimuli URL
 
