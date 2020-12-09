@@ -1,4 +1,27 @@
 New additions
+(0.9.812)
+- Updates stimuli URL
+
+(0.9.811)
+- Bug fixes
+
+(0.9.810)
+- Fixes syntax error
+- Fixes pomodoro resets upon day change
+
+(0.9.809)
+- Fixes typo
+
+(0.9.808)
+- Removes OAuth due to Chrome compatibility issues
+- Adds create account link
+
+(0.9.806)
+- Enabled Clear Completed Tasks button
+
+(0.9.805)
+- Added OAuth2 as default sign in method
+
 (0.9.803)
 - Sign in now can use special characters
 - Blacklist intensifier: if more than 3 zaps were sent in less than a minute, a popup appears to tell so to the user. This helps users not wearing Pavlok to curb bad browsing habits.
