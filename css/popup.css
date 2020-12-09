@@ -792,3 +792,7 @@ div.auth {
 .jqimessage #migrationTable th{
 	text-align: center;
 }
+
+.onlyUnlogged a {
+	color: white;
+}
