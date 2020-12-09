@@ -774,7 +774,7 @@ function initialize() {
 			}
 			
 			if (dayChange()){
-				testTodo.helpers.resetDailyTasks;
+				testTodo.helpers.resetDailyTasks();
 				blackList.resetTime();
 			}
 		}
