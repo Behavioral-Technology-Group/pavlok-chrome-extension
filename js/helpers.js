@@ -562,6 +562,7 @@ function toggleSignInOut(){
 
 function signOut(){ 
 	revokeAccessToken();
+	maybeEndUserSession();
 	UpdateBadgeOnOff("Off");
 	msgInterfaces({action: "logged", token: 'not logged'})
 	
@@ -834,16 +835,16 @@ function save_options() { // Mark for deletion
 	// Get data and store it in LocalStorage
 	var select = document.getElementById("wantToSave");
 	localStorage.maxTabs = select;
-	
-}
+};
 
 function getAccessToken(userData, callback){
-	var url = localStorage.baseAddress + "api/v1/sign_in";
 	var params = {
 		username: userData.userName,
 		password: userData.password,
 		grant_type: "password"
 	};
+	
+	var url = lsGet("baseAddress") + "api/v1/sign_in";
 	
 	$.post(url, params)
 	.done(function(data){
@@ -852,10 +853,9 @@ function getAccessToken(userData, callback){
 		var token = data.access_token;
 		lsSet('accessToken', token);
 		lsSet('logged', 'true');
-		
 		spread(token);
 	})
-	.fail(function(){
+	.fail(function(req){
 		log("failed");
 		msgInterfaces({	action: "login failed" });
 	});
@@ -876,6 +876,9 @@ function revokeAccessToken(){
 	
 	var sign_out_url = baseAddress + apiAddress;
 	
+	// erase token anyway
+	lsDel("accessToken");
+	
 	$.post(sign_out_url, params)
 	.done(function(data){
 		log("done");
@@ -887,6 +890,27 @@ function revokeAccessToken(){
 		log("failed");
 	});
 }
+
+function maybeEndUserSession() {
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress	= "users/";
+	var signOut		= "sign_out"
+	var parameters	= "?token=" + localStorage.accessToken;
+	
+	var target = baseAddress + apiAddress + signOut + parameters;
+	
+	$.get(target)
+	.done(function(data){
+		log("done");
+		log(data);
+		lsDel("accessToken");
+		msgInterfaces({action: "logged", token: 'not logged'});
+	})
+	.fail(function(){
+		log("failed");
+	});
+}
+
 
 function oauth() { 
 	var redirectURL = chrome.identity.getRedirectURL();
@@ -942,7 +966,6 @@ function oauth() {
 				redirect_uri: redirectURL
 			}
 				
-			
 			log("Step 4: Access token Url is: " + accessTokenUrl);
 			
 			$.post(accessTokenUrl, params)
@@ -1152,23 +1175,11 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 
 function dayChange(){
-	var now = new Date();
-	var today = now.getDate();
-	var month = now.getMonth();
-	var curDate = today + "-" + month;
+	var today = dateAsString(new Date());
+	var lastDate = lsGet('lastDateCheck') || "";
 	
-	var lastTime = lsGet('lastTimeCheck') || 0;
-	
-	var lastDate = new Date(lastTime);
-	var lastDay  = lastDate.getDate();
-	var lastMonth = lastDate.getMonth();
-	var prevDate = lastDay + "-" + lastMonth;
-	
-	lsSet('lastTimeCheck', now);
-	if (curDate != prevDate){
-		return true
-	}
-	else {return false}
+	lsSet('lastDateCheck', today);
+	return today !== lastDate;;
 }
 
 function convertTimeFormat(time, toFormat){
@@ -1397,6 +1408,17 @@ function interfaceListeners(page){
 	);
 }
 
+function dateAsString(date) {
+	const day = twoDigits(date.getDate());
+	const month = twoDigits(date.getMonth());
+	const year = date.getYear() + 1900;
+	
+	return `${year}-${month}-${day}`
+}
+
+function twoDigits(number) {
+	return ("0" + number).slice(-2);
+}
 
 
 
