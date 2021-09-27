@@ -1,0 +1,24 @@
+.WLContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    width: 99%;
+    height: 200px;
+
+    background-color: white;
+}
+
+#sideTagInput {
+    width: 60%;
+    height: 15%;
+    margin: 10px;
+
+    border: none;
+    outline: none;
+
+    color: rgb(159, 159, 159);
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+}

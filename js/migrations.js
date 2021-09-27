@@ -11,32 +11,32 @@ var migrations = {
 				if (request.target == "background"){ 
 					if( request.subject == "migration"){
 						if (migrations.oldIds.indexOf(sender.id) != -1){
-							localStorage.oldId = sender.id;
+							lsSet("oldId", sender.id);
 							blackList.checkForMigration();
 							var r = {
 								subject: "migration",
 								old: request, 
 								new: {
 									blackList: Object.keys(blackList.get("blackList")),
-									countdown: localStorage.timeWindow,
+									countdown: lsGet("timeWindow"),
 									whiteList: blackList.get("whiteList"),
 									
-									maxTabs: localStorage.maxTabs,
+									maxTabs: lsGet("maxTabs"),
 									
-									zap: localStorage.zapIntensity,
-									vib: localStorage.vibrationIntensity,
+									zap: lsGet("zapIntensity"),
+									vib: lsGet("vibrationIntensity"),
 									
 									scheduler: {
-										mon: localStorage.mondayActive,
-										tue: localStorage.tuesdayActive,
-										wed: localStorage.wednesdayActive,
-										thu: localStorage.thursdayActive,
-										fri: localStorage.fridayActive,
-										sat: localStorage.saturdayActive,
-										sun: localStorage.sundayActive,
+										mon: lsGet("mondayActive"),
+										tue: lsGet("tuesdayActive"),
+										wed: lsGet("wednesdayActive"),
+										thu: lsGet("thursdayActive"),
+										fri: lsGet("fridayActive"),
+										sat: lsGet("saturdayActive"),
+										sun: lsGet("sundayActive"),
 										
-										start: localStorage.generalActiveTimeStart,
-										end: localStorage.generalActiveTimeEnd
+										start: lsGet("generalActiveTimeStart"),
+										end: lsGet("generalActiveTimeEnd")
 									}
 								}
 							}
@@ -73,24 +73,24 @@ var migrations = {
 					
 					// Countdown
 					var newTime = r.old.countdown;
-					localStorage.timeWindow = newTime;
+					lsSet("timeWindow", newTime);
 					
 					// Max Tabs
 					var maxTabs = r.old.maxTabs;
-					localStorage.maxTabs = maxTabs;
+					lsSet("maxTabs", maxTabs);
 
 					// Remote
 					var zap = r.old.zap;
-					localStorage.zapIntensity = zap;
+					lsSet("zapIntensity", zap);
 					
 					var zapPos = parseInt(zap);
 					zapPos = rawToPercent(zap, "zap");
-					localStorage.zapPosition = zapPos;
+					lsSet("zapPosition", zapPos);
 					
 					var vib = r.old.vib;
 					var vibPos = parseInt(vib);
 					vibPos = rawToPercent(vib, "vibrate");
-					localStorage.vibrationPosition = vibPos;
+					lsSet("vibrationPosition", vibPos);
 					
 					console.log(vib);
 					
@@ -125,7 +125,7 @@ var migrations = {
 						nMigPrompt++;
 						
 						console.log(request);
-						localStorage.updateRequest = JSON.stringify(request);
+						lsSet("updateRequest", JSON.stringify(request));
 						
 						migrations.convertAll(request);
 					}
@@ -145,7 +145,7 @@ var migrations = {
 	},
 	
 	convertAll: function(r){
-		localStorage.updateRequest = JSON.stringify(r);
+		lsSet("updateRequest", JSON.stringify(r));
 		
 		var xHTML = $("<div>")
 			.append( $("<p>", {text: "You are coming from the previous Testing extension. Would you like import your old settings or clear your settings?"}) );
@@ -156,7 +156,7 @@ var migrations = {
 			buttons: {"Import settings": true, "Reset settings": false},
 			focus: 0,
 			submit: function(e, v, m, f){
-				var r = JSON.parse(localStorage.updateRequest);
+				var r = JSON.parse(lsGet("updateRequest"));
 				msgBackground({subject: "import settings", r: r})
 				
 				migrations.uninstallPrompt();
@@ -174,7 +174,7 @@ var migrations = {
 			focus: 0,
 			submit: function(e, v, m, f){
 				if (v === true){
-					var oldId = localStorage.oldId;
+					var oldId = lsGet("oldId");
 					chrome.runtime.sendMessage(oldId, {uninstall: true});
 					
 				}

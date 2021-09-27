@@ -8,18 +8,18 @@
 */
 
 // Server settings
-var server = "MVP";			// STAGE or MVP
+var server = "MVP" 			// STAGE or MVP
 var intent = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
 
 // Fail safe
 try {
 	var extensionURL = window.location.href;
-	console.log(extensionURL);
-	if 		(extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; server = "MVP"}
+	// console.log(extensionURL);
+	if (extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; server = "MVP" }
 	else if (extensionURL.indexOf("bgjnliglpcichfboncdhmaiagbdhplij") != -1) { intent = "local"; server = "MVP" }
 	else if (extensionURL.indexOf("jnpgmlnoaibdgbohdjhhnhfaoodnipkg") != -1) { intent = "test"; server = "STAGE"; }
 }
-catch(err){
+catch (err) {
 	console.log(err);
 }
 
@@ -44,35 +44,35 @@ settings.schedule = {};
 settings.user = {};
 
 // Site lists (black and whitelists)
-settings.siteLists.blackList = localStorage.blackList;
-settings.siteLists.blackList = localStorage.whiteList;
-settings.siteLists.blackList = localStorage.timeWindow;
+settings.siteLists.blackList = lsGet("blackList");
+settings.siteLists.blackList = lsGet("whiteList");
+settings.siteLists.blackList = lsGet("timeWindow");
 
 
 // Tab numbers
-settings.tabsControl.maxTabs = localStorage.maxTabs;
-settings.tabsControl.zapOnClose = localStorage.zapOnClose;
-settings.tabsControl.allWindows = localStorage.allWindows;
+settings.tabsControl.maxTabs = lsGet("maxTabs");
+settings.tabsControl.zapOnClose = lsGet("zapOnClose");
+settings.tabsControl.allWindows = lsGet("allWindows");
 
 
 // Stimuli intensity
-settings.stimuli.baseAddress = localStorage.baseAddress;
-settings.stimuli.zapIntensity = localStorage.zapIntensity;
-settings.stimuli.vibrationIntensity = localStorage.vibrationIntensity;
-settings.stimuli.beepVolume = localStorage.beepVolume;
+settings.stimuli.baseAddress = lsGet("baseAddress");
+settings.stimuli.zapIntensity = lsGet("zapIntensity");
+settings.stimuli.vibrationIntensity = lsGet("vibrationIntensity");
+settings.stimuli.beepVolume = lsGet("beepVolume");
 
-settings.stimuli.zapNotify = localStorage.notifyZap;
-settings.stimuli.vibrationNotify = localStorage.notifyVibration;
-settings.stimuli.beepNotify = localStorage.notifyBeep;
+settings.stimuli.zapNotify = lsGet("notifyZap");
+settings.stimuli.vibrationNotify = lsGet("notifyVibration");
+settings.stimuli.beepNotify = lsGet("notifyBeep");
 
 
 // To-do Lists
-settings.toDos.dailies = localStorage.dailies;
-settings.toDos.lastDailyID = localStorage.lastDailyID;
+settings.toDos.dailies = lsGet("dailies");
+settings.toDos.lastDailyID = lsGet("lastDailyID");
 
-settings.toDos.tasks = localStorage.ToDoTasks;
+settings.toDos.tasks = lsGet("ToDoTasks");
 settings.toDos.timeConstraints = '';
-settings.toDos.pomoFocus = localStorage.pomoFocus;
+settings.toDos.pomoFocus = lsGet("pomoFocus");
 
 
 // AutoZapper
@@ -115,51 +115,51 @@ settings.prompts.showAgain = '';
 */
 
 var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
-lsSet('baseAddress', baseAddress);
-localStorage.baseAddress = baseAddress;
+// var baseAddress = "https://app.pavlok.com/";
+lsSet("baseAddress", baseAddress);
 
-localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
+lsSet("gmailClientID", '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com');
 
 // Stimuli intensity
 { // Defaults
-if (!localStorage.beepTune ) { localStorage.beepTune = 2; } //Random tune
-if (!localStorage.beepIntensity ) { localStorage.beepIntensity = 255; } //Random tune
-if (!localStorage.beepPosition ) { localStorage.beepPosition = 100; } //Random tune
-if (!localStorage.zapIntensity ) { localStorage.zapIntensity = 153; } //60% default
-if (!localStorage.zapPosition ) { localStorage.zapPosition = 60; } //60% default
-if (!localStorage.vibrationIntensity ) { localStorage.vibrationIntensity = 153; } //60% default
-if (!localStorage.vibrationPosition ) { localStorage.vibrationPosition = 60; } //60% default
+	if (!lsGet("beepTune")) { lsSet("beepTune", 2) } //Random tune
+	if (!lsGet("beepIntensity")) { lsSet("beepIntensity", 255) } //Random tune
+	if (!lsGet("beepPosition")) { lsSet("beepPosition", 100) } //Random tune
+	if (!lsGet("zapIntensity")) { lsSet("zapIntensity", 153) } //60% default
+	if (!lsGet("zapPosition")) { lsSet("zapPosition", 60) } //60% default
+	if (!lsGet("vibrationIntensity")) { lsSet("vibrationIntensity", 153) } //60% default
+	if (!lsGet("vibrationPosition")) { lsSet("vibrationPosition", 60) } //60% default
 
-// Blacklist and tabs
-if (!localStorage.timeWindow) { localStorage.timeWindow = 15};
-if (!localStorage.blackList) { localStorage.blackList = JSON.stringify({}); }
-if (!localStorage.whiteList) { localStorage.whiteList = " "; }
-if (!localStorage.zapOnClose ) { localStorage.zapOnClose = "false"; }
-if (!localStorage.maxTabs ) { localStorage.maxTabs = 15; }
-if (!localStorage.tabCountAll ) { localStorage.tabCountAll = 'allWindows'; }
-if (!localStorage.tabNumbersActive ) { localStorage.tabNumbersActive = 'true'; }
+	// Blacklist and tabs
+	if (!lsGet("timeWindow")) { lsSet("timeWindow", 15) };
+	if (!lsGet("blackList")) { lsSet("blackList", JSON.stringify({})) }
+	if (!lsGet("whiteList")) { lsSet("whiteList", " ") }
+	if (!lsGet("zapOnClose")) { lsSet("zapOnClose", "false") }
+	if (!lsGet("maxTabs")) { lsSet("maxTabs", 15) }
+	if (!lsGet("tabCountAll")) { lsSet("tabCountAll", 'allWindows') }
+	if (!lsGet("tabNumbersActive")) { lsSet("tabNumbersActive", 'true') }
 
-// Active Days and Hours
-if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
-if (!localStorage.generalActiveTimeEnd) { localStorage.generalActiveTimeEnd = "23:59"; }
-if (!localStorage.sundayActive) { localStorage.sundayActive = 'true'; }
-if (!localStorage.mondayActive) { localStorage.mondayActive = 'true'; }
-if (!localStorage.tuesdayActive) { localStorage.tuesdayActive = 'true'; }
-if (!localStorage.wednesdayActive) { localStorage.wednesdayActive = 'true'; }
-if (!localStorage.thursdayActive) { localStorage.thursdayActive = 'true'; }
-if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
-if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
+	// Active Days and Hours
+	if (!lsGet("generalActiveTimeStart")) { lsSet("generalActiveTimeStart", "00:00") }
+	if (!lsGet("generalActiveTimeEnd")) { lsSet("generalActiveTimeEnd", "23:59") }
+	if (!lsGet("sundayActive")) { lsSet("sundayActive", 'true') }
+	if (!lsGet("mondayActive")) { lsSet("mondayActive", 'true') }
+	if (!lsGet("tuesdayActive")) { lsSet("tuesdayActive", 'true') }
+	if (!lsGet("wednesdayActive")) { lsSet("wednesdayActive", 'true') }
+	if (!lsGet("thursdayActive")) { lsSet("thursdayActive", 'true') }
+	if (!lsGet("fridayActive")) { lsSet("fridayActive", 'true') }
+	if (!lsGet("saturdayActive")) { lsSet("saturdayActive", 'true') }
 
-// Notifications
-if (!localStorage.persistedNotifications) { localStorage.persistedNotifications = [];}
-if (!localStorage.notifyBeep ) { localStorage.notifyBeep = 'false'; }
-if (!localStorage.notifyVibration ) { localStorage.notifyVibration = 'false'; }
-if (!localStorage.notifyZap ) { localStorage.notifyZap = 'false'; }
+	// Notifications
+	if (!lsGet("persistedNotifications")) { lsSet("persistedNotifications", []) }
+	if (!lsGet("notifyBeep")) { lsSet("notifyBeep", 'false') }
+	if (!lsGet("notifyVibration")) { lsSet("notifyVibration", 'false') }
+	if (!lsGet("notifyZap")) { lsSet("notifyZap", 'false') }
 
-var notifyInterval;
+	var notifyInterval;
 
 	var notifications = {};
-	
+
 	// When extension is first installed
 	notifications.installed = {};
 	notifications.installed.title = "Welcome to Pavlok. Let's get started!";
@@ -167,7 +167,7 @@ var notifyInterval;
 	notifications.installed.id = "installed";
 	notifications.installed.persist = true;
 	notifications.installed.usage = "installed";
-	
+
 	// When logged in
 	notifications.signedIn = {};
 	notifications.signedIn.title = "Hooray! Welcome aboard!";
@@ -175,7 +175,7 @@ var notifyInterval;
 	notifications.signedIn.id = "signedIn";
 	notifications.signedIn.persist = true;
 	notifications.signedIn.usage = "installed";
-	
+
 	// PomoFocus task completed
 	notifications.pomofocusDone = {};
 	notifications.pomofocusDone.title = "Way to go!";
@@ -183,7 +183,7 @@ var notifyInterval;
 	notifications.pomofocusDone.id = "PFNotify";
 	notifications.pomofocusDone.persist = false;
 	notifications.signedIn.usage = "pomofocusDone";
-	
+
 	// pomoFocus time ended
 	notifications.pomofocusEnded = {};
 	notifications.pomofocusEnded.title = "Congrats! You made it!";
@@ -191,39 +191,39 @@ var notifyInterval;
 	notifications.pomofocusEnded.id = "PFNotify";
 	notifications.pomofocusEnded.persist = false;
 	notifications.signedIn.usage = "pomofocusEnded";
-	
+
 	// 
 	lsSet('notifications', notifications, 'object');
-	
-// RescueTime
-if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
-if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
 
-if (!localStorage.RTPosSti) { localStorage.RTPosSti = "vibration" };
-if (!localStorage.RTWarnSti) { localStorage.RTWarnSti = "beep" };
-if (!localStorage.RTNegSti ) { localStorage.RTNegSti = "shock" };
+	// RescueTime
+	if (!lsGet("RTOnOffSelect")) { lsSet("RTOnOffSelect", "Off") };
+	if (!lsGet("RTFrequency")) { lsSet("RTFrequency", 15) };
 
-if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
-if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
-if (!localStorage.RTNegLimit ) { localStorage.RTNegLimit = 30 };
+	if (!lsGet("RTPosSti")) { lsSet("RTPosSti", "vibration") };
+	if (!lsGet("RTWarnSti")) { lsSet("RTWarnSti", "beep") };
+	if (!lsGet("RTNegSti")) { lsSet("RTNegSti", "shock") };
+
+	if (!lsGet("RTPosLimit")) { lsSet("RTPosLimit", 70) };
+	if (!lsGet("RTWarnLimit")) { lsSet("RTWarnLimit", 50) };
+	if (!lsGet("RTNegLimit")) { lsSet("RTNegLimit", 30) };
 
 
-var defInt = '';
-var defAT = '';
+	var defInt = '';
+	var defAT = '';
 }
 
-function removeInlineStyle(element){
+function removeInlineStyle(element) {
 	$(element).attr('style', '');
 }
 
-function fixNoEndTime(){
+function fixNoEndTime() {
 	var ps = [lsGet('pomoFocusO', 'parse'), lsGet('pomoFocusB', 'parse'), lsGet('pomoFocusP', 'parse')];
 	var pages = ['options', 'background', 'popup'];
 	var now = deltaTime(0).getTime();
-	
-	for ( p = 0; p < ps.length; p++ ){
+
+	for (p = 0; p < ps.length; p++) {
 		var pomoFocus = ps[p];
-		if (pomoFocus.endTime * 2 / 2 == pomoFocus.endTime){
+		if (pomoFocus.endTime * 2 / 2 == pomoFocus.endTime) {
 			continue
 		}
 		else {
@@ -233,34 +233,34 @@ function fixNoEndTime(){
 	}
 }
 
-function getPomoFocus(win){
+function getPomoFocus(win) {
 	var obj;
-	if (win == 'background') 	{
+	if (win == 'background') {
 		var t = lsGet('pomoFocusB');
-		if (t == undefined || t == 'undefined') { 
-			obj = {}; 
+		if (t == undefined || t == 'undefined') {
+			obj = {};
 			obj.lastUpdate = deltaTime(0).getTime();
 		}
 		else { obj = lsGet('pomoFocusB', 'parse'); }
 	}
-	else if (win == 'options') 	{
+	else if (win == 'options') {
 		var t = lsGet('pomoFocusO');
-		if (t == undefined || t == 'undefined') { 
+		if (t == undefined || t == 'undefined') {
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
 		}
 		else { obj = lsGet('pomoFocusO', 'parse'); }
 	}
 	else if (win == 'popup') {
 		var t = lsGet('pomoFocusP');
-		if (t == undefined || t == 'undefined') { 
+		if (t == undefined || t == 'undefined') {
 			obj = {}; obj.lastUpdate = deltaTime(0).getTime();
-		}else { obj = lsGet('pomoFocusP', 'parse'); }
+		} else { obj = lsGet('pomoFocusP', 'parse'); }
 	}
-	
+
 	return obj
 }
 
-function savePomoFocus(pomoFocus, win){
+function savePomoFocus(pomoFocus, win) {
 	var now = new Date().getTime();
 	pomoFocus.lastUpdate = now;
 
@@ -271,77 +271,79 @@ function savePomoFocus(pomoFocus, win){
 		pomoFocus.active = false;
 	}
 
-	chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 		if (tabs.length == 0) {
 			log("background debugger selected");
 			return
 		}
-		chrome.tabs.sendMessage(tabs[0].id, 
-		{
-			action: "pomodoro", 
-			pomodoro: pomoFocus
-		});
+		chrome.tabs.sendMessage(tabs[0].id,
+			{
+				action: "pomodoro",
+				pomodoro: pomoFocus
+			});
 	});
-	
+
 	lsSet('pomoFocusB', pomoFocus, 'object');
 	return pomoFocus
 }
 
-function equalizePomoFocus(latest){
+function equalizePomoFocus(latest) {
 	lsSet('pomoFocusB', latest, 'object');
 	lsSet('pomoFocusO', latest, 'object');
 	lsSet('pomoFocusP', latest, 'object');
 }
 
-function lsSet(key, data, dataType){
+function lsSet(key, data, dataType) {
 	if (!dataType) { dataType = 'string'; }
 	var returnData;
-	if (dataType == 'object') { 
-		returnData = JSON.stringify(data); 
+	if (dataType == 'object') {
+		returnData = JSON.stringify(data);
 	}
 	else { returnData = data; }
-	
+
 	return localStorage.setItem(key, returnData);
 }
 
-function lsGet(key, parse){
-	if (localStorage.getItem(key) == null) { return undefined };
-	
+function lsGet(key, parse) {
+	const cleanedKey = key.trim();
+	const value = localStorage.getItem(cleanedKey)
+	if (value == null) { return undefined };
+
 	if (!parse) { parse = 'string' };
-	var returnData = localStorage.getItem(key);
-	
-	if (parse == 'parse') { 
+	var returnData = value;
+
+	if (parse == 'parse') {
 		try {
 			returnData = JSON.parse(returnData)
 		}
-		catch(err){
-			log("Problem trying to parse " + key);
+		catch (err) {
+			log("Problem trying to parse " + cleanedKey);
 			log(err);
 			log(returnData);
 		}
 	}
-	else { returnData = localStorage.getItem(key); }
-	
+	else { returnData = value; }
+
 	return returnData
 }
 
-function lsDel(key){
+function lsDel(key) {
 	localStorage.removeItem(key);
 }
 
-function nowTime(){
+function nowTime() {
 	return new Date().getTime();
 }
 
-function compareSetting(LSsetting, elementName, override){
-	if (override == "override"){
+function compareSetting(LSsetting, elementName, override) {
+	if (override == "override") {
 		var curVal = elementName;
-	} else{
+	} else {
 		var curVal = $(elementName).val();
 	}
-	
+
 	var newVal = lsGet(LSsetting);
-	
+
 	if (curVal == newVal) { return true }
 	else { return false }
 }
@@ -353,25 +355,8 @@ function compareSetting(LSsetting, elementName, override){
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
 
-function isValid(token){
-	// Temporary workaround
-	if ( !localStorage.accessToken ){ return false }
-	else if (localStorage.accessToken.length == 64){ return true }
-	else { return false }
-
-	// Tries the code against API
-	log(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken);
-	
-	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
-	.done(function (data) {
-		log(data);
-		log("GOOD token. Works on API.");
-		return true
-	})
-	.fail(function(){
-		log("BAD token. Fails on API.");
-		return false
-	});
+function isValid(token) {
+	return token && typeof token === "string" && token.length === 64;
 }
 
 
@@ -384,39 +369,39 @@ function isValid(token){
 /*---------------------------------------------------------------------------*/
 
 var notifyUpdate = false;
-var noSUN = setTimeout(function(){
+var noSUN = setTimeout(function () {
 	notifyUpdate = true;
 }, 1000);
 
-function confirmUpdate(notify){
-	if (notify){
+function confirmUpdate(notify) {
+	if (notify) {
 		notifyUser('Settings updated', '', 'updatedSettings');
 		clearTimeout(notTimeout);
-		notTimeout = setTimeout(function(){chrome.notifications.clear('settingsUpdated')}, 2000);
+		notTimeout = setTimeout(function () { chrome.notifications.clear('settingsUpdated') }, 2000);
 	}
 }
 
 // Tour
-function openOptions(){
-	window.open('options.html','_blank');
+function openOptions() {
+	window.open('options.html', '_blank');
 }
 
 // Background
 function UpdateBadgeOnOff(badgeText) {
-	var logged = isValid(localStorage.accessToken);
+	var logged = isValid(lsGet("accessToken"));
 	var badgeStatus = lsGet('badgeStatus');
-	
-	if (logged == true){
-		if (badgeStatus == "off"){
-			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'});
+
+	if (logged == true) {
+		if (badgeStatus == "off") {
+			chrome.browserAction.setIcon({ path: 'images/logo_128x128.png' });
 			badgeStatus = "on";
 		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
 		chrome.browserAction.setBadgeText({ text: badgeText });
 	}
-	else{
-		if (badgeStatus == "on" || badgeStatus == false){
-			chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+	else {
+		if (badgeStatus == "on" || badgeStatus == false) {
+			chrome.browserAction.setIcon({ path: 'images/off_128x128.png' });
 			badgeStatus = "off";
 		}
 		chrome.browserAction.setBadgeBackgroundColor({ color: [100, 100, 100, 130] });
@@ -426,253 +411,250 @@ function UpdateBadgeOnOff(badgeText) {
 }
 
 function UpdateTabCount(tabCount) {
-	if (localStorage.tabNumbersActive == "true"){
-		UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	if (lsGet("tabNumbersActive") == "true") {
+		UpdateBadgeOnOff(tabCount + '/' + lsGet("maxTabs"));
 	}
 	else {
 		UpdateBadgeOnOff('' + tabCount);
 	}
 }
 
-function countTabs(mode, callback){
+function countTabs(mode, callback) {
 	accountedWindowsId = [];
 	totalTabs = 0;
 	lastWindowID = 0;
 	if (mode == 'allWindows') {
-		chrome.windows.getAll({populate:true},function(windows){
-			windows.forEach(function(window){
-				if (accountedWindowsId.indexOf(window.id) == -1){
+		chrome.windows.getAll({ populate: true }, function (windows) {
+			windows.forEach(function (window) {
+				if (accountedWindowsId.indexOf(window.id) == -1) {
 					accountedWindowsId.push(window.id);
 					var winTabs = window.tabs.length;
 					totalTabs = totalTabs + winTabs;
 				}
 			});
-			
-			
-			if (typeof callback === "function"){
+
+
+			if (typeof callback === "function") {
 				callback(totalTabs);
 			}
 		});
 	}
-	else {		
-		chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+	else {
+		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 			curPavTab = tabs[0];
-			chrome.tabs.getAllInWindow(curPavTab.windowId, function(tabs) {
+			chrome.tabs.getAllInWindow(curPavTab.windowId, function (tabs) {
 				totalTabs = tabs.length;
-				
-				if (typeof callback === "function"){
+
+				if (typeof callback === "function") {
 					callback(totalTabs);
 				}
 			});
 		});
-		
 	}
-	
-	
-	
 	return
 }
 
-function evaluateTabCount(tabCount){
-	var maxTabs = parseInt(localStorage.maxTabs);
-	if(!maxTabs || maxTabs == "no") {
+function evaluateTabCount(tabCount) {
+	var maxTabs = parseInt(lsGet("maxTabs"));
+	if (!maxTabs || maxTabs == "no") {
 		return;
 	}
-	
+
 	// How is number of tabs compared to tab limit (maxTabs)?
-	if(tabCount > maxTabs) {
+	if (tabCount > maxTabs) {
 		situation.status = "over";
 		stimuli("shock", defInt, defAT, "Too many tabs");
 		log("total tabs over max tabs");
 	}
-	else if (tabCount == maxTabs ){ 
+	else if (tabCount == maxTabs) {
 		situation.status = "limit";
 		stimuli("beep", defInt, defAT, "Incoming Beep. You're at the limit on tabs");
-	 
+
 	}
-	else if (tabCount == maxTabs - 1){ 
+	else if (tabCount == maxTabs - 1) {
 		situation.status = "borderline";
 		stimuli("vibration", defInt, defAT, "Incoming vibration. You're nearing the limit on tabs");
 	}
-	else { situation.status = "wayBellow"};
-	
+	else { situation.status = "wayBellow" };
+
 	previousTabs = tabCount;
 	notifyTabCount(tabCount, situation);
 }
 
-function clearCookies(){
+function clearCookies() {
 	/* Currently unsupported */
-	
+
 	// chrome.cookies.remove({
-		// url: "pavlok-mvp.herokuapp.com",
-		// name: "ajs_user_id"
+	// url: "pavlok-mvp.herokuapp.com",
+	// name: "ajs_user_id"
 	// });
-	
+
 	// chrome.cookies.remove({
-		// url: "pavlok-mvp.herokuapp.com",
-		// name: "ajs_group_id"
+	// url: "pavlok-mvp.herokuapp.com",
+	// name: "ajs_group_id"
 	// });
-	
+
 	// chrome.cookies.remove({
-		// url: "pavlok-mvp.herokuapp.com",
-		// name: "ajs_anonymous_id"
+	// url: "pavlok-mvp.herokuapp.com",
+	// name: "ajs_anonymous_id"
 	// });
-	
+
 	// chrome.cookies.remove({
-		// url: "pavlok-mvp.herokuapp.com",
-		// name: "_session_id"
+	// url: "pavlok-mvp.herokuapp.com",
+	// name: "_session_id"
 	// });
-	
+
 	// chrome.cookies.remove({
-		// url: "pavlok-mvp.herokuapp.com",
-		// name: "remember_user_token"
+	// url: "pavlok-mvp.herokuapp.com",
+	// name: "remember_user_token"
 	// });
 }
 
-function validateUserInfo(info){
-	var email 	= info.userName;
-	var pass 	= info.password;
-	
+function validateUserInfo(info) {
+	var email = info.userName;
+	var pass = info.password;
+
 	var problems = [];
-	
+
 	var hasAt = email.indexOf("@") > 0;
 	var hasDot = email.indexOf(".") > 0;
-	
+
 	var user;
-	if (hasAt && hasDot) 	{ user = true }
-	else 					{ user = false }
-	
+	if (hasAt && hasDot) { user = true }
+	else { user = false }
+
 	var hasPass = pass.length > 0;
-	
-	if (user && pass){ return true}
+
+	if (user && pass) { return true }
 	else { return false }
 }
 
-function toggleSignInOut(){
+function toggleSignInOut() {
 	var token = lsGet('accessToken');
-	if (isValid(token)){
+	if (isValid(token)) {
 		$("#signIn").addClass("noDisplay");
 		$("#signOut").removeClass("noDisplay");
 	}
-	else{
+	else {
 		$("#signIn").removeClass("noDisplay");
 		$("#signOut").addClass("noDisplay");
 	}
 }
 
-function signOut(){ 
+function signOut() {
 	revokeAccessToken();
 	maybeEndUserSession();
 	UpdateBadgeOnOff("Off");
-	msgInterfaces({action: "logged", token: 'not logged'})
-	
-	localStorage.setItem('logged', 'false');
+	msgInterfaces({ action: "logged", token: 'not logged' })
+
+	lsSet('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
 }
 
-function signIn(user){
+function signIn(user) {
 	getAccessToken(user);
 }
 
-function showOptions(accessToken){
-	if (isValid(localStorage.accessToken)){
-		$(".onlyLogged").css('visibility', 'visible'); 
-		$(".onlyUnlogged").css('display', 'none'); 
+function showOptions(accessToken) {
+	if (isValid(lsGet("accessToken"))) {
+		$(".onlyLogged").css('visibility', 'visible');
+		$(".onlyUnlogged").css('display', 'none');
 		$("#testPairing").show();
 		$("#testPairingX").show();
 		$("#pavUserNameLogin").val("");
 		$("#pavPasswordLogin").val("");
 	}
-	else { 
-		$(".onlyLogged").css('visibility', 'hidden'); 
+	else {
+		$(".onlyLogged").css('visibility', 'hidden');
 		$("#unloggedMessage").hide();
-		$(".onlyUnlogged").css('display', 'block'); 
+		$(".onlyUnlogged").css('display', 'block');
 		$("#unloggedMessage").show();
 		$("#testPairing").hide();
 		$("#testPairingX").hide();
 	}
 }
 
-function showName(name){ // mark for review
-	if (name == 'undefined' || name == 'null' || name == undefined || name == null ) {
+function showName(name) { // mark for review
+	if (name == 'undefined' || name == 'null' || name == undefined || name == null) {
 		log("SHOW NAME has username as undefined. Name is " + name)
 		return
 	}
 	else {
 		var userName = document.getElementById("userName");
 		userName.style.visibility = "visible";
-		userName.innerHTML = ", " + localStorage.userName;
-		
+		userName.innerHTML = ", " + lsGet("userName");
+
 		log('Username is ' + userName);
 	}
 	return
 }
 
-function updateNameAndEmail(name, email){
-	if ( $("#userName")  ) 	{ $("#userName").html(name); }
-	if ( $("#userEmail") ) 	{ $("#userEmail").html(email); }
+function updateNameAndEmail(name, email) {
+	// this function make no sense because '#userName' and '#userEmail DOM elements does not exist
+	if ($("#userName")) { $("#userName").html(name); }
+	if ($("#userEmail")) { $("#userEmail").html(email); }
 }
-//
-function enableTooltips(){
-	$(function() {
+
+function enableTooltips() {
+	$(function () {
 		// Makes possible to use HTML inside the tittle
 		$(document).tooltip({
-            content: function() {
-                var element = $( this );
-                if ( element.is( "[title]" ) ) {
-                    return element.attr( "title" );
-                }
+			content: function () {
+				var element = $(this);
+				if (element.is("[title]")) {
+					return element.attr("title");
+				}
 
-            },
-            position: { my: "left bottom-3", at: "center top" } 
+			},
+			position: { my: "left bottom-3", at: "center top" }
 		});
-	});	
+	});
 }
 
 // Notifications
-function notifyUser(title, message, notID, persist){
-	if (typeof(title) == "object"){
+function notifyUser(title, message, notID, persist) {
+	if (typeof (title) == "object") {
 		var NotList = lsGet('notifications', 'parse');
-		var Not = _.where(NotList, {usage: title});
-		
+		var Not = _.where(NotList, { usage: title });
+
 		var opt = {
 			type: "basic",
 			title: Not.title,
 			message: Not.message,
 			iconUrl: "icon.png"
-			
+
 		};
-		
+
 		var notID = Not.id;
 	}
-	else{
+	else {
 		var opt = {
 			type: "basic",
 			title: title,
 			message: message,
 			iconUrl: "icon.png"
-			
+
 		};
 	}
-	
-	chrome.notifications.create(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
+
+	chrome.notifications.create(notID, opt, function (notID) {
+		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 		}
 	});
 }
 
-function updateNotification(title, message, notID){
+function updateNotification(title, message, notID) {
 	var opt = {
 		type: "basic",
 		title: title,
 		message: message,
 		iconUrl: "icon.png"
 	};
-	
-	chrome.notifications.update(notID, opt, function(notID) {
-		if (chrome.runtime.lastError){
+
+	chrome.notifications.update(notID, opt, function (notID) {
+		if (chrome.runtime.lastError) {
 			console.error(chrome.runtime.lastError);
 		}
 	});
@@ -686,42 +668,42 @@ function updateNotification(title, message, notID){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-function clearSpaces(string){
+function clearSpaces(string) {
 	var x = string;
 	x[0] = x.replace(" ", "");
 	x[0] = x.replace(/\s/g, "");
 	x[0] = x.replace(/\t/g, "");
 	x[0] = x.replace(/\n/g, "");
 	x[0] = x.replace(/\r/g, "");
-	
+
 	return x;
 }
 
-function isEmpty(x){
+function isEmpty(x) {
 	var answer;
-	
-	if (typeof(x) == "undefined") { return true; }
-	if (typeof(x) == "array"){
+
+	if (typeof (x) == "undefined") { return true; }
+	if (typeof (x) == "array") {
 		if (x.length === 0) { return true; } // Empty Array
 		if (x.length === 1) {
 			if (clearSpaces(x[0]).length === 0) { return true }
 		}
 	}
-	if (typeof(x) == "object"){
+	if (typeof (x) == "object") {
 		if (Object.keys(x).length === 0) { return true; } // Empty Object
 	}
-	if(x.length === 0) { return true; }
-	if (typeof(x) == "string") {
+	if (x.length === 0) { return true; }
+	if (typeof (x) == "string") {
 		if (clearSpaces(x).length === 0) { return true }
 	}
 	return false;
 }
 
-function saveBlackList(){
+function saveBlackList() {
 	var curBlackList = $("#blackList")[0].value;
-	
+
 	var ok = validateTags(curBlackList);
-	if (ok == true){
+	if (ok == true) {
 		lsSet('blackList', curBlackList);
 	}
 	else {
@@ -729,15 +711,15 @@ function saveBlackList(){
 		var newList = fixTags(faulty);
 		lsSet('blackList', newList);
 	}
-	
+
 	confirmUpdate(notifyUpdate);
-	msgInterfaces({action: "updateBlackList"});
+	msgInterfaces({ action: "updateBlackList" });
 }
 
-function saveWhiteList(){
+function saveWhiteList() {
 	curWhiteList = $("#whiteList")[0].value;
 	var ok = validateTags(curWhiteList);
-	if (ok == true){
+	if (ok == true) {
 		lsSet('whiteList', curWhiteList);
 	}
 	else {
@@ -745,79 +727,79 @@ function saveWhiteList(){
 		var newList = fixTags(faulty);
 		lsSet('whiteList', newList);
 	}
-	
+
 	confirmUpdate(notifyUpdate);
-	msgInterfaces({action: "updateBlackList"});
+	msgInterfaces({ action: "updateBlackList" });
 }
 
-function validateTags(list){
+function validateTags(list) {
 	var tags;
-	
+
 	if (list == "") { tags = []; }
-	else {tags = list.split(',');}
-	 
+	else { tags = list.split(','); }
+
 	var problems = [];
-	
-	if (tags.length > 0){
-		for (t = 0; t < tags.length; t++){
+
+	if (tags.length > 0) {
+		for (t = 0; t < tags.length; t++) {
 			curTag = tags[t];
 			var www = curTag.indexOf("www.") != -1;
 			var http = curTag.indexOf("http:") != -1;
 			var https = curTag.indexOf("https:") != -1;
-			
+
 			var notOk = (www || http || https);
-			
-			if (notOk == true) {problems.push(curTag);}
+
+			if (notOk == true) { problems.push(curTag); }
 		}
 	}
-	
-	if (problems.length > 0){
+
+	if (problems.length > 0) {
 		return false
 	}
 	return true
-	
+
 }
 
-function fixTags(problems){
+function fixTags(problems) {
 	var list = [];
-	for (p = 0; p < problems.length; p++){
+	for (p = 0; p < problems.length; p++) {
 		var original = problems[p];
 		var work = original;
-		
+
 		var targets = ["https://", "http://", "www."];
-		
-		for (t = 0; t < targets.length; t++){
+
+		for (t = 0; t < targets.length; t++) {
 			curTarget = targets[t];
-			if (work.indexOf(curTarget) == 0){
+			if (work.indexOf(curTarget) == 0) {
 				work = work.split(curTarget)[1];
 			};
 		}
-		
+
 		list.push(work);
 		log(original + "\n" + work);
 	}
 	return list;
 }
 
-function notifyBadTags(problems){
-	if (notifyInterval == false){
+function notifyBadTags(problems) {
+	if (notifyInterval == false) {
 		return
 	}
-	
+
 	var corrections = fixTags(problems);
-	
+
 	notifyInterval = false;
-	setTimeout(function(){notifyInterval = true}, 10000);
-	
-	var fixMessage = 	'' +
-						'<p>You had a few whitelisted sites that will not fire properly.</p><p><b>We adjusted them for you, but check if you still recognize them</b>. For instance:</p>' + 
-						'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
-						'<p>The addresses who need your attention are:</p><ul>';
-	for (p = 0; p < problems.length; p++){
+	setTimeout(function () { notifyInterval = true }, 10000);
+
+	var fixMessage = '' +
+		'<p>You had a few whitelisted sites that will not fire properly.</p><p><b>We adjusted them for you, but check if you still recognize them</b>. For instance:</p>' +
+		'<p><i><span class="red">https://www.</span>facebook.com</i> becomes <i>facebook.com</i></p>' +
+		'<p>The addresses who need your attention are:</p><ul>';
+	for (p = 0; p < problems.length; p++) {
 		fixMessage = fixMessage + '<li>' + corrections[p] + " which was " + problems[p] + '</li>';
 	}
 	fixMessage = fixMessage + "</ul>"
-	
+
 	$.prompt(fixMessage, {
 		title: "Some whitelist items need correction"
 	});
@@ -834,150 +816,154 @@ function notifyBadTags(problems){
 function save_options() { // Mark for deletion
 	// Get data and store it in LocalStorage
 	var select = document.getElementById("wantToSave");
-	localStorage.maxTabs = select;
+	lsSet("maxTabs", select);
 };
 
-function getAccessToken(userData, callback){
+function getAccessToken(userData, callback) {
 	var params = {
 		username: userData.userName,
 		password: userData.password,
 		grant_type: "password"
 	};
-	
+
 	var url = lsGet("baseAddress") + "api/v1/sign_in";
-	
+
 	$.post(url, params)
-	.done(function(data){
-		log("done");
-		log(data);
-		var token = data.access_token;
-		lsSet('accessToken', token);
-		lsSet('logged', 'true');
-		spread(token);
-	})
-	.fail(function(req){
-		log("failed");
-		msgInterfaces({	action: "login failed" });
-	});
+		.done(function (data) {
+			log("done");
+			log(data);
+			var token = data.access_token;
+			lsSet('accessToken', token);
+			lsSet('logged', 'true');
+			spread(token);
+		})
+		.fail(function (req) {
+			log("failed");
+			msgInterfaces({ action: "login failed" });
+		});
 }
 
-function spread(token){
+function spread(token) {
 	msgInterfaces({
 		action: "logged",
 		token: token
 	});
-	
-	countTabs(localStorage.tabCountAll, UpdateTabCount);
+
+	countTabs(lsGet("tabCountAll"), UpdateTabCount);
 }
 
-function revokeAccessToken(){
-	var apiAddress	= "api/v1/sign_out"
-	var params	= {token: localStorage.accessToken};
-	
-	var sign_out_url = baseAddress + apiAddress;
-	
-	// erase token anyway
+function revokeAccessToken() {
+	// var baseAddress = "https://app.pavlok.com/";
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress = "api/v1/";
+	var signOut = "sign_out"
+	var parameters = "?token=" + lsGet("accessToken");
+
+	var target = baseAddress + apiAddress + signOut + parameters;
+
 	lsDel("accessToken");
-	
-	$.post(sign_out_url, params)
-	.done(function(data){
-		log("done");
-		log(data);
-		lsDel("accessToken");
-		msgInterfaces({action: "logged", token: 'not logged'});
-	})
-	.fail(function(){
-		log("failed");
-	});
+
+	$.post(target)
+		.done(function (data) {
+			log("done");
+			log(data);
+			lsDel("accessToken");
+			msgInterfaces({ action: "logged", token: 'not logged' });
+		})
+		.fail(function () {
+			log("failed");
+		});
 }
 
 function maybeEndUserSession() {
+	// var baseAddress = "https://app.pavlok.com/";
 	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
-	var apiAddress	= "users/";
-	var signOut		= "sign_out"
-	var parameters	= "?token=" + localStorage.accessToken;
-	
+
+	var apiAddress = "users/";
+	var signOut = "sign_out"
+	var parameters = "?token=" + lsGet("accessToken");
+
 	var target = baseAddress + apiAddress + signOut + parameters;
-	
+
 	$.get(target)
-	.done(function(data){
-		log("done");
-		log(data);
-		lsDel("accessToken");
-		msgInterfaces({action: "logged", token: 'not logged'});
-	})
-	.fail(function(){
-		log("failed");
-	});
+		.done(function (data) {
+			log("done");
+			log(data);
+			lsDel("accessToken");
+			msgInterfaces({ action: "logged", token: 'not logged' });
+		})
+		.fail(function () {
+			log("failed");
+		});
 }
 
 
-function oauth() { 
+function oauth() {
 	var redirectURL = chrome.identity.getRedirectURL();
-	
-	if ( usage == "localMVP" ) {
-		var clientID     = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
+
+	if (usage == "localMVP") {
+		var clientID = "cdf545447838ebca75037906fa76f65e078f39873c9a235f1f65ab3da0337300";
 		var clientSecret = "220898a0635c04696dd3aab7b6990b6735cc7fc2817eed5be9f1bb1b5063e288";
 	}
 	else if (usage == "localSTAGE") {
-		var clientID     = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
+		var clientID = "0dff824cc4af8db17a939c231fc17585b35409707c3a1a5308ef1e04733c9bd7";
 		var clientSecret = "a142a925c1abe2cc8bfdfd4481707f0f7fec4af89baa3929259b1079adbf72c2";
 	}
-	else if ( usage == "testMVP" ){
-		var clientID     = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
+	else if (usage == "testMVP") {
+		var clientID = "7258a54f6366824c3838bc5b4dd47181307b025dab913d45824f49af17815514";
 		var clientSecret = "abefe55aebdd664462e4e36a534ebed68eb27333612d822eb316aa7f525f73a3";
 	}
 	else if (usage == "testSTAGE") {
-		clientID     = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+		clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
 		clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
-	else if ( usage == "productionSTAGE" ){
-		var clientID     = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
+	else if (usage == "productionSTAGE") {
+		var clientID = "5e2fac7b1dd2b76aae014dd197daee094bc10d9759e5fda2e5c656449f00d8a4";
 		var clientSecret = "a08b1088b0c0090da308199e959a2f5753a133babfb05ff259674b64c4920227";
 	}
-	else if ( usage == "productionMVP" ) {
-		var clientID     = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
+	else if (usage == "productionMVP") {
+		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
 		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
 	}
-	var authURL = localStorage.baseAddress + "oauth/authorize?" + 
+	var authURL = lsGet("baseAddress") + "oauth/authorize?" +
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&response_type=code' +
 		'&prompt=select_account';
-	
+
 	log("Step 1: Redirect URL is: " + redirectURL);
-	
+
 	chrome.identity.launchWebAuthFlow(
-		{url: authURL, interactive: true},
-		
-		function(responseUrl) {
+		{ url: authURL, interactive: true },
+
+		function (responseUrl) {
 			// Get Auth code
 			log("Step 2: Response url with code is:" + responseUrl);
-			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
+			authorizationCode = responseUrl.substring(responseUrl.indexOf("=") + 1);
 			log("Step 3: Authorizaion code is: " + authorizationCode);
-			
+
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = localStorage.baseAddress + "/oauth/token" 
-			params = {
-				client_id: clientID,
-				client_secret: clientSecret,
-				code: authorizationCode,
-				grant_type: 'authorization_code',
-				redirect_uri: redirectURL
-			}
-				
+			accessTokenUrl =
+				lsGet("baseAddress")
+				+ "/oauth/token?"
+				+ 'client_id=' + clientID
+				+ '&client_secret=' + clientSecret
+				+ '&code=' + authorizationCode
+				+ '&grant_type=authorization_code'
+				+ '&redirect_uri=' + redirectURL;
+
 			log("Step 4: Access token Url is: " + accessTokenUrl);
-			
-			$.post(accessTokenUrl, params)
+
+			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.access_token;
 
-					msgInterfaces({action: 'logged', token: accessToken});
-					localStorage.setItem('logged', 'true');
-					localStorage.setItem('accessToken', accessToken);
-					chrome.windows.getLastFocused(function(win) {
-						countTabs(localStorage.tabCountAll, UpdateTabCount);
+					msgInterfaces({ action: 'logged', token: accessToken });
+					lsSet('logged', 'true');
+					lsSet('accessToken', accessToken);
+					chrome.windows.getLastFocused(function (win) {
+						countTabs(lsGet("tabCountAll"), UpdateTabCount);
 						showOptions(accessToken);
 						userInfo(accessToken);
 					});
@@ -986,182 +972,186 @@ function oauth() {
 					notifyUser('Hooray! Welcome aboard!', 'Click here to start using the Productivity Extension', 'signedIn');
 				});
 		}
-	);	
+	);
 }
 
-function rescueTimeOAuth() { 
+function rescueTimeOAuth() {
 	var redirectURL = chrome.identity.getRedirectURL();
 	// Local
 	var clientID = "c78f8ede283287e0ffc3";
 	var clientSecret = "ce1f6b4bfad9663af02053155d42185c6de2c72b";
 	var scope = 'user';
 	var state = randomString(12);
-	
-	var authURL = "https://github.com/login/oauth/authorize?" + 
+
+	var authURL = "https://github.com/login/oauth/authorize?" +
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&scope=' + scope +
 		'&state=' + state;
-	
+
 	log("Step 1: Redirect URL is: " + redirectURL);
-	
+
 	chrome.identity.launchWebAuthFlow(
-		{url: authURL, interactive: true},
-		
-		function(responseUrl) {
+		{ url: authURL, interactive: true },
+
+		function (responseUrl) {
 			// Get Auth code
 			log("Step 2: Response url with code is:" + responseUrl);
-			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
+			authorizationCode = responseUrl.substring(responseUrl.indexOf("=") + 1);
 			log("Step 3: Authorizaion code is: " + authorizationCode);
-			
+
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://github.com/login/oauth/access_token'
-			params = {
-				client_id: clientID,
-				client_secret: clientSecret,
-				code: authorizationCode,
-				redirect_uri: redirectURL,
-				state: state
-			}
-				
+			accessTokenUrl = 'https://github.com/login/oauth/access_token?' +
+				'client_id=' + clientID +
+				'&client_secret=' + clientSecret +
+				'&code=' + authorizationCode +
+				'&redirect_uri=' + redirectURL;
+			'&state=' + state;
+
 			log("Step 4: Access token Url is: " + accessTokenUrl);
-			
-			$.post(accessTokenUrl, params)
+
+			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.split("=")[1];
-					localStorage.setItem('loggedRT', 'true');
-					localStorage.setItem('accessTokenRT', accessToken);
-					
-					$("#rescueTimeData").html($.get("https://api.github.com/user?access_token=" + localStorage.accessTokenRT));
-					
-					
+					lsSet('loggedRT', 'true');
+					lsSet('accessTokenRT', accessToken);
+
+					$("#rescueTimeData").html($.get("https://api.github.com/user?access_token=" + lsGet("accessTokenRT")));
+
+
 				});
-			
+
 			log("OAuth2 test concluded");
-			
+
 		}
-	);	
+	);
 }
 
-function destroyToken(){
-	localStorage.setItem('accessToken', 'null');
+function destroyToken() {
+	lsSet('accessToken', 'null');
 }
 
-function userInfo(accessToken) { 
-	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
+function userInfo(accessToken) {
+	$.get(lsGet("baseAddress + 'api/v1/me?access_token=' + accessToken"))
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
-				log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
-				localStorage.setItem('userEmail', data.email)
-				localStorage.setItem('userName', data.name);
-				updateNameAndEmail(localStorage.userName, localStorage.userEmail);
-				return data.name;
+			log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
+			lsSet('userEmail', data.email)
+			lsSet('userName', data.name);
+			updateNameAndEmail(lsGet("userName"), lsGet("userEmail"));
+			return data.name;
 		})
-		.fail(function(){
+		.fail(function () {
 			log('User information request failed');
 		});
 }
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
+
+
 	var now = new Date().getTime();
 	var dif = now - lastVib;
 	lastVib = now;
 	if (dif < limitRep) { return }
-	
+
 	stimuliTypes = ['shock', 'vibration', 'beep'];
-	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
-	
+	defIntensities = [lsGet("zapIntensity"), lsGet("vibrationIntensity"), lsGet("beepIntensity")]; // zap, vibration, beep
+
 	if (!value || value == 'defInt' || '') { value = defIntensities[stimuliTypes.indexOf(stimulus)]; }
-	if (!accessToken || accessToken == 'defAT' || '') { accessToken = localStorage.accessToken; }
-	if (!textAlert){ textAlert = "Incoming " + stimulus; }
-	
+	if (!accessToken || accessToken == 'defAT' || '') { accessToken = lsGet("accessToken"); }
+	if (!textAlert) { textAlert = "Incoming " + stimulus; }
+
 	var notify = true;
-	
-	if ( stimulus == 'beep' && localStorage.notifyBeep == 'false' ) { notify = false; }
-	else if ( stimulus == 'vibration' && localStorage.notifyVibration == 'false' ) { notify = false; }
-	else if ( stimulus == 'shock' && localStorage.notifyZap == 'false' ) { notify = false; }
-	
-	if ( forceNotify == 'false' ) { notify = false; }
-	else if ( forceNotify == 'true' ) { notify = true; }
-	
-	stimulusUrl = 	localStorage.baseAddress + 'api/v1/stimuli/' + 
-				stimulus + '/' + value
-	params = { access_token: accessToken };
-				
-	if (textAlert.length > 0) { params.reason = textAlert; }
+
+	if (stimulus == 'beep' && lsGet("notifyBeep") == 'false') { notify = false; }
+	else if (stimulus == 'vibration' && lsGet("notifyVibration") == 'false') { notify = false; }
+	else if (stimulus == 'shock' && lsGet("notifyZap") == 'false') { notify = false; }
+
+	if (forceNotify == 'false') { notify = false; }
+	else if (forceNotify == 'true') { notify = true; }
+
+	// if (notify) { $.prompt(textAlert); }
+
+	postURL = lsGet("baseAddress") + 'api/v1/' +
+		stimulus + '/' +
+		value +
+		'?access_token=' + accessToken;
+
+	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
 	else { alert("stimuli without reason"); }
-	
-	log("URL being POSTED is:\n" + stimulusUrl);
-	$.post(stimulusUrl, params)
+
+	log("URL being POSTED is:\n" + postURL);
+	$.post(postURL)
 		.done(function (data, result) {
 			return log(stimulus + ' succeeded!\n' + data + " " + result);
 		})
-		.fail( function() {
+		.fail(function () {
 			log('Failed the new API. Trying the old one');
-			objectCode = localStorage.objectCode;
+			objectCode = lsGet("objectCode");
 			if (stimulus == "vibration") { stimulus = "vibro"; }
-			log(stimulus + ' failed!\nUrl was: ' + stimulusUrl + "\nTrying the old API at: ");
-			$.get('https://pavlok.herokuapp.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
-			
-			return 
-		});	
+			log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			$.get('https://app.pavlok.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
+
+			return
+		});
 }
 
-function randomString(characters){
+function randomString(characters) {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	for( var i=0; i < characters; i++ )
+	for (var i = 0; i < characters; i++)
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 	return text;
 }
 
-function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
+function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback) {
 	var redirectURL = chrome.identity.getRedirectURL();
 	var state = randomString(12);
-	
+
 	// var authURL = "https://github.com/login/oauth/authorize?" + 
-		// 'client_id=' + clientID +
-		// '&redirect_uri=' + redirectURL +
-		// '&scope=' + scope +
-		// '&state=' + state;
-	
+	// 'client_id=' + clientID +
+	// '&redirect_uri=' + redirectURL +
+	// '&scope=' + scope +
+	// '&state=' + state;
+
 	log("Step 1: Redirect URL is: " + redirectURL);
-	
+
 	chrome.identity.launchWebAuthFlow(
-		{url: authURL, interactive: true},
-		
-		function(responseUrl) {
+		{ url: authURL, interactive: true },
+
+		function (responseUrl) {
 			// Get Auth code
 			log("Step 2: Response url with code is:" + responseUrl);
-			authorizationCode = responseUrl.substring(responseUrl.indexOf("=")+1);
+			authorizationCode = responseUrl.substring(responseUrl.indexOf("=") + 1);
 			log("Step 3: Authorizaion code is: " + authorizationCode);
-			
+
 			// Exchange AuthCode for Access Token:
 			accessTokenUrl = tokenURL;
 			log("Step 4: Access token Url is: " + accessTokenUrl);
-			
+
 			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
-					localStorage.lastOAuthData = data;//JSON.strigigy(data);
+					lsSet("lastOAuthData", data);//JSON.strigigy(data);
 					var accessToken = data.split("=")[1];
-					localStorage.setItem('oauthSuccess', 'true');
-					localStorage.setItem('lastAccessToken', accessToken);
-					localStorage.setItem('lastAccessToken', accessToken);
-					
-					
+					lsSet('oauthSuccess', 'true');
+					lsSet('lastAccessToken', accessToken);
+					lsSet('lastAccessToken', accessToken);
+
+
 					log("OAuth2 test concluded");
 				})
-				.fail(function() {
+				.fail(function () {
 					log("OAuth failed.")
 				});
 		}
 	);
-	if (localStorage.oauthSuccess == 'true' ){
-		return localStorage.lastAccessToken
+	if (lsGet("oauthSuccess") == 'true') {
+		return lsGet("lastAccessToken");
 	}
 }
 
@@ -1174,225 +1164,234 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback){
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-function dayChange(){
+function dayChange() {
 	var today = dateAsString(new Date());
 	var lastDate = lsGet('lastDateCheck') || "";
-	
+
 	lsSet('lastDateCheck', today);
 	return today !== lastDate;;
 }
 
-function convertTimeFormat(time, toFormat){
+function convertTimeFormat(time, toFormat) {
 	var curFormat = 12;
 	var newTime;
-	
-	if ( time.indexOf("AM") == -1 && time.indexOf("PM") == -1 ) { 
-		curFormat = 24 
+
+	if (time.indexOf("AM") == -1 && time.indexOf("PM") == -1) {
+		curFormat = 24
 	};
-	
-	if (toFormat == 12){
-		if ( curFormat == 12 ) { 
-			return time 
+
+	if (toFormat == 12) {
+		if (curFormat == 12) {
+			return time
 		}
 		else {
 			newTime = time.replace(":", " ");
 			newTime = newTime.split(" ");
 			hours = parseInt(newTime[0]);
 			minutes = parseInt(newTime[1]);
-			
+
 			if (hours >= 12) {
 				code = "PM";
-				if (hours > 12){ 
-					hours = hours - 12; 
+				if (hours > 12) {
+					hours = hours - 12;
 				}
-				else { 
-					hours = 12; 
+				else {
+					hours = 12;
 				}
-			} else{
+			} else {
 				code = "AM";
-				if (hours == 0) { hours = 12;}
+				if (hours == 0) { hours = 12; }
 			}
-			
+
 			// if (hours.length == 1)	{ hours 	= "0" + hours; }
-			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			if (minutes.length == 1) { minutes = "0" + minutes; }
 			newTime = hours + ":" + minutes + " " + code;
-			
+
 		}
 	}
-	else if (toFormat == 24){
-		if ( curFormat == 24 ) { return time }
-		else{
+	else if (toFormat == 24) {
+		if (curFormat == 24) { return time }
+		else {
 			newTime = time.replace(":", " ");
 			newTime = newTime.split(" ");
 			hours = parseInt(newTime[0]);
 			minutes = newTime[1];
 			code = newTime[2];
-			
+
 			if (code == "PM") { hours = hours + 12; }
-			
+
 			// if (hours.length == 1)	{ hours 	= "0" + hours; }
-			if (minutes.length == 1){ minutes 	= "0" + minutes; }
+			if (minutes.length == 1) { minutes = "0" + minutes; }
 			newTime = hours + ":" + minutes;
 		}
 	}
-	
+
 
 	return newTime
-	
+
 }
 
-function deltaTime(seconds, baseDate){
-	if (!baseDate){ 
+function deltaTime(seconds, baseDate) {
+	if (!baseDate) {
 		var baseDate = new Date();
 	}
-	
+
 	var future = new Date();
 	future.setTime(baseDate.getTime() + seconds * 1000);
-	
+
 	return future
 }
 
-function dateFromTime(time){
+function dateFromTime(time) {
 	var date = new Date();
 	date.setTime(time);
 	return date
 }
 
-function percentToRaw(percent, stimulus){
+function percentToRaw(percent, stimulus) {
 	var rawRange;
-	if (stimulus == 'zap'){
+	if (stimulus == 'zap') {
 		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
 	}
-	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+	else if (stimulus == 'beep' || stimulus == 'vibrate') {
 		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
 	}
-	
-	var index = ((parseInt(percent))/10) - 1;
+
+	var index = ((parseInt(percent)) / 10) - 1;
 	var rawN = rawRange[index];
-	
+
 	return rawN
 }
 
-function rawToPercent(raw, stimulus){
+function rawToPercent(raw, stimulus) {
 	raw = parseInt(raw);
 	var rawRange;
-	if (stimulus == 'zap'){
+	if (stimulus == 'zap') {
 		rawRange = [32, 64, 85, 112, 128, 144, 160, 176, 192, 255];
 	}
-	else if (stimulus == 'beep' || stimulus == 'vibrate'){
+	else if (stimulus == 'beep' || stimulus == 'vibrate') {
 		rawRange = [55, 75, 95, 115, 135, 155, 175, 195, 215, 255];
 	}
-	
+
 	var index = rawRange.indexOf(raw);
-	
+
 	var percN = (index + 1) * 10;
 	return percN
 }
 
-function isActive(){
+function isActive() {
 	var dayHour = checkActiveDayHour();
-	var token = isValid(localStorage.accessToken);
-	
+	var token = isValid(lsGet("accessToken"));
+
 	return dayHour && token
 }
 
-function msgInterfaces(msg){
+function msgInterfaces(msg) {
 	msg.target = "popup";
 	chrome.runtime.sendMessage(msg);
 	msg.target = "options";
 	chrome.runtime.sendMessage(msg);
 }
 
-function msgBackground(msg){
+function msgBackground(msg) {
 	msg.target = "background";
 	chrome.runtime.sendMessage(msg);
 }
 
 function arrayObjectIndexOf(myArray, searchTerm, property) {
-    for (var i = 0, len = myArray.length; i < len; i++) {
-        if (myArray[i][property] === searchTerm) return i;
-    }
-    return -1;
+	for (var i = 0, len = myArray.length; i < len; i++) {
+		if (myArray[i][property] === searchTerm) return i;
+	}
+	return -1;
 }
 
-function toBoolean(string){
+function toBoolean(string) {
 	try { string = string.toLowerCase() }
-	catch(err) { log(err); }
-	
+	catch (err) { log(err); }
+
 	var bStatus = true;
-	
+
 	if (
-		isEmpty(string) || 
-		string === "false" || 
+		isEmpty(string) ||
+		string === "false" ||
 		string === false
-		) { bStatus = false; }
-	
+	) { bStatus = false; }
+
 	return bStatus
 }
 
-function setVal(data){
+function setVal(data) {
 	var target = $(data.dom);
 	if (isEmpty(target)) { target = data.dom2; }
-	
+
 	var type = $(target).prop("nodeName");
 	var subType = $(target).prop("type") || "none";
-	
-	if (type == "INPUT" && subType == "checkbox"){
+
+	if (type == "INPUT" && subType == "checkbox") {
 		$(target).prop("checked", data.value);
 	}
 	else {
 		$(target).val(data.value);
 	}
-	
+
 	return
 }
 
-function interfaceListeners(page){
+function interfaceListeners(page) {
 	chrome.extension.onMessage.addListener(
-		function(request, sender, sendResponse) {
-			if (request.target == page){
-				if (request.action == "updateBlackList"){
+		function (request, sender, sendResponse) {
+			if (request.target == page) {
+				if (request.action == "updateBlackList") {
 					var bl = compareSetting("blackList", "#blackList");
 					var wl = compareSetting("whiteList", "#whiteList");
-					
-					if (bl == false || wl == false){
+
+					if (bl == false || wl == false) {
 						$("#blackList").importTags(lsGet('blackList'));
 						$("#whiteList").importTags(lsGet('whiteList'));
 					}
-					
+
 					var nBL = lsGet('blackList', 'parse');
 					blackListTable.create(nBL, 'blackList');
 				}
-				
+
 				// else if (request.action == "updateMaxTabs"){
-					// var maxTabs = request.maxTabs;
-					// var mt = compareSetting(maxTabs, "#maxTabsSelect");
-					// if (mt == false){ 
-						// setVal({target: "#maxTabsSelect", value: maxTabs});
-					// }
+				// var maxTabs = request.maxTabs;
+				// var mt = compareSetting(maxTabs, "#maxTabsSelect");
+				// if (mt == false){ 
+				// setVal({target: "#maxTabsSelect", value: maxTabs});
 				// }
-				
-				else if (request.action == "updateStimuli"){
+				// }
+
+				else if (request.action == "updateStimuli") {
 					var bi = compareSetting("beepPosition", $("#sliderBeep").slider("value").toString(), "override");
 					var zi = compareSetting("zapPosition", $("#sliderZap").slider("value").toString(), "override");
 					var vi = compareSetting("vibrationPosition", $("#sliderVibration").slider("value").toString(), "override");
-					
-					if ((bi && zi && vi) == false ){
-						$("#sliderBeep")		.slider("value", parseInt(lsGet('beepPosition'		)));
-						$("#sliderVibration")	.slider("value", parseInt(lsGet('vibrationPosition'	)));
-						$("#sliderZap")			.slider("value", parseInt(lsGet('zapPosition'		)));
+
+					if ((bi && zi && vi) == false) {
+						$("#sliderBeep").slider("value", parseInt(lsGet('beepPosition')));
+						$("#sliderVibration").slider("value", parseInt(lsGet('vibrationPosition')));
+						$("#sliderZap").slider("value", parseInt(lsGet('zapPosition')));
 					}
 				}
-				
-				else if (request.action == "updatePomo"){
+
+				else if (request.action == "updatePomo") {
 					pavPomo.frontend.updateCountdown(request.pomo);
 				}
-				
-				else if (request.action == "logged"){
+
+				else if (request.action == "logged") {
 					showOptions(request.token);
 				}
-				else if (request.action == "login failed"){
+				else if (request.action == "login failed") {
 					wrong_login();
+				}
+
+				else if (request.action == "todoist") {
+					if (request.change == "unlogged") {
+						todoist.frontend.toggle();
+					}
+					else if (request.change == "logged") {
+						todoist.frontend.toggle();
+					}
 				}
 			}
 		}
@@ -1403,7 +1402,7 @@ function dateAsString(date) {
 	const day = twoDigits(date.getDate());
 	const month = twoDigits(date.getMonth());
 	const year = date.getYear() + 1900;
-	
+
 	return `${year}-${month}-${day}`
 }
 
@@ -1419,214 +1418,215 @@ function twoDigits(number) {
 
 
 var blackListTable = {
-	create: function(list, target){
+	create: function (list, target) {
 		var base = target;
 		target = "#" + target;
-		
+
 		var table = $(target + " > table");
-		
+
 		var hour;
 		var day;
 		var row;
 		var newSiteRow;
 		var titlesRow;
 		var limitRow;
-		
+
 		var s;
 		var site;
 		var sites = Object.keys(list);
-		
+
 		var global = lsGet("blackGlobal", "parse") || false;
 		var globalHourly = (global.status === "hourly");
-		
+
 		// Empty table structure
-		var tableCode = 
-			$("<table>", {id: base + "Table"})
-				.append( $("<thead>") )
-				.append( $("<tbody>") )
-				.append( $("<tfoot>") );
-				
-		if (table.length === 0){
+		var tableCode =
+			$("<table>", { id: base + "Table" })
+				.append($("<thead>"))
+				.append($("<tbody>"))
+				.append($("<tfoot>"));
+
+		if (table.length === 0) {
 			$(target).append(tableCode);
 		}
 		else {
-			$(table).replaceWith( tableCode );
+			$(table).replaceWith(tableCode);
 		}
-		
-		newSiteRow = $("<tr>", {class: "newBLTR"})
-			.append( $("<td>")
-				.append( $("<input>", {type: "text", id: "siteName", class: "siteAddress", placeholder: "Add site... ie: facebook.com" }) )
+
+		newSiteRow = $("<tr>", { class: "newBLTR" })
+			.append($("<td>")
+				.append($("<input>", { type: "text", id: "siteName", class: "siteAddress", placeholder: "Add site... ie: facebook.com" }))
 			)
-			.append( $("<td>", {class: "limitTime"}) 
-				.append( $("<input>", {type: "text", id: "limit" + "new", class: "limitTime", placeholder: "ie: 5" }) )
+			.append($("<td>", { class: "limitTime" })
+				.append($("<input>", { type: "text", id: "limit" + "new", class: "limitTime", placeholder: "ie: 5" }))
 			)
-			.append( $("<td>", {class: "limitType"}) 
-				.append( $("<select>", {id: "scope" + "new", class: "limitType" })
-					.append( $("<option>", {value: "daily", text: "daily"}) )
-					.append( $("<option>", {value: "hourly", text: "hourly"}) )
+			.append($("<td>", { class: "limitType" })
+				.append($("<select>", { id: "scope" + "new", class: "limitType" })
+					.append($("<option>", { value: "daily", text: "daily" }))
+					.append($("<option>", { value: "hourly", text: "hourly" }))
 				)
 			)
-			.append( $("<td>", {class: "hoverOnly"}) 
-				.append( $("<input>", {type: "button", id: "addNewBL", class: "addNewBLButton", value: "+" }) )
+			.append($("<td>", { class: "hoverOnly" })
+				.append($("<input>", { type: "button", id: "addNewBL", class: "addNewBLButton", value: "+" }))
 			);
-		
-		titlesRow = $("<tr>", {class: ""})
-			.append( $("<th>", {text: "Site", class: "siteAddress"}) )
-			.append( $("<th>", {text: "Minutes", class: "limitMinutes"}) )
-			.append( $("<th>", {text: "Frequency", class: "limitType"}) )
-			.append( $("<th>", {text: ""}) );
-		
-		limitRow = $("<tr>", {class: "totalLimitTR"})
-			.append( $("<td>", {class: "inLiner"})
-				.append( $("<input>", {type: "checkbox", id: "totalLimit", checked: global.status }) )
-				.append( $("<span>", {text: "Total Limit", id: "totalLimitSpan" }) )
+
+		titlesRow = $("<tr>", { class: "" })
+			.append($("<th>", { text: "Site", class: "siteAddress" }))
+			.append($("<th>", { text: "Minutes", class: "limitMinutes" }))
+			.append($("<th>", { text: "Frequency", class: "limitType" }))
+			.append($("<th>", { text: "" }));
+
+		limitRow = $("<tr>", { class: "totalLimitTR" })
+			.append($("<td>", { class: "inLiner" })
+				.append($("<input>", { type: "checkbox", id: "totalLimit", checked: global.status }))
+				.append($("<span>", { text: "Total Limit", id: "totalLimitSpan" }))
 			)
-			.append( $("<td>", {class: "limitTime"}) 
-				.append( $("<input>", {type: "text", id: "limit" + "global", class: "limitTime", placeholder: "ie: 5", value:  global.limit}) )
+			.append($("<td>", { class: "limitTime" })
+				.append($("<input>", { type: "text", id: "limit" + "global", class: "limitTime", placeholder: "ie: 5", value: global.limit }))
 			)
-			.append( $("<td>", {class: "limitType"}) 
-				.append( $("<select>", {id: "scope" + "global", class: "limitType" })
-					.append( $("<option>", {value: "daily", text: "daily"}) )
-					.append( $("<option>", {value: "hourly", text: "hourly"}) )
+			.append($("<td>", { class: "limitType" })
+				.append($("<select>", { id: "scope" + "global", class: "limitType" })
+					.append($("<option>", { value: "daily", text: "daily" }))
+					.append($("<option>", { value: "hourly", text: "hourly" }))
 				)
 			)
-			.append( $("<td>", {class: "hoverOnly"}) );
-		
-		
-		
+			.append($("<td>", { class: "hoverOnly" }));
+
+
+
 		$(target + " > table > thead").append(titlesRow);
 		$(target + " > table > thead").append(newSiteRow);
-		
+
 		$(target + " > table > tfoot").append(limitRow);
 		// Filling rows
-		for (s = 0; s < sites.length; s++){
+		for (s = 0; s < sites.length; s++) {
 			site = sites[s];
 			limit = list[site].limit;
 			type = list[site].type;
-			
+
 			if (type == "daily") {
-				dailyOpt = $("<option>", {value: "daily", text: "daily", selected: true});
-				hourlyOpt = $("<option>", {value: "hourly", text: "hourly"});
+				dailyOpt = $("<option>", { value: "daily", text: "daily", selected: true });
+				hourlyOpt = $("<option>", { value: "hourly", text: "hourly" });
 			}
-			else{
-				dailyOpt = $("<option>", {value: "daily", text: "daily"});
-				hourlyOpt = $("<option>", {value: "hourly", text: "hourly", selected: true});
+			else {
+				dailyOpt = $("<option>", { value: "daily", text: "daily" });
+				hourlyOpt = $("<option>", { value: "hourly", text: "hourly", selected: true });
 			}
-			row = $("<tr>", {class: "blackListRow"})
-				.append( $("<td>")
-					.append( $("<input>", {type: "text", id: "address" + site, class: "siteAddress", value: site }) )
+			row = $("<tr>", { class: "blackListRow" })
+				.append($("<td>")
+					.append($("<input>", { type: "text", id: "address" + site, class: "siteAddress", value: site }))
 				)
-				.append( $("<td>", {class: "limitTime"}) 
-					.append( $("<input>", {type: "text", id: "limit" + site, class: "limitTime", value: limit }) )
+				.append($("<td>", { class: "limitTime" })
+					.append($("<input>", { type: "text", id: "limit" + site, class: "limitTime", value: limit }))
 				)
-				.append( $("<td>", {class: "limitType"}) 
-					.append( $("<select>", {id: "scope" + site, class: "limitType" })
-						.append( dailyOpt )
-						.append( hourlyOpt )
+				.append($("<td>", { class: "limitType" })
+					.append($("<select>", { id: "scope" + site, class: "limitType" })
+						.append(dailyOpt)
+						.append(hourlyOpt)
 					)
 				)
-				.append( $("<td>", { class: "hoverOnly buttonHolder" }) 
-					.append( $("<input>", {type: "button", id: "delete" + site, class: "deleteRowButton", value: "x" }) )
+				.append($("<td>", { class: "hoverOnly buttonHolder" })
+					.append($("<input>", { type: "button", id: "delete" + site, class: "deleteRowButton", value: "x" }))
 				);
 			$(target + " > table > tbody").append(row);
 		}
-		
+
 		blackListTable.listenClicks();
 		$("#scopeglobal").val(global.type);
 	},
-	
-	listenClicks: function(){
-		
-		$('#blackList input').on('keydown', function(e) {
+
+	listenClicks: function () {
+
+		$('#blackList input').on('keydown', function (e) {
 			// Create and Edit Black List items
 			if (e.which == 13) {
 				e.preventDefault();
 				var msg = blackListTable.getRowInfo(this);
-				
+
 				log(msg);
 				msgBackground(msg);
 			}
 		});
-		
-		$('#blackList select').on('change', function(e) {
+
+		$('#blackList select').on('change', function (e) {
 			// Change evaluation between hourly and daily
 			e.preventDefault();
 			var msg = blackListTable.getRowInfo(this);
-			
+
 			log(msg);
 			msgBackground(msg);
 		});
-		
-		$('#blackList input:checkbox').on('change', function(e) { 
+
+		$('#blackList input:checkbox').on('change', function (e) {
 			// Change the global status
 			var msg = blackListTable.getRowInfo(this);
-			
+
 			log(msg);
 			msgBackground(msg);
 			status = $(this).prop("checked");
 			status = toBoolean(status);
 			blackListTable.toggle(status);
-			
+
 		});
-		
-		$("#blackList .deleteRowButton").on("click", function(){
+
+		$("#blackList .deleteRowButton").on("click", function () {
+
 			var name = $(this)
-						.attr("id")
-						.replace("delete", "");
-					
+				.attr("id")
+				.replace("delete", "");
+
 			msg = {
 				action: "blackList",
 				do: "delete",
 				name: name,
 				list: "black"
 			};
-			
+
 			msgBackground(msg);
 		});
 	},
-	
-	toggle: function(globalBL){
-		
+
+	toggle: function (globalBL) {
+
 		globalBL = globalBL === "true";
-		
+
 		// All the regular inputs go one way
 		$(".limitTime").prop("disabled", globalBL);
 		$(".limitType").prop("disabled", globalBL);
-		
+
 		// Total time goes the other way
 		$("#limitglobal").prop("disabled", !globalBL);
 		$("#scopeglobal").prop("disabled", !globalBL);
-		
+
 	},
-	
-	getRowInfo: function(focused){
+
+	getRowInfo: function (focused) {
 		var action = "new";
 		var oldName;
 		var status;
-		
+
 		var row = $(focused).closest("tr");
 		var rowType;
-		
-		if 		( $(row).hasClass("totalLimitTR") ) { rowType = "global"; }
-		else if ( $(row).hasClass("blackListRow") ) { rowType = "old Site"; }
-		else if ( $(row).hasClass("newBLTR") ) 		{ rowType = "new Site"; }
-		
+
+		if ($(row).hasClass("totalLimitTR")) { rowType = "global"; }
+		else if ($(row).hasClass("blackListRow")) { rowType = "old Site"; }
+		else if ($(row).hasClass("newBLTR")) { rowType = "new Site"; }
+
 		var limit = parseInt($(focused).closest("tr").find("input.limitTime").val()) || 0;
 		var type = $(focused).closest("tr").find("select.limitType").val() || "daily";
-			
-		if (rowType == "old Site" || rowType == "new Site"){
+
+		if (rowType == "old Site" || rowType == "new Site") {
 			var name = $(focused).closest("tr").find("input.siteAddress").val();
-			
+
 			// Validation
 			if (name.length === 0) { return; }
-			
-			if ( rowType == "old Site" ){
+
+			if (rowType == "old Site") {
 				action = "edit";
 				oldName = $(focused).closest("tr").find("input.siteAddress").prop('id');
 				oldName = oldName.replace("address", "");
 			}
 			else { action = "new"; }
-			
+
 			msg = {
 				name: name,
 				limit: limit,
@@ -1635,13 +1635,13 @@ var blackListTable = {
 				action: 'blackList',
 				list: "black"
 			};
-		
-			if (action == "edit"){ msg["oldName"] = oldName; }
+
+			if (action == "edit") { msg["oldName"] = oldName; }
 		}
-		else if (rowType == "global"){
+		else if (rowType == "global") {
 			status = $("#totalLimit").prop("checked");
 			status = toBoolean(status);
-			
+
 			msg = {
 				list: "global",
 				limit: limit,
@@ -1650,47 +1650,47 @@ var blackListTable = {
 				action: "blackList"
 			}
 		}
-		
+
 		return msg;
 	}
 }
 
 var maxTabsPack = {
-	create: function(page, value){
-		if (!value || isNaN(parseInt(value))){
+	create: function (page, value) {
+		if (!value || isNaN(parseInt(value))) {
 			value = 8;
 		}
 		var old = $("#maxTabsSelect");
-		var menu = $("<select>", {id: "maxTabsSelect", class: "pavSetting"})
+		var menu = $("<select>", { id: "maxTabsSelect", class: "pavSetting" })
 		var item;
-		
-		var range = ["no", 
-					1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-					11, 12, 13, 14, 15,
-					20, 25, 30, 35, 40, 45, 50
-					];
-		
-		for (i = 0; i < range.length; i++){
+
+		var range = ["no",
+			1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+			11, 12, 13, 14, 15,
+			20, 25, 30, 35, 40, 45, 50
+		];
+
+		for (i = 0; i < range.length; i++) {
 			var v = range[i];
-			if (v == parseInt(value)){
-				item = $("<option>", {text: v, value: v, selected: true});
-			} else{
-				item = $("<option>", {text: v, value: v});
+			if (v == parseInt(value)) {
+				item = $("<option>", { text: v, value: v, selected: true });
+			} else {
+				item = $("<option>", { text: v, value: v });
 			}
 			$(menu).append(item);
 		}
-		
+
 		$(old).replaceWith(menu);
-		
+
 		maxTabsPack.frontListener(page);
 	},
-	
-	set: function(value){
-		setVal({dom: "#maxTabsSelect", value});
+
+	set: function (value) {
+		setVal({ dom: "#maxTabsSelect", value });
 	},
-	
-	frontListener: function(page){
-		$("#maxTabsSelect").change(function(){
+
+	frontListener: function (page) {
+		$("#maxTabsSelect").change(function () {
 			var maxTabs = $(this).val();
 			msgBackground({
 				change: "settings",
@@ -1698,33 +1698,33 @@ var maxTabsPack = {
 				maxTabs: maxTabs
 			});
 		});
-		
+
 		chrome.runtime.onMessage.addListener(
-			function(request, sender, sendResponse) {
+			function (request, sender, sendResponse) {
 				r = request;
-				if (r.target == page && r.action == "update Max Tabs"){
+				if (r.target == page && r.action == "update Max Tabs") {
 					var curV = $("#maxTabsSelect").val();
 					var recV = r.value.toString();
 
-					countTabs(localStorage.tabCountAll, UpdateTabCount);
-					
-					if (curV != recV){
-						maxTabsPack.set(r.value);	
+					countTabs(lsGet("tabCountAll"), UpdateTabCount);
+
+					if (curV != recV) {
+						maxTabsPack.set(r.value);
 						confirmUpdate(true);
 					}
-					
+
 				}
-				
+
 			}
 		);
 	},
-	
-	backListener: function(r){
-		if (r.action == "update Max Tabs"){
-			localStorage.maxTabs = r.maxTabs;
+
+	backListener: function (r) {
+		if (r.action == "update Max Tabs") {
+			lsSet("maxTabs", r.maxTabs);
 			var msg = {
-				action: "update Max Tabs", 
-				dom: "#maxTabsSelect", 
+				action: "update Max Tabs",
+				dom: "#maxTabsSelect",
 				value: r.maxTabs
 			}
 			msgInterfaces(msg);
@@ -1732,40 +1732,40 @@ var maxTabsPack = {
 	}
 }
 
-function enter_on_sign_in(){
-	$('.onlyUnlogged input').on('keydown', function(e) {
+function enter_on_sign_in() {
+	$('.onlyUnlogged input').on('keydown', function (e) {
 		if (e.which == 13) {
 			e.preventDefault();
 			var userInfo = {
 				userName: $("#pavUserNameLogin").val(),
 				password: $("#pavPasswordLogin").val(),
 			};
-			
-			if (validateUserInfo(userInfo)){
-				var msg = { 
-					action: "oauth", 
-					user: userInfo 
+
+			if (validateUserInfo(userInfo)) {
+				var msg = {
+					action: "oauth",
+					user: userInfo
 				};
-				
-				msgBackground( msg );
+
+				msgBackground(msg);
 			}
-			else{
-				
+			else {
+
 			};
 
 		}
-	
+
 	});
 }
 
-function log(msg){
-	try{
-		if (JSON.parse(localStorage.verbose)){ console.log(msg); }
+function log(msg) {
+	try {
+		if (JSON.parse(lsGet("verbose"))) { console.log(msg); }
 	}
-	catch(err){}
+	catch (err) { }
 }
 
-function wrong_login(){
-	$("#unloggedMessage").effect("highlight", {color: 'white'}, 400);
+function wrong_login() {
+	$("#unloggedMessage").effect("highlight", { color: 'white' }, 400);
 	$("#unloggedMessage").text("Invalid password and email combination");
 }

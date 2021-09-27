@@ -1,2 +1,12 @@
-*.zip
-*.zip
+/node_modules
+/.vscode
+/public/bundle.js
+/public/advancedOptions
+/public/main
+/public/remoteControl
+/public/rescueTime
+/public/siteList
+/public/todoist
+/public/todoList
+/public/bundle
+bugs_&_issues.md

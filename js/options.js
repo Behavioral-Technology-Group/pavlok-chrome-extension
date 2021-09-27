@@ -3,7 +3,7 @@
 
 var notTimeout;
 var focusCompleteMsg = "Keep the zone going, you rock star!";
-var focusStopMsg = ''; 
+var focusStopMsg = '';
 var defInt = '';			// Use default intensity for stimuli
 var defAT = '';				// Use default Access Token for stimuli
 var PFpromptForce = false;
@@ -21,108 +21,107 @@ var toDoChecker;
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
-function visibleDaily(targetRow, detailRow){
-	if ($(targetRow).hasClass("activeDailyTR")){
+function visibleDaily(targetRow, detailRow) {
+	if ($(targetRow).hasClass("activeDailyTR")) {
 		$(targetRow).removeClass("activeDailyTR");
-		$(".taskDetailTR").hide(100, 
-			function(){$(".taskDetailTR").remove()}); 
+		$(".taskDetailTR").hide(100,
+			function () { $(".taskDetailTR").remove() });
 	}
-	else{
+	else {
 		// Restore actual active to regular before opening the new one
 		$(".dailyListTR").removeClass("activeDailyTR");
-		
+
 		$(targetRow).addClass("activeDailyTR");
-		
+
 		// Manage presentation of new task details
 		$(detailRow).show(400);
-		$(detailRow).effect("highlight", {color: 'white'}, 400);
+		$(detailRow).effect("highlight", { color: 'white' }, 400);
 	}
-	
 }
 
-function createDetailTR(targetRow){
+function createDetailTR(targetRow) {
 	var clickedId = parseInt(targetRow.attr("id"));
-	
+
 	// Removes any detail row before
 	$(".taskDetailTR").hide(200).remove();
-	
+
 	// Insert a new TR for details of clicked task
 	var newDetailTR = document.createElement("tr");
 	newDetailTR.className = "taskDetailTR noDisplay";
-	
+
 	var newTD = document.createElement("td");
 	newDetailTR.appendChild(newTD);
 	newTD.colSpan = 3;
-	
+
 	$(targetRow).after(newDetailTR);
-	
+
 	// Fill details of the clicked task
 	newTD.appendChild(testTodo.frontend.dailyDetail(clickedId));
-	
+
 	var task = testTodo.backend.read(clickedId);
-	
+
 	var blContent = task.blackList || '';
 	var blackListDiv = $("#blackListTD").children()[0];
 	$(blackListDiv).tagsInput({
-		'defaultText':'Add site... ie: facebook.com',
-		'removeWithBackspace' : true
+		'defaultText': 'Add site... ie: facebook.com',
+		'removeWithBackspace': true
 	})
-	.importTags(blContent);
+		.importTags(blContent);
 	removeInlineStyle("#blackListDaily_tagsinput");
-	
+
 	var wlContent = task.whiteList || '';
 	var whiteListDiv = $("#whiteListTD").children()[0];
 	$(whiteListDiv).tagsInput({
-		'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
-		'removeWithBackspace' : true
+		'defaultText': 'Add site... ie: facebook.com/groups/772212156222588/',
+		'removeWithBackspace': true
 	})
-	.importTags(wlContent);
+		.importTags(wlContent);
 	removeInlineStyle("#whiteListDaily_tagsinput");
 
 	// Show detail row and reformat clicked rows
 	var detailRow = $(".taskDetailTR");
-	
+
 	visibleDaily(targetRow, detailRow);
 }
 
-function fillDailyList(){
+function fillDailyList() {
 	$('.dailyListTR').remove()
 	var allTasks = lsGet('allTasks', 'parse');
-	var dailyList = _.where(allTasks, {daily: true});
+	var dailyList = _.where(allTasks, { daily: true });
 	dailyList = dailyList.reverse();
-	
-	for (d = 0; d < dailyList.length; d++ ) {
+
+	for (d = 0; d < dailyList.length; d++) {
 		var daily = dailyList[d];
 		var speciaList;
 		if (daily.specialList == true) { specialList = 'Using'; }
 		else { specialList = 'Not Using'; }
-		
+
 		var newLine = '' +
 			'<tr id="' + daily.id + '" class="dailyListTR">' +
-				'<td>' + daily.task 		+ '</td>' + 
-				'<td>' + daily.pomos + " x " + daily.duration	+ " min" + '</td>' +
-				'<td>' + specialList 		+ '</td>' +
+			'<td>' + daily.task + '</td>' +
+			'<td>' + daily.pomos + " x " + daily.duration + " min" + '</td>' +
+			'<td>' + specialList + '</td>' +
 			'</tr>' +
 			'<tr id="' + daily.id + 'details" class="dailyDetailTR">' +
-			
+
 			'</tr>'
 			;
-			
+
 		$('#dailyListTable > tbody').append(newLine);
 	}
 }
 
-function listenDailyListClick(){
-	$("#dailyListTable tbody ").on('click', '.dailyListTR', function(){
+function listenDailyListClick() {
+	$("#dailyListTable tbody ").on('click', '.dailyListTR', function () {
 		var clickedTR = $(this);
 		var clickedId = parseInt($(this).attr('id'));
-		
+
 		createDetailTR(clickedTR);
 	});
-	
-	$("#createNewDailyTaskButton").click(function(){
+
+	$("#createNewDailyTaskButton").click(function () {
 		var newTaskName = $("#newDailyTaskInput").val()
-		if (newTaskName.length > 0 && newTaskName != " "){
+		if (newTaskName.length > 0 && newTaskName != " ") {
 			$('#newDailyTaskInput').val('');
 
 			var newDaily = {
@@ -130,74 +129,75 @@ function listenDailyListClick(){
 				daily: true,
 				pomos: 1,
 			};
+
 			newDaily = testTodo.backend.create(newDaily);
-			
+
 			testTodo.frontend.restoreTasks("options");
-			
+
 			fillDailyList();
 			createDetailTR($("#" + newDaily.id));
-			msgInterfaces({action: "updateDaily"});
-			
-		} else{
+			msgInterfaces({ action: "updateDaily" });
+
+		} else {
 			return
 		}
 	});
 
-	$("#testBinaural").click(function(){
+	$("#testBinaural").click(function () {
 		sampleBinaural();
 	});
-	
-	$("#dailyListTable").on('click', '#specialListsInput', function( event ){
+
+	$("#dailyListTable").on('click', '#specialListsInput', function (event) {
 		var checked = $('#specialListsInput').prop('checked');
-		if (checked == true){
+		if (checked == true) {
 			$("#blackListDaily").tagsInput();
 			$("#whiteListDaily").tagsInput();
 			$('.specialListDisplay').show(300);
 		}
-		else{
+		else {
 			$('.specialListDisplay').hide(300);
 		}
 	});
-	
-	$("#dailyListTable").on('click', '#saveDaily', function( event ){
+
+	$("#dailyListTable").on('click', '#saveDaily', function (event) {
 		event.preventDefault();
-		
+
 		var updates = testTodo.helpers.gatherDaily();
 		var task = testTodo.backend.update(updates.id, updates);
 		log(task);
-		
-		$(".taskDetailTR").hide(300, function(){$(".taskDetailTR").remove()});
-		
+
+		$(".taskDetailTR").hide(300, function () { $(".taskDetailTR").remove() });
+
 		fillDailyList();
 		visibleDaily($(".activeDailyTR"));
 	});
-	
-	$("#dailyListTable").on('click', '#deleteDaily', function( event ){
+
+	$("#dailyListTable").on('click', '#deleteDaily', function (event) {
 		event.preventDefault();
-		
+
 		var id = parseInt($('#dailyTaskIdInput').val());
 		testTodo.backend.delete(id);
 		visibleDaily($(".activeDailyTR"));
 		fillDailyList();
 	});
 }
-	
-function enableBlackDaily(){
+
+function enableBlackDaily() {
 	$('#blackListDaily').tagsInput({
-		'defaultText':'Add site... ie: facebook.com',
-		'removeWithBackspace' : true
+		'defaultText': 'Add site... ie: facebook.com',
+		'removeWithBackspace': true
 	});
 	$('#blackListDaily_tagsinput').attr('style', '');
-	
-	
+
+
 	$('#whiteListDaily').tagsInput({
-		'defaultText':'facebook.com/groups/772212156222588/',
-		'removeWithBackspace' : true
+		'defaultText': 'facebook.com/groups/772212156222588/',
+		'removeWithBackspace': true
 	});
 	$('#whiteListDaily_tagsinput').attr('style', '');
 }
 
-function enableDaily(){
+function enableDaily() {
 	fillDailyList();
 	listenDailyListClick();
 }
@@ -209,224 +209,225 @@ function enableDaily(){
 /* ***************************************************************** */
 
 // Helpers
-function changeRTVisibility(){
-	APIKey = localStorage.RTAPIKey;
+function changeRTVisibility() {
+	APIKey = lsGet("RTAPIKey");
 	if (APIKey == undefined || APIKey == 'null' || APIKey == false) {
 		$("#RTCodeOnly").addClass("noDisplay");
 		$("#NoRTCodeOnly").removeClass("noDisplay");
 		$("#RTAPIKeySpan").text('');
-		
+
 	} else {
 		$("#RTCodeOnly").removeClass("noDisplay");
 		$("#NoRTCodeOnly").addClass("noDisplay");
-		$("#RTAPIKeySpan").text(localStorage.RTAPIKey);
+		$("#RTAPIKeySpan").text(lsGet("RTAPIKey"));
 	}
 }
 
-function regressRTHour(deltaMinutes){
-	
-	var original = localStorage.Comment;
+function regressRTHour(deltaMinutes) {
+
+	var original = lsGet("Comment");
 	var originalDate = [original.split(" ")[8], original.split(" ")[9]];
-	
+
 	var year = originalDate[0].split("-")[0];
 	var month = originalDate[0].split("-")[1];
 	var day = originalDate[0].split("-")[2];
-	
+
 	var hours = originalDate[1].split(":")[0];
 	var minutes = originalDate[1].split(":")[1];
 	var seconds = originalDate[1].split(":")[2];
 	var milliseconds = 0;
-	
+
 	var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
-	
+
 	var d2 = new Date(d);
 	d2.setMinutes(d.getMinutes() + deltaMinutes);
-	
+
 	return d2
 }
 
-function updateProductivity(){
-	RTProdInterval = setInterval(function(){
-		if (localStorage.RTOnOffSelect == "On") {
-			if (!localStorage.Comment) { return }
+function updateProductivity() {
+	RTProdInterval = setInterval(function () {
+		if (lsGet("RTOnOffSelect") == "On") {
+			if (!lsGet("Comment")) { return }
 			var beginCycle = regressRTHour(-30);
 			var beginHours = beginCycle.getHours() + ":" + beginCycle.getMinutes() + ":" + beginCycle.getSeconds();
-			if (parseInt(localStorage.RTPulse) > 0) {
-				$("#RTResultsHolder").html("Your Productivity pulse was <b>" + localStorage.RTPulse + "</b>.");
-				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + localStorage.RTHour);
+			if (parseInt(lsGet("RTPulse")) > 0) {
+				$("#RTResultsHolder").html("Your Productivity pulse was <b>" + lsGet("RTPulse") + "</b>.");
+				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + lsGet("RTHour"));
 			}
 			else {
-				$("#RTResultsHolder").html("Too little time evaluated from <b>" + localStorage.RTHour + "</b>. Check back in 15 minutes or so.");
-				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + localStorage.RTHour);
+				$("#RTResultsHolder").html("Too little time evaluated from <b>" + lsGet("RTHour") + "</b>. Check back in 15 minutes or so.");
+				$("#RTResultsHolder").attr('title', 'Measured from ' + beginHours + " to " + lsGet("RTHour"));
 			}
 		}
 	}, 3 * 1000);
 }
 
-function updateRTLimits(){
+function updateRTLimits() {
 	var PosLimitMax = 100;
-	// var PosLimitMin = parseInt(localStorage.RTWarnLimit);
-	var PosLimitMin = $( "#RTWarnLimit" ).spinner( "value" );
-	var PosValue = $( "#RTPosLimit" ).spinner( "value" );
-	
-	var WarnLimitMax = $( "#RTPosLimit" ).spinner( "value" );
-	var WarnLimitMin = $( "#RTNegLimit" ).spinner( "value" );
-	var WarnValue = $( "#RTWarnLimit" ).spinner( "value" );
-	
-	var NegLimitMax = $( "#RTWarnLimit" ).spinner( "value" );
+	// var PosLimitMin = parseInt(lsGet("RTWarnLimit"));
+	var PosLimitMin = $("#RTWarnLimit").spinner("value");
+	var PosValue = $("#RTPosLimit").spinner("value");
+
+	var WarnLimitMax = $("#RTPosLimit").spinner("value");
+	var WarnLimitMin = $("#RTNegLimit").spinner("value");
+	var WarnValue = $("#RTWarnLimit").spinner("value");
+
+	var NegLimitMax = $("#RTWarnLimit").spinner("value");
 	var NegLimitMin = 0;
-	var NegValue = $( "#RTNegLimit" ).spinner( "value" );
-	
+	var NegValue = $("#RTNegLimit").spinner("value");
+
 	// There should be no cross over
-	if ( NegLimitMax > WarnLimitMax ) {
+	if (NegLimitMax > WarnLimitMax) {
 		WarnValue = WarnLimitMax;
 	}
-	
-	var PosLimit = $( "#RTPosLimit" ).spinner({
+
+	var PosLimit = $("#RTPosLimit").spinner({
 		max: PosLimitMax,
 		min: PosLimitMin
 	});
-	var WarnLimit = $( "#RTWarnLimit" ).spinner({
+	var WarnLimit = $("#RTWarnLimit").spinner({
 		max: WarnLimitMax,
 		min: WarnLimitMin
 	});
-	var NegLimit = $( "#RTNegLimit" ).spinner({
+	var NegLimit = $("#RTNegLimit").spinner({
 		max: NegLimitMax,
 		min: NegLimitMin
 	});
-	
-	localStorage.RTPosLimit = PosValue;
-	localStorage.RTWarnLimit = WarnValue;
-	localStorage.RTNegLimit = NegValue;
+
+	lsSet("RTPosLimit", PosValue);
+	lsSet("RTWarnLimit", WarnValue);
+	lsSet("RTNegLimit", NegValue);
 	confirmUpdate(notifyUpdate);
 	return
 }
 
 // Enabler
-function enableRescueTime(){
-	$("#fireRTIntegration").click(function(){
+function enableRescueTime() {
+	$("#fireRTIntegration").click(function () {
 		var APIKey = $("#rescueTimeAPIKey").val();
-		localStorage.RTAPIKey = APIKey;
+		lsSet("RTAPIKey", APIKey);
 		changeRTVisibility();
 	});
-	
-	if (localStorage.RTPulse && localStorage.RTOnOffSelect) {changeRTVisibility();}
-	if (localStorage.RTOnOffSelect == "On") { updateProductivity(); }
-	
-	$("#RTOnOffSelect").change(function(){
+
+	if (lsGet("RTPulse") && lsGet("RTOnOffSelect")) { changeRTVisibility(); }
+	if (lsGet("RTOnOffSelect") == "On") { updateProductivity(); }
+
+	$("#RTOnOffSelect").change(function () {
 		var RTOnOffSelect = $(this).val();
 		confirmUpdate(notifyUpdate);
-		localStorage.RTOnOffSelect = RTOnOffSelect;
-		if (RTOnOffSelect == "On") { 
-			updateProductivity(); 
+		lsSet("RTOnOffSelect", RTOnOffSelect);
+		if (RTOnOffSelect == "On") {
+			updateProductivity();
 			$("#RTResultsHolder").css('visibility', 'visible');
-		} else{
+		} else {
 			$("#RTResultsHolder").css('visibility', 'hidden');
 		}
 	});
-	
+
 	var RTFreq = lsGet('RTFrequency') || 3;
-	$( "#RTFrequencySelect" ).val(RTFreq);
-	
-	$( "#RTFrequencySelect" ).change(function(){
-		localStorage.RTFrequency = $(this).val();
+	$("#RTFrequencySelect").val(RTFreq);
+
+	$("#RTFrequencySelect").change(function () {
+		lsSet("RTFrequency", $(this).val());
 		confirmUpdate(notifyUpdate);
 	});
-	
-	$("#removeRTAPIKey").click(function() {
+
+	$("#removeRTAPIKey").click(function () {
 		var msg = "Have you been noticing that you receive beeps when you are being unproductive, and vibrations when you are being very productive?<br/><br/>Keeping this integration will help you become a productive, healthy individual. Are you sure you want to disconnect Pavlok from RescueTime?";
-		
+
 		var options = {
-			
+
 		};
 		$.prompt(msg, {
 			title: "Your Pavlok will disconnect from RescueTime. But are you sure you want to do that?",
 			html: msg,
 			defaultButton: 1,
 			buttons: { "No, I want to be productive": false, "Yes, disconnect from RescueTime": true },
-			submit: function(e,v,m,f){
+			submit: function (e, v, m, f) {
 				log("result was " + v);
 				var result = v;
-				if (result == true){
-					delete localStorage.RTAPIKey;
+				if (result == true) {
+					lsDel("RTAPIKey");
 					$("#rescueTimeAPIKey").val('');
 					$("#RTOnOffSelect").val('Off');
 					lsSet('RTOnOffSelect', 'Off');
 					changeRTVisibility();
 					confirmUpdate(notifyUpdate);
-				}	
+				}
 			}
 		});
 	});
-	
+
 	// Enable spinners
-	var PosLimit = $( "#RTPosLimit" ).spinner({
-		min: parseInt(localStorage.RTWarnLimit),
+	var PosLimit = $("#RTPosLimit").spinner({
+		min: parseInt(lsGet("RTWarnLimit")),
 		max: 100,
 		page: 10,
 		step: 5,
-		change: function(event, ui) { 
-			updateRTLimits(); 
+		change: function (event, ui) {
+			updateRTLimits();
 		}
 	});
-	
-	var WarnLimit = $( "#RTWarnLimit" ).spinner({
-		min: parseInt(localStorage.RTNegLimit),
-		max: parseInt(localStorage.RTPosLimit),
+
+	var WarnLimit = $("#RTWarnLimit").spinner({
+		min: parseInt(lsGet("RTNegLimit")),
+		max: parseInt(lsGet("RTPosLimit")),
 		page: 10,
 		step: 5,
-		change: function(event, ui){ updateRTLimits() }
+		change: function (event, ui) { updateRTLimits() }
 	});
-	
-	var NegLimit = $( "#RTNegLimit" ).spinner({
+
+	var NegLimit = $("#RTNegLimit").spinner({
 		min: 0,
-		max: parseInt(localStorage.RTWarnLimit),
+		max: parseInt(lsGet("RTWarnLimit")),
 		page: 10,
 		step: 5,
-		change: function(event, ui){ updateRTLimits() }
+		change: function (event, ui) { updateRTLimits() }
 	});
-	
-	$(".RTThreshold").change(function(){
+
+	$(".RTThreshold").change(function () {
+
 		var PosLimitMax = 100;
-		var PosLimitMin = parseInt(localStorage.RTPosLimit);
-		var PosValue = $( "#RTPosLimit" ).spinner( "value" );
-		
-		var WarnLimitMax = parseInt(localStorage.RTWarnLimit);
-		var WarnLimitMin = parseInt(localStorage.RTNegLimit);
-		var WarnValue = $( "#RTWarnLimit" ).spinner( "value" );
-		
-		var NegLimitMax = parseInt(localStorage.RTNegLimit);
+		var PosLimitMin = parseInt(lsGet("RTPosLimit"));
+		var PosValue = $("#RTPosLimit").spinner("value");
+
+		var WarnLimitMax = parseInt(lsGet("RTWarnLimit"));
+		var WarnLimitMin = parseInt(lsGet("RTNegLimit"));
+		var WarnValue = $("#RTWarnLimit").spinner("value");
+
+		var NegLimitMax = parseInt(lsGet("RTNegLimit"));
 		var NegLimitMin = 0;
-		var NegValue = $( "#RTNegLimit" ).spinner( "value" );
-		
+		var NegValue = $("#RTNegLimit").spinner("value");
+
 		// There should be no cross over
-		if ( NegLimitMax > WarnLimitMax ) {
+		if (NegLimitMax > WarnLimitMax) {
 			WarnValue = WarnLimitMax;
 		}
-		
-		localStorage.RTPosLimit = PosValue;
-		localStorage.RTWarnLimit = WarnValue;
-		localStorage.RTNegLimit = NegValue;
+
+		lsSet("RTPosLimit", PosValue);
+		lsSet("RTWarnLimit", WarnValue);
+		lsSet("RTNegLimit", NegValue);
 		confirmUpdate(notifyUpdate);
 	});
-	
+
 	// Restore values
-	$("#RTPosLimit").val(parseInt(localStorage.RTPosLimit));
-	$("#RTWarnLimit").val(parseInt(localStorage.RTWarnLimit));
-	$("#RTNegLimit").val(parseInt(localStorage.RTNegLimit));
-	
-	$("#RTPosSti").val(localStorage.RTPosSti);
-	$("#RTWarnSti").val(localStorage.RTWarnSti);
-	$("#RTNegSti").val(localStorage.RTNegSti);
-	
+	$("#RTPosLimit").val(parseInt(lsGet("RTPosLimit")));
+	$("#RTWarnLimit").val(parseInt(lsGet("RTWarnLimit")));
+	$("#RTNegLimit").val(parseInt(lsGet("RTNegLimit")));
+
+	$("#RTPosSti").val(lsGet("RTPosSti"));
+	$("#RTWarnSti").val(lsGet("RTWarnSti"));
+	$("#RTNegSti").val(lsGet("RTNegSti"));
+
 	// Save Values:
-	$("#RTPosLimit").change(function(){localStorage.RTPosLimit = $(this).val();});
-	$("#RTWarnLimit").change(function(){localStorage.RTWarnLimit = $(this).val();});
-	$("#RTNegLimit").change(function(){localStorage.RTNegLimit = $(this).val();});
-	
-	$("#RTPosSti").change(function(){localStorage.RTPosSti = $(this).val();});
-	$("#RTWarnSti").change(function(){localStorage.RTWarnSti = $(this).val();});
-	$("#RTNegSti").change(function(){localStorage.RTNegSti = $(this).val();});
+	$("#RTPosLimit").change(function () { lsSet("RTPosLimit", $(this).val()); });
+	$("#RTWarnLimit").change(function () { lsSet("RTWarnLimit", $(this).val()); });
+	$("#RTNegLimit").change(function () { lsSet("RTNegLimit", $(this).val()); });
+
+	$("#RTPosSti").change(function () { lsSet("RTPosSti", $(this).val()); });
+	$("#RTWarnSti").change(function () { lsSet("RTWarnSti", $(this).val()); });
+	$("#RTNegSti").change(function () { lsSet("RTNegSti", $(this).val()); });
 
 	changeRTVisibility();
 }
@@ -439,96 +440,96 @@ function enableRescueTime(){
 /* ***************************************************************** */
 
 // Helpers
-function enableTimers(){
-	$.widget( "ui.timespinner", $.ui.spinner, {
-    options: {
-      // seconds
-      step: 15 * 60 * 1000,
-      // hours
-      page: 60
-    },
- 
-    _parse: function( value ) {
-      if ( typeof value === "string" ) {
-        // already a timestamp
-        if ( Number( value ) == value ) {
-          return Number( value );
-        }
-        return Globalize.parseDate( value );
-      }
-      return value;
-    },
- 
-    _format: function( value ) {
-      return Globalize.format( new Date(value), "t" );
-    }
-  });
- 
-	$(function() {
-		$( "#generalActiveTimeStart" ).timespinner({
-			change: function( event, ui ) { 
-				localStorage.generalActiveTimeStart = $(this).val();
-				countTabs(localStorage.tabCountAll, UpdateTabCount);
+function enableTimers() {
+	$.widget("ui.timespinner", $.ui.spinner, {
+		options: {
+			// seconds
+			step: 15 * 60 * 1000,
+			// hours
+			page: 60
+		},
+
+		_parse: function (value) {
+			if (typeof value === "string") {
+				// already a timestamp
+				if (Number(value) == value) {
+					return Number(value);
+				}
+				return Globalize.parseDate(value);
+			}
+			return value;
+		},
+
+		_format: function (value) {
+			return Globalize.format(new Date(value), "t");
+		}
+	});
+
+	$(function () {
+		$("#generalActiveTimeStart").timespinner({
+			change: function (event, ui) {
+				lsSet("generalActiveTimeStart", $(this).val());
+				countTabs(lsGet("tabCountAll"), UpdateTabCount);
 				confirmUpdate(notifyUpdate);
 			},
 		});
-		$( "#generalActiveTimeEnd" ).timespinner({
-			change: function( event, ui ) { 
-				localStorage.generalActiveTimeEnd = $(this).val();
-				countTabs(localStorage.tabCountAll, UpdateTabCount);
+		$("#generalActiveTimeEnd").timespinner({
+			change: function (event, ui) {
+				lsSet("generalActiveTimeEnd", $(this).val());
+				countTabs(lsGet("tabCountAll"), UpdateTabCount);
 				confirmUpdate(notifyUpdate);
 			}
 		});
-	 
-		$( "#timeFormat" ).change(function() {
+
+		$("#timeFormat").change(function () {
 			lsSet('timeFormat', $(this).val());
-			countTabs(localStorage.tabCountAll, UpdateTabCount);
-			
-			var currentStart = $( "#generalActiveTimeStart" ).timespinner( "value" );
-			var currentEnd = $( "#generalActiveTimeEnd" ).timespinner( "value" );
-			
+			countTabs(lsGet("tabCountAll"), UpdateTabCount);
+
+			var currentStart = $("#generalActiveTimeStart").timespinner("value");
+			var currentEnd = $("#generalActiveTimeEnd").timespinner("value");
+
 			var selectedOption = $(this).val();
 			if (selectedOption == "24") { culture = "de-DE" }
-			else if (selectedOption == "12") { culture = "en-EN"};
+			else if (selectedOption == "12") { culture = "en-EN" };
 
-			Globalize.culture( culture );
-			$( "#generalActiveTimeStart" ).timespinner( "value", currentStart );
-			$( "#generalActiveTimeEnd" ).timespinner( "value", currentEnd );
+			Globalize.culture(culture);
+			$("#generalActiveTimeStart").timespinner("value", currentStart);
+			$("#generalActiveTimeEnd").timespinner("value", currentEnd);
 		});
 	});
 }
 
-function toggleAutoZapperConf(toState){
-	if (toState == "configure"){
+function toggleAutoZapperConf(toState) {
+	if (toState == "configure") {
 		$(".autoZapperConf").removeClass("noDisplay");
 		$(".autoZapperActive").addClass("noDisplay");
-		
+
 	}
-	else if (toState == "train"){
+	else if (toState == "train") {
 		$(".autoZapperActive").removeClass("noDisplay");
 		$(".autoZapperConf").addClass("noDisplay");
 	}
 }
 
-function enableAutoZapper(){
-	// var date = new Date(new Date().valueOf() + parseInt(localStorage.trainingSessionZD));
-	$('#countDownTraining').countdown(new Date(), function(event) {
+function enableAutoZapper() {
+	// var date = new Date(new Date().valueOf() + parseInt(lsGet("trainingSessionZD")));
+	$('#countDownTraining').countdown(new Date(), function (event) {
 		$(this).html(event.strftime('%M:%S'));
 	})
-	.on('finish.countdown', function(event) {
-		$.prompt("Session Finished! Congratulations!");
-		clearInterval(localStorage.trainingSession);
-		localStorage.trainingSession = 'false';
-		localStorage.trainingSessionZI = '';
-		localStorage.trainingSessionZD = '';
-		localStorage.trainingSessionZF = '';
-		
-		toggleAutoZapperConf("configure");
-		
-	});
-	
-	
-	var intensity = $( "#autoZapperIntensity" ).spinner({
+		.on('finish.countdown', function (event) {
+			$.prompt("Session Finished! Congratulations!");
+			clearInterval(lsGet("trainingSession"));
+			lsSet("trainingSession", 'false');
+			lsSet("trainingSessionZI", '');
+			lsSet("trainingSessionZD", '');
+			lsSet("trainingSessionZF", '');
+
+			toggleAutoZapperConf("configure");
+
+		});
+
+
+	var intensity = $("#autoZapperIntensity").spinner({
 		min: 10,
 		max: 100,
 		page: 10,
@@ -537,7 +538,7 @@ function enableAutoZapper(){
 	});
 	intensity.val(60);
 
-	var duration = $( "#autoZapperDuration" ).spinner({
+	var duration = $("#autoZapperDuration").spinner({
 		min: 1,
 		max: 60,
 		page: 1,
@@ -546,7 +547,7 @@ function enableAutoZapper(){
 	});
 	duration.val(5);
 
-	var frequency = $( "#autoZapperFrequency" ).spinner({
+	var frequency = $("#autoZapperFrequency").spinner({
 		min: 2,
 		max: 30,
 		page: 1,
@@ -554,91 +555,90 @@ function enableAutoZapper(){
 		change: confirmUpdate
 	});
 	frequency.val(5);
-	
-	$("#autoZapperStart").click(function( event ){
+
+	$("#autoZapperStart").click(function (event) {
 		event.preventDefault();
 		$.prompt("Starting <b>zaps on " + intensity.val() + "%</b>...<br />" +
-			"for <b>" + duration.val() + " minutes</b><br />"+
+			"for <b>" + duration.val() + " minutes</b><br />" +
 			"zapping <b>every " + frequency.val() + " seconds</b>.", {
 			title: "Are you Ready?",
 			buttons: { "Yes, I'm Ready": true, "No, let me change this": false },
-			submit: function(e,v,m,f){
+			submit: function (e, v, m, f) {
 				log("result was " + v);
 				var result = v;
-				if (result == true){
-					var zapInt = percentToRaw(parseInt( $("#autoZapperIntensity").val() ), 'zap');
-					var zapFreq = parseInt( $("#autoZapperFrequency").val() ) * 1000;
-					var zapDur = parseInt( $("#autoZapperDuration").val() ) * 60 * 1000;
+				if (result == true) {
+					var zapInt = percentToRaw(parseInt($("#autoZapperIntensity").val()), 'zap');
+					var zapFreq = parseInt($("#autoZapperFrequency").val()) * 1000;
+					var zapDur = parseInt($("#autoZapperDuration").val()) * 60 * 1000;
 
-					localStorage.trainingSessionZI = zapInt;
-					localStorage.trainingSessionZF = zapFreq;
-					localStorage.trainingSessionZD = zapDur;
-					
+					lsSet("trainingSessionZI", zapInt);
+					lsSet("trainingSessionZF", zapFreq);
+					lsSet("trainingSessionZD", zapDur);
+
 					// Update interface
 					toggleAutoZapperConf("train");
 					// Start Count Down Timer
-					var date = new Date(new Date().valueOf() + parseInt(localStorage.trainingSessionZD));
-					$('#countDownTraining').countdown(date, function(event) {
+					var date = new Date(new Date().valueOf() + parseInt(lsGet("trainingSessionZD")));
+					$('#countDownTraining').countdown(date, function (event) {
 						$(this).html(event.strftime('%M:%S'));
 					})
-					.on('finish.countdown', function(event) {
-						// // // $.prompt("Session Finished! Congratulations!");
-						clearInterval(localStorage.trainingSession);
-						localStorage.trainingSession = 'false';
-						localStorage.trainingSessionZI = '';
-						localStorage.trainingSessionZD = '';
-						localStorage.trainingSessionZF = '';
-						
-						toggleAutoZapperConf("configure");
-						
-					});
-					
-					var trainingSession = setInterval(function() {
+						.on('finish.countdown', function (event) {
+							// // // $.prompt("Session Finished! Congratulations!");
+							clearInterval(lsGet("trainingSession"));
+							lsSet("trainingSession", 'false');
+							lsSet("trainingSessionZI", '');
+							lsSet("trainingSessionZD", '');
+							lsSet("trainingSessionZF", '');
+
+							toggleAutoZapperConf("configure");
+
+						});
+
+					var trainingSession = setInterval(function () {
 						log("Occured at ");
-						stimuli("shock", localStorage.trainingSessionZI, defAT, "Training Session. Keep going!", "false");
-					}, parseInt(localStorage.trainingSessionZF));
-					localStorage.trainingSession = trainingSession;
-					
+						stimuli("shock", lsGet("trainingSessionZI"), defAT, "Training Session. Keep going!", "false");
+					}, parseInt(lsGet("trainingSessionZF")));
+					lsSet("trainingSession", trainingSession);
+
 					// var endTraining = setTimeout(function(){ 
-						// clearInterval(trainingSession);
-						// $.prompt("Congratulations! Session is over!");
-						// localStorage.trainingSession = 'false';
-						// localStorage.trainingSessionZI = '';
-						// localStorage.trainingSessionZD = '';
-						// localStorage.trainingSessionZF = '';
-						
-					// }, parseInt(localStorage.trainingSessionZD));
-					// localStorage.endTraining = endTraining;
-				}	
+					// clearInterval(trainingSession);
+					// $.prompt("Congratulations! Session is over!");
+					// lsSet("trainingSession", 'false');
+					// lsSet("trainingSessionZI", '');
+					// lsSet("trainingSessionZD", '');
+					// lsSet("trainingSessionZF", '');
+
+					// }, parseInt(lsGet("trainingSessionZD")));
+					// lsSet("endTraining", endTraining);
+				}
 			}
 		});
 	});
-	
-	$("#autoZapperStop").click(function( event ){
+
+	$("#autoZapperStop").click(function (event) {
 		event.preventDefault();
-		clearInterval(parseInt(localStorage.trainingSession));
+		clearInterval(parseInt(lsGet("trainingSession")));
 		$.prompt("Traning session canceled", "Your training session is now over");
-		
+
 		toggleAutoZapperConf("configure");
 	});
 }
 
-function enableSelecatbles(){
+function enableSelecatbles() {
 	$("#selectable").selectable({
 		filter: ".tdSelectable",
-		stop: function() {
-			var result = $( "#select-result" ).empty();
-			$( ".ui-selected", this ).each(function() {
-				var index = $( "#selectable td" ).index( this );
-				result.append( " #" + ( index + 1 ) );
+		stop: function () {
+			var result = $("#select-result").empty();
+			$(".ui-selected", this).each(function () {
+				var index = $("#selectable td").index(this);
+				result.append(" #" + (index + 1));
 			});
 		}
 	});
 }
 
-function restoreCheckBox(checkboxID, condition){
-	if (condition == 'true' )
-		{ $("#" + checkboxID).prop('checked', true); }
+function restoreCheckBox(checkboxID, condition) {
+	if (condition == 'true') { $("#" + checkboxID).prop('checked', true); }
 	else { $("#" + checkboxID).prop('checked', false); }
 }
 
@@ -650,69 +650,102 @@ function restoreCheckBox(checkboxID, condition){
 /* ***************                                   *************** */
 /* ***************************************************************** */
 
-function enableCoach(){
+function enableCoach() {
 	chrome.runtime.sendMessage(
 		// Warns background about new page being loaded
 		{
 			target: "background",
 			action: "coachChange",
 			change: "sync"
-		}, 
-		
-		function(response) {
-			if (response){
+		},
+
+		function (response) {
+			if (response) {
 				log(response);
 				$("#coachPower").prop("checked", (response.status || false));
 			}
 		}
 	);
-	
-	$("#coachPower").change(function(){
+
+	$("#coachPower").change(function () {
 		var status = $(this).prop("checked");
 		msgBackground({
-			action: "coachChange", 
+			action: "coachChange",
 			change: "status",
 			status: status
 		});
 	});
 }
 
-function enableSignInOut(){
-	$("#signOutX").click(function(){
-		msgBackground({action: "signOut"});
+function enableTodoist() {
+	$("#todoistLogin").click(function (event) {
+		event.preventDefault();
+
+		log("clicked on todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "oauth"
+		});
+	});
+
+	todoist.frontend.toggle();
+
+	$("#importTodoist").click(function (event) {
+		event.preventDefault();
+
+		msgBackground({
+			action: "todoistChange",
+			change: "import"
+		});
+	});
+
+	$("#signOutTodoist").click(function (event) {
+		event.preventDefault();
+
+		log("unlogging from todoist");
+		msgBackground({
+			action: "todoistChange",
+			change: "signOut"
+		});
 	});
 }
 
-function adjustSliders(curPos, fixedHeader){
+function enableSignInOut() {
+	$("#signOutX").click(function () {
+		msgBackground({ action: "signOut" });
+	});
+}
+
+function adjustSliders(curPos, fixedHeader) {
 	var sliders = [$("#sliderBeep"), $("#sliderVibration"), $("#sliderZap")];
-	
-	for (s = 0; s < sliders.length; s++ ){
+
+	for (s = 0; s < sliders.length; s++) {
 		var curSlider = sliders[s];
 		var curContainer = $(curSlider).parent();
 		var curH = curSlider.offset().top;
-		
-		if (curPos > curH - fixedHeader){
+
+		if (curPos > curH - fixedHeader) {
 			$(curContainer).css("visibility", "hidden");
 		}
 		else {
 			$(curContainer).css("visibility", "visible")
 		}
 	}
-	
+
 }
 
-function adjustSpinners(curPos, fixedHeaderSize){
+function adjustSpinners(curPos, fixedHeaderSize) {
 	var spinners = [$("#autoZapperStartLine"), $("#RTPosTR"), $("#RTWarnTR"), $("#RTNegTR"), $("#generalActiveHours")];
-	
+
 	var visiblePos = curPos + fixedHeaderSize;
-	
-	for (s = 0; s < spinners.length; s++ ){
+
+	for (s = 0; s < spinners.length; s++) {
 		var curSpinner = spinners[s];
 		var curH = curSpinner.offset().top;
 		// var curH = curH - fixedHeaderSize;
-		
-		if (curPos > curH - fixedHeaderSize){
-		// if (curPos >= curH){
+
+		if (curPos > curH - fixedHeaderSize) {
+			// if (curPos >= curH){
 			$(curSpinner).css("visibility", "hidden");
 		}
 		else {
@@ -721,7 +754,7 @@ function adjustSpinners(curPos, fixedHeaderSize){
 	}
 }
 
-function highlightActiveSection(curPos, fixedHeaderSize){
+function highlightActiveSection(curPos, fixedHeaderSize) {
 	var tops = [
 		$("#blackListContainerDiv").offset().top,
 		$("#tabNumbersContainerDiv").offset().top,
@@ -730,7 +763,7 @@ function highlightActiveSection(curPos, fixedHeaderSize){
 		$("#appIntegrationsContainerDiv").offset().top,
 		$("#advancedOptionsContainerDiv").offset().top,
 	];
-	
+
 	var sections = [
 		"blackList",
 		"tabNumbers",
@@ -740,57 +773,57 @@ function highlightActiveSection(curPos, fixedHeaderSize){
 		"advancedOptions",
 	]
 	var visiblePos = curPos + fixedHeaderSize;
-	
+
 	var difs = [];
 	// Checks which one have already been passed by
-	for (n = 0; n < tops.length; n++){
+	for (n = 0; n < tops.length; n++) {
 		difs.push(tops[n] - visiblePos);
 	}
-	
-	var passed = _.countBy(difs, function(num) {
-		return num <= 0 ? 'reached': 'ahead';
+
+	var passed = _.countBy(difs, function (num) {
+		return num <= 0 ? 'reached' : 'ahead';
 	});
-	
-	if (passed.ahead == sections.length) { passed.reached = 1;}
-	
+
+	if (passed.ahead == sections.length) { passed.reached = 1; }
+
 	var active = passed.reached - 1;
 	$("#indexDiv").children().removeClass("activeSection");
 	$($("#indexDiv").children()[active]).addClass("activeSection")
-	
+
 }
 
-function enableSelects(){
-	$("#blackListTimeWindow").change(function(){
-		localStorage.timeWindow = $(this).val() ;
+function enableSelects() {
+	$("#blackListTimeWindow").change(function () {
+		lsSet("timeWindow", $(this).val());
 	});
 }
 
-function enableButtons(){
-	$("#testPairingX").click(function(){
+function enableButtons() {
+	$("#testPairingX").click(function () {
 		stimuli("vibration", 230, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
-	$("#testBeepInt").click(function(){
+	$("#testBeepInt").click(function () {
 		stimuli("beep", defInt, defAT, "Incoming Beep. You should receive a notification on your phone, followed by a beep");
 	});
-	
-	$("#testZapInt").click(function(){
+
+	$("#testZapInt").click(function () {
 		stimuli("shock", defInt, defAT, "Incoming Zap. You should receive a notification on your phone, followed by a zap");
 	});
-		
-	$("#testVibrationInt").click(function(){
+
+	$("#testVibrationInt").click(function () {
 		stimuli("vibration", defInt, defAT, "Incoming Vibration. You should receive a notification on your phone, followed by a vibration");
 	});
 
-	$("#signIn").click(function(){
+	$("#signIn").click(function () {
 		oauth();
 	});
 
-	$("#signOut").click(function(){
+	$("#signOut").click(function () {
 		signOut();
 	});
-	
-	$("#rescueTimeOAuth").click(function(){
+
+	$("#rescueTimeOAuth").click(function () {
 		rescueTimeOAuth();
 	});
 }
@@ -799,452 +832,452 @@ function enableSpiners() {
 	$("#autoZapperIntensity").spiner();
 }
 
-function enableTables(){ // TO-do update or remove
+function enableTables() { // TO-do update or remove
 	// $('#sundayActiveTimeStart').timepicker({
 	// // // // $('.timeSelectors').timepicker({
-		// // // // showPeriod: true,
-		// // // // showLeadingZero: true
+	// // // // showPeriod: true,
+	// // // // showLeadingZero: true
 	// // // // });
-	
+
 }
 
-function enableSliders(){
-	$(function() {
+function enableSliders() {
+	$(function () {
 		defZap = parseInt(lsGet('zapPosition'));
 		defVib = parseInt(lsGet('vibrationPosition'));
 		defBeep = parseInt(lsGet('beepPosition'));
-		
-		$( "#sliderBeep" ).slider({
-			value:defBeep,
+
+		$("#sliderBeep").slider({
+			value: defBeep,
 			min: 10,
 			max: 100,
 			step: 10,
-			slide: function( event, ui ) {
+			slide: function (event, ui) {
 				var beepPos = ui.value;
 				log(beepPos);
 				lsSet('beepPosition', beepPos);
 				lsSet('beepIntensity', percentToRaw(beepPos, 'beep'));
 				$("#beepIntensity").html(beepPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgInterfaces({action: "updateStimuli"});
+				msgInterfaces({ action: "updateStimuli" });
 			}
 		});
 		$("#beepIntensity").html(defBeep + "%");
-		
-		$( "#sliderZap" ).slider({
-			value:defZap,
+
+		$("#sliderZap").slider({
+			value: defZap,
 			min: 10,
 			max: 100,
 			step: 10,
-			slide: function( event, ui ) {
+			slide: function (event, ui) {
 				var zapPos = ui.value;
 				lsSet('zapPosition', zapPos);
 				lsSet('zapIntensity', percentToRaw(zapPos, 'zap'));
 				$("#zapIntensity").html(zapPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgInterfaces({action: "updateStimuli"});
+				msgInterfaces({ action: "updateStimuli" });
 			}
 		});
 		$("#zapIntensity").html(defZap + "%");
-		
-		$( "#sliderVibration" ).slider({
-			value:defVib,
+
+		$("#sliderVibration").slider({
+			value: defVib,
 			min: 10,
 			max: 100,
 			step: 10,
-			slide: function( event, ui ) {
+			slide: function (event, ui) {
 				var vibPos = ui.value;
 				lsSet('vibrationPosition', vibPos);
 				lsSet('vibrationIntensity', percentToRaw(vibPos, 'vibrate'));
 				$("#vibrationIntensity").html(vibPos + "%");
 				confirmUpdate(notifyUpdate);
-				msgInterfaces({action: "updateStimuli"});
+				msgInterfaces({ action: "updateStimuli" });
 			}
-			
+
 		});
 		$("#vibrationIntensity").html(defVib + "%");
-		
-		
+
+
 	});
-	
-	$("#resetIntensity").click(function( event ){
+
+	$("#resetIntensity").click(function (event) {
 		event.preventDefault();
-		
+
 		var defVib = 60;
 		var defZap = 60;
 		var defBeep = 100;
-		
+
 		lsSet('vibrationPosition', defVib);
 		lsSet('vibrationIntensity', percentToRaw(defVib, 'vibrate'));
 		$("#vibrationIntensity").html(defVib + "%");
-		$( "#sliderVibration" ).slider({value:defVib});
-		
+		$("#sliderVibration").slider({ value: defVib });
+
 		lsSet('zapPosition', defZap);
 		lsSet('zapIntensity', percentToRaw(defZap, 'zap'));
 		$("#zapIntensity").html(defZap + "%");
-		$( "#sliderZap" ).slider({value:defZap});
-		
+		$("#sliderZap").slider({ value: defZap });
+
 		lsSet('beepPosition', defBeep);
 		lsSet('beepIntensity', percentToRaw(defBeep, 'beep'));
 		$("#beepIntensity").html(defBeep + "%");
-		$( "#sliderBeep" ).slider({value:defBeep});
+		$("#sliderBeep").slider({ value: defBeep });
 	});
-	
+
 }
 
-function enableCheckboxes(){
+function enableCheckboxes() {
 	// Active days
-	$(".activeDay").change(function(){
-		countTabs(localStorage.tabCountAll, UpdateTabCount);
+	$(".activeDay").change(function () {
+		countTabs(lsGet("tabCountAll"), UpdateTabCount);
 	});
-	
-	$("#sundayActive").change(function(){
-		lsSet('sundayActive', $(this).prop( "checked" ));
+
+	$("#sundayActive").change(function () {
+		lsSet('sundayActive', $(this).prop("checked"));
 	});
-	$("#mondayActive").change(function(){
-		lsSet('mondayActive', $(this).prop( "checked" ));
+	$("#mondayActive").change(function () {
+		lsSet('mondayActive', $(this).prop("checked"));
 	});
-	$("#tuesdayActive").change(function(){
-		lsSet('tuesdayActive', $(this).prop( "checked" ));
+	$("#tuesdayActive").change(function () {
+		lsSet('tuesdayActive', $(this).prop("checked"));
 	});
-	$("#wednesdayActive").change(function(){
-		lsSet('wednesdayActive', $(this).prop( "checked" ));
+	$("#wednesdayActive").change(function () {
+		lsSet('wednesdayActive', $(this).prop("checked"));
 	});
-	$("#thursdayActive").change(function(){
-		lsSet('thursdayActive', $(this).prop( "checked" ));
+	$("#thursdayActive").change(function () {
+		lsSet('thursdayActive', $(this).prop("checked"));
 	});
-	$("#fridayActive").change(function(){
-		lsSet('fridayActive', $(this).prop( "checked" ));
+	$("#fridayActive").change(function () {
+		lsSet('fridayActive', $(this).prop("checked"));
 	});
-	$("#saturdayActive").change(function(){
-		lsSet('saturdayActive', $(this).prop( "checked" ));
+	$("#saturdayActive").change(function () {
+		lsSet('saturdayActive', $(this).prop("checked"));
 	});
-	$("#eachDay").change( function() {	
-		var advanced = $(this).prop( "checked" );
+	$("#eachDay").change(function () {
+		var advanced = $(this).prop("checked");
 		alert("each Day is " + advanced);
-		if ( advanced == true ) { 
+		if (advanced == true) {
 			$("#singleDayTimeTR").css("display", "block");
 		} else {
 			$("#singleDayTimeTR").css("display", "none");
 		}
-	});	
-	
+	});
+
 }
 
-function enableInputs(){	
+function enableInputs() {
 	// Advanced day to day
-	$("#sundayActiveTimeStart").change( function() {
-		lsSet('sundayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#sundayActiveTimeEnd").change( function() {	
-		lsSet('sundayActiveTimeEnd', $(this).val() );
-	});	
-		
-	$("#mondayActiveTimeStart").change( function() {	
-		lsSet('mondayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#mondayActiveTimeEnd").change( function() {	
-		lsSet('mondayActiveTimeEnd', $(this).val() );
-	});	
-	
-	$("#tuesdayActiveTimeStart").change( function() {	
-		lsSet('tuesdayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#tuesdayActiveTimeEnd").change( function() {	
-		lsSet('tuesdayActiveTimeEnd', $(this).val() );
-	});	
-		
-	$("#wednesdayActiveTimeStart").change( function() {	
-		lsSet('wednesdayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#wednesdayActiveTimeEnd").change( function() {	
-		lsSet('wednesdayActiveTimeEnd', $(this).val() );
-	});	
-		
-	$("#thursdayActiveTimeStart").change( function() {	
-		lsSet('thursdayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#thursdayActiveTimeEnd").change( function() {	
-		lsSet('thursdayActiveTimeEnd', $(this).val() );
-	});	
-		
-	$("#fridayActiveTimeStart").change( function() {	
-		lsSet('fridayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#fridayActiveTimeEnd").change( function() {	
-		lsSet('fridayActiveTimeEnd', $(this).val() );
-	});	
+	$("#sundayActiveTimeStart").change(function () {
+		lsSet('sundayActiveTimeStart', $(this).val());
+	});
 
-	$("#saturdayActiveTimeStart").change( function() {	
-		lsSet('fridayActiveTimeStart', $(this).val() );
-	});	
-		
-	$("#saturdayActiveTimeEnd").change( function() {	
-		lsSet('fridayActiveTimeEnd', $(this).val() );
-	});	
-	
+	$("#sundayActiveTimeEnd").change(function () {
+		lsSet('sundayActiveTimeEnd', $(this).val());
+	});
+
+	$("#mondayActiveTimeStart").change(function () {
+		lsSet('mondayActiveTimeStart', $(this).val());
+	});
+
+	$("#mondayActiveTimeEnd").change(function () {
+		lsSet('mondayActiveTimeEnd', $(this).val());
+	});
+
+	$("#tuesdayActiveTimeStart").change(function () {
+		lsSet('tuesdayActiveTimeStart', $(this).val());
+	});
+
+	$("#tuesdayActiveTimeEnd").change(function () {
+		lsSet('tuesdayActiveTimeEnd', $(this).val());
+	});
+
+	$("#wednesdayActiveTimeStart").change(function () {
+		lsSet('wednesdayActiveTimeStart', $(this).val());
+	});
+
+	$("#wednesdayActiveTimeEnd").change(function () {
+		lsSet('wednesdayActiveTimeEnd', $(this).val());
+	});
+
+	$("#thursdayActiveTimeStart").change(function () {
+		lsSet('thursdayActiveTimeStart', $(this).val());
+	});
+
+	$("#thursdayActiveTimeEnd").change(function () {
+		lsSet('thursdayActiveTimeEnd', $(this).val());
+	});
+
+	$("#fridayActiveTimeStart").change(function () {
+		lsSet('fridayActiveTimeStart', $(this).val());
+	});
+
+	$("#fridayActiveTimeEnd").change(function () {
+		lsSet('fridayActiveTimeEnd', $(this).val());
+	});
+
+	$("#saturdayActiveTimeStart").change(function () {
+		lsSet('fridayActiveTimeStart', $(this).val());
+	});
+
+	$("#saturdayActiveTimeEnd").change(function () {
+		lsSet('fridayActiveTimeEnd', $(this).val());
+	});
+
 }
 
 function saveOptions() {
-	
+
 	var blackList = $("#blackList")[0].value;
 	lsSet('blackList', blackList);
-	
+
 	var whiteList = $("#whiteList")[0].value;
 	lsSet('whiteList', whiteList);
-	
+
 	var maxTabs = $("#maxTabsSelect").val();
 	lsSet('maxTabs', maxTabs);
-	
+
 	var zapOnClose = $("#zapOnClose").prop('checked');
 	lsSet('zapOnClose', zapOnClose);
-	
-	var beepPosition = $( "#sliderBeep" ).slider( "option", "value");
+
+	var beepPosition = $("#sliderBeep").slider("option", "value");
 	beepIntensity = percentToRaw(beepPosition, 'beep'); // convert to 1-255 interval
 	lsSet('beepIntensity', beepIntensity);
-	
-	var zapPosition = $( "#sliderZap" ).slider( "option", "value");
+
+	var zapPosition = $("#sliderZap").slider("option", "value");
 	zapIntensity = percentToRaw(zapPosition, 'zap'); // convert to 1-255 interval
 	lsSet('zapIntensity', zapIntensity);
-	
-	var vibrationPosition = $( "#sliderVibration" ).slider( "option", "value");
+
+	var vibrationPosition = $("#sliderVibration").slider("option", "value");
 	vibrationIntensity = percentToRaw(vibrationPosition, 'vibrate');
 	lsSet('vibrationIntensity', vibrationIntensity);
-	
+
 	confirmUpdate(notifyUpdate);
 }
 
 function restoreOptions() {
+
 	// User name and email
-	updateNameAndEmail(localStorage.userName, localStorage.userEmail);
-	
+	updateNameAndEmail(lsGet("userName"), lsGet("userEmail"));
+
 	// Black and white lists
-	var blackList = localStorage.blackList;
+	var blackList = lsGet("blackList");
 	// log(blackList);
 	if (blackList == undefined) { blackList = ' '; }
 	// $("#blackList").val(blackList);
 	$("#blackList").importTags(blackList);
 
-	var whiteList = localStorage.whiteList;
+	var whiteList = lsGet("whiteList");
 	if (whiteList == undefined) { whiteList = ' '; }
 	$("#whiteList").val(whiteList);
 
 	// Scheduler
-	var timeFormat = localStorage.timeFormat;
+	var timeFormat = lsGet("timeFormat");
 	$("#timeFormat").val(timeFormat);
-	
-	var startHour = localStorage.generalActiveTimeStart;
+
+	var startHour = lsGet("generalActiveTimeStart");
 	$("#generalActiveTimeStart").val(startHour);
-	var endHour = localStorage.generalActiveTimeEnd;
+	var endHour = lsGet("generalActiveTimeEnd");
 	$("#generalActiveTimeEnd").val(endHour);
-	
-	$("#blackListTimeWindow").val(localStorage.timeWindow)
-	
+
+	$("#blackListTimeWindow").val(lsGet("timeWindow"))
+
 	// Checkboxes
-	restoreCheckBox('zapOnClose', localStorage.zapOnClose);
-	restoreCheckBox('notifyZap', localStorage.notifyZap);
-	restoreCheckBox('notifyVibration', localStorage.notifyVibration);
-	restoreCheckBox('notifyBeep', localStorage.notifyBeep);
-	
-	restoreCheckBox('sundayActive', localStorage.sundayActive);
-	restoreCheckBox('mondayActive', localStorage.mondayActive);
-	restoreCheckBox('tuesdayActive', localStorage.tuesdayActive);
-	restoreCheckBox('wednesdayActive', localStorage.wednesdayActive);
-	restoreCheckBox('thursdayActive', localStorage.thursdayActive);
-	restoreCheckBox('fridayActive', localStorage.fridayActive);
-	restoreCheckBox('saturdayActive', localStorage.saturdayActive);
-	
-	restoreCheckBox('tabNumbersActiveCheckbox', localStorage.tabNumbersActive);
-	$("#tabNumbersActiveCheckbox").change(function(){
-		localStorage.tabNumbersActive = $(this).prop('checked');
+	restoreCheckBox('zapOnClose', lsGet("zapOnClose"));
+	restoreCheckBox('notifyZap', lsGet("notifyZap"));
+	restoreCheckBox('notifyVibration', lsGet("notifyVibration"));
+	restoreCheckBox('notifyBeep', lsGet("notifyBeep"));
+
+	restoreCheckBox('sundayActive', lsGet("sundayActive"));
+	restoreCheckBox('mondayActive', lsGet("mondayActive"));
+	restoreCheckBox('tuesdayActive', lsGet("tuesdayActive"));
+	restoreCheckBox('wednesdayActive', lsGet("wednesdayActive"));
+	restoreCheckBox('thursdayActive', lsGet("thursdayActive"));
+	restoreCheckBox('fridayActive', lsGet("fridayActive"));
+	restoreCheckBox('saturdayActive', lsGet("saturdayActive"));
+
+	restoreCheckBox('tabNumbersActiveCheckbox', lsGet("tabNumbersActive"));
+	$("#tabNumbersActiveCheckbox").change(function () {
+		lsSet("tabNumbersActive", $(this).prop('checked'));
 	});
-	
-	$("#allTabsCountSelect").val(localStorage.tabCountAll);
-	$("#allTabsCountSelect").change(function(){
-		localStorage.tabCountAll = $(this).val();
+
+	$("#allTabsCountSelect").val(lsGet("tabCountAll"));
+	$("#allTabsCountSelect").change(function () {
+		lsSet("tabCountAll", $(this).val());
 		confirmUpdate(notifyUpdate);
 	});
-		
-	// $("#maxTabsSelect").val(localStorage.maxTabs);
-	
-	$("#timeFormat").val(localStorage.timeFormat);
+
+	// $("#maxTabsSelect").val(lsGet("maxTabs"));
+
+	$("#timeFormat").val(lsGet("timeFormat"));
 
 	// Stimuli Intensity
-	if (parseInt(localStorage.beepPosition) > 0){
-		var beepSlider = localStorage.beepPosition;
+	if (parseInt(lsGet("beepPosition")) > 0) {
+		var beepSlider = lsGet("beepPosition");
 	} else { var beepSlider = 60; }
-	$( "#sliderBeep" ).slider( { "value": beepSlider });
-	$( "#beepIntensity" ).html( beepSlider + "%");
-	
-	if (parseInt(localStorage.vibrationPosition) > 0){
-		var vibSlider = localStorage.vibrationPosition;
+	$("#sliderBeep").slider({ "value": beepSlider });
+	$("#beepIntensity").html(beepSlider + "%");
+
+	if (parseInt(lsGet("vibrationPosition")) > 0) {
+		var vibSlider = lsGet("vibrationPosition");
 	} else { var vibSlider = 60; }
-	$( "#sliderVibration" ).slider( { "value": vibSlider });
-	$( "#vibrationIntensity" ).html( vibSlider + "%");
-	
-	if (parseInt(localStorage.zapIntensity) > 0){
-		var zapSlider = Math.round(parseInt(localStorage.zapIntensity) * 100 / 2550) * 10;
+	$("#sliderVibration").slider({ "value": vibSlider });
+	$("#vibrationIntensity").html(vibSlider + "%");
+
+	if (parseInt(lsGet("zapIntensity")) > 0) {
+		var zapSlider = Math.round(parseInt(lsGet("zapIntensity")) * 100 / 2550) * 10;
 	} else { var zapSlider = 60; }
-	$( "#sliderZap" ).slider( { "value": zapSlider });
-	$( "#zapIntensity" ).html( zapSlider + "%");
-	
+	$("#sliderZap").slider({ "value": zapSlider });
+	$("#zapIntensity").html(zapSlider + "%");
+
 	// Rescue Time
-	$("#RTOnOffSelect").val(localStorage.RTOnOffSelect);
-	if ($("#RTOnOffSelect").val() == "Off") { $("#RTResultsHolder").css('visibility', 'hidden');}
+	$("#RTOnOffSelect").val(lsGet("RTOnOffSelect"));
+	if ($("#RTOnOffSelect").val() == "Off") { $("#RTResultsHolder").css('visibility', 'hidden'); }
 	changeRTVisibility();
-	
+
 }
 
-function enableScrollNavigation(){
-	$("#indexDiv").on('click', '.scrollableLink', function( event ){
+function enableScrollNavigation() {
+	$("#indexDiv").on('click', '.scrollableLink', function (event) {
 		moveToLink($(this));
 	});
 }
 
-function moveToLink(clickedLink){
+function moveToLink(clickedLink) {
 	var target = $(clickedLink).prop('id').split("@")[1];
 	target = $("#" + target);
-	
+
 	var topHeight = parseInt($(".fixedHeader").height());
 	// var topMargin = parseInt($("#fixedHeader").margin());
 	// var topPadding= parseInt($("#fixedHeader").css('padding').split("p")[0]);
 	// var topSize = topHeight + topPadding;
 	var topSize = topHeight;
-	
+
 	var position = $(target).offset().top;
 	var positionUpdated = position - topSize;
-	
+
 	// log(positionUpdated);
 	// window.scrollTo(0, positionUpdated);
 	$('html, body').animate({
 		scrollTop: positionUpdated
 	}, 1000);
-	
+
 }
 
-function toggleOverlay(toState){
+function toggleOverlay(toState) {
 	var curtain = $("#bigOverlay");
 	var stage = $(curtain).css('display');
-	
-	if (toState == "showOptions"){
-		if ( stage == "none" ){ return }
-		
-		$("#bigOverlay").fadeTo(300, 0, function(){ 
+
+	if (toState == "showOptions") {
+		if (stage == "none") { return }
+
+		$("#bigOverlay").fadeTo(300, 0, function () {
 			$("#bigOverlay").hide()
 		});
-		
-	} 
+
+	}
 	else if (toState == "hideOptions") {
-		if ($("#bigOverlay").length == 0){
+		if ($("#bigOverlay").length == 0) {
 			var overlayDiv = [
-			'<div id="bigOverlay">',
-			'<div id="bigOverlay" class="noDisplay">',
+				'<div id="bigOverlay">',
+				'<div id="bigOverlay" class="noDisplay">',
 				'<div id="bigOverlayContents">',
-					'<p>',
-						'Ooops! You are not signed in!',
-					'</p>',
-					'<p>',
-						'<a id="overlaySignIn" href="#">Click here to solve it!</a>',
-					'</p>',
+				'<p>',
+				'Ooops! You are not signed in!',
+				'</p>',
+				'<p>',
+				'<a id="overlaySignIn" href="#">Click here to solve it!</a>',
+				'</p>',
 				'</div>',
-			'</div>',
+				'</div>',
 			];
-			
+
 			overlayDiv = overlayDiv.join(',')
 			$("body").append(overlayDiv);
 		}
-		
+
 		var stage = $(curtain).css('display');
-		
-		if ( stage != 'none'){ return }
-		
-		$("#bigOverlay").show(function(){
+
+		if (stage != 'none') { return }
+
+		$("#bigOverlay").show(function () {
 			$("#bigOverlay").fadeTo(300, 0.8);
 		});
-	
+
 	}
 }
 
-function enableLogin(){
-	$("#pavSubmitLogin").click(function(event){
+function enableLogin() {
+	$("#pavSubmitLogin").click(function (event) {
 		event.preventDefault();
-		
+
 		var userInfo = {
 			userName: $("#pavUserNameLogin").val(),
 			password: $("#pavPasswordLogin").val(),
 		};
-		
-		if (validateUserInfo(userInfo)){
-			var msg = { 
-				action: "oauth", 
-				user: userInfo 
+
+		if (validateUserInfo(userInfo)) {
+			var msg = {
+				action: "oauth",
+				user: userInfo
 			};
-			
-			msgBackground( msg );
+
+			msgBackground(msg);
 		}
-		else{
-			
+		else {
 		};
-		
 	});
 }
 // Create the vertical tabs
 function initialize() {
 	var timeFormat = lsGet('timeFormat');
 	if (timeFormat == "24") { culture = "de-DE"; }
-	else if (timeFormat == "12") { culture = "en-EN"}
-	else { 
+	else if (timeFormat == "12") { culture = "en-EN" }
+	else {
 		culture = "de-DE";
-		localStorage.timeFormat = "24";
+		lsSet("timeFormat", "24");
 		$("#timeFormat").val("24");
 		log("timeFormat is broken: " + timeFormat);
 	};
-	Globalize.culture( culture );
-	
+	Globalize.culture(culture);
+
 	enableLogin();
 	enableSignInOut()
 	enableScrollNavigation();
 	// Black and WhiteLists
 	var wl = document.getElementById("blackList");
 	if (wl) {
-		$('#whiteList')[0].value = localStorage["whiteList"];
+		$('#whiteList')[0].value = lsGet("whiteList");
 		$('#whiteList').tagsInput({
-			'onChange' : saveWhiteList,
-			'defaultText':'Add site... ie: facebook.com/groups/772212156222588/',
-			'removeWithBackspace' : true
+			'onChange': saveWhiteList,
+			'defaultText': 'Add site... ie: facebook.com/groups/772212156222588/',
+			'removeWithBackspace': true
 		});
 	}
-	
-	
-	
+
+
+
+
 	// Add listeners for Auto save when options change
-	$("#zapOnClose").change(function(){
-		localStorage.zapOnClose = $(this).prop( "checked" );
+	$("#zapOnClose").change(function () {
+		lsSet("zapOnClose", $(this).prop("checked"));
 	});
-	
+
 	// Notifications before stimuli
-	$("#notifyZap").change(function(){
-		localStorage.notifyZap = $(this).prop( "checked" );
+	$("#notifyZap").change(function () {
+		lsSet("notifyZap", $(this).prop("checked"));
 	});
 
-	$("#notifyVibration").change(function(){
-		localStorage.notifyVibration = $(this).prop( "checked" );
+	$("#notifyVibration").change(function () {
+		lsSet("notifyVibration", $(this).prop("checked"));
 	});
 
-	$("#notifyBeep").change(function(){
-		localStorage.notifyBeep = $(this).prop( "checked" );
+	$("#notifyBeep").change(function () {
+		lsSet("notifyBeep", $(this).prop("checked"));
 	});
-	
+
 	// Max Tabs
-	maxTabsPack.create( "options", lsGet("maxTabs") );
-	
-	
+	maxTabsPack.create("options", lsGet("maxTabs"));
+
+
 	// Enablers
 	enableSelects();
 	enableSelecatbles();
@@ -1258,76 +1291,76 @@ function initialize() {
 	enableInputs();
 	enableRescueTime();
 	enableToDo();
-	
+
 	// syncToDo('options');
 	pavPomo.helpers.initialSync();
-	
+
 	enableDaily();
-	
+
 	$(".allCaps").text().toUpperCase();
-	
-	var serverKind = localStorage.baseAddress;
-	serverKind = serverKind.split("-")[1].split(".")[0];
-	$("#server").text(serverKind);
-	
+
+	// var serverKind = lsGet("baseAddress");
+	// serverKind = serverKind.split("-")[1].split(".")[0];
+	// $("#server").text(serverKind);
+
 }
 
 initialize();
-$( document ).ready(function() {
+$(document).ready(function () {
 	enter_on_sign_in();
-	showOptions(localStorage.accessToken);
-	if (localStorage.logged == 'true') { 
+	showOptions(lsGet("accessToken"));
+	if (lsGet("logged") == 'true') {
 		toggleOverlay("options");
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
 		$("#signOutX").attr('title', 'Sign Out');
 		$("#testPairingX").show();
 	}
-	else{
+	else {
 		// toggleOverlay("hide");
 		$(".onlyLogged").css('visibility', 'hidden');
 		$("#signOutX").attr('title', 'Sign In');
 		$("#testPairingX").hide();
-		
+
 	}
-	
+
 	// Fill user Data
-	if (!localStorage.userName){
-		userInfo(localStorage.accessToken)
+	if (!lsGet("userName")) {
+		userInfo(lsGet("accessToken"))
 	}
-	if (localStorage.userName == undefined) {localStorage.userName = ' '; }
+	if (lsGet("userName") == undefined) { lsSet("userName", ' '); }
 	else {
-		$('#userEmailSettings').html(localStorage.userEmail);
-		$('#userName').html(" " + localStorage.userName);
+		$('#userEmailSettings').html(lsGet("userEmail"));
+		$('#userName').html(" " + lsGet("userName"));
 	}
-	restoreOptions();
-	if ($('#blackListDaily_tagsinput').length > 0){ return }
+	//restoreOptions(); //removed temporary when working in advancedOptinos
+	if ($('#blackListDaily_tagsinput').length > 0) { return }
 	enableBlackDaily();
 	enableCoach();
-	
+	enableTodoist();
+
 	removeInlineStyle("#blackList_tagsinput");
 	removeInlineStyle("#whiteList_tagsinput");
 	removeInlineStyle("#blackListDaily_tagsinput");
 	removeInlineStyle("#whiteListDaily_tagsinput");
-	
-	$(window).scroll(function(){ 
+
+	$(window).scroll(function () {
 		var curPos = $(this).scrollTop();
 
 		var fixedHeaderHeight = $(".fixedHeader").height();
 		var fixedHeaderSize = fixedHeaderHeight;
 
-		highlightActiveSection(curPos, fixedHeaderSize); 
+		highlightActiveSection(curPos, fixedHeaderSize);
 		adjustSliders(curPos, fixedHeaderSize);
 		adjustSpinners(curPos, fixedHeaderSize);
 	});
-	
-	$("body").on('change', '.pavSetting', function(){ 
+
+	$("body").on('change', '.pavSetting', function () {
 		confirmUpdate(notifyUpdate);
 	});
-	
+
 	blackListTable.create(lsGet('blackList', 'parse'), 'blackList');
 	blackListTable.listenClicks();
-	
+
 	interfaceListeners("options");
-	
 });

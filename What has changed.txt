@@ -1,7 +1,4 @@
 New additions
-(0.9.813)
-- Removes Todoist integration
-- Fixes styling issues
 
 (0.9.812)
 - Updates stimuli URL
@@ -26,13 +23,6 @@ New additions
 (0.9.805)
 - Added OAuth2 as default sign in method
 
-(0.9.803)
-- Sign in now can use special characters
-- Blacklist intensifier: if more than 3 zaps were sent in less than a minute, a popup appears to tell so to the user. This helps users not wearing Pavlok to curb bad browsing habits.
-
-(0.9.802)
-- Bug fixes on sign in
-
 (0.9.801)
 - Fixed a problem with LockMe during pomodoros, where it wouldn't run.
 
@@ -53,7 +43,7 @@ New additions
 
 (0.9.4)
 - Extension became optionally less noisy for developers
---- Verbose requires localStorage.verbose = JSON.stringify(true)
+--- Verbose requires lsGet("verbose") = JSON.stringify(true))
 --- Injected script won't use the console.log anymore
 
 (0.9.2)

@@ -218,7 +218,7 @@ var coach = {
 	registerPomos: function(pomosArray){
 		var totalPomos = lsGet('totalPomos', 'parse') || [];
 		totalPomos.push(pomosArray);
-		localStorage.totalPomos = JSON.stringify(totalPomos);
+		lsSet("totalPomos", JSON.stringify(totalPomos));
 	},
 	
 	resetPomos: function(){},

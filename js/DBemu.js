@@ -19,19 +19,19 @@ function addObject(object, table){
 	
 	var x = JSON.stringify
 	/* // For now, there's only a single table. TODO. Will change this later
-	var tablesList = JSON.parse(localStorage.tablesList);
+	var tablesList = JSON.parse(lsGet("tablesList"));
 	var oTableIndex = tablesList.indexOf(table);
 	if ( oTable == -1 ) {
 		console.log("Table " + table + " does not exist.\nExisting tables are:\n" + tablesList);
 		return false
 	}
-	var oTableIndex = JSON.parse("localStorage." + tablesList[oTableIndex]);
+	var oTableIndex = JSON.parse(lsGet(tablesList[oTableIndex]));
 	*/
 	
-	var oDB = JSON.parse(localStorage.ToDoDB);
+	var oDB = JSON.parse(lsGet("ToDoDB"));
 	var oTable = oDB.table;
 	
-	var oTable.push(object);
+	oTable.push(object);
 	
 	
 }
