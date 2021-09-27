@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 2,
-  "version": "0.9.813",
+  "version": "0.9.812",
   "name": "PAVLOK Productivity",
   "short_name": "PAVLOK Prod",
  
@@ -42,17 +42,18 @@
   ],
   
   "permissions": [
-    "background",
-    "cookies",
-      "https://pavlok.herokuapp.com/*",
-      "https://pavlok-stage.herokuapp.com/*",
-      "https://pavlok-mvp.herokuapp.com/*",
-      
-    "identity",
-    "notifications",
-    "tabs",
+	"background",
+	"cookies",
+    "https://pavlok.herokuapp.com/*",
+    "https://pavlok-stage.herokuapp.com/*",
+    "https://pavlok-mvp.herokuapp.com/*",
     
-    "https://github.com/login/oauth/*",
-    "https://www.rescuetime.com/*"
-  ]
+	"identity",
+	"notifications",
+	"tabs",
+	
+	"https://github.com/login/oauth/*",
+	"https://www.rescuetime.com/*",
+	"https://todoist.com/api"
+    ]
 }

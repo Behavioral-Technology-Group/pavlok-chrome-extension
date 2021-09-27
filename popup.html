@@ -44,7 +44,8 @@
 	</div>
 	<hr>
 	<div class="onlyUnlogged">
-		<p id="unloggedMessage"><a href="https://app.pavlok.com/users/sign_up">Create an account</a> or sign in</p>
+		<p id="unloggedMessage"><a href="https://app.pavlok.com/users/sign_up">Create an account</a> or sign
+			in</p>
 		<input placeholder="Email Address" id="pavUserNameLogin" type="text" class="loginInput"
 			alt="Your email" /><br />
 		<input placeholder="Password" id="pavPasswordLogin" type="password" class="loginInput"
@@ -53,7 +54,7 @@
 		<p><a href="http://app.pavlok.com/users/password/new" target="blank">Forgot your password?</a></p>
 	</div>
 	<div id="actionSection" class="onlyLogged">
-		<tab>
+		<tab id="toDoContainerDiv" data-name="todo-tab">
 			<!-- To-do lists -->
 			<div>
 				<img src="../images/todolist.png" class="pv-tab-header-icon" />
@@ -163,7 +164,7 @@
 			</div>
 		</tab>
 
-		<tab>
+		<tab id="blackListContainerDiv">
 			<!-- Black List -->
 			<div>
 				<img src="../images/blacklist(icon).png" class="pv-tab-header-icon" />
@@ -196,7 +197,7 @@
 				</div>
 			</div>
 		</tab>
-		<tab>
+		<tab id="tabNumbersContainerDiv">
 			<!-- Tab numbers -->
 			<div>
 				<img src="../images/tabnumbers.png" class="pv-tab-header-icon" />
@@ -208,7 +209,7 @@
 				</select>
 			</div>
 		</tab>
-		<tab>
+		<tab id="stimuliContainerDiv">
 			<!-- Stimuli controls -->
 			<div>
 				<img src="../images/stimuli.png" class="pv-tab-header-icon" />
@@ -241,7 +242,7 @@
 				</div>
 			</div>
 		</tab>
-		<tab>
+		<tab id="appIntegrationsContainerDiv">
 			<!-- App Integrations -->
 			<div>
 				<img src="../images/appintegrations.png" class="pv-tab-header-icon" />
@@ -254,9 +255,12 @@
 				<p>
 					<a href="options.html#puHook3" target="blank">RescueTime</a>
 				</p>
+				<p>
+					<a href="options.html#rescuetimeContainerDiv" target="blank">Todoist</a>
+				</p>
 			</div>
 		</tab>
-		<tab>
+		<tab id="advancedOptionsContainerDiv" class="advancedOptionsContainerDiv">
 			<!-- Advanced Options -->
 			<div>
 				<img src="../images/advancedoptions.png" class="pv-tab-header-icon" />
@@ -264,7 +268,7 @@
 			</div>
 			<div>
 				<p>
-					<a target="blank" href="options.html#zapFrequencyBlackListDiv">Black List Count</a>
+					<a target="blank" href="options.html#todoistContainerDiv">Black List Count</a>
 				</p>
 				<p>
 					<a target="blank" href="options.html#zapFrequencyBlackListDiv">Scheduler</a>
@@ -285,3 +289,10 @@
 </body>
 
 </html>
+<script src="public/bundle/advancedOptionsContainerDiv2/advancedOptionsContainerDiv2.bundle.js"></script>
+<script src="public/bundle/fixedFooter2/fixedFooter2.bundle.js"></script>
+<script src="public/bundle/appIntegrationsContainerDiv2/appIntegrationsContainerDiv2.bundle.js"></script>
+<script src="public/bundle/stimuliContainerDiv2/stimuliContainerDiv2.bundle.js"></script>
+<script src="public/bundle/tabNumbersContainerDiv2/tabNumbersContainerDiv2.bundle.js"></script>
+<script src="public/bundle/blackListContainerDiv2/blackListContainerDiv2.bundle.js"></script>
+<script src="public/bundle/toDoContainerDiv2/toDoContainerDiv2.bundle.js"></script>

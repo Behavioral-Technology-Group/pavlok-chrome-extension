@@ -22,6 +22,7 @@
 	<script src="js/external/jquery.countdown.js"></script>
 	<script src="js/jquery.tagsinput.js"></script>
 	<script src="js/ToDo.js"></script>
+	<script src="js/TodoistIntegration.js" type="text/javascript"></script>
 	<!-- <script src="js/options.js"></script>	 -->
 
 	<link rel="stylesheet" href="css/options.css">
@@ -29,7 +30,7 @@
 
 <body>
 	<div class="generalContainer">
-		<div class="fixedHeader">
+		<div id="fixedHeader" class="fixedHeader">
 			<div class="headerContainer">
 				<div id="topHeader" class="flexContainer space-between header">
 					<div id="logoDiv" class="flexItem">
@@ -37,9 +38,12 @@
 					</div>
 					<div id="likeDiv" class="flexItem">
 						<span id="coolSpan"><i class="fa fa-thumbs-o-up"></i> </span>
-						<span id="likeSpan"><a
-								href="https://chrome.google.com/webstore/detail/pavlok-productivity/hefieeppocndiofffcfpkbfnjcooacib/reviews">Like
-								Pavlok? Rate it!</a></span>
+						<span id="likeSpan">
+							<a
+								href="https://chrome.google.com/webstore/detail/pavlok-productivity/hefieeppocndiofffcfpkbfnjcooacib/reviews">
+								Like Pavlok? Rate it!-original renderization
+							</a>
+						</span>
 					</div>
 				</div>
 			</div>
@@ -64,16 +68,17 @@
 		<div class="fixedHeaderPlaceHolder"></div>
 		<div class="bodyContainer">
 			<div class="contentContainer">
-				<div class="onlyUnlogged">
-					<p id="unloggedMessage"><a href="https://app.pavlok.com/users/sign_up">Create an account</a> or sign
-						in</p>
+				<div class="onlyUnlogged" id="onlyUnlogged">
+					<p id="unloggedMessage"><a href="https://app.pavlok.com/users/sign_up">Create an
+							account</a> or sign in</p>
 					<input placeholder="Email Address" id="pavUserNameLogin" type="text" class="loginInput"
 						alt="Your email" /><br />
 					<input placeholder="Password" id="pavPasswordLogin" type="password" class="loginInput"
 						alt="Your password" /><br />
 					<input id="pavSubmitLogin" type="button" value="Sign In" class="loginInput clickable"
 						alt="Submit" /><br />
-					<p><a href="http://app.pavlok.com/users/password/new" target="blank">Forgot your password?</a></p>
+					<p><a href="http://app.pavlok.com/users/password/new" target="blank">Forgot your
+							password?</a></p>
 				</div>
 				<div class="onlyLogged" id="loggedDIV">
 					<div id="blackListContainerDiv">
@@ -239,7 +244,8 @@
 							<h2 class="sectionTitle">Your To-do List</h2>
 							<p>Your list can be seen and acted upon clicking in the extension icon, which is always a
 								click away from you. It is divided in regular <span class="yellow">regular</span> and
-								<span class="yellow">daily</span> tasks.</p>
+								<span class="yellow">daily</span> tasks.
+							</p>
 							<p>Regular tasks are just what you're used to: a list task to be dealt and BOOM, done.
 								Dailies differ a bit.</p>
 
@@ -417,6 +423,7 @@
 					<div id="appIntegrationsContainerDiv">
 						<div id="autoZapperContainerDiv">
 							<!-- AutoZapper -->
+							<h2> renderização antiga</h2>
 							<h2 class="sectionTitle">Free up your hands!</h2>
 							<p>AutoZapper will get your through training sessions with using but a few clicks.</p>
 							<p>Here is how it works:</p>
@@ -451,8 +458,10 @@
 								<tbody>
 									<tr id="autoZapperStartLine">
 										<td>
-											<p><input id="autoZapperIntensity" class="50px"> <span
-													class="yellowX"><b>%</b></span></p>
+											<p>
+												<input id="autoZapperIntensity" class="50px">
+												<span class="yellowX"><b>%</b></span>
+											</p>
 										</td>
 										<td style="text-align: center">
 											<p class="autoZapperConf"><input id="autoZapperDuration" class="50px"> <span
@@ -616,12 +625,9 @@
 											<div id="notifyRT" class="miniChartDiv">Neutral</div>
 											<div id="goodRT" class="miniChartDiv">Positive</div>
 										</div>
-
 									</div>
 								</div>
-
 								<hr>
-
 								<div id="RTAPIKeyDiv">
 									<p>Your API Key is: <b><span id="RTAPIKeySpan"></span></b></p>
 									<p>
@@ -640,6 +646,29 @@
 							</div>
 
 
+						</div>
+						<div id="todoistContainerDiv">
+							<h2 class="sectionTitle">Sync your tasks with Todoist
+								<sup><span class="helpSpan" title='<p>Todoist is a popular Task management app. It can now get super powers syncing with Pavlok!</p>
+										'>
+										<b>?</b>
+									</span></sup>
+							</h2>
+							<div id="offTodoist">
+								<p>Todoist will require you to login and to allow Pavlok to manage your tasks.</p>
+								<p>
+									To do so, just click the icon
+									<img id="todoistLogin" class="clickAction todoistLogo" src="images/Todoist_logo.png"
+										alt="todoist">
+									</a>
+								</p>
+							</div>
+							<div id="onTodoist">
+								<p><img class="clickAction todoistLogo" src="images/Todoist_logo.png" alt="todoist"> is
+									active.</p>
+								<p><a href="#" id="importTodoist" class="clickAction">Import your tasks</a></p>
+								<p><a href="#" id="signOutTodoist">Unplug todoist</a></p>
+							</div>
 						</div>
 					</div>
 					<div id="advancedOptionsContainerDiv">
@@ -848,3 +877,11 @@
 
 </html>
 <script src="js/options.js"></script>
+<script src="public/bundle/onlyUnlogged/onlyUnlogged.bundle.js"></script>
+<script src="public/bundle/appIntegrationsContainerDiv/appIntegrationsContainerDiv.bundle.js"></script>
+<script src="public/bundle/fixedHeader/fixedHeader.bundle.js"></script>
+<script src="public/bundle/advancedOptionsContainerDiv/advancedOptionsContainerDiv.bundle.js"></script>
+<script src="public/bundle/toDoContainerDiv/toDoContainerDiv.bundle.js"></script>
+<script src="public/bundle/stimuliContainerDiv/stimuliContainerDiv.bundle.js"></script>
+<script src="public/bundle/tabNumbersContainerDiv/tabNumbersContainerDiv.bundle.js"></script>
+<script src="public/bundle/blackListContainerDiv/blackListContainerDiv.bundle.js"></script>

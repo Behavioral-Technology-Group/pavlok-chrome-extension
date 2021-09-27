@@ -8,13 +8,13 @@
 */
 
 // Server settings
-var server = "MVP";			// STAGE or MVP
+var server = "MVP" 			// STAGE or MVP
 var intent = "production"; 	// local OR test OR production (MVP or STAGE added at the end)
 
 // Fail safe
 try {
 	var extensionURL = window.location.href;
-	console.log(extensionURL);
+	// console.log(extensionURL);
 	if (extensionURL.indexOf("hefieeppocndiofffcfpkbfnjcooacib") != -1) { intent = "production"; server = "MVP" }
 	else if (extensionURL.indexOf("bgjnliglpcichfboncdhmaiagbdhplij") != -1) { intent = "local"; server = "MVP" }
 	else if (extensionURL.indexOf("jnpgmlnoaibdgbohdjhhnhfaoodnipkg") != -1) { intent = "test"; server = "STAGE"; }
@@ -44,35 +44,35 @@ settings.schedule = {};
 settings.user = {};
 
 // Site lists (black and whitelists)
-settings.siteLists.blackList = localStorage.blackList;
-settings.siteLists.blackList = localStorage.whiteList;
-settings.siteLists.blackList = localStorage.timeWindow;
+settings.siteLists.blackList = lsGet("blackList");
+settings.siteLists.blackList = lsGet("whiteList");
+settings.siteLists.blackList = lsGet("timeWindow");
 
 
 // Tab numbers
-settings.tabsControl.maxTabs = localStorage.maxTabs;
-settings.tabsControl.zapOnClose = localStorage.zapOnClose;
-settings.tabsControl.allWindows = localStorage.allWindows;
+settings.tabsControl.maxTabs = lsGet("maxTabs");
+settings.tabsControl.zapOnClose = lsGet("zapOnClose");
+settings.tabsControl.allWindows = lsGet("allWindows");
 
 
 // Stimuli intensity
-settings.stimuli.baseAddress = localStorage.baseAddress;
-settings.stimuli.zapIntensity = localStorage.zapIntensity;
-settings.stimuli.vibrationIntensity = localStorage.vibrationIntensity;
-settings.stimuli.beepVolume = localStorage.beepVolume;
+settings.stimuli.baseAddress = lsGet("baseAddress");
+settings.stimuli.zapIntensity = lsGet("zapIntensity");
+settings.stimuli.vibrationIntensity = lsGet("vibrationIntensity");
+settings.stimuli.beepVolume = lsGet("beepVolume");
 
-settings.stimuli.zapNotify = localStorage.notifyZap;
-settings.stimuli.vibrationNotify = localStorage.notifyVibration;
-settings.stimuli.beepNotify = localStorage.notifyBeep;
+settings.stimuli.zapNotify = lsGet("notifyZap");
+settings.stimuli.vibrationNotify = lsGet("notifyVibration");
+settings.stimuli.beepNotify = lsGet("notifyBeep");
 
 
 // To-do Lists
-settings.toDos.dailies = localStorage.dailies;
-settings.toDos.lastDailyID = localStorage.lastDailyID;
+settings.toDos.dailies = lsGet("dailies");
+settings.toDos.lastDailyID = lsGet("lastDailyID");
 
-settings.toDos.tasks = localStorage.ToDoTasks;
+settings.toDos.tasks = lsGet("ToDoTasks");
 settings.toDos.timeConstraints = '';
-settings.toDos.pomoFocus = localStorage.pomoFocus;
+settings.toDos.pomoFocus = lsGet("pomoFocus");
 
 
 // AutoZapper
@@ -114,47 +114,47 @@ settings.prompts.showAgain = '';
 
 */
 
-var baseAddress = "https://app.pavlok.com?";
-lsSet('baseAddress', baseAddress);
-localStorage.baseAddress = baseAddress;
+var baseAddress = "https://pavlok-" + server.toLowerCase() + ".herokuapp.com/";
+// var baseAddress = "https://app.pavlok.com/";
+lsSet("baseAddress", baseAddress);
 
-localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com';
+lsSet("gmailClientID", '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps.googleusercontent.com');
 
 // Stimuli intensity
 { // Defaults
-	if (!localStorage.beepTune) { localStorage.beepTune = 2; } //Random tune
-	if (!localStorage.beepIntensity) { localStorage.beepIntensity = 255; } //Random tune
-	if (!localStorage.beepPosition) { localStorage.beepPosition = 100; } //Random tune
-	if (!localStorage.zapIntensity) { localStorage.zapIntensity = 153; } //60% default
-	if (!localStorage.zapPosition) { localStorage.zapPosition = 60; } //60% default
-	if (!localStorage.vibrationIntensity) { localStorage.vibrationIntensity = 153; } //60% default
-	if (!localStorage.vibrationPosition) { localStorage.vibrationPosition = 60; } //60% default
+	if (!lsGet("beepTune")) { lsSet("beepTune", 2) } //Random tune
+	if (!lsGet("beepIntensity")) { lsSet("beepIntensity", 255) } //Random tune
+	if (!lsGet("beepPosition")) { lsSet("beepPosition", 100) } //Random tune
+	if (!lsGet("zapIntensity")) { lsSet("zapIntensity", 153) } //60% default
+	if (!lsGet("zapPosition")) { lsSet("zapPosition", 60) } //60% default
+	if (!lsGet("vibrationIntensity")) { lsSet("vibrationIntensity", 153) } //60% default
+	if (!lsGet("vibrationPosition")) { lsSet("vibrationPosition", 60) } //60% default
 
 	// Blacklist and tabs
-	if (!localStorage.timeWindow) { localStorage.timeWindow = 15 };
-	if (!localStorage.blackList) { localStorage.blackList = JSON.stringify({}); }
-	if (!localStorage.whiteList) { localStorage.whiteList = " "; }
-	if (!localStorage.zapOnClose) { localStorage.zapOnClose = "false"; }
-	if (!localStorage.maxTabs) { localStorage.maxTabs = 15; }
-	if (!localStorage.tabCountAll) { localStorage.tabCountAll = 'allWindows'; }
-	if (!localStorage.tabNumbersActive) { localStorage.tabNumbersActive = 'true'; }
+	if (!lsGet("timeWindow")) { lsSet("timeWindow", 15) };
+	if (!lsGet("blackList")) { lsSet("blackList", JSON.stringify({})) }
+	if (!lsGet("whiteList")) { lsSet("whiteList", " ") }
+	if (!lsGet("zapOnClose")) { lsSet("zapOnClose", "false") }
+	if (!lsGet("maxTabs")) { lsSet("maxTabs", 15) }
+	if (!lsGet("tabCountAll")) { lsSet("tabCountAll", 'allWindows') }
+	if (!lsGet("tabNumbersActive")) { lsSet("tabNumbersActive", 'true') }
 
 	// Active Days and Hours
-	if (!localStorage.generalActiveTimeStart) { localStorage.generalActiveTimeStart = "00:00"; }
-	if (!localStorage.generalActiveTimeEnd) { localStorage.generalActiveTimeEnd = "23:59"; }
-	if (!localStorage.sundayActive) { localStorage.sundayActive = 'true'; }
-	if (!localStorage.mondayActive) { localStorage.mondayActive = 'true'; }
-	if (!localStorage.tuesdayActive) { localStorage.tuesdayActive = 'true'; }
-	if (!localStorage.wednesdayActive) { localStorage.wednesdayActive = 'true'; }
-	if (!localStorage.thursdayActive) { localStorage.thursdayActive = 'true'; }
-	if (!localStorage.fridayActive) { localStorage.fridayActive = 'true'; }
-	if (!localStorage.saturdayActive) { localStorage.saturdayActive = 'true'; }
+	if (!lsGet("generalActiveTimeStart")) { lsSet("generalActiveTimeStart", "00:00") }
+	if (!lsGet("generalActiveTimeEnd")) { lsSet("generalActiveTimeEnd", "23:59") }
+	if (!lsGet("sundayActive")) { lsSet("sundayActive", 'true') }
+	if (!lsGet("mondayActive")) { lsSet("mondayActive", 'true') }
+	if (!lsGet("tuesdayActive")) { lsSet("tuesdayActive", 'true') }
+	if (!lsGet("wednesdayActive")) { lsSet("wednesdayActive", 'true') }
+	if (!lsGet("thursdayActive")) { lsSet("thursdayActive", 'true') }
+	if (!lsGet("fridayActive")) { lsSet("fridayActive", 'true') }
+	if (!lsGet("saturdayActive")) { lsSet("saturdayActive", 'true') }
 
 	// Notifications
-	if (!localStorage.persistedNotifications) { localStorage.persistedNotifications = []; }
-	if (!localStorage.notifyBeep) { localStorage.notifyBeep = 'false'; }
-	if (!localStorage.notifyVibration) { localStorage.notifyVibration = 'false'; }
-	if (!localStorage.notifyZap) { localStorage.notifyZap = 'false'; }
+	if (!lsGet("persistedNotifications")) { lsSet("persistedNotifications", []) }
+	if (!lsGet("notifyBeep")) { lsSet("notifyBeep", 'false') }
+	if (!lsGet("notifyVibration")) { lsSet("notifyVibration", 'false') }
+	if (!lsGet("notifyZap")) { lsSet("notifyZap", 'false') }
 
 	var notifyInterval;
 
@@ -196,16 +196,16 @@ localStorage.gmailClientID = '355054180595-pl1tc9qtp7mrb8fe2nb25n071ai2foff.apps
 	lsSet('notifications', notifications, 'object');
 
 	// RescueTime
-	if (!localStorage.RTOnOffSelect) { localStorage.RTOnOffSelect = "Off" };
-	if (!localStorage.RTFrequency) { localStorage.RTFrequency = 15 };
+	if (!lsGet("RTOnOffSelect")) { lsSet("RTOnOffSelect", "Off") };
+	if (!lsGet("RTFrequency")) { lsSet("RTFrequency", 15) };
 
-	if (!localStorage.RTPosSti) { localStorage.RTPosSti = "vibration" };
-	if (!localStorage.RTWarnSti) { localStorage.RTWarnSti = "beep" };
-	if (!localStorage.RTNegSti) { localStorage.RTNegSti = "shock" };
+	if (!lsGet("RTPosSti")) { lsSet("RTPosSti", "vibration") };
+	if (!lsGet("RTWarnSti")) { lsSet("RTWarnSti", "beep") };
+	if (!lsGet("RTNegSti")) { lsSet("RTNegSti", "shock") };
 
-	if (!localStorage.RTPosLimit) { localStorage.RTPosLimit = 70 };
-	if (!localStorage.RTWarnLimit) { localStorage.RTWarnLimit = 50 };
-	if (!localStorage.RTNegLimit) { localStorage.RTNegLimit = 30 };
+	if (!lsGet("RTPosLimit")) { lsSet("RTPosLimit", 70) };
+	if (!lsGet("RTWarnLimit")) { lsSet("RTWarnLimit", 50) };
+	if (!lsGet("RTNegLimit")) { lsSet("RTNegLimit", 30) };
 
 
 	var defInt = '';
@@ -305,22 +305,24 @@ function lsSet(key, data, dataType) {
 }
 
 function lsGet(key, parse) {
-	if (localStorage.getItem(key) == null) { return undefined };
+	const cleanedKey = key.trim();
+	const value = localStorage.getItem(cleanedKey)
+	if (value == null) { return undefined };
 
 	if (!parse) { parse = 'string' };
-	var returnData = localStorage.getItem(key);
+	var returnData = value;
 
 	if (parse == 'parse') {
 		try {
 			returnData = JSON.parse(returnData)
 		}
 		catch (err) {
-			log("Problem trying to parse " + key);
+			log("Problem trying to parse " + cleanedKey);
 			log(err);
 			log(returnData);
 		}
 	}
-	else { returnData = localStorage.getItem(key); }
+	else { returnData = value; }
 
 	return returnData
 }
@@ -354,24 +356,7 @@ function compareSetting(LSsetting, elementName, override) {
 /*---------------------------------------------------------------------------*/
 
 function isValid(token) {
-	// Temporary workaround
-	if (!localStorage.accessToken) { return false }
-	else if (localStorage.accessToken.length == 64) { return true }
-	else { return false }
-
-	// Tries the code against API
-	log(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken);
-
-	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
-		.done(function (data) {
-			log(data);
-			log("GOOD token. Works on API.");
-			return true
-		})
-		.fail(function () {
-			log("BAD token. Fails on API.");
-			return false
-		});
+	return token && typeof token === "string" && token.length === 64;
 }
 
 
@@ -403,7 +388,7 @@ function openOptions() {
 
 // Background
 function UpdateBadgeOnOff(badgeText) {
-	var logged = isValid(localStorage.accessToken);
+	var logged = isValid(lsGet("accessToken"));
 	var badgeStatus = lsGet('badgeStatus');
 
 	if (logged == true) {
@@ -426,8 +411,8 @@ function UpdateBadgeOnOff(badgeText) {
 }
 
 function UpdateTabCount(tabCount) {
-	if (localStorage.tabNumbersActive == "true") {
-		UpdateBadgeOnOff(tabCount + '/' + localStorage.maxTabs);
+	if (lsGet("tabNumbersActive") == "true") {
+		UpdateBadgeOnOff(tabCount + '/' + lsGet("maxTabs"));
 	}
 	else {
 		UpdateBadgeOnOff('' + tabCount);
@@ -465,16 +450,12 @@ function countTabs(mode, callback) {
 				}
 			});
 		});
-
 	}
-
-
-
 	return
 }
 
 function evaluateTabCount(tabCount) {
-	var maxTabs = parseInt(localStorage.maxTabs);
+	var maxTabs = parseInt(lsGet("maxTabs"));
 	if (!maxTabs || maxTabs == "no") {
 		return;
 	}
@@ -566,7 +547,7 @@ function signOut() {
 	UpdateBadgeOnOff("Off");
 	msgInterfaces({ action: "logged", token: 'not logged' })
 
-	localStorage.setItem('logged', 'false');
+	lsSet('logged', 'false');
 	lsDel('accessToken');
 	clearCookies();
 }
@@ -576,7 +557,7 @@ function signIn(user) {
 }
 
 function showOptions(accessToken) {
-	if (isValid(localStorage.accessToken)) {
+	if (isValid(lsGet("accessToken"))) {
 		$(".onlyLogged").css('visibility', 'visible');
 		$(".onlyUnlogged").css('display', 'none');
 		$("#testPairing").show();
@@ -602,7 +583,7 @@ function showName(name) { // mark for review
 	else {
 		var userName = document.getElementById("userName");
 		userName.style.visibility = "visible";
-		userName.innerHTML = ", " + localStorage.userName;
+		userName.innerHTML = ", " + lsGet("userName");
 
 		log('Username is ' + userName);
 	}
@@ -610,10 +591,11 @@ function showName(name) { // mark for review
 }
 
 function updateNameAndEmail(name, email) {
+	// this function make no sense because '#userName' and '#userEmail DOM elements does not exist
 	if ($("#userName")) { $("#userName").html(name); }
 	if ($("#userEmail")) { $("#userEmail").html(email); }
 }
-//
+
 function enableTooltips() {
 	$(function () {
 		// Makes possible to use HTML inside the tittle
@@ -834,7 +816,7 @@ function notifyBadTags(problems) {
 function save_options() { // Mark for deletion
 	// Get data and store it in LocalStorage
 	var select = document.getElementById("wantToSave");
-	localStorage.maxTabs = select;
+	lsSet("maxTabs", select);
 };
 
 function getAccessToken(userData, callback) {
@@ -867,19 +849,21 @@ function spread(token) {
 		token: token
 	});
 
-	countTabs(localStorage.tabCountAll, UpdateTabCount);
+	countTabs(lsGet("tabCountAll"), UpdateTabCount);
 }
 
 function revokeAccessToken() {
-	var apiAddress = "api/v1/sign_out"
-	var params = { token: localStorage.accessToken };
+	// var baseAddress = "https://app.pavlok.com/";
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+	var apiAddress = "api/v1/";
+	var signOut = "sign_out"
+	var parameters = "?token=" + lsGet("accessToken");
 
-	var sign_out_url = baseAddress + apiAddress;
+	var target = baseAddress + apiAddress + signOut + parameters;
 
-	// erase token anyway
 	lsDel("accessToken");
 
-	$.post(sign_out_url, params)
+	$.post(target)
 		.done(function (data) {
 			log("done");
 			log(data);
@@ -892,10 +876,12 @@ function revokeAccessToken() {
 }
 
 function maybeEndUserSession() {
-	var baseAddress = "https://app.pavlok.com?";
+	// var baseAddress = "https://app.pavlok.com/";
+	var baseAddress = "https://pavlok-mvp.herokuapp.com/";
+
 	var apiAddress = "users/";
 	var signOut = "sign_out"
-	var parameters = "?token=" + localStorage.accessToken;
+	var parameters = "?token=" + lsGet("accessToken");
 
 	var target = baseAddress + apiAddress + signOut + parameters;
 
@@ -939,7 +925,7 @@ function oauth() {
 		var clientID = "7d90dbab1f8723cd8fd15244f194c8a370736bd48acffcca589c9901454df935";
 		var clientSecret = "83a2de725b3ec336393a5cb59e4399bd5dc2f51c5e7aeb37d3249d7ee622523c";
 	}
-	var authURL = localStorage.baseAddress + "oauth/authorize?" +
+	var authURL = lsGet("baseAddress") + "oauth/authorize?" +
 		'client_id=' + clientID +
 		'&redirect_uri=' + redirectURL +
 		'&response_type=code' +
@@ -957,27 +943,27 @@ function oauth() {
 			log("Step 3: Authorizaion code is: " + authorizationCode);
 
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = localStorage.baseAddress + "/oauth/token"
-			params = {
-				client_id: clientID,
-				client_secret: clientSecret,
-				code: authorizationCode,
-				grant_type: 'authorization_code',
-				redirect_uri: redirectURL
-			}
+			accessTokenUrl =
+				lsGet("baseAddress")
+				+ "/oauth/token?"
+				+ 'client_id=' + clientID
+				+ '&client_secret=' + clientSecret
+				+ '&code=' + authorizationCode
+				+ '&grant_type=authorization_code'
+				+ '&redirect_uri=' + redirectURL;
 
 			log("Step 4: Access token Url is: " + accessTokenUrl);
 
-			$.post(accessTokenUrl, params)
+			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.access_token;
 
 					msgInterfaces({ action: 'logged', token: accessToken });
-					localStorage.setItem('logged', 'true');
-					localStorage.setItem('accessToken', accessToken);
+					lsSet('logged', 'true');
+					lsSet('accessToken', accessToken);
 					chrome.windows.getLastFocused(function (win) {
-						countTabs(localStorage.tabCountAll, UpdateTabCount);
+						countTabs(lsGet("tabCountAll"), UpdateTabCount);
 						showOptions(accessToken);
 						userInfo(accessToken);
 					});
@@ -1015,25 +1001,23 @@ function rescueTimeOAuth() {
 			log("Step 3: Authorizaion code is: " + authorizationCode);
 
 			// Exchange AuthCode for Access Token:
-			accessTokenUrl = 'https://github.com/login/oauth/access_token'
-			params = {
-				client_id: clientID,
-				client_secret: clientSecret,
-				code: authorizationCode,
-				redirect_uri: redirectURL,
-				state: state
-			}
+			accessTokenUrl = 'https://github.com/login/oauth/access_token?' +
+				'client_id=' + clientID +
+				'&client_secret=' + clientSecret +
+				'&code=' + authorizationCode +
+				'&redirect_uri=' + redirectURL;
+			'&state=' + state;
 
 			log("Step 4: Access token Url is: " + accessTokenUrl);
 
-			$.post(accessTokenUrl, params)
+			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
 					var accessToken = data.split("=")[1];
-					localStorage.setItem('loggedRT', 'true');
-					localStorage.setItem('accessTokenRT', accessToken);
+					lsSet('loggedRT', 'true');
+					lsSet('accessTokenRT', accessToken);
 
-					$("#rescueTimeData").html($.get("https://api.github.com/user?access_token=" + localStorage.accessTokenRT));
+					$("#rescueTimeData").html($.get("https://api.github.com/user?access_token=" + lsGet("accessTokenRT")));
 
 
 				});
@@ -1045,17 +1029,17 @@ function rescueTimeOAuth() {
 }
 
 function destroyToken() {
-	localStorage.setItem('accessToken', 'null');
+	lsSet('accessToken', 'null');
 }
 
 function userInfo(accessToken) {
-	$.get(localStorage.baseAddress + 'api/v1/me?access_token=' + accessToken)
+	$.get(lsGet("baseAddress + 'api/v1/me?access_token=' + accessToken"))
 		.done(function (data) {
 			var dude = JSON.stringify(data, null, 4);
 			log('User info for ' + data.name + ' succeeded. \nHis UID is:' + data.uid);
-			localStorage.setItem('userEmail', data.email)
-			localStorage.setItem('userName', data.name);
-			updateNameAndEmail(localStorage.userName, localStorage.userEmail);
+			lsSet('userEmail', data.email)
+			lsSet('userName', data.name);
+			updateNameAndEmail(lsGet("userName"), lsGet("userEmail"));
 			return data.name;
 		})
 		.fail(function () {
@@ -1064,45 +1048,51 @@ function userInfo(accessToken) {
 }
 
 function stimuli(stimulus, value, accessToken, textAlert, forceNotify) {
+
+
 	var now = new Date().getTime();
 	var dif = now - lastVib;
 	lastVib = now;
 	if (dif < limitRep) { return }
 
 	stimuliTypes = ['shock', 'vibration', 'beep'];
-	defIntensities = [localStorage.zapIntensity, localStorage.vibrationIntensity, localStorage.beepIntensity]; // zap, vibration, beep
+	defIntensities = [lsGet("zapIntensity"), lsGet("vibrationIntensity"), lsGet("beepIntensity")]; // zap, vibration, beep
 
 	if (!value || value == 'defInt' || '') { value = defIntensities[stimuliTypes.indexOf(stimulus)]; }
-	if (!accessToken || accessToken == 'defAT' || '') { accessToken = localStorage.accessToken; }
+	if (!accessToken || accessToken == 'defAT' || '') { accessToken = lsGet("accessToken"); }
 	if (!textAlert) { textAlert = "Incoming " + stimulus; }
 
 	var notify = true;
 
-	if (stimulus == 'beep' && localStorage.notifyBeep == 'false') { notify = false; }
-	else if (stimulus == 'vibration' && localStorage.notifyVibration == 'false') { notify = false; }
-	else if (stimulus == 'shock' && localStorage.notifyZap == 'false') { notify = false; }
+	if (stimulus == 'beep' && lsGet("notifyBeep") == 'false') { notify = false; }
+	else if (stimulus == 'vibration' && lsGet("notifyVibration") == 'false') { notify = false; }
+	else if (stimulus == 'shock' && lsGet("notifyZap") == 'false') { notify = false; }
 
 	if (forceNotify == 'false') { notify = false; }
 	else if (forceNotify == 'true') { notify = true; }
 
-	stimulusUrl = localStorage.baseAddress + 'api/v1/stimuli/' +
-		stimulus + '/' + value
-	params = { access_token: accessToken };
+	// if (notify) { $.prompt(textAlert); }
 
-	if (textAlert.length > 0) { params.reason = textAlert; }
+	postURL = lsGet("baseAddress") + 'api/v1/' +
+		stimulus + '/' +
+		value +
+		'?access_token=' + accessToken;
+
+	// if (server == 'STAGE') { postURL = postURL + '&reason=' + textAlert; }
+	if (textAlert.length > 0) { postURL = postURL + '&reason=' + textAlert; }
 	else { alert("stimuli without reason"); }
 
-	log("URL being POSTED is:\n" + stimulusUrl);
-	$.post(stimulusUrl, params)
+	log("URL being POSTED is:\n" + postURL);
+	$.post(postURL)
 		.done(function (data, result) {
 			return log(stimulus + ' succeeded!\n' + data + " " + result);
 		})
 		.fail(function () {
 			log('Failed the new API. Trying the old one');
-			objectCode = localStorage.objectCode;
+			objectCode = lsGet("objectCode");
 			if (stimulus == "vibration") { stimulus = "vibro"; }
-			log(stimulus + ' failed!\nUrl was: ' + stimulusUrl + "\nTrying the old API at: ");
-			$.get('https://app.pavlok.com?/api/' + objectCode + '/' + stimuli + '/' + intensity);
+			log(stimulus + ' failed!\nUrl was: ' + postURL + "\nTrying the old API at: ");
+			$.get('https://app.pavlok.com/api/' + objectCode + '/' + stimuli + '/' + intensity);
 
 			return
 		});
@@ -1146,11 +1136,11 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback) {
 			$.post(accessTokenUrl)
 				.done(function (data) {
 					log(data);
-					localStorage.lastOAuthData = data;//JSON.strigigy(data);
+					lsSet("lastOAuthData", data);//JSON.strigigy(data);
 					var accessToken = data.split("=")[1];
-					localStorage.setItem('oauthSuccess', 'true');
-					localStorage.setItem('lastAccessToken', accessToken);
-					localStorage.setItem('lastAccessToken', accessToken);
+					lsSet('oauthSuccess', 'true');
+					lsSet('lastAccessToken', accessToken);
+					lsSet('lastAccessToken', accessToken);
 
 
 					log("OAuth2 test concluded");
@@ -1160,8 +1150,8 @@ function genericOAuth(clientID, clientSecret, authURL, tokenURL, callback) {
 				});
 		}
 	);
-	if (localStorage.oauthSuccess == 'true') {
-		return localStorage.lastAccessToken
+	if (lsGet("oauthSuccess") == 'true') {
+		return lsGet("lastAccessToken");
 	}
 }
 
@@ -1291,7 +1281,7 @@ function rawToPercent(raw, stimulus) {
 
 function isActive() {
 	var dayHour = checkActiveDayHour();
-	var token = isValid(localStorage.accessToken);
+	var token = isValid(lsGet("accessToken"));
 
 	return dayHour && token
 }
@@ -1393,6 +1383,15 @@ function interfaceListeners(page) {
 				}
 				else if (request.action == "login failed") {
 					wrong_login();
+				}
+
+				else if (request.action == "todoist") {
+					if (request.change == "unlogged") {
+						todoist.frontend.toggle();
+					}
+					else if (request.change == "logged") {
+						todoist.frontend.toggle();
+					}
 				}
 			}
 		}
@@ -1570,6 +1569,7 @@ var blackListTable = {
 		});
 
 		$("#blackList .deleteRowButton").on("click", function () {
+
 			var name = $(this)
 				.attr("id")
 				.replace("delete", "");
@@ -1706,7 +1706,7 @@ var maxTabsPack = {
 					var curV = $("#maxTabsSelect").val();
 					var recV = r.value.toString();
 
-					countTabs(localStorage.tabCountAll, UpdateTabCount);
+					countTabs(lsGet("tabCountAll"), UpdateTabCount);
 
 					if (curV != recV) {
 						maxTabsPack.set(r.value);
@@ -1721,7 +1721,7 @@ var maxTabsPack = {
 
 	backListener: function (r) {
 		if (r.action == "update Max Tabs") {
-			localStorage.maxTabs = r.maxTabs;
+			lsSet("maxTabs", r.maxTabs);
 			var msg = {
 				action: "update Max Tabs",
 				dom: "#maxTabsSelect",
@@ -1760,7 +1760,7 @@ function enter_on_sign_in() {
 
 function log(msg) {
 	try {
-		if (JSON.parse(localStorage.verbose)) { console.log(msg); }
+		if (JSON.parse(lsGet("verbose"))) { console.log(msg); }
 	}
 	catch (err) { }
 }
