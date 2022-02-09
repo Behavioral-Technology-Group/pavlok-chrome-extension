@@ -210,7 +210,7 @@ function enableStimuliControls() {
 }
 
 function msgListeners(){
-	chrome.extension.onMessage.addListener(
+	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.target == "popup"){
 				if (request.action == "updateBlackList"){
@@ -260,6 +260,10 @@ function msgListeners(){
 	);
 }
 
+function submit_login (){
+
+}
+
 $( document ).ready(function() {
 	enableTooltips();
 	presentName();
@@ -277,26 +281,30 @@ $( document ).ready(function() {
 		msgBackground({action: "signOut"});
 	});
 	
-	$("#pavSubmitLogin").click(function(event){
-		event.preventDefault();
-		
-		var userInfo = {
-			userName: $("#pavUserNameLogin").val(),
-			password: $("#pavPasswordLogin").val(),
+	//$("#pavSubmitLogin").click(submit_login(this));
+	$("#pavSubmitLogin").click(function() {		
+
+			//event.preventDefault();
+	console.log($("#pavUserNameLogin").val());
+	var userInfo = {
+		userName: $("#pavUserNameLogin").val(),
+		password: $("#pavPasswordLogin").val(),
+	};
+	
+	if (validateUserInfo(userInfo)){
+		var msg = { 
+			action: "oauth", 
+			user: userInfo 
 		};
 		
-		if (validateUserInfo(userInfo)){
-			var msg = { 
-				action: "oauth", 
-				user: userInfo 
-			};
-			
-			msgBackground( msg );
-		}
-		else{
-			
-		};
+		msgBackground( msg );
+	}
+	else{
 		
+	};
+	
+
+
 	});
 
 	maxTabsPack.create( "popup", lsGet("maxTabs") );

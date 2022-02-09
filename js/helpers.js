@@ -408,19 +408,19 @@ function UpdateBadgeOnOff(badgeText) {
 	
 	if (logged == true){
 		if (badgeStatus == "off"){
-			chrome.browserAction.setIcon({path: 'images/logo_128x128.png'});
+			chrome.action.setIcon({path: 'images/logo_128x128.png'});
 			badgeStatus = "on";
 		}
-		chrome.browserAction.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
-		chrome.browserAction.setBadgeText({ text: badgeText });
+		chrome.action.setBadgeBackgroundColor({ color: [38, 25, 211, 255] });
+		chrome.action.setBadgeText({ text: badgeText });
 	}
 	else{
 		if (badgeStatus == "on" || badgeStatus == false){
-			chrome.browserAction.setIcon({path: 'images/off_128x128.png'});
+			chrome.action.setIcon({path: 'images/off_128x128.png'});
 			badgeStatus = "off";
 		}
-		chrome.browserAction.setBadgeBackgroundColor({ color: [100, 100, 100, 130] });
-		chrome.browserAction.setBadgeText({ text: "Off" });
+		chrome.action.setBadgeBackgroundColor({ color: [100, 100, 100, 130] });
+		chrome.action.setBadgeText({ text: "Off" });
 	}
 	lsSet('badgeStatus', badgeStatus);
 }
@@ -1305,7 +1305,8 @@ function msgInterfaces(msg){
 
 function msgBackground(msg){
 	msg.target = "background";
-	chrome.runtime.sendMessage(msg);
+	//chrome.runtime.sendMessage(msg);
+		chrome.runtime.onMessage.dispatch(msg);
 }
 
 function arrayObjectIndexOf(myArray, searchTerm, property) {
@@ -1348,7 +1349,7 @@ function setVal(data){
 }
 
 function interfaceListeners(page){
-	chrome.extension.onMessage.addListener(
+	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.target == page){
 				if (request.action == "updateBlackList"){

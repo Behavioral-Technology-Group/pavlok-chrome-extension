@@ -118,7 +118,7 @@ var migrations = {
 	},
 	
 	frontListener: function(){
-		chrome.extension.onMessage.addListener(
+		chrome.runtime.onMessage.addListener(
 			function(request, sender, sendResponse) {
 				if ( request.target == "popup" || request.target == "options") {
 					if (request.subject == "migration" && nMigPrompt === 0){

@@ -1,7 +1,7 @@
 var verbose = false;
 var x = 0;
 
-var minImgURL = chrome.extension.getURL("images/browser_action_16x16.png");
+var minImgURL = "https://pavlok.com/public/pavlok-chrome-extension/images/browser_action_16x16.png";
 var pavlokBannerHeight = 25;
 
 function togglePomoFocus(pomoFocus){
