@@ -80,15 +80,15 @@ var pavPomo = {
 		
 		toBackground: function(msg){
 			msg.target = "background";
-			chrome.runtime.sendMessage(msg);
+			chrome.runtime.onMessage.dispatch(msg);
 		},
 		
 		toInterfaces: function(msg){
 			msg.target = "popup";
-			chrome.runtime.sendMessage(msg);
+			chrome.runtime.onMessage.dispatch(msg);
 			
 			msg.target = "options";
-			chrome.runtime.sendMessage(msg);
+			chrome.runtime.onMessage.dispatch(msg);
 			
 			msg.target = "external page"
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {

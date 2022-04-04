@@ -1298,15 +1298,15 @@ function isActive(){
 
 function msgInterfaces(msg){
 	msg.target = "popup";
-	chrome.runtime.sendMessage(msg);
+	chrome.runtime.onMessage.dispatch(msg);
 	msg.target = "options";
-	chrome.runtime.sendMessage(msg);
+	chrome.runtime.onMessage.dispatch(msg);
 }
 
 function msgBackground(msg){
 	msg.target = "background";
 	//chrome.runtime.sendMessage(msg);
-		chrome.runtime.onMessage.dispatch(msg);
+	chrome.runtime.onMessage.dispatch(msg);
 }
 
 function arrayObjectIndexOf(myArray, searchTerm, property) {

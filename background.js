@@ -648,7 +648,7 @@ function msgListeners(){
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			r = request;
-            console.log("Message received: " + r);
+            console.log("Message received: " + JSON.stringify(r));
 			if (r.target == "background"){
 				// blackList:
 				// countdown
